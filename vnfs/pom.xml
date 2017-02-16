@@ -59,13 +59,16 @@
     </plugins>
   </build>
 
-
-<distributionManagement>
-        <repository>
-            <id>nexus</id>
-            <name>OpenECOMP Release Repository</name>
-            <url>https://ecomp-nexus:8443/repository/raw</url>
-        </repository>
-    </distributionManagement>
+  <distributionManagement>
+    <repository>
+      <id>ecomp-releases</id>
+      <name>Demo Release Repository</name>
+      <url>${nexusproxy}/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>ecomp-snapshots</id>
+      <name>Demo Snapshot Repository</name>
+      <url>${nexusproxy}/content/repositories/snapshots/</url>
+    </snapshotRepository>
 
 </project>
