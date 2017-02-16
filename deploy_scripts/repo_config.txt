@@ -1,4 +1,0 @@
-REPO_URL=https://ecomp-nexus:8443/repository/raw
-REPO_USERNAME=
-REPO_PASSWORD=
-
