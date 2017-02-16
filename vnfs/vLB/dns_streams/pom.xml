@@ -1,0 +1,58 @@
+<!--<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">-->
+<project>
+
+<parent>
+    <groupId>org.openecomp.demo.vnf</groupId>
+    <artifactId>demo-aggregator</artifactId>
+    <version>1.0.0</version>
+<relativePath>../../pom.xml</relativePath>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.openecomp.demo.vnf.vlb</groupId>
+  <artifactId>vlb_dns_streams</artifactId>
+ <!-- <name>vfw_pg_streams</name>-->
+  <version>1.0.0</version>
+  <build>
+    <plugins>
+
+       <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <phase>never</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.5.3</version>
+        <configuration>
+          <descriptor>dep.xml</descriptor>
+        </configuration>
+        <executions>
+          <execution>
+            <id>create-archive</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-deploy-plugin</artifactId>
+  <configuration>
+    <skip>false</skip>
+  </configuration>
+</plugin>
+
+
+    </plugins>
+  </build>
+
+</project>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+ <!-- <parent>
+    <groupId>io.fd.honeycomb.common</groupId>
+    <artifactId>minimal-distribution-parent</artifactId>
+    <version>1.16.9</version>
+  </parent>
+-->
+<parent>
+<groupId>io.fd.honeycomb.common</groupId>
+    <artifactId>minimal-distribution-parent</artifactId>
+    <version>1.16.9</version>
+<relativePath>../parent-pom/pom.xml</relativePath>
+</parent>
+<!--
+<parent>
+    <groupId>org.openecomp.demo.vnf</groupId>
+    <artifactId>demo-aggregator</artifactId>
+    <version>1.0.0</version>
+<relativePath>../../../pom.xml</relativePath>
+  </parent>
+-->
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.openecomp.demo.vnf</groupId>
+  <artifactId>sample-distribution</artifactId>
+  <version>1.0.0</version>
+
+  <properties>
+    <main.class>io.fd.honeycomb.vpp.integration.distro.Main</main.class>
+    <v3po.version>1.16.9</v3po.version>
+    <lisp.version>1.16.9</lisp.version>
+    <vpp.common.min.distro.version>1.16.9</vpp.common.min.distro.version>
+    <vppnsh.version>1.16.9</vppnsh.version>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-deploy-plugin</artifactId>
+  <configuration>
+    <skip>false</skip>
+  </configuration>
+</plugin>
+
+<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.fd.honeycomb.vpp</groupId>
+      <artifactId>minimal-distribution</artifactId>
+      <version>${vpp.common.min.distro.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.fd.honeycomb.v3po</groupId>
+      <artifactId>v3po2vpp</artifactId>
+      <version>${v3po.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.fd.honeycomb.lisp</groupId>
+      <artifactId>lisp2vpp</artifactId>
+      <version>${lisp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.fd.honeycomb.vppnsh</groupId>
+      <artifactId>vppnsh-impl</artifactId>
+      <version>${vppnsh.version}</version>
+    </dependency>
+<dependency>
+      <groupId>org.openecomp.demo.vnf</groupId>
+      <artifactId>sample-plugin-impl</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+  </dependencies>
+
+</project>

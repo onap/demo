@@ -1,0 +1,12 @@
+packet-generator new {
+  name fw_udp9
+  rate 10
+  node ip4-input
+  size 64-64
+  no-recycle
+  data {
+    UDP: 192.168.10.31 -> 192.168.20.32
+    UDP: 15320 -> 8080	
+    length 128 checksum 0 incrementing 1
+  }
+}

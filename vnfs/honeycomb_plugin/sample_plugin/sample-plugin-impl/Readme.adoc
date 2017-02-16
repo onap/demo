@@ -1,0 +1,3 @@
+--Documentation for sample-plugin --
+
+TODO Replace with general description whats the purpose of sample-plugin and how it works

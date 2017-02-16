@@ -1,0 +1,51 @@
+<project>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.openecomp.demo.vnf.lb</groupId>
+  <artifactId>dns-manager</artifactId>
+  <name>DNS Manager</name>
+  <packaging>jar</packaging>
+  <version>1.0.0</version>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>main.java.DNSMembershipManager</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+    </plugin>
+
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+    </plugin>
+
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-install-plugin</artifactId>
+      <configuration>
+        <skip>false</skip>
+      </configuration>
+     </plugin>
+    </plugins>
+  </build>
+
+  <distributionManagement>
+      <repository>
+          <id>nexus</id>
+          <name>OpenECOMP Release Repository</name>
+          <url>https://ecomp-nexus:8443/repository/raw</url>
+      </repository>
+  </distributionManagement>
+
+</project>

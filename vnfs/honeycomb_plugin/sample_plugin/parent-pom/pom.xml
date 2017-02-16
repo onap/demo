@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016 Cisco and/or its affiliates.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at:
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+<parent>
+    <groupId>org.openecomp.demo.vnf</groupId>
+    <artifactId>demo-aggregator</artifactId>
+    <version>1.0.0</version>
+    <relativePath>../../../pom.xml</relativePath>
+</parent>
+
+    <properties>
+        <nexusproxy>http://nexus.fd.io/content</nexusproxy>
+        <start.script.template>
+#!/bin/sh -
+STATUS=100
+
+while [ $STATUS -eq 100 ]
+do
+  %s
+  STATUS=$?
+  echo "Honeycomb exited with status: $STATUS"
+  if [ $STATUS -eq 100 ]
+  then
+    echo "Restarting..."
+  fi
+done
+        </start.script.template>
+        <exec.parameters>-Xms32m -Xmx128m -XX:MetaspaceSize=32m -XX:MaxMetaspaceSize=128m</exec.parameters>
+        <exec.parameters.minimal>-client -Xms20m -Xmx32m -XX:MetaspaceSize=5m -XX:MaxMetaspaceSize=32m -XX:MaxMetaspaceExpansion=1m -Xss512k -XX:+UseSerialGC -Djava.compiler=NONE -Xverify:none -noverify</exec.parameters.minimal>
+        <debug.parameters>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</debug.parameters>
+        <guice.version>4.1.0</guice.version>
+        <guice.config.version>1.2.0</guice.config.version>
+        <restconf.version>1.3.2-Beryllium-SR2</restconf.version>
+        <netconf.version>1.0.2-Beryllium-SR2</netconf.version>
+        <jersey.version>1.19.1</jersey.version>
+        <jetty.version>9.3.11.v20160721</jetty.version>
+        <servlet.version>3.1.0</servlet.version>
+        <yangtools.version>0.8.2-Beryllium-SR2</yangtools.version>
+        <mdsal.version>1.3.2-Beryllium-SR2</mdsal.version>
+        <!-- Used by mdsal as provided/runtime dependency-->
+        <osgi.core.version>5.0.0</osgi.core.version>
+    </properties>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.fd.honeycomb.common</groupId>
+    <artifactId>minimal-distribution-parent</artifactId>
+    <version>1.16.9</version>
+    <packaging>pom</packaging>
+
+    <!-- Generate executable shell script -->
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.3</version>
+                    <configuration>
+                        <!-- Use google's error-prone static analysis-->
+                        <compilerId>javac-with-errorprone</compilerId>
+                        <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                        <showWarnings>true</showWarnings>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.codehaus.plexus</groupId>
+                            <artifactId>plexus-compiler-javac-errorprone</artifactId>
+                            <version>2.5</version>
+                        </dependency>
+                        <!-- override plexus-compiler-javac-errorprone's dependency on
+                             Error Prone with the latest version -->
+                        <dependency>
+                            <groupId>com.google.errorprone</groupId>
+                            <artifactId>error_prone_core</artifactId>
+                            <version>2.0.9</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>2.6</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <mainClass>${main.class}</mainClass>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>
+                                <useUniqueVersions>false</useUniqueVersions>
+                                <classpathMavenRepositoryLayout>true</classpathMavenRepositoryLayout>
+                            </manifest>
+                            <manifestEntries>
+                                <Class-Path>config/ cert/</Class-Path>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+
+                <!-- Copy all dependencies -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.10</version>
+                    <executions>
+                        <execution>
+                            <id>copy-dependencies</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                <useBaseVersion>true</useBaseVersion>
+                                <useRepositoryLayout>true</useRepositoryLayout>
+                                <excludeArtifactIds>yang-jmx-generator</excludeArtifactIds>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>unpack-configuration</id>
+                            <phase>prepare-package</phase>
+                            <goals>
+                                <goal>unpack-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <includes>**/honeycomb-minimal-resources/</includes>
+                                <outputDirectory>${project.build.outputDirectory}/</outputDirectory>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Generate shell script -->
+                <plugin>
+                    <groupId>org.codehaus.gmaven</groupId>
+                    <artifactId>groovy-maven-plugin</artifactId>
+                    <version>2.0</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>execute</goal>
+                            </goals>
+                            <configuration>
+                                <!-- TODO add remote debug option -->
+                                <!-- TODO add clean option -->
+                                <!-- TODO add shutdown script -->
+                                <!-- TODO add restart script -->
+                                <!-- TODO pass options to JVM? -->
+                                <source>
+                                    import java.nio.file.Paths
+
+                                    log.info "Generating shell exec script"
+                                    def scriptTemplate = properties.getOrDefault("start.script.template", "")
+                                    def args = properties.getOrDefault("exec.parameters", "")
+                                    log.debug "Additional shell exec script properties: ${args}"
+                                    def javaArgs = "${args} -jar \$(dirname \$0)/${project.artifactId}-${project.version}.jar"
+                                    def scriptParent = Paths.get(project.build.outputDirectory, "honeycomb-minimal-resources")
+                                    scriptParent.toFile().mkdirs()
+                                    def scriptContent = "java " + javaArgs
+                                    log.info "Generating shell exec script as ${scriptContent}"
+                                    def scriptPath = Paths.get(scriptParent.toString(), "honeycomb")
+                                    log.info "Writing shell exec script to ${scriptPath}"
+                                    scriptPath.toFile().text = String.format(scriptTemplate, scriptContent)
+                                    scriptPath.toFile().setExecutable(true)
+
+                                    scriptPath = Paths.get(scriptParent.toString(), "honeycomb-start")
+                                    log.info "Writing shell exec script to ${scriptPath}"
+                                    scriptPath.toFile().text = "\$(dirname \$0)/honeycomb &amp;"
+                                    scriptPath.toFile().setExecutable(true)
+
+                                    def debug_args = properties.getOrDefault("debug.parameters", "")
+                                    def debugScriptContent = "java" + " ${debug_args} " + javaArgs
+                                    log.info "Generating shell debug script as ${debugScriptContent}"
+                                    scriptPath = Paths.get(scriptParent.toString(), "honeycomb-debug")
+                                    log.info "Writing shell debug script to ${scriptPath}"
+                                    scriptPath.toFile().text = String.format(scriptTemplate, debugScriptContent)
+                                    scriptPath.toFile().setExecutable(true)
+                                </source>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <!-- Build archives -->
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.5.3</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>io.fd.honeycomb.common</groupId>
+                            <artifactId>minimal-assembly-descriptor</artifactId>
+                            <version>1.16.9</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>create-archive</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                            <configuration>
+                                <descriptorRefs>
+                                    <descriptorRef>honeycomb-minimal</descriptorRef>
+                                </descriptorRefs>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+<!--    <distributionManagement>
+        <repository>
+            <id>fdio-release</id>
+            <url>${nexusproxy}/repositories/fd.io.release/</url>
+        </repository>
+        <snapshotRepository>
+            <id>fdio-snapshot</id>
+            <url>${nexusproxy}/repositories/fd.io.snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
+-->
+</project>
