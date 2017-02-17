@@ -3,6 +3,7 @@
 ########## Define parameters ##########
 VERSION="1.0.0-SNAPSHOT"
 pwd
+ls -all ../
 PATH_TO_BOOT="boot"
 PATH_TO_HEAT="heat"
 PATH_TO_VFW="vnfs/vFW/scripts"
