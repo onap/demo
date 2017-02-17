@@ -2,12 +2,11 @@
 
 ########## Define parameters ##########
 VERSION="1.0.0-SNAPSHOT"
-pwd
-ls -all
-PATH_TO_BOOT="boot"
-PATH_TO_HEAT="heat"
-PATH_TO_VFW="vnfs/vFW/scripts"
-PATH_TO_VLB="vnfs/vLB/scripts"
+
+PATH_TO_BOOT="/w/workspace/demo-master-merge-java/boot"
+PATH_TO_HEAT="/w/workspace/demo-master-merge-java/heat"
+PATH_TO_VFW="/w/workspace/demo-master-merge-java/vnfs/vFW/scripts"
+PATH_TO_VLB="/w/workspace/demo-master-merge-java/vnfs/vLB/scripts"
 
 BOOT_GROUP_ID="org.openecomp.demo.boot"
 HEAT_GROUP_ID="org.openecomp.demo.heat"
