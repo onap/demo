@@ -3,10 +3,10 @@
 ########## Define parameters ##########
 VERSION="1.0.0-SNAPSHOT"
 
-PATH_TO_BOOT="../boot"
-PATH_TO_HEAT="../heat"
-PATH_TO_VFW="../vnfs/vFW/scripts"
-PATH_TO_VLB="../vnfs/vLB/scripts"
+PATH_TO_BOOT="boot"
+PATH_TO_HEAT="heat"
+PATH_TO_VFW="vnfs/vFW/scripts"
+PATH_TO_VLB="vnfs/vLB/scripts"
 
 BOOT_GROUP_ID="org.openecomp.demo.boot"
 HEAT_GROUP_ID="org.openecomp.demo.heat"

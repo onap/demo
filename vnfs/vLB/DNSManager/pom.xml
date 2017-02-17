@@ -8,7 +8,7 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.openecomp.demo.vnf.lb</groupId>
+  <groupId>org.openecomp.demo.vnf.vlb</groupId>
   <artifactId>dns-manager</artifactId>
   <name>DNS Manager</name>
   <packaging>jar</packaging>
@@ -43,6 +43,20 @@
         <skip>false</skip>
       </configuration>
      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 
