@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+  <groupId>org.openecomp.demo.vnf</groupId>
+  <artifactId>demo-aggregator</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>demo-aggregator</name>
+  <packaging>pom</packaging>
+  <modelVersion>4.0.0</modelVersion>
+  <prerequisites>
+    <maven>3.1.1</maven>
+  </prerequisites>
+
+  <modules>
+  <module>vnfs/honeycomb_plugin/sample_plugin</module>
+    <module>vnfs/vFW/pg_streams</module>
+    <module>vnfs/vLB/dns_streams</module>
+    <module>vnfs/vLB/DNSClient</module>
+    <module>vnfs/vLB/DNSManager</module>
+    <module>vnfs/VES</module>
+    <module>vnfs/VESreporting_vLB</module>
+    <module>vnfs/VESreporting_vFW</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.1.1</version>
+        <executions>
+          <execution>
+            <id>upload-boot-scripts</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>scripts/deploy.sh</executable>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <distributionManagement>
+    <repository>
+      <id>ecomp-releases</id>
+      <name>Demo Release Repository</name>
+      <url>${nexusproxy}/content/repositories/releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>ecomp-snapshots</id>
+      <name>Demo Snapshot Repository</name>
+      <url>${nexusproxy}/content/repositories/snapshots/</url>
+    </snapshotRepository>
+
+</project>

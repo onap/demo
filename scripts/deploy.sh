@@ -34,3 +34,7 @@ ls | xargs -I{} curl -k --netrc-file '${NETRC}' --upload-file {} $REPO_URL/$VFW_
 cd $PATH_TO_VLB
 ls | xargs -I{} curl -k --netrc-file '${NETRC}' --upload-file {} $REPO_URL/$VLB_GROUP_ID/$VERSION/{}
 ####################################################
+
+######### Clean up ##########
+rm ${NETRC}
+#############################

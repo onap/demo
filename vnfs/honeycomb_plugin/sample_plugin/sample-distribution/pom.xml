@@ -18,14 +18,13 @@
     <groupId>org.openecomp.demo.vnf</groupId>
     <artifactId>demo-aggregator</artifactId>
     <version>1.0.0</version>
-<relativePath>../../../pom.xml</relativePath>
+<relativePath>../../../../pom.xml</relativePath>
   </parent>
 -->
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openecomp.demo.vnf</groupId>
   <artifactId>sample-distribution</artifactId>
-  <version>1.0.0</version>
 
   <properties>
     <main.class>io.fd.honeycomb.vpp.integration.distro.Main</main.class>
