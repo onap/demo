@@ -66,12 +66,12 @@
     <repository>
       <id>ecomp-releases</id>
       <name>Demo Release Repository</name>
-      <url>${nexusproxy}/content/repositories/releases/</url>
+      <url> https://nexus.openecomp.org/content/repositories/releases/</url>
     </repository>
     <snapshotRepository>
       <id>ecomp-snapshots</id>
       <name>Demo Snapshot Repository</name>
-      <url>${nexusproxy}/content/repositories/snapshots/</url>
+      <url> https://nexus.openecomp.org/content/repositories/snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
