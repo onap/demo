@@ -23,7 +23,6 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openecomp.demo.vnf</groupId>
   <artifactId>sample-plugin-api</artifactId>
-  <version>1.0.0</version>
   <packaging>bundle</packaging>
 
   <dependencyManagement>

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ########## Define parameters ##########
-VERSION="1.0.0"
+VERSION="1.0.0-SNAPSHOT"
 
 PATH_TO_BOOT="../boot"
 PATH_TO_HEAT="../heat"
@@ -34,3 +34,7 @@ ls | xargs -I{} curl -k --netrc-file '${NETRC}' --upload-file {} $REPO_URL/$VFW_
 cd $PATH_TO_VLB
 ls | xargs -I{} curl -k --netrc-file '${NETRC}' --upload-file {} $REPO_URL/$VLB_GROUP_ID/$VERSION/{}
 ####################################################
+
+########## Clean up ##########
+rm ${NETRC}
+##############################
