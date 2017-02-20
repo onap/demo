@@ -22,6 +22,11 @@ NETRC=$(mktemp)
 echo "machine nexus.openecomp.org login ${USER} password ${PASS}" > "${NETRC}"
 #######################################
 
+echo "##### TEST #####"
+cat "${NETRC}"
+echo "Username: ${USER}; Password: ${PASS}"
+echo "################"
+
 ##### Upload scripts into Nexus raw repository #####
 cd $PATH_TO_BOOT
 ls | xargs -I{} curl -vk --netrc-file '${NETRC}' --upload-file {} $REPO_URL/$BOOT_GROUP_ID/$VERSION/{}
