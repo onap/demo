@@ -11,6 +11,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.openecomp.demo.vnf</groupId>
   <artifactId>sample-distribution</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
 
   <properties>
     <main.class>io.fd.honeycomb.vpp.integration.distro.Main</main.class>
@@ -81,7 +82,7 @@
       <artifactId>vppnsh-impl</artifactId>
       <version>${vppnsh.version}</version>
     </dependency>
-<dependency>
+    <dependency>
       <groupId>org.openecomp.demo.vnf</groupId>
       <artifactId>sample-plugin-impl</artifactId>
       <version>1.0.0-SNAPSHOT</version>
