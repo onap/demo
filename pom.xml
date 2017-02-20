@@ -14,7 +14,7 @@
   </prerequisites>
 
   <modules>
-    <!--module>vnfs/honeycomb_plugin/sample_plugin</module-->
+    <module>vnfs/honeycomb_plugin/sample_plugin</module>
     <module>vnfs/vFW/pg_streams</module>
     <module>vnfs/vLB/dns_streams</module>
     <module>vnfs/vLB/DNSClient</module>
