@@ -84,7 +84,7 @@
 <dependency>
       <groupId>org.openecomp.demo.vnf</groupId>
       <artifactId>sample-plugin-impl</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
