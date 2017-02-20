@@ -10,10 +10,10 @@ PATH_TO_HEAT="/w/workspace/demo-master-merge-java/heat"
 PATH_TO_VFW="/w/workspace/demo-master-merge-java/vnfs/vFW/scripts"
 PATH_TO_VLB="/w/workspace/demo-master-merge-java/vnfs/vLB/scripts"
 
-BOOT_GROUP_ID="org.openecomp.demo.boot"
-HEAT_GROUP_ID="org.openecomp.demo.heat"
-VFW_GROUP_ID="org.openecomp.demo.vnfs.vfw"
-VLB_GROUP_ID="org.openecomp.demo.vnfs.vlb"
+BOOT_GROUP_ID="org.openecomp.demo/boot"
+HEAT_GROUP_ID="org.openecomp.demo/heat"
+VFW_GROUP_ID="org.openecomp.demo/vnfs/vfw"
+VLB_GROUP_ID="org.openecomp.demo/vnfs/vlb"
 
 REPO_URL="https://nexus.openecomp.org/content/sites/raw"
 USER=$(xpath -q -e "//servers/server[id='ecomp-raw']/username/text()" "$SETTINGS_FILE")
