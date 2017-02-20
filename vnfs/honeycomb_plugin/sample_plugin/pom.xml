@@ -53,18 +53,6 @@
           <skip>true</skip>
         </configuration>
       </plugin>
-        <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <configuration>
-                <skip>true</skip>
-            </configuration>
-            <executions>
-                <execution>
-                    <phase>none</phase>
-                </execution>
-            </executions>
-        </plugin>
     </plugins>
   </build>
 

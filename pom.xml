@@ -14,7 +14,7 @@
   </prerequisites>
 
   <modules>
-    <!--module>vnfs/honeycomb_plugin/sample_plugin</module-->
+    <module>vnfs/honeycomb_plugin/sample_plugin</module>
     <module>vnfs/vFW/pg_streams</module>
     <module>vnfs/vLB/dns_streams</module>
     <module>vnfs/vLB/DNSClient</module>
@@ -29,6 +29,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.1</version>
         <configuration>
           <skip>true</skip>
         </configuration>
@@ -36,6 +37,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-install-plugin</artifactId>
+        <version>2.5.2</version>
         <configuration>
           <skip>true</skip>
         </configuration>

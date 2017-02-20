@@ -24,20 +24,16 @@ echo "machine nexus.openecomp.org login ${USER} password ${PASS}" > "${NETRC}"
 
 ##### Upload scripts into Nexus raw repository #####
 cd $PATH_TO_BOOT
-#ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$BOOT_GROUP_ID/$VERSION/{}
-ls | xargs -I{} curl -k -v -u $USER:$PASS --upload-file {} $REPO_URL/$BOOT_GROUP_ID/$VERSION/{}
+ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$BOOT_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_HEAT
-#ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_GROUP_ID/$VERSION/{}
-ls | xargs -I{} curl -k -v -u $USER:$PASS --upload-file {} $REPO_URL/$HEAT_GROUP_ID/$VERSION/{}
+ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_VFW
-#ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$VFW_GROUP_ID/$VERSION/{}
-ls | xargs -I{} curl -k -v -u $USER:$PASS --upload-file {} $REPO_URL/$VFW_GROUP_ID/$VERSION/{}
+ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$VFW_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_VLB
-#ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$VLB_GROUP_ID/$VERSION/{}
-ls | xargs -I{} curl -k -v -u $USER:$PASS --upload-file {} $REPO_URL/$VLB_GROUP_ID/$VERSION/{}
+ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$VLB_GROUP_ID/$VERSION/{}
 ####################################################
 
 ########## Clean up ##########
