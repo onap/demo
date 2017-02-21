@@ -37,9 +37,10 @@ ifconfig br1 up
 sleep 1
 
 # Start HoneyComb
+VERSION=$(cat /opt/config/artifacts_version.txt)
 echo "" > /var/lib/honeycomb/persist/context/data.json
 echo "" > /var/lib/honeycomb/persist/config/data.json
-/opt/honeycomb/sample-distribution-1.0.0/honeycomb &>/dev/null &disown
+/opt/honeycomb/sample-distribution-$VERSION/honeycomb &>/dev/null &disown
 sleep 1
 
 # Start VES client
