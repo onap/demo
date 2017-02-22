@@ -6,11 +6,10 @@ NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 
 cd /opt/policy
 git pull
-cd /opt
 
-chmod +x policy/config/drools/drools-tweaks.sh
+chmod +x config/drools/drools-tweaks.sh
 IP_ADDRESS=$(ifconfig eth0 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
-echo $IP_ADDRESS > /opt/policy/config/pe/ip_addr.txt
+echo $IP_ADDRESS > config/pe/ip_addr.txt
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 /opt/docker/docker-compose up -d
