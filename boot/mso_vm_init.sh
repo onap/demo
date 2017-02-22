@@ -6,7 +6,7 @@ NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 OPENSTACK_USERNAME=$(cat /opt/config/openstack_username.txt)
 OPENSTACK_APIKEY=$(cat /opt/config/api_key.txt)
 DMAAP_TOPIC=$(cat /opt/config/dmaap_topic.txt)
-export MSO_DOCKER_IMAGE_VERSION=1.0.0
+export MSO_DOCKER_IMAGE_VERSION=latest
 
 # Update the MSO configuration file.
 read -d '' MSO_CONFIG_UPDATES <<-EOF
@@ -45,6 +45,7 @@ export MSO_CONFIG_UPDATES
 
 # Deploy the environment
 cd /opt/test_lab
+git pull
 chmod +x deploy.sh
 #This script takes in input 2 nexus repos (the first one for the MSO image, the second one for mariadb)
-./deploy.sh $NEXUS_DOCKER_REPO $NEXUS_USERNAME $NEXUS_PASSWD ecomp-nexus:51211 release sfWU3DFVdBr7GVxB85mTYgAW
+./deploy.sh $NEXUS_DOCKER_REPO $NEXUS_USERNAME $NEXUS_PASSWD $NEXUS_DOCKER_REPO $NEXUS_USERNAME $NEXUS_PASSWD

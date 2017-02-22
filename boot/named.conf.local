@@ -6,7 +6,7 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
-zone "openecomp.org" {
+zone "simpledemo.openecomp.org" {
     type master;
-    file "/etc/bind/zones/db.openecomp.org"; # zone file path
+    file "/etc/bind/zones/db.simpledemo.openecomp.org"; # zone file path
 };

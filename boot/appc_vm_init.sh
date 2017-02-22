@@ -6,8 +6,10 @@ NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DMAAP_TOPIC=$(cat /opt/config/dmaap_topic.txt)
 
 cd /opt/appc
+git pull
+cd /opt/appc/docker-compose
 
-sed -i "s/DMAAP_TOPIC_ENV=.*/DMAAP_TOPIC_ENV="$DMAAP_TOPIC"/g" /opt/appc/docker-compose.yml
+sed -i "s/DMAAP_TOPIC_ENV=.*/DMAAP_TOPIC_ENV="$DMAAP_TOPIC"/g" docker-compose.yml
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 /opt/docker/docker-compose pull
