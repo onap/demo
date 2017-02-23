@@ -9,14 +9,14 @@ GITLAB_USERNAME=$(cat /opt/config/gitlab_username.txt)
 GITLAB_PASSWD=$(cat /opt/config/gitlab_password.txt)
 
 # Pull HBase container from a public docker hub
-docker pull aaidocker/aai-hbase-1.2.3
+docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
+docker pull $NEXUS_USERNAME/aaidocker/aai-hbase-1.2.3
 docker rm -f hbase-1.2.3
 docker run -d --net=host --name="hbase-1.2.3" aaidocker/aai-hbase-1.2.3
 
 # Wait 3 minutes before instantiating the A&AI container
 sleep 180
 
-docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/openecomp/ajsc-aai:latest
 docker rm -f aai-service
 docker run --name=aai-service --net=host -v /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt -it -e GITLAB_CERTNAME=$GITLAB_CERTNAME -e GITLAB_USERNAME=$GITLAB_USERNAME -e GITLAB_PASSWORD=$GITLAB_PASSWD -e AAI_REPO_PATH=r/aai -e AAI_CHEF_ENV=simpledemo -d -e AAI_CHEF_LOC=/var/chef/aai-data/environments -e docker_gitbranch=develop $NEXUS_DOCKER_REPO/openecomp/ajsc-aai:latest
