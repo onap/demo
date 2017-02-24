@@ -12,6 +12,8 @@ cd /opt/testsuite/properties
 git pull
 cp integration_* /opt/eteshare/config
 cp vm_config2robot.sh /opt/eteshare/config
+cp ete.sh /opt
+cp demo.sh /opt
 
 /bin/bash /opt/eteshare/config/vm_config2robot.sh
 
