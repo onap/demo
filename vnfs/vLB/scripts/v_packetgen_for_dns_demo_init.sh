@@ -94,5 +94,5 @@ sleep 20
 # Enable traffic flows
 cd /opt
 chmod +x run_streams_dns.sh
-#./run_streams_dns.sh &>/dev/null &disown
+./run_streams_dns.sh &>/dev/null &disown
 

@@ -1,0 +1,139 @@
+heat_template_version: 2013-05-23
+description: Heat template to deploy vFirewall demo app for OpenECOMP
+
+parameters:
+  public_net_id:
+    type: string
+    label: Public network name or ID
+    description: Public network that enables remote connection to VNF
+  vpg_image_name:
+    type: string
+    label: Image name or ID
+    description: Image to be used for compute instance
+  vpg_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used
+  vpg_name_0:
+    type: string
+    label: vPacketGenerator name
+    description: Name of the vPacketGenerator
+  key_name:
+    type: string
+    label: Key pair name
+    description: Public/Private key pair name
+  pub_key:
+    type: string
+    label: Public key
+    description: Public key to be installed on the compute instance
+  repo_url_blob:
+    type: string
+    label: Repository URL
+    description: URL of the repository that hosts the demo packages
+  repo_url_artifacts:
+    type: string
+    label: Repository URL
+    description: URL of the repository that hosts the demo packages
+  vlb_ipaddr:
+    type: string
+    label: Public IP of the vLoadBalancer to which we want to send traffic
+    description: Public IP of the vLoadBalancer to which we want to send traffic
+  demo_artifacts_version:
+    type: string
+    label: Artifacts version used in demo vnfs
+    description: Artifacts (jar, tar.gz) version used in demo vnfs
+
+
+resources:
+
+  random-str:
+    type: OS::Heat::RandomString
+    properties:
+      length: 4
+
+  my_keypair:
+    type: OS::Nova::KeyPair
+    properties:
+      name:
+        str_replace:
+          template: base_rand
+          params:
+            base: { get_param: key_name }
+            rand: { get_resource: random-str }  
+      public_key: { get_param: pub_key }
+      save_private_key: false
+
+ 
+  vpg_0:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: vpg_image_name }
+      flavor: { get_param: vpg_flavor_name }
+      name: { get_param: vpg_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - network: { get_param: public_net_id }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __repo_url_blob__ : { get_param: repo_url_blob }
+            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
+            __vlb_ipaddr__: { get_param: vlb_ipaddr }
+            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
+          template: |
+            #!/bin/bash
+
+            REPO_URL_BLOB=__repo_url_blob__
+            REPO_URL_ARTIFACTS=__repo_url_artifacts__
+            VLB_IPADDR=__vlb_ipaddr__
+            DEMO_ARTIFACTS_VERSION=__demo_artifacts_version__
+
+            # Download required dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y make wget openjdk-8-jdk gcc libcurl4-openssl-dev python-pip bridge-utils apt-transport-https ca-certificates
+            apt-get install -y maven
+            pip install jsonschema
+
+            # Download vFirewall demo code for packet generator
+            mkdir /opt/config
+            mkdir /opt/honeycomb
+            cd /opt
+            wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$DEMO_ARTIFACTS_VERSION/v_packetgen_for_dns_demo_init.sh
+            wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$DEMO_ARTIFACTS_VERSION/vpacketgenfordnsdemo.sh
+            wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$DEMO_ARTIFACTS_VERSION/run_streams_dns.sh
+            wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$DEMO_ARTIFACTS_VERSION/vdnspacketgen_change_streams_ports.sh   
+ 
+            mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -DremoteRepositories=$REPO_URL_ARTIFACTS -Dartifact=org.openecomp.demo.vnf:sample-distribution:$DEMO_ARTIFACTS_VERSION:tar.gz:hc -Dtransitive=false -Ddest=.
+            mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -DremoteRepositories=$REPO_URL_ARTIFACTS -Dartifact=org.openecomp.demo.vnf.vlb:vlb_dns_streams:$DEMO_ARTIFACTS_VERSION:tar.gz:demo -Dtransitive=false -Ddest=.
+
+            
+            tar -zxvf vpp.tar.gz
+            tar -zxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+            mv sample-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
+            sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/sample-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+            tar -zxvf vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+            mv vlb_dns_streams-$DEMO_ARTIFACTS_VERSION dns_streams
+            rm *.tar.gz
+            chmod +x v_packetgen_for_dns_demo_init.sh
+            chmod +x vpacketgenfordnsdemo.sh
+            chmod +x run_streams_dns.sh
+            chmod +x vdnspacketgen_change_streams_ports.sh
+            echo $VLB_IPADDR > config/vlb_ipaddr.txt
+            echo $DEMO_ARTIFACTS_VERSION > config/artifacts_version.txt
+
+            # Install VPP
+            export UBUNTU="trusty"
+            export RELEASE=".stable.1609"
+            rm /etc/apt/sources.list.d/99fd.io.list
+            echo "deb [trusted=yes] https://nexus.fd.io/content/repositories/fd.io$RELEASE.ubuntu.$UBUNTU.main/ ./" | sudo tee -a /etc/apt/sources.list.d/99fd.io.list
+            apt-get update
+            apt-get install -y vpp vpp-dpdk-dkms vpp-lib vpp-dbg vpp-plugins vpp-dev
+            sleep 1
+
+            # Run instantiation script
+            cd /opt
+            mv vpacketgenfordnsdemo.sh /etc/init.d
+            update-rc.d vpacketgenfordnsdemo.sh defaults
+            ./v_packetgen_for_dns_demo_init.sh
