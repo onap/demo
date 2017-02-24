@@ -15,6 +15,9 @@ cp vm_config2robot.sh /opt/eteshare/config
 cp ete.sh /opt
 cp demo.sh /opt
 
+chmod +x /opt/ete.sh
+chmod +x /opt/demo.sh
+
 /bin/bash /opt/eteshare/config/vm_config2robot.sh
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
