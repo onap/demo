@@ -1,7 +1,7 @@
 # partition table of /dev/xvdb
 unit: sectors
 
-/dev/vdb1 : start=     2048, size=209713152, Id=83
-/dev/vdb2 : start=        0, size=        0, Id= 0
-/dev/vdb3 : start=        0, size=        0, Id= 0
-/dev/vdb4 : start=        0, size=        0, Id= 0
+/dev/xvdb1 : start=     2048, size=209713152, Id=83
+/dev/xvdb2 : start=        0, size=        0, Id= 0
+/dev/xvdb3 : start=        0, size=        0, Id= 0
+/dev/xvdb4 : start=        0, size=        0, Id= 0
