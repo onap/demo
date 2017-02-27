@@ -3,6 +3,7 @@
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
+NEXUS_DOCKER_PORT=$(echo $NEXUS_DOCKER_REPO | cut -d':' -f2)
 ENV_NAME=$(cat /opt/config/env_name.txt)
 RELEASE=latest
 
@@ -23,4 +24,4 @@ sed -i "s/\"ueb_url_list\":.*/\"ueb_url_list\": \"10.0.11.1,10.0.11.1\",/g" /dat
 sed -i "s/\"fqdn\":.*/\"fqdn\": [\"10.0.11.1\", \"10.0.11.1\"]/g" /data/environments/$ENV_NAME.json
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
-bash /data/scripts/docker_run.sh -e $ENV_NAME -r $RELEASE -p 10001
+bash /data/scripts/docker_run.sh -e $ENV_NAME -r $RELEASE -p $NEXUS_DOCKER_PORT
