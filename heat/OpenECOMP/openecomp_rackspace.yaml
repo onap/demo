@@ -777,7 +777,7 @@ resources:
             chmod +x /opt/docker/docker-compose
 
             # Create partition and mount the external volume
-            curl --user '__nexus_username__:__nexus_password__' __nexus_repo__/org.openecomp.boot/asdc_ext_volume_partitions.txt -o /opt/asdc_ext_volume_partitions.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_ext_volume_partitions.txt -o /opt/asdc_ext_volume_partitions.txt
             sfdisk /dev/xvdb < /opt/asdc_ext_volume_partitions.txt
             mkfs -t ext4 /dev/xvdb1
             mkdir -p /data
