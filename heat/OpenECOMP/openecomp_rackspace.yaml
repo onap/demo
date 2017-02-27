@@ -799,9 +799,9 @@ resources:
             mkdir -p /data/scripts
             mkdir -p /data/logs/BE
             mkdir -p /data/logs/FE
-            chmod 775 /data
-            chmod 775 /data/logs/BE
-            chmod 775 /data/logs/FE
+            chmod 777 /data
+            chmod 777 /data/logs/BE
+            chmod 777 /data/logs/FE
 
             git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/sdc.git
 
