@@ -178,11 +178,6 @@ resources:
         str_replace:
           params:
             __nexus_repo__: { get_param: nexus_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
           template: |
             #!/bin/bash
@@ -288,6 +283,7 @@ resources:
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "gerrit.openecomp.org" > /opt/config/gitlab_certname.txt
+            
             # Execute docker instructions
             cd /opt
             ./aai_vm_init.sh
@@ -530,6 +526,7 @@ resources:
             echo "__openstack_password__" > /opt/config/openstack_password.txt
             echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
             echo "__openstack_region__" > /opt/config/region.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
 
             # Execute RobotETE-specific instructions: create share folder to run as a docker volume
             mkdir -p /opt/eteshare/logs
