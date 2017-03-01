@@ -743,6 +743,7 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
           template: |
             #!/bin/bash
+            
             # DNS/GW IP address configuration
             mkdir /opt/config
             echo "10.0.0.1" > /opt/config/dns_gw_ip.txt
@@ -853,6 +854,7 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
           template: |
             #!/bin/bash
+            
             # DNS/GW IP address configuration
             mkdir /opt/config
             echo "10.0.0.1" > /opt/config/dns_gw_ip.txt
@@ -942,6 +944,7 @@ resources:
             __openstack_region__: { get_param: openstack_region }
           template: |
             #!/bin/bash
+            
             # DNS/GW IP address configuration
             echo "nameserver 10.0.0.1" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
@@ -1055,6 +1058,7 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
           template: |
             #!/bin/bash
+            
             # DNS/GW IP address configuration
             mkdir /opt/config
             echo "10.0.0.1" > /opt/config/dns_gw_ip.txt
