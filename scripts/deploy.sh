@@ -31,13 +31,13 @@ cd $PATH_TO_BOOT
 ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$BOOT_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_HEAT_MASTER
-ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_GROUP_ID/$VERSION/{}
+ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_MASTER_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_HEAT_VFW
-ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_GROUP_ID/$VERSION/{}
+ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_VFW_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_HEAT_VLB
-ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_GROUP_ID/$VERSION/{}
+ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_VLB_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_VFW
 ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$VFW_GROUP_ID/$VERSION/{}
