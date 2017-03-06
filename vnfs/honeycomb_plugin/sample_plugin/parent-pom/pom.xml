@@ -230,16 +230,4 @@ done
         </pluginManagement>
     </build>
 
-<!--    <distributionManagement>
-        <repository>
-            <id>fdio-release</id>
-            <url>${nexusproxy}/repositories/fd.io.release/</url>
-        </repository>
-        <snapshotRepository>
-            <id>fdio-snapshot</id>
-            <url>${nexusproxy}/repositories/fd.io.snapshot/</url>
-        </snapshotRepository>
-    </distributionManagement>
--->
-
 </project>
