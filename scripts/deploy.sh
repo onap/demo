@@ -6,6 +6,7 @@ set -x
 VERSION="1.0.0-SNAPSHOT"
 
 PATH_TO_BOOT="/w/workspace/demo-master-merge-java/boot"
+PATH_TO_HEAT="/w/workspace/demo-master-merge-java/heat"
 PATH_TO_HEAT_MASTER="/w/workspace/demo-master-merge-java/heat/OpenECOMP"
 PATH_TO_HEAT_VFW="/w/workspace/demo-master-merge-java/heat/vFW"
 PATH_TO_HEAT_VLB="/w/workspace/demo-master-merge-java/heat/vLB"
@@ -13,6 +14,7 @@ PATH_TO_VFW="/w/workspace/demo-master-merge-java/vnfs/vFW/scripts"
 PATH_TO_VLB="/w/workspace/demo-master-merge-java/vnfs/vLB/scripts"
 
 BOOT_GROUP_ID="org.openecomp.demo/boot"
+HEAT_GROUP_ID="org.openecomp.demo/heat"
 HEAT_MASTER_GROUP_ID="org.openecomp.demo/heat/OpenECOMP"
 HEAT_VFW_GROUP_ID="org.openecomp.demo/heat/vFW"
 HEAT_VLB_GROUP_ID="org.openecomp.demo/heat/vLB"
@@ -29,6 +31,10 @@ echo "machine nexus.openecomp.org login ${USER} password ${PASS}" > "${NETRC}"
 ##### Upload scripts into Nexus raw repository #####
 cd $PATH_TO_BOOT
 ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$BOOT_GROUP_ID/$VERSION/{}
+
+cd $PATH_TO_HEAT
+curl -vk --netrc-file "${NETRC}" --upload-file README.md $REPO_URL/$HEAT_GROUP_ID/
+curl -vk --netrc-file "${NETRC}" --upload-file LICENSE.TXT $REPO_URL/$HEAT_GROUP_ID/
 
 cd $PATH_TO_HEAT_MASTER
 ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_MASTER_GROUP_ID/$VERSION/{}
