@@ -61,6 +61,18 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.7</version>
+        <extensions>true</extensions>
+        <configuration>
+          <nexusUrl>${nexusproxy}</nexusUrl>
+          <stagingProfileId>176c31dfe190a</stagingProfileId>
+          <serverId>ecomp-staging</serverId>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 

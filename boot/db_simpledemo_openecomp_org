@@ -25,11 +25,11 @@ vm1.appc.simpledemo.openecomp.org.      IN      A       10.0.2.1
 c1.vm1.appc.simpledemo.openecomp.org.   IN      A       10.0.2.1
 c2.vm1.appc.simpledemo.openecomp.org.   IN      A       10.0.2.1
 
-vm1.asdc.simpledemo.openecomp.org.      IN      A       10.0.3.1
-c1.vm1.asdc.simpledemo.openecomp.org.   IN      A       10.0.3.1
-c2.vm1.asdc.simpledemo.openecomp.org.   IN      A       10.0.3.1
-c3.vm1.asdc.simpledemo.openecomp.org.   IN      A       10.0.3.1
-c4.vm1.asdc.simpledemo.openecomp.org.   IN      A       10.0.3.1
+vm1.sdc.simpledemo.openecomp.org.      IN      A       10.0.3.1
+c1.vm1.sdc.simpledemo.openecomp.org.   IN      A       10.0.3.1
+c2.vm1.sdc.simpledemo.openecomp.org.   IN      A       10.0.3.1
+c3.vm1.sdc.simpledemo.openecomp.org.   IN      A       10.0.3.1
+c4.vm1.sdc.simpledemo.openecomp.org.   IN      A       10.0.3.1
 
 vm1.dcae.simpledemo.openecomp.org.           IN      A       10.0.4.1
 c1.vm1.dcae.simpledemo.openecomp.org.        IN      A       10.0.4.1
@@ -78,7 +78,7 @@ aai.hbase.simpledemo.openecomp.org.	IN 	CNAME	vm1.aai.simpledemo.openecomp.org.
 appc.api.simpledemo.openecomp.org.	IN	CNAME	vm1.appc.simpledemo.openecomp.org.
 
 ;ASDC
-asdc.api.simpledemo.openecomp.org.	IN	CNAME	vm1.asdc.simpledemo.openecomp.org.	
+sdc.api.simpledemo.openecomp.org.	IN	CNAME	vm1.sdc.simpledemo.openecomp.org.	
 
 ;DCAE
 dcae.api.simpledemo.openecomp.org.	IN	CNAME	vm1.dcae.simpledemo.openecomp.org.
