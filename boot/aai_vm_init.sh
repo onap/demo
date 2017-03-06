@@ -10,7 +10,7 @@ GITLAB_PASSWD=$(cat /opt/config/gitlab_password.txt)
 
 # Pull HBase container from a public docker hub
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
-docker pull $NEXUS_USERNAME/aaidocker/aai-hbase-1.2.3
+docker pull $NEXUS_DOCKER_REPO/aaidocker/aai-hbase-1.2.3
 docker rm -f hbase-1.2.3
 docker run -d --net=host --name="hbase-1.2.3" aaidocker/aai-hbase-1.2.3
 
