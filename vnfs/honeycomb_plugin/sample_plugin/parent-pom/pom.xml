@@ -26,7 +26,7 @@
 </parent>
 
     <properties>
-        <!--nexusproxy>http://nexus.fd.io/content</nexusproxy-->
+        <nexusproxy>http://nexus.fd.io/content</nexusproxy>
         <start.script.template>
 #!/bin/sh -
 STATUS=100
@@ -58,10 +58,12 @@ done
         <osgi.core.version>5.0.0</osgi.core.version>
     </properties>
 
+    <!--groupId>io.fd.honeycomb.common</groupId-->
+    <!--artifactId>minimal-distribution-parent</artifactId-->
+    <!--version>1.16.9</version-->
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.fd.honeycomb.common</groupId>
-    <artifactId>minimal-distribution-parent</artifactId>
-    <version>1.16.9</version>
+    <artifactId>hc-openecomp</artifactId>
     <packaging>pom</packaging>
 
     <!-- Generate executable shell script -->

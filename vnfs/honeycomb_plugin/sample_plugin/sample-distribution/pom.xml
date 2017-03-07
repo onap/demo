@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-<parent>
+<!--parent>
 <groupId>io.fd.honeycomb.common</groupId>
     <artifactId>minimal-distribution-parent</artifactId>
     <version>1.16.9</version>
+</parent-->
+
+<parent>
+    <groupId>org.openecomp.demo.vnf</groupId>
+    <artifactId>hc-openecomp</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../parent-pom/pom.xml</relativePath>
 </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -16,7 +23,6 @@
     <lisp.version>1.16.9</lisp.version>
     <vpp.common.min.distro.version>1.16.9</vpp.common.min.distro.version>
     <vppnsh.version>1.16.9</vppnsh.version>
-    <honeycomb.infra.version>1.16.9</honeycomb.infra.version>
   </properties>
 
   <build>
@@ -81,23 +87,10 @@
       <version>${vppnsh.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.fd.honeycomb.common</groupId>
+      <groupId>org.openecomp.demo.vnf</groupId>
       <artifactId>sample-plugin-impl</artifactId>
-      <version>${honeycomb.infra.version}</version>
+      <version>latest</version>
     </dependency>
   </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>ecomp-releases</id>
-            <name>Demo Release Repository</name>
-            <url> https://nexus.openecomp.org/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ecomp-snapshots</id>
-            <name>Demo Snapshot Repository</name>
-            <url> https://nexus.openecomp.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 </project>
