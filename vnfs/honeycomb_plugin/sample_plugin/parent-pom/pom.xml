@@ -26,7 +26,7 @@
 </parent>
 
     <properties>
-        <nexusproxy>http://nexus.fd.io/content</nexusproxy>
+        <!--nexusproxy>http://nexus.fd.io/content</nexusproxy-->
         <start.script.template>
 #!/bin/sh -
 STATUS=100
