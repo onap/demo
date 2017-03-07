@@ -18,11 +18,12 @@
   <artifactId>sample-distribution</artifactId>
 
   <properties>
-    <main.class>io.fd.honeycomb.vpp.integration.distro.Main</main.class>
-    <v3po.version>1.16.9</v3po.version>
-    <lisp.version>1.16.9</lisp.version>
-    <vpp.common.min.distro.version>1.16.9</vpp.common.min.distro.version>
-    <vppnsh.version>1.16.9</vppnsh.version>
+      <main.class>io.fd.honeycomb.vpp.integration.distro.Main</main.class>
+      <v3po.version>1.16.9</v3po.version>
+      <lisp.version>1.16.9</lisp.version>
+      <vpp.common.min.distro.version>1.16.9</vpp.common.min.distro.version>
+      <vppnsh.version>1.16.9</vppnsh.version>
+      <honeycomb.infra.version>1.16.9</honeycomb.infra.version>
   </properties>
 
   <build>
@@ -87,9 +88,9 @@
       <version>${vppnsh.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openecomp.demo.vnf</groupId>
+      <groupId>io.fd.honeycomb.common</groupId>
       <artifactId>sample-plugin-impl</artifactId>
-      <version>latest</version>
+      <version>${honeycomb.infra.version}</version>
     </dependency>
   </dependencies>
 
