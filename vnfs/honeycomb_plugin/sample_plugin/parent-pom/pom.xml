@@ -65,6 +65,12 @@ done
     <packaging>pom</packaging>
 
     <!-- Generate executable shell script -->
+  <modules>
+    <module>../sample-plugin-api</module>
+    <module>../sample-plugin-impl</module>
+    <module>../sample-distribution</module>
+  </modules>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -239,7 +245,6 @@ done
                         <skip>true</skip>
                     </configuration>
                 </plugin>
-
             </plugins>
         </pluginManagement>
     </build>

@@ -17,13 +17,10 @@
     <groupId>io.fd.honeycomb.common</groupId>
     <artifactId>api-parent</artifactId>
     <version>1.16.9</version>
-    <relativePath>../../common/api-parent</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.openecomp.demo.vnf</groupId>
   <artifactId>sample-plugin-api</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <dependencyManagement>

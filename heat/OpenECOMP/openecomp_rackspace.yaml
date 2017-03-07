@@ -790,6 +790,7 @@ resources:
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__env_name__" > /opt/config/env_name.txt
+            echo "10.0.11.1" > /opt/config/mr_ip_addr.txt
 
             # Run SDC-specific instructions
             cd /opt
