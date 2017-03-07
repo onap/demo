@@ -16,6 +16,7 @@
     <lisp.version>1.16.9</lisp.version>
     <vpp.common.min.distro.version>1.16.9</vpp.common.min.distro.version>
     <vppnsh.version>1.16.9</vppnsh.version>
+    <honeycomb.infra.version>1.16.9</honeycomb.infra.version>
   </properties>
 
   <build>
@@ -80,9 +81,9 @@
       <version>${vppnsh.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.openecomp.demo.vnf</groupId>
+      <groupId>io.fd.honeycomb.common</groupId>
       <artifactId>sample-plugin-impl</artifactId>
-      <version>latest</version>
+      <version>${honeycomb.infra.version}</version>
     </dependency>
   </dependencies>
 

@@ -29,9 +29,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.openecomp.demo.vnf</groupId>
+            <groupId>io.fd.honeycomb.common</groupId>
             <artifactId>sample-plugin-api</artifactId>
-            <version>latest</version>
+            <version>${honeycomb.infra.version}</version>
         </dependency>
 
         <!-- Honeycomb infrastructure-->
