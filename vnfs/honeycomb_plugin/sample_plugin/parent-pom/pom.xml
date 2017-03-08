@@ -14,6 +14,11 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+
+<!--
+    Modifications copyright © 2017 AT&T Intellectual Property
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
@@ -57,10 +62,6 @@ done
         <!-- Used by mdsal as provided/runtime dependency-->
         <osgi.core.version>5.0.0</osgi.core.version>
     </properties>
-
-    <!--groupId>io.fd.honeycomb.common</groupId-->
-    <!--artifactId>minimal-distribution-parent</artifactId-->
-    <!--version>1.16.9</version-->
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>hc-openecomp</artifactId>
