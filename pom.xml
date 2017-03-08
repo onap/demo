@@ -89,7 +89,7 @@
         <version>1.6.7</version>
         <extensions>true</extensions>
         <configuration>
-          <nexusUrl>https://nexus.openecomp.org/content/repositories/staging/</nexusUrl>
+          <nexusUrl>https://nexus.openecomp.org/</nexusUrl>
           <stagingProfileId>176c31dfe190a</stagingProfileId>
           <serverId>ecomp-staging</serverId>
         </configuration>
