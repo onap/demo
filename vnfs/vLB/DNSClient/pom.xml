@@ -33,7 +33,7 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.openecomp.demo.vnf.lb</groupId>
+  <groupId>org.openecomp.demo.vnf.vlb</groupId>
   <artifactId>dns-client</artifactId>
   <name>DNS Client</name>
   <packaging>jar</packaging>
