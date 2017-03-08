@@ -10,7 +10,7 @@
 <parent>
     <groupId>org.openecomp.demo.vnf</groupId>
     <artifactId>hc-openecomp</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <relativePath>../parent-pom/pom.xml</relativePath>
 </parent>
 

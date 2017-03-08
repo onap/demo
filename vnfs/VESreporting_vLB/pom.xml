@@ -28,7 +28,7 @@
   <parent>
     <groupId>org.openecomp.demo.vnf</groupId>
     <artifactId>demo-aggregator</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
