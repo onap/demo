@@ -29,7 +29,7 @@ cd portal/deliveries
 ./dbstart.sh
 ./new_start.sh
 
-sleep 60
+sleep 180
 
 if [ ! -e /opt/config/boot.txt ]
 then
