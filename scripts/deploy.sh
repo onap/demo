@@ -3,7 +3,7 @@
 set -x
 
 ########## Define parameters ##########
-VERSION="1.0.0"
+VERSION="1.1.0-SNAPSHOT"
 
 PATH_TO_BOOT="/w/workspace/demo-master-merge-java/boot"
 PATH_TO_HEAT="/w/workspace/demo-master-merge-java/heat"
