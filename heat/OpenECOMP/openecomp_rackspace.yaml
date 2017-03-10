@@ -983,7 +983,7 @@ resources:
             cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
             ZONE: __dcae_zone__
             STATE: __dcae_state__
-            DCAE-VERSION: 0.1.0-SNAPSHOT
+            DCAE-VERSION: __artifacts_version__
             HORIZON-URL: https://mycloud.rackspace.com/cloud/__tenant_id__
             KEYSTONE-URL: https://identity.api.rackspacecloud.com/v2.0
             OPENSTACK-TENANT-ID: __tenant_id__
