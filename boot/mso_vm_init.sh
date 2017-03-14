@@ -8,6 +8,13 @@ OPENSTACK_APIKEY=$(cat /opt/config/api_key.txt)
 DMAAP_TOPIC=$(cat /opt/config/dmaap_topic.txt)
 export MSO_DOCKER_IMAGE_VERSION=latest
 
+if [ -e /opt/config/keystone.txt ]
+then
+  KEYSTONE_URL=$(cat /opt/config/keystone.txt)
+else
+  KEYSTONE_URL="https://identity.api.rackspacecloud.com/v2.0"
+fi
+
 # Update the MSO configuration file.
 read -d '' MSO_CONFIG_UPDATES <<-EOF
 {
@@ -25,7 +32,7 @@ read -d '' MSO_CONFIG_UPDATES <<-EOF
 	    "identity_services": 
 	        [
 	            {"dcp_clli": "RAX_KEYSTONE", 
-	             "identity_url": "https://identity.api.rackspacecloud.com/v2.0", 
+	             "identity_url": "$KEYSTONE_URL",
 	             "mso_id": "$OPENSTACK_USERNAME", 
 	             "mso_pass": "$OPENSTACK_APIKEY", 
 	             "admin_tenant": "service", 
