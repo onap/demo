@@ -491,6 +491,7 @@ resources:
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
             apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
 
             # Download scripts from Nexus
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_vm_init.sh -o /opt/robot_vm_init.sh
