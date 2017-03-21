@@ -6,7 +6,7 @@ NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 OPENSTACK_USERNAME=$(cat /opt/config/openstack_username.txt)
 OPENSTACK_APIKEY=$(cat /opt/config/api_key.txt)
 DMAAP_TOPIC=$(cat /opt/config/dmaap_topic.txt)
-export MSO_DOCKER_IMAGE_VERSION=latest
+export MSO_DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 if [ -e /opt/config/keystone.txt ]
 then
