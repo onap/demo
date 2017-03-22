@@ -3,6 +3,7 @@
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
+DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 cd /opt/portal
 git pull
@@ -14,8 +15,9 @@ chmod +x portal/deliveries/dbstart.sh
 unzip -o portal/deliveries/etc.zip -d /PROJECT/OpenSource/UbuntuEP/
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
-docker pull $NEXUS_DOCKER_REPO/openecomp/portaldb:latest
-docker pull $NEXUS_DOCKER_REPO/openecomp/portalapps:latest
+
+docker pull $NEXUS_DOCKER_REPO/openecomp/portaldb:$DOCKER_IMAGE_VERSION
+docker pull $NEXUS_DOCKER_REPO/openecomp/portalapps:$DOCKER_IMAGE_VERSION
 
 docker create --name data_vol_portal -v /var/lib/mysql mariadb
 

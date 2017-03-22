@@ -6,7 +6,7 @@ NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 NEXUS_DOCKER_PORT=$(echo $NEXUS_DOCKER_REPO | cut -d':' -f2)
 ENV_NAME=$(cat /opt/config/env_name.txt)
 MR_IP_ADDR=$(cat /opt/config/mr_ip_addr.txt)
-RELEASE=latest
+RELEASE=$(cat /opt/config/docker_version.txt)
 
 cd /opt/sdc
 git pull
