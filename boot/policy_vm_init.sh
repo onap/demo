@@ -3,6 +3,7 @@
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
+DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 export DOCKER_REPOSITORY=${NEXUS_DOCKER_REPO}
 
@@ -21,4 +22,17 @@ fi
 echo $IP_ADDRESS > config/pe/ip_addr.txt
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
+
+docker pull $NEXUS_DOCKER_REPO/openecomp/policy/policy-db:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/openecomp/policy/policy-db:$DOCKER_IMAGE_VERSION latest
+
+docker pull $NEXUS_DOCKER_REPO/openecomp/policy/policy-pe:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/openecomp/policy/policy-pe:$DOCKER_IMAGE_VERSION latest
+
+docker pull $NEXUS_DOCKER_REPO/openecomp/policy/policy-drools:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/openecomp/policy/policy-drools:$DOCKER_IMAGE_VERSION latest
+
+docker pull $NEXUS_DOCKER_REPO/openecomp/policy/policy-nexus:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/openecomp/policy/policy-nexus:$DOCKER_IMAGE_VERSION latest
+
 /opt/docker/docker-compose up -d

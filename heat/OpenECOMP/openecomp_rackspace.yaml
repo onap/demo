@@ -59,6 +59,11 @@ parameters:
     type: string
     label: Artifacts Version
     description: Artifacts version of OpenECOMP components
+    
+  docker_version:
+    type: string
+    label: Docker Version
+    description: Docker version of OpenECOMP docker images
 
 
   # Parameters for DCAE instantiation
@@ -240,6 +245,7 @@ resources:
             __gitlab_password__: { get_param: gitlab_password }
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
 
@@ -283,6 +289,7 @@ resources:
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "gerrit.openecomp.org" > /opt/config/gitlab_certname.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
             
             # Execute docker instructions
             cd /opt
@@ -321,6 +328,7 @@ resources:
             __openstack_api_key__: { get_param: openstack_api_key }
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
 
@@ -363,7 +371,7 @@ resources:
             echo "__openstack_username__" > /opt/config/openstack_username.txt
             echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
-           
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run docker-compose to spin up containers
             cd /opt
@@ -480,6 +488,7 @@ resources:
             __openstack_password__: { get_param: openstack_password }
             __artifacts_version__: { get_param: artifacts_version }
             __openstack_region__: { get_param: openstack_region }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
 
@@ -507,7 +516,6 @@ resources:
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
             apt-get install -y docker-engine
-            #sed -i 's|^ExecStart=/usr/bin/dockerd \s*-H \s*fd://\s*$|ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375|' /lib/systemd/system/docker.service
             service docker start
  
             mkdir /opt/docker
@@ -528,6 +536,7 @@ resources:
             echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
             echo "__openstack_region__" > /opt/config/region.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Execute RobotETE-specific instructions: create share folder to run as a docker volume
             mkdir -p /opt/eteshare/logs
@@ -567,6 +576,7 @@ resources:
             __gitlab_username__: { get_param: gitlab_username }
             __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
 
@@ -606,6 +616,7 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run script to spin up containers
             cd /opt
@@ -641,6 +652,7 @@ resources:
             __gitlab_username__: { get_param: gitlab_username }
             __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
 
@@ -682,6 +694,7 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run docker-compose to spin up containers
             cd /opt
@@ -742,6 +755,7 @@ resources:
             __gitlab_password__: { get_param: gitlab_password }
             __env_name__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
             
@@ -792,6 +806,7 @@ resources:
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__env_name__" > /opt/config/env_name.txt
             echo "10.0.11.1" > /opt/config/mr_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run SDC-specific instructions
             cd /opt
@@ -854,6 +869,7 @@ resources:
             __gitlab_username__: { get_param: gitlab_username }
             __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
             
@@ -894,6 +910,7 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run Portal-specific instructions
             mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
@@ -944,6 +961,7 @@ resources:
             __pub_key__: { get_param: pub_key }
             __nexus_repo_root__: { get_param: nexus_repo_root }
             __openstack_region__: { get_param: openstack_region }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
             
@@ -984,7 +1002,7 @@ resources:
             cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
             ZONE: __dcae_zone__
             STATE: __dcae_state__
-            DCAE-VERSION: __artifacts_version__
+            DCAE-VERSION: 1.0.0
             HORIZON-URL: https://mycloud.rackspace.com/cloud/__tenant_id__
             KEYSTONE-URL: https://identity.api.rackspacecloud.com/v2.0
             OPENSTACK-TENANT-ID: __tenant_id__
@@ -1015,6 +1033,7 @@ resources:
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             cd /opt
             ./dcae_vm_init.sh
@@ -1058,6 +1077,7 @@ resources:
             __gitlab_username__: { get_param: gitlab_username }
             __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
             
@@ -1098,6 +1118,7 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run docker-compose to spin up containers
             cd /opt
@@ -1135,6 +1156,7 @@ resources:
             __gitlab_password__: { get_param: gitlab_password }
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
           template: |
             #!/bin/bash
 
@@ -1177,6 +1199,7 @@ resources:
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run docker-compose to spin up containers
             cd /opt
