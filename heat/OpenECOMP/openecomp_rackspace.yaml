@@ -1,10 +1,10 @@
 heat_template_version: 2013-05-23
 
-description: Heat template to deploy OpenECOMP components
+description: Heat template to deploy ONAP components
 
 parameters:
 
-  # Generic parameters used across all OpenECOMP components
+  # Generic parameters used across all ONAP components
   public_net_id:
     type: string
     label: Public network name or ID
@@ -58,13 +58,17 @@ parameters:
   artifacts_version:
     type: string
     label: Artifacts Version
-    description: Artifacts version of OpenECOMP components
+    description: Artifacts version of ONAP components
     
   docker_version:
     type: string
     label: Docker Version
-    description: Docker version of OpenECOMP docker images
+    description: Docker version of ONAP docker images
 
+  gerrit_branch:
+    type: string
+    label: Gerrit code branch
+    description: Gerrit branch where to download the code from
 
   # Parameters for DCAE instantiation
   dcae_zone:
@@ -124,7 +128,7 @@ resources:
     properties:
       length: 4
 
-  # Public key used to access OpenECOMP components
+  # Public key used to access ONAP components
   vm_key:
     type: OS::Nova::KeyPair
     properties:
@@ -138,7 +142,7 @@ resources:
       save_private_key: false
 
 
-  # OpenECOMP management private network
+  # ONAP management private network
   oam_ecomp:
     type: OS::Neutron::Net
     properties:
@@ -158,7 +162,7 @@ resources:
             rand: { get_resource: random-str }
       network_id: { get_resource: oam_ecomp }
       cidr: 10.0.0.0/8
-    value: { get_attr: [oam_ecomp, name] }
+    #value: { get_attr: [oam_ecomp, name] }
 
 
   # DNS Server instantiation
@@ -329,6 +333,7 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
 
@@ -375,7 +380,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/mso/docker-config.git test_lab
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/mso/docker-config.git test_lab
             MSO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
             echo -n "__openstack_api_key__" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
             ./mso_vm_init.sh
@@ -409,6 +414,7 @@ resources:
             __gitlab_username__: { get_param: gitlab_username }
             __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
 
@@ -451,7 +457,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/dcae/demo/startup/message-router.git dcae-startup-vm-message-router
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/dcae/demo/startup/message-router.git dcae-startup-vm-message-router
             ./mr_vm_init.sh
 
 
@@ -489,6 +495,7 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __openstack_region__: { get_param: openstack_region }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
 
@@ -544,7 +551,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/testsuite/properties.git testsuite/properties
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/testsuite/properties.git testsuite/properties
             ./robot_vm_init.sh
 
 
@@ -577,6 +584,7 @@ resources:
             __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
 
@@ -620,7 +628,7 @@ resources:
 
             # Run script to spin up containers
             cd /opt
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/vid.git
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/vid.git
             ./vid_vm_init.sh
 
 
@@ -653,6 +661,7 @@ resources:
             __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
 
@@ -698,7 +707,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/sdnc/oam.git sdnc
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/sdnc/oam.git sdnc
             ./sdnc_vm_init.sh
 
 
@@ -756,6 +765,7 @@ resources:
             __env_name__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
             
@@ -818,7 +828,7 @@ resources:
             chmod 777 /data/logs/BE
             chmod 777 /data/logs/FE
 
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/sdc.git
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/sdc.git
 
             cat > /root/.bash_aliases << EOF
             alias dcls='/data/scripts/docker_clean.sh \$1'
@@ -870,6 +880,7 @@ resources:
             __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
             
@@ -915,7 +926,7 @@ resources:
             # Run Portal-specific instructions
             mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
             cd /opt
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/portal.git
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/portal.git
 
             # Run docker-compose to spin up containers
             ./portal_vm_init.sh
@@ -962,6 +973,7 @@ resources:
             __nexus_repo_root__: { get_param: nexus_repo_root }
             __openstack_region__: { get_param: openstack_region }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
             
@@ -995,14 +1007,14 @@ resources:
             
             # DCAE Controller specific deployment
             cd /opt
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/dcae/demo/startup/controller.git dcae-startup-vm-controller
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/dcae/demo/startup/controller.git dcae-startup-vm-controller
 
             cd dcae-startup-vm-controller
             mkdir -p /opt/app/dcae-controller
             cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
             ZONE: __dcae_zone__
             STATE: __dcae_state__
-            DCAE-VERSION: 1.0.0
+            DCAE-VERSION: __artifacts_version__
             HORIZON-URL: https://mycloud.rackspace.com/cloud/__tenant_id__
             KEYSTONE-URL: https://identity.api.rackspacecloud.com/v2.0
             OPENSTACK-TENANT-ID: __tenant_id__
@@ -1078,6 +1090,7 @@ resources:
             __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
             
@@ -1122,7 +1135,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/policy/docker.git policy
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/policy/docker.git policy
 
             ./policy_vm_init.sh
 
@@ -1157,6 +1170,7 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
 
@@ -1203,6 +1217,6 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/appc/deployment.git appc
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/appc/deployment.git appc
             ./appc_vm_init.sh
 
