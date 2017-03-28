@@ -1,4 +1,5 @@
 [gerrit]
-host=gerrit.openecomp.org
+#host=gerrit.openecomp.org
+host=gerrit.onap.org
 port=29418
 project=demo.git

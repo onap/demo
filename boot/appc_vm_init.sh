@@ -20,5 +20,4 @@ docker tag $NEXUS_DOCKER_REPO/openecomp/appc-image:$DOCKER_IMAGE_VERSION openeco
 docker pull $NEXUS_DOCKER_REPO/openecomp/dgbuilder-sdnc-image:$DOCKER_IMAGE_VERSION
 docker tag $NEXUS_DOCKER_REPO/openecomp/dgbuilder-sdnc-image:$DOCKER_IMAGE_VERSION openecomp/dgbuilder-sdnc-image:latest
 
-#/opt/docker/docker-compose pull
 /opt/docker/docker-compose up -d

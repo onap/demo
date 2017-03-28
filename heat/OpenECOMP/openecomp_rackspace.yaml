@@ -291,7 +291,7 @@ resources:
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__gitlab_username__" > /opt/config/gitlab_username.txt
             echo "__gitlab_password__" > /opt/config/gitlab_password.txt
-            echo "gerrit.openecomp.org" > /opt/config/gitlab_certname.txt
+            echo "gerrit.onap.org" > /opt/config/gitlab_certname.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             
             # Execute docker instructions
@@ -379,7 +379,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/mso/docker-config.git test_lab
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/mso/docker-config.git test_lab
             MSO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
             echo -n "__openstack_api_key__" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
             ./mso_vm_init.sh
@@ -456,7 +456,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/dcae/demo/startup/message-router.git dcae-startup-vm-message-router
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/dcae/demo/startup/message-router.git dcae-startup-vm-message-router
             ./mr_vm_init.sh
 
 
@@ -550,7 +550,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/testsuite/properties.git testsuite/properties
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/testsuite/properties.git testsuite/properties
             ./robot_vm_init.sh
 
 
@@ -627,7 +627,7 @@ resources:
 
             # Run script to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/vid.git
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/vid.git
             ./vid_vm_init.sh
 
 
@@ -706,7 +706,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/sdnc/oam.git sdnc
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/sdnc/oam.git sdnc
             ./sdnc_vm_init.sh
 
 
@@ -827,7 +827,7 @@ resources:
             chmod 777 /data/logs/BE
             chmod 777 /data/logs/FE
 
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/sdc.git
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/sdc.git
 
             cat > /root/.bash_aliases << EOF
             alias dcls='/data/scripts/docker_clean.sh \$1'
@@ -925,7 +925,7 @@ resources:
             # Run Portal-specific instructions
             mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/portal.git
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/portal.git
 
             # Run docker-compose to spin up containers
             ./portal_vm_init.sh
@@ -1006,7 +1006,7 @@ resources:
             
             # DCAE Controller specific deployment
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/dcae/demo/startup/controller.git dcae-startup-vm-controller
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/dcae/demo/startup/controller.git dcae-startup-vm-controller
 
             cd dcae-startup-vm-controller
             mkdir -p /opt/app/dcae-controller
@@ -1033,7 +1033,7 @@ resources:
             
             DOCKER-REGISTRY: __nexus_docker_repo__
 
-            GIT-MR-REPO: https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/dcae/demo/startup/message-router.git
+            GIT-MR-REPO: https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/dcae/demo/startup/message-router.git
             EOF_CONFIG
 
             # Store credentials in files
@@ -1134,7 +1134,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/policy/docker.git policy
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/policy/docker.git policy
 
             ./policy_vm_init.sh
 
@@ -1216,6 +1216,6 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.openecomp.org/r/a/appc/deployment.git appc
+            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/appc/deployment.git appc
             ./appc_vm_init.sh
 
