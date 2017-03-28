@@ -162,7 +162,6 @@ resources:
             rand: { get_resource: random-str }
       network_id: { get_resource: oam_ecomp }
       cidr: 10.0.0.0/8
-    #value: { get_attr: [oam_ecomp, name] }
 
 
   # DNS Server instantiation

@@ -210,7 +210,6 @@ resources:
             mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -DremoteRepositories=$REPO_URL_ARTIFACTS -Dartifact=org.openecomp.demo.vnf.ves:ves:$DEMO_ARTIFACTS_VERSION:tar.gz:demo -Dtransitive=false -Ddest=.
             mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -DremoteRepositories=$REPO_URL_ARTIFACTS -Dartifact=org.openecomp.demo.vnf.ves:ves_vfw_reporting:$DEMO_ARTIFACTS_VERSION:tar.gz:demo -Dtransitive=false -Ddest=.
 
-            
             tar -zxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
             mv ves-$DEMO_ARTIFACTS_VERSION VES
             tar -zxvf ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
