@@ -89,7 +89,7 @@
         <version>1.6.7</version>
         <extensions>true</extensions>
         <configuration>
-          <nexusUrl>https://nexus.openecomp.org/</nexusUrl>
+          <nexusUrl>https://nexus.onap.org/</nexusUrl>
           <stagingProfileId>176c31dfe190a</stagingProfileId>
           <serverId>ecomp-staging</serverId>
         </configuration>
@@ -102,12 +102,12 @@
     <repository>
       <id>ecomp-releases</id>
       <name>Demo Release Repository</name>
-      <url> https://nexus.openecomp.org/content/repositories/releases/</url>
+      <url> https://nexus.onap.org/content/repositories/releases/</url>
     </repository>
     <snapshotRepository>
       <id>ecomp-snapshots</id>
       <name>Demo Snapshot Repository</name>
-      <url> https://nexus.openecomp.org/content/repositories/snapshots/</url>
+      <url> https://nexus.onap.org/content/repositories/snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
