@@ -32,7 +32,7 @@ HEAT_VLB_GROUP_ID=$PARENT_GROUP_ID"/heat/vLB"
 VFW_GROUP_ID=$PARENT_GROUP_ID"/vnfs/vfw"
 VLB_GROUP_ID=$PARENT_GROUP_ID"/vnfs/vlb"
 
-REPO_URL="https://nexus.openecomp.org/content/sites/raw"
+REPO_URL="https://nexus.onap.org/content/sites/raw"
 USER=$(xpath -q -e "//servers/server[id='ecomp-raw']/username/text()" "$SETTINGS_FILE")
 PASS=$(xpath -q -e "//servers/server[id='ecomp-raw']/password/text()" "$SETTINGS_FILE")
 NETRC=$(mktemp)
