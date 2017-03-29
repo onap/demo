@@ -15,10 +15,9 @@ sed -i "s/DMAAP_TOPIC_ENV=.*/DMAAP_TOPIC_ENV="$DMAAP_TOPIC"/g" docker-compose.ym
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
 docker pull $NEXUS_DOCKER_REPO/openecomp/appc-image:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/openecomp/appc-image:$DOCKER_IMAGE_VERSION latest
+docker tag $NEXUS_DOCKER_REPO/openecomp/appc-image:$DOCKER_IMAGE_VERSION openecomp/appc-image:latest
 
 docker pull $NEXUS_DOCKER_REPO/openecomp/dgbuilder-sdnc-image:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/openecomp/dgbuilder-sdnc-image:$DOCKER_IMAGE_VERSION latest
+docker tag $NEXUS_DOCKER_REPO/openecomp/dgbuilder-sdnc-image:$DOCKER_IMAGE_VERSION openecomp/dgbuilder-sdnc-image:latest
 
-#/opt/docker/docker-compose pull
 /opt/docker/docker-compose up -d

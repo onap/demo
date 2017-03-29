@@ -21,8 +21,8 @@ docker pull $NEXUS_DOCKER_REPO/openecomp/portalapps:$DOCKER_IMAGE_VERSION
 
 docker create --name data_vol_portal -v /var/lib/mysql mariadb
 
-docker tag $NEXUS_DOCKER_REPO/openecomp/portaldb:latest ecompdb:portal
-docker tag $NEXUS_DOCKER_REPO/openecomp/portalapps:latest ep:1610-1
+docker tag $NEXUS_DOCKER_REPO/openecomp/portaldb:$DOCKER_IMAGE_VERSION ecompdb:portal
+docker tag $NEXUS_DOCKER_REPO/openecomp/portalapps:$DOCKER_IMAGE_VERSION ep:1610-1
 
 docker rm -f ecompdb_portal
 docker rm -f 1610-1
