@@ -8,11 +8,11 @@ The repository includes:
  
  - LICENSE.TXT: the license text
  
- - The "boot" directory: the scripts to instantiate ONAP. 
+ - The "boot" directory: the scripts that instantiate ONAP. 
  
  - The "heat" directory: contains the following three directories:
  
- 	- OpenECOMP: contains the HEAT template for the installation of the ONAP platform (openecomp_rackspace.yaml) and the environment file (openecomp_rackspace.env)
+ 	- OpenECOMP: contains the HEAT template for the installation of the ONAP platform. The template openecomp_rackspace.yaml and the environment file openecomp_rackspace.env work in Rackspace, while the template onap_openstack.yaml and the environment file onap_openstack.env work in vanilla OpenStack.
  	
  	- vFW: contains the HEAT template for the instantiation of the vFirewall VNF (base_vfw.yaml) and the environment file (base_vfw.env)
  	
@@ -20,7 +20,7 @@ The repository includes:
  	
  - The "vnfs" directory: contains the following directories:
  
- 	- honeycomb_plugin: Honeycomb plugin that allows upstream systems to change VNF configuration via RESTCONF or NETCONF protocols.
+ 	- honeycomb_plugin: Honeycomb plugin that allows ONAP to change VNF configuration via RESTCONF or NETCONF protocols.
  	
  	- VES: source code of the ECOMP Vendor Event Listener (VES) Library. The VES library used here has been cloned from the GitHub repository at https://github.com/att/evel-library on February 1, 2017.
  	
@@ -33,16 +33,16 @@ The repository includes:
  	- vLB: scripts that download, install and run packages for the vLoadBalancer/vDNS demo application.
  
 
-ONAP HEAT Template
+ONAP HEAT Template for Rackspace
 ---
 
 The ONAP HEAT template spins up the entire ONAP platform. The template, openecomp_rackspace.yaml, comes with an environment file, openecomp_rackspace.env, in which all the default values are defined.
 
-The HEAT template is composed of two sections: (i) parameters, and (ii) resources. The parameter section contains the declaration and description of the parameters that will be used to spin up OpenECOMP, such as public network identifier, URLs of code and artifacts repositories, etc.
+The HEAT template is composed of two sections: (i) parameters, and (ii) resources. The parameter section contains the declaration and description of the parameters that will be used to spin up ONAP, such as public network identifier, URLs of code and artifacts repositories, etc.
 The default values of these parameters can be found in the environment file. The resource section contains the definition of:
  - ONAP Private Management Network, which ONAP components use to communicate with each other and with VNFs
  - ONAP Virtual Machines (VMs)
- - Public/private key pair used to access OpenECOMP VMs
+ - Public/private key pair used to access ONAP VMs
  - Virtual interfaces towards the ONAP Private Management Network
  - Disk volumes. 
 
@@ -64,7 +64,7 @@ public_net_id is the unique identifier (UUID) or name of the public network of t
         00000000-0000-0000-0000-000000000000
 
 
-pub_key is string value of the public key that will be installed in each OpenECOMP VM. To create a public/private key pair in Linux, execute the following instruction:
+pub_key is string value of the public key that will be installed in each ONAP VM. To create a public/private key pair in Linux, please execute the following instruction:
    
         user@ubuntu:~$ ssh-keygen -t rsa
 
@@ -78,10 +78,15 @@ The following operations to create the public/private key pair occur:
         Your identification has been saved in /home/user/.ssh/id_rsa.
         Your public key has been saved in /home/user/.ssh/id_rsa.pub.
 
-openstack_username, openstack_tenant_id (password), and openstack_api_key are user's credentials to access the Openstack-based cloud. Note that in the Rackspace web interface, openstack_api_key can be found by clicking on the username and then "Account Settings".
+openstack_username, openstack_tenant_id (password), and openstack_api_key are user's credentials to access the Openstack-based cloud. Note that in the Rackspace web interface, openstack_api_key can be found by clicking on the username on the top-right corner of the GUI and then "Account Settings".
 
+DCAE spins up the data collection and analytics environment outside the HEAT template. This environment is composed of: 3-VM CDAP/Hadoop cluster, 1 VM for the DCAE data collector, and 1 VM for Postgres DB. DCAE needs to know where (i.e. Rackspace region) it has to spin up these VMs. Three parameters have to be setup to reflect the Rackspace region, namely dcae_zone, dcae_state and openstack_region. dcae_zone and dcae_state are used to compose the name of the VMs, so any meaningful name can be used. openstack_region, instead, represents the actual location, so Rackspace-specific values must be used: IAD, DFW, HKG, SYD. The example below shows a snippet of the HEAT environment file that instantiate ONAP in IAD region in Rackspace: 
 
-The OpenECOMP platform can be instantiated via Rackspace GUI or command line.
+        dcae_zone:        iad4
+        dcae_state:       vi
+        openstack_region: IAD
+
+The ONAP platform can be instantiated via Rackspace GUI or command line.
 
 Instantiation via Rackspace GUI:
  - Login to Rackspace with your personal credentials
@@ -114,26 +119,54 @@ Instantiation via Command Line:
 
         source ~/rackspace/openrc
         
- - In order to install the OpenECOMP platform, type:
+ - In order to install the ONAP platform, type:
 
         heat stack-create STACK_NAME -f PATH_TO_HEAT_TEMPLATE(YAML FILE) -e PATH_TO_ENV_FILE       # Old HEAT client, OR
         openstack stack create -t PATH_TO_HEAT_TEMPLATE(YAML FILE) -e PATH_TO_ENV_FILE STACK_NAME  # New Openstack client
 
 
+ONAP HEAT Template for vanilla OpenStack
+---
+
+The HEAT template for vanilla OpenStack is similar to the HEAT template for Rackspace. The main difference is the way in which some VMs resource-intensive VMs are defined. Unlike OpenStack, in fact, Rackspace requires to explicitly define a local disk for memory- or CPU-intensive VMs.
+
+The HEAT template for vanilla OpenStack tries to replicate typical application deployments in OpenStack. VMs have a private IP address in the ONAP Private Management Network space. Unlike the Rackspace deployment, they use floating IP addresses. Currently, floating IPs are automatically assigned by OpenStack. A router is also created that connects the ONAP Private Management Network to the external network.
+
+In addition to the parameters described in the previous section, the HEAT template for vanilla OpenStack uses the following parameters to define the image name and flavor of a VM:
+
+        ubuntu_1404_image: PUT THE UBUNTU 14.04 IMAGE NAME HERE
+        ubuntu_1604_image: PUT THE UBUNTU 16.04 IMAGE NAME HERE
+        flavor_small: PUT THE SMALL FLAVOR NAME HERE
+        flavor_medium: PUT THE MEDIUM FLAVOR NAME HERE
+        flavor_large: PUT THE LARGE FLAVOR NAME HERE
+        flavor_xlarge: PUT THE XLARGE FLAVOR NAME HERE
+  
+Parameters for network configuration are also used:
+
+        external_dns
+        oam_network_cidr
+        aai_ip_addr
+        appc_ip_addr
+        ...
+        vid_ip_addr
+        
+These parameters are used to configure the ONAP internal DNS VM. The external_dns parameter is a comma-separated list of IP addresses (they can be obtained from /etc/resolv.conf in many UNIX-based Operating Systems). The IP address of the ONAP VMs must comply with the oam_network_cidr parameter, and viceversa. Except for external_dns, the other network parameters are already set. They should work for many deployments. 
+
+
 VNFs HEAT Templates
 ---
 
-The HEAT templates for the demo apps are stored in vFW and vLB directories. 
+The HEAT templates for the demo applications are stored in heat/vFW and heat/vLB directories. 
 
 vFW contains the HEAT template, base_vfw.yaml, and the environment file, base_vfw.env, that are used to instantiate a virtual firewall. The VNF is composed of three VMs:
   - Packet generator
   - Firewall
   - Sink
 
-The packet generator generates traffic that passes through the firewall and reaches the sink. The firewall periodically reports the number of packets received in a unit of time to the DCAE collector. If the reported number of packets received on the firewall is above a high-water mark or below a low-water mark, OpenECOMP will enforce a configuration change on the packet generator, reducing or augmenting the quantity of traffic generated, respectively.
+The packet generator generates traffic that passes through the firewall and reaches the sink. The firewall periodically reports the number of packets received in a unit of time to the DCAE collector. If the reported number of packets received on the firewall is above a high-water mark or below a low-water mark, ONAP will enforce a configuration change on the packet generator, reducing or augmenting the quantity of traffic generated, respectively.
 
 vLB contains the HEAT template, base_vlb.yaml, and the environment file, base_vlb.env, that are used to spin up a virtual load balancer and a virtual DNS. vLB also contains the HEAT template, packet_gen_vlb.yaml, and the environment file packet_gen_vlb.env, of a packet generator that generates DNS queries.
-The load balancer periodically reports the number of DNS query packets received in a time unit to the DCAE collector. If the reported number of received packets crosses a threshold, then OpenECOMP will spin up a new DNS based on the dnsscaling.yaml HEAT template and dnsscaling.env to better balance the load of incoming DNS queries.
+The load balancer periodically reports the number of DNS query packets received in a time unit to the DCAE collector. If the reported number of received packets crosses a threshold, then ONAP will spin up a new DNS based on the dnsscaling.yaml HEAT template and dnsscaling.env to better balance the load of incoming DNS queries.
 
 The vFW and vLB HEAT templates and environment files are onboarded into ONAP SDC and run automatically. The user is not required to run these templates manually.
 However, before onboarding the templates following the instructions in the ONAP documentation, the user should set the following values in the environment files:
@@ -154,7 +187,7 @@ vFirewall
 
 The vFirewall application contains 3 VMs: a firewall, a packet generator, and a packet sink. 
 
-The packet generator sends packets to the packet sink through the firewall. The firewall reports the volume of traffic from the packet generator to the sink to OpenECOMP DCAE’s collector. To check the traffic volume to the sink, you can access the link http://sink_IP:667 through your browser. You can see the traffic volume in the charts. 
+The packet generator sends packets to the packet sink through the firewall. The firewall reports the volume of traffic from the packet generator to the sink to ONAP DCAE’s collector. To check the traffic volume to the sink, you can access the link http://sink_ip_address:667 through your browser. You can see the traffic volume in the charts. 
 
 The packet generator includes a script that periodically generates different volumes of traffic. 
 
@@ -163,10 +196,10 @@ The closed-loop policy has been configured to re-adjust the traffic volume when 
 __Closedloop for vFirewall demo:__
 
 Through the ONAP Portal’s Policy Portal, we can find the configuration and operation policies that is currently enabled for the vFirewall application. 
-+ The configuration policy sets the thresholds for generating an onset event from DCAE to the Policy engine. Currently the threshold is set to below 300 packets or above 700 packets per 10 seconds. 
-+ Once the threshold is crossed, the Policy engine executes the operational policy to request APP-C to change the configuration of the packet gen. 
++ The configuration policy sets the thresholds for generating an onset event from DCAE to the Policy engine. Currently the thresholds are set to 300 packets and 700 packets, while the measurement interval is set to 10 seconds. 
++ Once one of the thresholds is crossed (e.g. the number of received packets is below 300 packets or above 700 per 10 seconds), the Policy engine executes the operational policy to request APP-C to change the configuration of the packet generator. 
 + APP-C sends a request to the packet generator to adjust the traffic volume to 500 packets per 10 seconds. 
-+ The traffic volume can be observed through the link http://sink_IP:667.
++ The traffic volume can be observed through the link http://sink_ip_address:667.
 
 __Adjust packet generator:__
 
@@ -180,7 +213,7 @@ To adjust the traffic volume sending from the packet generator, run the followin
 curl -X PUT -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{"pg-streams":{"pg-stream": [{"id":"fw_udp1", "is-enabled":"true"},{"id":"fw_udp2", "is-enabled":"true"},{"id":"fw_udp3", "is-enabled":"true"},{"id":"fw_udp4", "is-enabled":"true"},{"id":"fw_udp5", "is-enabled":"true"}]}}' "http://PacketGen_IP:8183/restconf/config/sample-plugin:sample-plugin/pg-streams"
 ```
 
-A script in /opt/run_traffic_fw_demo.sh on the packet generator VM starts automatically and alternate the volume of traffic every 10 minutes. 
+A script in /opt/run_traffic_fw_demo.sh on the packet generator VM starts automatically and alternate the volume of traffic every 5 minutes. 
 
 vLoadBalancer/vDNS
 ---
@@ -204,10 +237,10 @@ That means the load balancer has been set up correctly and has forwarded the DNS
 
 __Closedloop for vLoadBalancer/vDNS:__
 
-Through the OpenECOMP Portal’s Policy Portal, we can find the configuration and operation policies that is currently enabled for the vLoadBalancer/vDNS application. 
-+ The configuration policy sets the thresholds for generating an onset event from DCAE to the Policy engine. Currently the threshold is set to above 200 packets per 10 seconds. 
-+ Once the threshold is crossed, the Policy engine executes the operational policy to query A&AI and send a request to MSO for spinning up a new DNS instance. 
-+ A new DNS instance will be spun up after the threshold is crossed. It can take a few minutes for this to happen. 
+Through the Policy Portal (accessible via the ONAP Portal), we can find the configuration and operation policies that are currently enabled for the vLoadBalancer/vDNS application. 
++ The configuration policy sets the thresholds for generating an onset event from DCAE to the Policy engine. Currently the threshold is set to 200 packets, while the measurement interval is set to 10 seconds. 
++ Once the threshold is crossed (e.g. the number of received packets is above 200 packets per 10 seconds), the Policy engine executes the operational policy to query A&AI and send a request to MSO for spinning up a new DNS instance. 
++ A new DNS instance will be then spun up.
 
 
 __Generate DNS queries:__
@@ -227,9 +260,9 @@ To generate DNS queries to the vLoadBalancer/vDNS instance, a separate packet ge
 ```  
 curl -X PUT -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{"pg-streams":{"pg-stream": [{"id":"dns1", "is-enabled":"true"}]}}' "http://vLoadBalancer_IP:8183/restconf/config/sample-plugin:sample-plugin/pg-streams"  
 ```  
-+ *{"id":"dns1", "is-enabled":"true"}* shows the stream *dns1* is enabled. The packet gen sends requests in the rate of 100 packets per 10 seconds.  
++ *{"id":"dns1", "is-enabled":"true"}* shows the stream *dns1* is enabled. The packet generator sends requests in the rate of 100 packets per 10 seconds.  
 
-+ To increase the amount of traffic, we can enable more streams. The packet gen has total 10 streams, *dns1*, *dns2*, *dns3* to *dns10*. Each of them produces 100 packets per 10 seconds. To enable the streams, includes *{"id":"dnsX", "is-enabled":"true"}* where *X* is the stream ID in the pg-stream bracket of the curl command.  
++ To increase the amount of traffic, we can enable more streams. The packet generator has 10 streams, *dns1*, *dns2*, *dns3* to *dns10*. Each of them generates 100 packets per 10 seconds. To enable the streams, please insert *{"id":"dnsX", "is-enabled":"true"}* where *X* is the stream ID in the pg-stream bracket of the curl command.  
 For example, if we want to enable 3 streams, the curl command should be:
 
 ```
