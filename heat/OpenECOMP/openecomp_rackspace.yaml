@@ -259,7 +259,7 @@ resources:
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
             # Download scripts from Nexus
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai_vm_init.sh -o /opt/aai_vm_init.sh
@@ -324,8 +324,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __openstack_username__: { get_param: openstack_username }
             __openstack_tenant_id__: { get_param: openstack_tenant_id }
             __openstack_api_key__: { get_param: openstack_api_key }
@@ -370,8 +368,6 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__openstack_username__" > /opt/config/openstack_username.txt
             echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
@@ -379,7 +375,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/mso/docker-config.git test_lab
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/mso/docker-config.git test_lab
             MSO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
             echo -n "__openstack_api_key__" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
             ./mso_vm_init.sh
@@ -410,8 +406,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __gerrit_branch__: { get_param: gerrit_branch }
           template: |
@@ -424,7 +418,7 @@ resources:
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
             
             # Download scripts from Nexus
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mr_vm_init.sh -o /opt/mr_vm_init.sh
@@ -451,12 +445,10 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/dcae/demo/startup/message-router.git dcae-startup-vm-message-router
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/dcae/demo/startup/message-router.git dcae-startup-vm-message-router
             ./mr_vm_init.sh
 
 
@@ -485,8 +477,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __network_name__: { get_attr: [oam_ecomp, name] }
             __openstack_username__: { get_param: openstack_username }
             __openstack_api_key__: { get_param : openstack_api_key }
@@ -505,7 +495,7 @@ resources:
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
             echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
 
             # Download scripts from Nexus
@@ -534,8 +524,6 @@ resources:
             echo "__nexus_repo__" > /opt/config/nexus_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__network_name__" > /opt/config/network.txt
             echo "__openstack_username__" > /opt/config/openstack_username.txt
             echo "__openstack_password__" > /opt/config/openstack_password.txt
@@ -550,7 +538,7 @@ resources:
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/testsuite/properties.git testsuite/properties
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/testsuite/properties.git testsuite/properties
             ./robot_vm_init.sh
 
 
@@ -579,8 +567,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
@@ -621,13 +607,11 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run script to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/vid.git
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/vid.git
             ./vid_vm_init.sh
 
 
@@ -656,8 +640,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
@@ -673,7 +655,7 @@ resources:
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
             # Download scripts from Nexus
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/sdnc_vm_init.sh -o /opt/sdnc_vm_init.sh
@@ -700,13 +682,11 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/sdnc/oam.git sdnc
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/sdnc/oam.git sdnc
             ./sdnc_vm_init.sh
 
 
@@ -759,8 +739,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __env_name__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
@@ -777,7 +755,7 @@ resources:
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
             
             # Download scripts from Nexus
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_vm_init.sh -o /opt/asdc_vm_init.sh
@@ -811,8 +789,6 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__env_name__" > /opt/config/env_name.txt
             echo "10.0.11.1" > /opt/config/mr_ip_addr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
@@ -827,7 +803,7 @@ resources:
             chmod 777 /data/logs/BE
             chmod 777 /data/logs/FE
 
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/sdc.git
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/sdc.git
 
             cat > /root/.bash_aliases << EOF
             alias dcls='/data/scripts/docker_clean.sh \$1'
@@ -875,8 +851,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
@@ -892,7 +866,7 @@ resources:
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk unzip mysql-client-core-5.6 ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git unzip mysql-client-core-5.6 ntp ntpdate
             
             # Download scripts from Nexus
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/portal_vm_init.sh -o /opt/portal_vm_init.sh
@@ -918,14 +892,12 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run Portal-specific instructions
             mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/portal.git
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/portal.git
 
             # Run docker-compose to spin up containers
             ./portal_vm_init.sh
@@ -956,8 +928,6 @@ resources:
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
             __nexus_url_snapshots__: { get_param: nexus_url_snapshot }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __gitlab_branch__: { get_param: gitlab_branch }
             __dcae_zone__: { get_param: dcae_zone }
             __dcae_state__: { get_param: dcae_state }
@@ -1006,7 +976,7 @@ resources:
             
             # DCAE Controller specific deployment
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/dcae/demo/startup/controller.git dcae-startup-vm-controller
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/dcae/demo/startup/controller.git dcae-startup-vm-controller
 
             cd dcae-startup-vm-controller
             mkdir -p /opt/app/dcae-controller
@@ -1033,7 +1003,7 @@ resources:
             
             DOCKER-REGISTRY: __nexus_docker_repo__
 
-            GIT-MR-REPO: https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/dcae/demo/startup/message-router.git
+            GIT-MR-REPO: http://gerrit.onap.org/r/dcae/demo/startup/message-router.git
             EOF_CONFIG
 
             # Store credentials in files
@@ -1041,8 +1011,6 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
@@ -1085,8 +1053,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
@@ -1102,7 +1068,7 @@ resources:
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
             # Download scripts from Nexus
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/policy_vm_init.sh -o /opt/policy_vm_init.sh
@@ -1128,13 +1094,11 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/policy/docker.git policy
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/policy/docker.git policy
 
             ./policy_vm_init.sh
 
@@ -1164,8 +1128,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
@@ -1182,7 +1144,7 @@ resources:
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-7-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-7-jdk git ntp ntpdate
 
             # Download scripts from Nexus
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/appc_vm_init.sh -o /opt/appc_vm_init.sh
@@ -1209,13 +1171,11 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run docker-compose to spin up containers
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/appc/deployment.git appc
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/appc/deployment.git appc
             ./appc_vm_init.sh
 
