@@ -297,7 +297,7 @@ resources:
             __mso_ip_addr__: { get_param: mso_ip_addr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __policy_ip_addr__: { get_param: policy_ip_addr }
-            __portal_ip_addr__: { get_param: policy_ip_addr }
+            __portal_ip_addr__: { get_param: portal_ip_addr }
             __robot_ip_addr__: { get_param: robot_ip_addr }
             __sdc_ip_addr__: { get_param: sdc_ip_addr }
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
