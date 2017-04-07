@@ -489,8 +489,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __openstack_username__: { get_param: openstack_username }
             __openstack_tenant_id__: { get_param: openstack_tenant_id }
             __openstack_api_key__: { get_param: openstack_api_key }
@@ -536,8 +534,6 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__openstack_username__" > /opt/config/openstack_username.txt
             echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
             echo "__keystone_url__" > /opt/config/keystone.txt
@@ -546,7 +542,7 @@ resources:
 
             # Clone Gerrit repository
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/mso/docker-config.git test_lab
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/mso/docker-config.git test_lab
             MSO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
             echo -n "__openstack_api_key__" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
 
@@ -597,8 +593,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __gerrit_branch__: { get_param: gerrit_branch }
@@ -638,12 +632,10 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
 
             # Clone Gerrit repository
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/dcae/demo/startup/message-router.git dcae-startup-vm-message-router
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/dcae/demo/startup/message-router.git dcae-startup-vm-message-router
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
@@ -687,8 +679,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __network_name__: { get_attr: [oam_ecomp, name] }
             __openstack_username__: { get_param: openstack_username }
             __openstack_api_key__: { get_param : openstack_api_key }
@@ -735,8 +725,6 @@ resources:
             echo "__nexus_repo__" > /opt/config/nexus_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__network_name__" > /opt/config/network.txt
             echo "__openstack_username__" > /opt/config/openstack_username.txt
             echo "__openstack_api_key__" > /opt/config/openstack_password.txt
@@ -750,7 +738,7 @@ resources:
 
             # Clone Gerrit repository
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/testsuite/properties.git testsuite/properties
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/testsuite/properties.git testsuite/properties
             
             # Rename network interface
             sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
@@ -799,8 +787,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __docker_version__: { get_param: docker_version }
@@ -841,13 +827,11 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/vid.git
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/vid.git
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
@@ -891,8 +875,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __docker_version__: { get_param: docker_version }
@@ -933,13 +915,11 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/sdnc/oam.git sdnc
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/sdnc/oam.git sdnc
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
@@ -996,8 +976,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __env_name__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
@@ -1048,8 +1026,6 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__env_name__" > /opt/config/env_name.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__public_ip__" > /opt/config/public_ip.txt
@@ -1066,7 +1042,7 @@ resources:
             chmod 777 /data/logs/FE
 
             # Clone Gerrit repository
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/sdc.git
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/sdc.git
 
             cat > /root/.bash_aliases << EOF
             alias dcls='/data/scripts/docker_clean.sh \$1'
@@ -1122,8 +1098,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __public_ip__: { get_attr: [portal_floating_ip, floating_ip_address] }
@@ -1164,15 +1138,13 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__public_ip__" > /opt/config/public_ip.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/portal.git
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/portal.git
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
@@ -1217,8 +1189,6 @@ resources:
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
             __nexus_url_snapshots__: { get_param: nexus_url_snapshot }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __gitlab_branch__: { get_param: gitlab_branch }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __dcae_zone__: { get_param: dcae_zone }
@@ -1269,7 +1239,7 @@ resources:
             
             # Clone Gerrit repository
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/dcae/demo/startup/controller.git dcae-startup-vm-controller
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/dcae/demo/startup/controller.git dcae-startup-vm-controller
             
             # DCAE Controller specific deployment
             cd /opt/dcae-startup-vm-controller
@@ -1297,7 +1267,7 @@ resources:
             
             DOCKER-REGISTRY: __nexus_docker_repo__
 
-            GIT-MR-REPO: https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/dcae/demo/startup/message-router.git
+            GIT-MR-REPO: http://gerrit.onap.org/r/dcae/demo/startup/message-router.git
             EOF_CONFIG
 
             # Store credentials in files
@@ -1305,8 +1275,6 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             
@@ -1352,8 +1320,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __public_ip__: { get_attr: [policy_floating_ip, floating_ip_address] }
@@ -1394,14 +1360,12 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__public_ip__" > /opt/config/public_ip.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/policy/docker.git policy
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/policy/docker.git policy
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
@@ -1445,8 +1409,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
@@ -1488,14 +1450,12 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             cd /opt
-            git clone -b __gerrit_branch__ --single-branch https://__gitlab_username__:__gitlab_password__@gerrit.onap.org/r/a/appc/deployment.git appc
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/appc/deployment.git appc
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head

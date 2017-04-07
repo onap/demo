@@ -107,4 +107,4 @@ collector.api.simpledemo.openecomp.org. IN      A   dcae_coll_ip_addr.102
 ;drprov.api.simpledemo.openecomp.org.	IN	CNAME  	vm1.mr.simpledemo.openecomp.org.
 
 ;AAF
-aaf.api.simpledemo.openecomp.org.	IN	CNAME	vm1.aaf.simpledemo.openecomp.org.
+;aaf.api.simpledemo.openecomp.org.	IN	CNAME	vm1.aaf.simpledemo.openecomp.org.
