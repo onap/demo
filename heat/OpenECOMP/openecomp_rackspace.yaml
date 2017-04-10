@@ -39,16 +39,6 @@ parameters:
     type: string
     label: Nexus Repository Password
     description: Nexus Repository Password
-    
-  gitlab_username:
-    type: string
-    label: Gitlab Repository Username
-    description: Gitlab Repository username
-
-  gitlab_password:
-    type: string
-    label: Gitlab Repository Password
-    description: Gitlab Repository Password
 
   dmaap_topic:
     type: string
@@ -244,8 +234,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
@@ -289,9 +277,6 @@ resources:
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
-            echo "gerrit.onap.org" > /opt/config/gitlab_certname.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             
             # Execute docker instructions
