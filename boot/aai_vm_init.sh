@@ -4,9 +4,6 @@ NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DMAAP_TOPIC=$(cat /opt/config/dmaap_topic.txt)
-GITLAB_CERTNAME=$(cat /opt/config/gitlab_certname.txt)
-GITLAB_USERNAME=$(cat /opt/config/gitlab_username.txt)
-GITLAB_PASSWD=$(cat /opt/config/gitlab_password.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 # Pull HBase container from a public docker hub
@@ -20,7 +17,7 @@ sleep 180
 
 docker pull $NEXUS_DOCKER_REPO/openecomp/ajsc-aai:$DOCKER_IMAGE_VERSION
 docker rm -f aai-service
-docker run --name=aai-service --net=host -v /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt -it -e GITLAB_CERTNAME=$GITLAB_CERTNAME -e GITLAB_USERNAME=$GITLAB_USERNAME -e GITLAB_PASSWORD=$GITLAB_PASSWD -e AAI_REPO_PATH=r/aai -e AAI_CHEF_ENV=simpledemo -d -e AAI_CHEF_LOC=/var/chef/aai-data/environments -e docker_gitbranch=master $NEXUS_DOCKER_REPO/openecomp/ajsc-aai:$DOCKER_IMAGE_VERSION
+docker run --name=aai-service --net=host -v /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt -it -e AAI_REPO_PATH=r/aai -e AAI_CHEF_ENV=simpledemo -d -e AAI_CHEF_LOC=/var/chef/aai-data/environments -e docker_gitbranch=master $NEXUS_DOCKER_REPO/openecomp/ajsc-aai:$DOCKER_IMAGE_VERSION
 
 docker pull $NEXUS_DOCKER_REPO/openecomp/model-loader:$DOCKER_IMAGE_VERSION
 docker rm -f model-loader-service

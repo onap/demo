@@ -66,14 +66,6 @@ parameters:
   nexus_password:
     type: string
     description: Nexus Repository Password
-
-  gitlab_username:
-    type: string
-    description: Gitlab Repository username
-
-  gitlab_password:
-    type: string
-    description: Gitlab Repository Password
     
   artifacts_version:
     type: string
@@ -395,8 +387,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __gitlab_username__: { get_param: gitlab_username }
-            __gitlab_password__: { get_param: gitlab_password }
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
@@ -407,12 +397,21 @@ resources:
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
             
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
             # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai_vm_init.sh -o /opt/aai_vm_init.sh
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai_serv.sh -o /opt/aai_serv.sh
             chmod +x /opt/aai_vm_init.sh
@@ -421,7 +420,8 @@ resources:
             update-rc.d aai_serv.sh defaults
 
             # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -435,17 +435,6 @@ resources:
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
             chmod +x /opt/docker/docker-compose
-            
-            # Store credentials in files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
-            echo "__gitlab_username__" > /opt/config/gitlab_username.txt
-            echo "__gitlab_password__" > /opt/config/gitlab_password.txt
-            echo "gerrit.onap.org" > /opt/config/gitlab_certname.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
@@ -503,33 +492,8 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-
-            # Download dependencies
-            add-apt-repository -y ppa:openjdk-r/ppa
-            apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
-
-            # Download scripts from Nexus
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mso_vm_init.sh -o /opt/mso_vm_init.sh
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mso_serv.sh -o /opt/mso_serv.sh
-            chmod +x /opt/mso_vm_init.sh
-            chmod +x /opt/mso_serv.sh
-            mv /opt/mso_serv.sh /etc/init.d
-            update-rc.d mso_serv.sh defaults
-
-            # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-            echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
-            apt-get update
-            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
-            service docker start
-
-            mkdir /opt/docker
-            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
-            chmod +x /opt/docker/docker-compose
-
-            # Store credentials in files
+            
+            # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
@@ -539,6 +503,33 @@ resources:
             echo "__keystone_url__" > /opt/config/keystone.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
+
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mso_vm_init.sh -o /opt/mso_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mso_serv.sh -o /opt/mso_serv.sh
+            chmod +x /opt/mso_vm_init.sh
+            chmod +x /opt/mso_serv.sh
+            mv /opt/mso_serv.sh /etc/init.d
+            update-rc.d mso_serv.sh defaults
+
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
 
             # Clone Gerrit repository
             cd /opt
@@ -601,13 +592,20 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
 
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
             
             # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mr_vm_init.sh -o /opt/mr_vm_init.sh
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mr_serv.sh -o /opt/mr_serv.sh
             chmod +x /opt/mr_vm_init.sh
@@ -616,7 +614,8 @@ resources:
             update-rc.d mr_serv.sh defaults
 
             # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -626,12 +625,6 @@ resources:
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
             chmod +x /opt/docker/docker-compose
-
-            # Store credentials in files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
 
             # Clone Gerrit repository
             cd /opt
@@ -692,34 +685,8 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
- 
-            # Download dependencies
-            add-apt-repository -y ppa:openjdk-r/ppa
-            apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
-            echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
-
-            # Download scripts from Nexus
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_vm_init.sh -o /opt/robot_vm_init.sh
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_serv.sh -o /opt/robot_serv.sh
-            chmod +x /opt/robot_vm_init.sh
-            chmod +x /opt/robot_serv.sh
-            mv /opt/robot_serv.sh /etc/init.d
-            update-rc.d robot_serv.sh defaults
- 
-            # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-            echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
-            apt-get update
-            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
-            service docker start
- 
-            mkdir /opt/docker
-            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
-            chmod +x /opt/docker/docker-compose
- 
-            # Store credentials in files
+            
+            # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_repo__" > /opt/config/nexus_repo.txt
@@ -731,6 +698,34 @@ resources:
             echo "__openstack_region__" > /opt/config/region.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
+ 
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+            echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_vm_init.sh -o /opt/robot_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_serv.sh -o /opt/robot_serv.sh
+            chmod +x /opt/robot_vm_init.sh
+            chmod +x /opt/robot_serv.sh
+            mv /opt/robot_serv.sh /etc/init.d
+            update-rc.d robot_serv.sh defaults
+ 
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+ 
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose     
 
             # Execute RobotETE-specific instructions: create share folder to run as a docker volume
             mkdir -p /opt/eteshare/logs
@@ -796,6 +791,13 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
@@ -803,6 +805,7 @@ resources:
             apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk make git ntp ntpdate
 
             # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/vid_vm_init.sh -o /opt/vid_vm_init.sh
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/vid_serv.sh -o /opt/vid_serv.sh
             chmod +x /opt/vid_vm_init.sh
@@ -811,7 +814,8 @@ resources:
             update-rc.d vid_serv.sh defaults
 
             # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -821,13 +825,6 @@ resources:
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
             chmod +x /opt/docker/docker-compose
-
-            # Store credentials in files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             cd /opt
@@ -884,13 +881,21 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
             # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/sdnc_vm_init.sh -o /opt/sdnc_vm_init.sh
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/sdnc_serv.sh -o /opt/sdnc_serv.sh
             chmod +x /opt/sdnc_vm_init.sh
@@ -899,7 +904,8 @@ resources:
             update-rc.d sdnc_serv.sh defaults
             
             # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -909,13 +915,6 @@ resources:
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
             chmod +x /opt/docker/docker-compose
-            
-            # Store credentials in files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             cd /opt
@@ -988,13 +987,24 @@ resources:
             
             hn=`hostname`        
             echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__env_name__" > /opt/config/env_name.txt
+            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
+            echo "__public_ip__" > /opt/config/public_ip.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
           
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
             # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_vm_init.sh -o /opt/asdc_vm_init.sh
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_serv.sh -o /opt/asdc_serv.sh
             chmod +x /opt/asdc_vm_init.sh
@@ -1003,7 +1013,8 @@ resources:
             update-rc.d asdc_serv.sh defaults
             
             # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -1020,16 +1031,6 @@ resources:
             mkdir -p /data
             mount /dev/vdb1 /data
             echo "/dev/vdb1  /data           ext4    errors=remount-ro,noatime,barrier=0 0       1" >> /etc/fstab
-
-            # Store credentials in files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__env_name__" > /opt/config/env_name.txt
-            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
-            echo "__public_ip__" > /opt/config/public_ip.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Run SDC-specific instructions
             cd /opt
@@ -1109,12 +1110,21 @@ resources:
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
             
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__public_ip__" > /opt/config/public_ip.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk unzip mysql-client-core-5.6 ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git unzip mysql-client-core-5.6 ntp ntpdate
 
             # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/portal_vm_init.sh -o /opt/portal_vm_init.sh
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/portal_serv.sh -o /opt/portal_serv.sh
             chmod +x /opt/portal_vm_init.sh
@@ -1123,7 +1133,8 @@ resources:
             update-rc.d portal_serv.sh defaults
             
             # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -1132,14 +1143,6 @@ resources:
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
             chmod +x /opt/docker/docker-compose
-
-            # Store credentials in files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__public_ip__" > /opt/config/public_ip.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
@@ -1212,6 +1215,14 @@ resources:
             
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
@@ -1219,6 +1230,7 @@ resources:
             apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk make git ntp ntpdate
 
             # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dcae_vm_init.sh -o /opt/dcae_vm_init.sh
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dcae_serv.sh -o /opt/dcae_serv.sh
             chmod +x /opt/dcae_vm_init.sh
@@ -1227,7 +1239,8 @@ resources:
             update-rc.d dcae_serv.sh defaults
 
             # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -1269,14 +1282,6 @@ resources:
 
             GIT-MR-REPO: http://gerrit.onap.org/r/dcae/demo/startup/message-router.git
             EOF_CONFIG
-
-            # Store credentials in files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
@@ -1330,13 +1335,22 @@ resources:
             
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__public_ip__" > /opt/config/public_ip.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
             # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/policy_vm_init.sh -o /opt/policy_vm_init.sh
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/policy_serv.sh -o /opt/policy_serv.sh
             chmod +x /opt/policy_vm_init.sh
@@ -1345,7 +1359,8 @@ resources:
             update-rc.d policy_serv.sh defaults
 
             # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -1354,14 +1369,6 @@ resources:
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
             chmod +x /opt/docker/docker-compose
-
-            # Store credentials in files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__public_ip__" > /opt/config/public_ip.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             cd /opt
@@ -1419,13 +1426,22 @@ resources:
             
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
-            apt-get install -y apt-transport-https ca-certificates wget openjdk-7-jdk ntp ntpdate
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-7-jdk git ntp ntpdate
 
             # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/appc_vm_init.sh -o /opt/appc_vm_init.sh
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/appc_serv.sh -o /opt/appc_serv.sh
             chmod +x /opt/appc_vm_init.sh
@@ -1434,7 +1450,8 @@ resources:
             update-rc.d appc_serv.sh defaults
             
             # Download and install docker-engine and docker-compose
-            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
@@ -1444,14 +1461,6 @@ resources:
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
             chmod +x /opt/docker/docker-compose
-            
-            # Store credentials in files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
 
             # Clone Gerrit repository
             cd /opt
