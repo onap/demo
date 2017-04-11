@@ -2,7 +2,7 @@
 
 # Read configuration files
 NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
-ARTIFACT_VERSION=$(cat /opt/config/artifact_version.txt)
+ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
 # Add host name to /etc/host to avoid warnings in openstack images
@@ -28,9 +28,9 @@ fi
 
 # Download script
 mkdir /etc/bind/zones
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACT_VERSION/$ZONE_FILE -o /etc/bind/zones/db.simpledemo.openecomp.org
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACT_VERSION/$OPTIONS_FILE -o /etc/bind/named.conf.options
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACT_VERSION/named.conf.local -o /etc/bind/named.conf.local
+curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/$ZONE_FILE -o /etc/bind/zones/db.simpledemo.openecomp.org
+curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/$OPTIONS_FILE -o /etc/bind/named.conf.options
+curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/named.conf.local -o /etc/bind/named.conf.local
 
 # Set the private IP address of each ONAP VM in the Bind configuration in OpenStack deployments
 if [[ $CLOUD_ENV == "openstack" ]]

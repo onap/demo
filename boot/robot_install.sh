@@ -2,7 +2,7 @@
 
 # Read configuration files
 NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
-ARTIFACT_VERSION=$(cat /opt/config/artifact_version.txt)
+ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DOCKER_KEY=$(cat /opt/config/docker_key.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -20,9 +20,9 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACT_VERSION/docker_key.txt -o /opt/config/docker_key.txt
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACT_VERSION/robot_vm_init.sh -o /opt/robot_vm_init.sh
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACT_VERSION/robot_serv.sh -o /opt/robot_serv.sh
+curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/docker_key.txt -o /opt/config/docker_key.txt
+curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/robot_vm_init.sh -o /opt/robot_vm_init.sh
+curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/robot_serv.sh -o /opt/robot_serv.sh
 chmod +x /opt/robot_vm_init.sh
 chmod +x /opt/robot_serv.sh
 mv /opt/robot_serv.sh /etc/init.d
