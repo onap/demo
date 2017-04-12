@@ -12,7 +12,7 @@ STATE=$(cat /opt/config/dcae_state.txt)
 HORIZON_URL=$(cat /opt/config/horizon_url.txt)
 OPENSTACK_USER=$(cat /opt/config/openstack_user.txt)
 OPENSTACK_PASSWORD=$(cat /opt/config/openstack_password.txt)
-OPENSTACK_KEYNAME=$(cat /opt/config/openstack_key_name.txt)$(cat /opt/config/rand_str.txt)"_dcae"
+OPENSTACK_KEYNAME=$(cat /opt/config/key_name.txt)$(cat /opt/config/rand_str.txt)"_dcae"
 OPENSTACK_PUBKEY=$(cat /opt/config/pub_key.txt)
 KEYSTONE_URL=$(cat /opt/config/keystone_url.txt)
 OPENSTACK_TENANT_ID=$(cat /opt/config/tenant_id.txt)
@@ -23,7 +23,7 @@ OPENSTACK_PRIVATE_NETWORK=$(cat /opt/config/openstack_private_network_name.txt)
 NEXUS_URL_ROOT=$(cat /opt/config/nexus_repo_root.txt)
 NEXUS_USER=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWORD=$(cat /opt/config/nexus_password.txt)
-NEXUS_URL_SNAPSHOTS=$(cat /opt/config/nexus_url_snapshot.txt)
+NEXUS_URL_SNAPSHOTS=$(cat /opt/config/nexus_url_snapshots.txt)
 DOCKER_REGISTRY=$(cat /opt/config/nexus_docker_repo.txt)
 
 # Add host name to /etc/host to avoid warnings in openstack images
@@ -72,8 +72,8 @@ mkdir -p /opt/app/dcae-controller
 cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
 ZONE: $ZONE
 STATE: $STATE
-DCAE-VERSION: $ARTIFACT_VERSION
-HORIZON-URL: $HORIZON_URL"/"$OPENSTACK_USER
+DCAE-VERSION: $ARTIFACTS_VERSION
+HORIZON-URL: $HORIZON_URL/$OPENSTACK_USER
 KEYSTONE-URL: $KEYSTONE_URL
 OPENSTACK-TENANT-ID: $OPENSTACK_TENANT_ID
 OPENSTACK-TENANT-NAME: $OPENSTACK_TENANT_NAME
