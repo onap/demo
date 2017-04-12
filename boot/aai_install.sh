@@ -3,7 +3,6 @@
 # Read configuration files
 NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
-DOCKER_KEY=$(cat /opt/config/docker_key.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
@@ -28,6 +27,7 @@ mv /opt/aai_serv.sh /etc/init.d
 update-rc.d aai_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
+DOCKER_KEY=$(cat /opt/config/docker_key.txt)
 apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
 echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
 apt-get update
