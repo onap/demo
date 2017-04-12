@@ -40,13 +40,14 @@ curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose
 chmod +x /opt/docker/docker-compose
 
 # Create partition and mount the external volume
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACT_VERSION/asdc_ext_volume_partitions.txt -o /opt/asdc_ext_volume_partitions.txt
+curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/asdc_ext_volume_partitions.txt -o /opt/asdc_ext_volume_partitions.txt
 
 if [[ $CLOUD_ENV == "rackspace" ]]
 then
 	DISK="xvdb"
 else
 	DISK="vdb"
+	sed -i "s/xvdb/vdb/g" /opt/asdc_ext_volume_partitions.txt
 fi
 
 sfdisk /dev/$DISK < /opt/asdc_ext_volume_partitions.txt
