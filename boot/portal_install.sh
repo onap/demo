@@ -16,7 +16,7 @@ fi
 # Download dependencies
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-get update
-apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git unzip mysql-client-core-5.6 ntp ntpdate
 
 # Download scripts from Nexus
 curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/docker_key.txt -o /opt/config/docker_key.txt
