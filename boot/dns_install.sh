@@ -35,6 +35,7 @@ curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/named.conf.local 
 # Set the private IP address of each ONAP VM in the Bind configuration in OpenStack deployments
 if [[ $CLOUD_ENV == "openstack" ]]
 then
+	sed -i "s/dns_ip_addr/"$(cat /opt/config/dns_ip_addr.txt)"/g" /etc/bind/named.conf.options
 	A=$(cat /opt/config/dcae_ip_addr.txt | cut -d"." -f1)
 	B=$(cat /opt/config/dcae_ip_addr.txt | cut -d"." -f2)
 	C=$(cat /opt/config/dcae_ip_addr.txt | cut -d"." -f3)
