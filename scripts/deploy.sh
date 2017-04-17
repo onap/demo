@@ -36,7 +36,7 @@ REPO_URL="https://nexus.onap.org/content/sites/raw"
 USER=$(xpath -q -e "//servers/server[id='ecomp-raw']/username/text()" "$SETTINGS_FILE")
 PASS=$(xpath -q -e "//servers/server[id='ecomp-raw']/password/text()" "$SETTINGS_FILE")
 NETRC=$(mktemp)
-echo "machine nexus.openecomp.org login ${USER} password ${PASS}" > "${NETRC}"
+echo "machine nexus.onap.org login ${USER} password ${PASS}" > "${NETRC}"
 #######################################
 
 ##### Upload scripts into Nexus raw repository #####

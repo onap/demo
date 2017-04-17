@@ -1,6 +1,6 @@
 heat_template_version: 2015-10-15
 
-description: Heat template to install ONAP components
+description: Heat template to install ONAP components on Mitaka OpenStack
 
 ##############
 #            #
@@ -425,7 +425,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
             mkdir /opt/openecomp
@@ -524,7 +525,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
             mkdir /opt/docker
@@ -538,13 +540,16 @@ resources:
             echo -n "__openstack_api_key__" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
 
             # Rename network interface
-            sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+            sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub
             grub-mkconfig -o /boot/grub/grub.cfg
-            sed -i "s/ens3/eth0/g" /etc/network/interfaces.d/*.cfg
+            sed -i 's/ens3/eth0/g' /etc/network/interfaces.d/*.cfg
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
+
+            # Disable cloud-init for networking on reboot
+            echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
             
             # Reboot the VM to pick up configuration changes
             reboot
@@ -619,7 +624,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
             mkdir /opt/docker
@@ -720,7 +726,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
  
             mkdir /opt/docker
@@ -736,13 +743,16 @@ resources:
             git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/testsuite/properties.git testsuite/properties
             
             # Rename network interface
-            sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+            sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub
             grub-mkconfig -o /boot/grub/grub.cfg
-            sed -i "s/ens3/eth0/g" /etc/network/interfaces.d/*.cfg
+            sed -i 's/ens3/eth0/g' /etc/network/interfaces.d/*.cfg
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
+            
+            # Disable cloud-init for networking on reboot
+            echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
             
             # Reboot the VM to pick up configuration changes
             reboot
@@ -819,7 +829,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
             mkdir /opt/docker
@@ -909,7 +920,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
             mkdir /opt/docker
@@ -1018,7 +1030,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
@@ -1053,13 +1066,16 @@ resources:
             EOF
             
             # Rename network interface
-            sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+            sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub
             grub-mkconfig -o /boot/grub/grub.cfg
-            sed -i "s/ens3/eth0/g" /etc/network/interfaces.d/*.cfg
+            sed -i 's/ens3/eth0/g' /etc/network/interfaces.d/*.cfg
             
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
+            
+            # Disable cloud-init for networking on reboot
+            echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
             
             # Reboot the VM to pick up configuration changes
             reboot
@@ -1138,7 +1154,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
@@ -1244,7 +1261,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
@@ -1364,7 +1382,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
@@ -1455,7 +1474,8 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            apt-get install -y docker-engine
+            #apt-get install -y docker-engine
+            apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
             mkdir /opt/docker
