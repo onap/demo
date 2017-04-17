@@ -25,6 +25,13 @@ NEXUS_USER=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWORD=$(cat /opt/config/nexus_password.txt)
 NEXUS_URL_SNAPSHOTS=$(cat /opt/config/nexus_url_snapshots.txt)
 DOCKER_REGISTRY=$(cat /opt/config/nexus_docker_repo.txt)
+DCAE_CODE_VERSION=$(cat /opt/config/dcae_code_version.txt)
+
+DCAE_COLL_FLOAT_IP=$(cat /opt/config/dcae_coll_float_ip.txt)
+DCAE_DB_FLOAT_IP=$(cat /opt/config/dcae_db_float_ip.txt)
+DCAE_HDP1_FLOAT_IP=$(cat /opt/config/dcae_hdp1_float_ip.txt)
+DCAE_HDP2_FLOAT_IP=$(cat /opt/config/dcae_hdp2_float_ip.txt)
+DCAE_HDP3_FLOAT_IP=$(cat /opt/config/dcae_hdp3_float_ip.txt)
 
 # Add host name to /etc/host to avoid warnings in openstack images
 if [[ $CLOUD_ENV == "openstack" ]]
@@ -72,7 +79,7 @@ mkdir -p /opt/app/dcae-controller
 cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
 ZONE: $ZONE
 STATE: $STATE
-DCAE-VERSION: $ARTIFACTS_VERSION
+DCAE-VERSION: $DCAE_CODE_VERSION
 HORIZON-URL: $HORIZON_URL/$OPENSTACK_USER
 KEYSTONE-URL: $KEYSTONE_URL
 OPENSTACK-TENANT-ID: $OPENSTACK_TENANT_ID

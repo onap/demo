@@ -36,9 +36,6 @@ curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/named.conf.local 
 if [[ $CLOUD_ENV == "openstack" ]]
 then
 	sed -i "s/dns_ip_addr/"$(cat /opt/config/dns_ip_addr.txt)"/g" /etc/bind/named.conf.options
-	A=$(cat /opt/config/dcae_ip_addr.txt | cut -d"." -f1)
-	B=$(cat /opt/config/dcae_ip_addr.txt | cut -d"." -f2)
-	C=$(cat /opt/config/dcae_ip_addr.txt | cut -d"." -f3)
 	sed -i "s/aai_ip_addr/"$(cat /opt/config/aai_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/appc_ip_addr/"$(cat /opt/config/appc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/dcae_ip_addr/"$(cat /opt/config/dcae_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
@@ -51,7 +48,7 @@ then
 	sed -i "s/sdc_ip_addr/"$(cat /opt/config/sdc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/sdnc_ip_addr/"$(cat /opt/config/sdnc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/vid_ip_addr/"$(cat /opt/config/vid_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
-	sed -i "s/dcae_coll_ip_addr/"$A.$B.$C"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+	sed -i "s/dcae_coll_ip_addr/"$(cat /opt/config/dcae_coll_float_ip.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 fi
 
 # Configure Bind
