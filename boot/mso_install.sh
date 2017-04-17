@@ -56,6 +56,7 @@ then
 	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
 	grub-mkconfig -o /boot/grub/grub.cfg
 	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
+	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
 	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
 	reboot
 fi
