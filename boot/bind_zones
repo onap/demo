@@ -101,8 +101,8 @@ portal.api.simpledemo.openecomp.org.	IN	CNAME	vm1.portal.simpledemo.openecomp.or
 ;Message Router
 ;mr.api.simpledemo.openecomp.org.	IN	CNAME	vm1.mr.simpledemo.openecomp.org.	
 ueb.api.simpledemo.openecomp.org.	IN	CNAME	vm1.mr.simpledemo.openecomp.org.
-mr.api.simpledemo.openecomp.org.        IN      A   dcae_coll_ip_addr.102
-collector.api.simpledemo.openecomp.org. IN      A   dcae_coll_ip_addr.102
+mr.api.simpledemo.openecomp.org.        IN      A   dcae_coll_ip_addr
+collector.api.simpledemo.openecomp.org. IN      A   dcae_coll_ip_addr
 ;dbc.api.simpledemo.openecomp.org.	IN	CNAME  	vm1.mr.simpledemo.openecomp.org.
 ;drprov.api.simpledemo.openecomp.org.	IN	CNAME  	vm1.mr.simpledemo.openecomp.org.
 
