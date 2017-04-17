@@ -117,7 +117,7 @@ parameters:
     type: string
     description: A&AI IP Address
 
-  appc_ip_addr: 
+  appc_ip_addr:
     type: string
     description: APP-C IP Address
 
@@ -129,11 +129,11 @@ parameters:
     type: string
     description: DNS IP Address
 
-  mso_ip_addr: 
+  mso_ip_addr:
     type: string
     description: MSO IP Address
 
-  mr_ip_addr: 
+  mr_ip_addr:
     type: string
     description: Message Router IP Address
 
@@ -145,7 +145,7 @@ parameters:
     type: string
     description: Portal IP Address
 
-  robot_ip_addr: 
+  robot_ip_addr:
     type: string
     description: Robot Framework IP Address
 
@@ -551,8 +551,8 @@ resources:
 
             # Reboot the VM to pick up configuration changes
             reboot
-            
-            
+
+
   # Message Router instantiation
   mrouter_private_port:
     type: OS::Neutron::Port
@@ -653,7 +653,7 @@ resources:
     properties:
       floating_network_id: { get_param: public_net_id }
       port_id: { get_resource: robot_private_port }
- 
+
   robot_vm:
     type: OS::Nova::Server
     properties:
@@ -701,7 +701,7 @@ resources:
             echo "__openstack_region__" > /opt/config/region.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
- 
+
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
@@ -716,7 +716,7 @@ resources:
             chmod +x /opt/robot_serv.sh
             mv /opt/robot_serv.sh /etc/init.d
             update-rc.d robot_serv.sh defaults
- 
+
             # Download and install docker-engine and docker-compose
             DOCKER_KEY=$(cat /opt/config/docker_key.txt)
             apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
@@ -728,7 +728,7 @@ resources:
  
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
-            chmod +x /opt/docker/docker-compose     
+            chmod +x /opt/docker/docker-compose
 
             # Execute RobotETE-specific instructions: create share folder to run as a docker volume
             mkdir -p /opt/eteshare/logs
@@ -991,7 +991,7 @@ resources:
           template: |
             #!/bin/bash
 
-            hn=`hostname`        
+            hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
 
             # Create configuration files
