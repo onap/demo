@@ -38,7 +38,7 @@ parameters:
   flavor_xlarge:
     type: string
     description: Name of the Extra Large Flavor supported by the cloud provider
-    
+
   vm_base_name:
     type: string
     description: Base name of ONAP VMs
@@ -66,15 +66,15 @@ parameters:
   nexus_password:
     type: string
     description: Nexus Repository Password
-    
+
   artifacts_version:
     type: string
     description: Artifacts version of ONAP components
-    
+
   docker_version:
     type: string
     label: Version number of ONAP docker images
-    
+
   gerrit_branch:
     type: string
     label: Gerrit code branch
@@ -83,7 +83,7 @@ parameters:
   dmaap_topic:
     type: string
     description: DmaaP Topic name
-    
+
   openstack_tenant_id:
     type: string
     description: Openstack tenant ID
@@ -95,7 +95,7 @@ parameters:
   openstack_api_key:
     type: string
     description: Openstack API Key
-    
+
   horizon_url:
     type: string
     description: URL of Openstack Horizon
@@ -103,7 +103,7 @@ parameters:
   keystone_url:
     type: string
     description: URL of Openstack Keystone
-    
+
   # Network parameters
   external_dns:
     type: comma_delimited_list
@@ -112,39 +112,39 @@ parameters:
   oam_network_cidr:
     type: string
     description: CIDR of the OAM ONAP network
-    
+
   aai_ip_addr:
     type: string
     description: A&AI IP Address
-    
+
   appc_ip_addr: 
     type: string
     description: APP-C IP Address
-    
+
   dcae_ip_addr:
     type: string
     description: DCAE IP Address
-    
+
   dns_ip_addr:
     type: string
     description: DNS IP Address
-    
+
   mso_ip_addr: 
     type: string
     description: MSO IP Address
-    
+
   mr_ip_addr: 
     type: string
     description: Message Router IP Address
-    
+
   policy_ip_addr:
     type: string
     description: Policy Engine IP Address
-    
+
   portal_ip_addr:
     type: string
     description: Portal IP Address
-    
+
   robot_ip_addr: 
     type: string
     description: Robot Framework IP Address
@@ -152,11 +152,11 @@ parameters:
   sdc_ip_addr:
     type: string
     description: SDC IP Address
-    
+
   sdnc_ip_addr:
     type: string
     description: SDN-C IP Address
-    
+
   vid_ip_addr:
     type: string
     description: VID IP Address
@@ -173,7 +173,7 @@ parameters:
   nexus_repo_root:
     type: string
     description: Root URL of Nexus repository
-    
+
   nexus_url_snapshot:
     type: string
     description: Snapshot of Maven repository for DCAE deployment
@@ -300,7 +300,7 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
@@ -347,7 +347,7 @@ resources:
 
             modprobe ip_gre
             sed -i "s/OPTIONS=.*/OPTIONS=\"-4 -u bind\"/g" /etc/default/bind9
-            
+
             # Restart bind to pick up configuration changes
             service bind9 restart
 
@@ -425,7 +425,6 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
@@ -493,7 +492,7 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
@@ -525,7 +524,6 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
@@ -543,18 +541,18 @@ resources:
             sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub
             grub-mkconfig -o /boot/grub/grub.cfg
             sed -i 's/ens3/eth0/g' /etc/network/interfaces.d/*.cfg
-            
+
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
 
             # Disable cloud-init for networking on reboot
             echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-            
+
             # Reboot the VM to pick up configuration changes
             reboot
-
-
+            
+            
   # Message Router instantiation
   mrouter_private_port:
     type: OS::Neutron::Port
@@ -624,7 +622,6 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
@@ -691,7 +688,7 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
@@ -726,7 +723,6 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
  
@@ -741,19 +737,19 @@ resources:
             # Clone Gerrit repository
             cd /opt
             git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/testsuite/properties.git testsuite/properties
-            
+
             # Rename network interface
             sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub
             grub-mkconfig -o /boot/grub/grub.cfg
             sed -i 's/ens3/eth0/g' /etc/network/interfaces.d/*.cfg
-            
+
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
-            
+
             # Disable cloud-init for networking on reboot
             echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-            
+
             # Reboot the VM to pick up configuration changes
             reboot
 
@@ -801,7 +797,7 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
@@ -829,7 +825,6 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
@@ -840,15 +835,15 @@ resources:
             # Clone Gerrit repository
             cd /opt
             git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/vid.git
-            
+
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
-            
+
             # Reboot the VM to pick up configuration changes
             reboot
-            
-            
+
+
   # SDN-C instantiation
   sdnc_private_port:
     type: OS::Neutron::Port
@@ -892,7 +887,7 @@ resources:
 
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
@@ -913,14 +908,13 @@ resources:
             chmod +x /opt/sdnc_serv.sh
             mv /opt/sdnc_serv.sh /etc/init.d
             update-rc.d sdnc_serv.sh defaults
-            
+
             # Download and install docker-engine and docker-compose
             DOCKER_KEY=$(cat /opt/config/docker_key.txt)
             apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
@@ -931,15 +925,15 @@ resources:
             # Clone Gerrit repository
             cd /opt
             git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/sdnc/oam.git sdnc
-            
+
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
-            
+
             # Reboot the VM to pick up configuration changes
             reboot
 
-            
+
   # SDC instantiation
   sdc_private_port:
     type: OS::Neutron::Port
@@ -996,10 +990,10 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
-            
+
             hn=`hostname`        
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
@@ -1009,7 +1003,7 @@ resources:
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__public_ip__" > /opt/config/public_ip.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
-          
+
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
@@ -1023,14 +1017,14 @@ resources:
             chmod +x /opt/asdc_serv.sh
             mv /opt/asdc_serv.sh /etc/init.d
             update-rc.d asdc_serv.sh defaults
-            
+
             # Download and install docker-engine and docker-compose
             DOCKER_KEY=$(cat /opt/config/docker_key.txt)
             apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
+
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
             mkdir /opt/docker
@@ -1064,23 +1058,23 @@ resources:
             alias rund='/data/scripts/docker_run.sh'
             alias health='/data/scripts/docker_health.sh'
             EOF
-            
+
             # Rename network interface
             sed -i 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub
             grub-mkconfig -o /boot/grub/grub.cfg
             sed -i 's/ens3/eth0/g' /etc/network/interfaces.d/*.cfg
-            
+
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
-            
+
             # Disable cloud-init for networking on reboot
             echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-            
+
             # Reboot the VM to pick up configuration changes
             reboot
-            
-            
+
+
   # PORTAL instantiation
   portal_private_port:
     type: OS::Neutron::Port
@@ -1122,10 +1116,10 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
-            
+
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
@@ -1133,7 +1127,7 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__public_ip__" > /opt/config/public_ip.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
-            
+
             # Download dependencies
             add-apt-repository -y ppa:openjdk-r/ppa
             apt-get update
@@ -1147,14 +1141,13 @@ resources:
             chmod +x /opt/portal_serv.sh
             mv /opt/portal_serv.sh /etc/init.d
             update-rc.d portal_serv.sh defaults
-            
+
             # Download and install docker-engine and docker-compose
             DOCKER_KEY=$(cat /opt/config/docker_key.txt)
             apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
             mkdir /opt/docker
@@ -1165,15 +1158,15 @@ resources:
             mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
             cd /opt
             git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/portal.git
-            
+
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
 
             # Reboot the VM to pick up configuration changes
             reboot
-            
-            
+
+
   # DCAE Controller instantiation
   dcae_c_private_port:
     type: OS::Neutron::Port
@@ -1229,10 +1222,10 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
-            
+
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
@@ -1261,17 +1254,16 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
             mkdir /opt/docker
             curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
             chmod +x /opt/docker/docker-compose
-            
+
             # Clone Gerrit repository
             cd /opt
             git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/dcae/demo/startup/controller.git dcae-startup-vm-controller
-            
+
             # DCAE Controller specific deployment
             cd /opt/dcae-startup-vm-controller
             mkdir -p /opt/app/dcae-controller
@@ -1289,26 +1281,26 @@ resources:
             OPENSTACK-PASSWORD: __openstack_password__
             OPENSTACK-KEYNAME: __key_name_____rand_str___dcae
             OPENSTACK-PUBKEY: __pub_key__
-            
+
             NEXUS-URL-ROOT: __nexus_repo_root__
             NEXUS-USER: __nexus_username__
             NEXUS-PASSWORD: __nexus_password__
             NEXUS-URL-SNAPSHOTS: __nexus_url_snapshots__
             NEXUS-RAWURL: __nexus_repo__
-            
+
             DOCKER-REGISTRY: __nexus_docker_repo__
 
             GIT-MR-REPO: http://gerrit.onap.org/r/dcae/demo/startup/message-router.git
             EOF_CONFIG
-            
+
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
 
             # Reboot the VM to pick up configuration changes
             reboot
-            
-            
+
+
   # Policy Engine instantiation
   policy_private_port:
     type: OS::Neutron::Port
@@ -1350,10 +1342,10 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
-            
+
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
@@ -1382,7 +1374,6 @@ resources:
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
             mkdir /opt/docker
@@ -1392,15 +1383,15 @@ resources:
             # Clone Gerrit repository
             cd /opt
             git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/policy/docker.git policy
-            
+
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
-            
+
             # Reboot the VM to pick up configuration changes
             reboot
-            
-            
+
+
   # APP-C instantiation
   appc_private_port:
     type: OS::Neutron::Port
@@ -1442,10 +1433,10 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
           template: |
             #!/bin/bash
-            
+
             hn=`hostname`
             echo 127.0.0.1 $hn >> /etc/hosts
-            
+
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
@@ -1467,14 +1458,13 @@ resources:
             chmod +x /opt/appc_serv.sh
             mv /opt/appc_serv.sh /etc/init.d
             update-rc.d appc_serv.sh defaults
-            
+
             # Download and install docker-engine and docker-compose
             DOCKER_KEY=$(cat /opt/config/docker_key.txt)
             apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
             echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
             apt-get update
             apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-            #apt-get install -y docker-engine
             apt-get install -y --allow-unauthenticated docker-engine
             service docker start
 
@@ -1485,11 +1475,10 @@ resources:
             # Clone Gerrit repository
             cd /opt
             git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/appc/deployment.git appc
-            
+
             # DNS/GW IP address configuration
             echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
             resolvconf -u
-            
+
             # Reboot the VM to pick up configuration changes
             reboot
-            
