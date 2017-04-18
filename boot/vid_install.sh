@@ -30,7 +30,7 @@ update-rc.d vid_serv.sh defaults
 echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
 apt-get update
 apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-apt-get install -y docker-engine
+apt-get install -y --allow-unauthenticated docker-engine
 
 mkdir /opt/docker
 curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
