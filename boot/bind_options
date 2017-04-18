@@ -4,8 +4,8 @@ acl "trusted" {
 options {
         directory "/var/cache/bind";
 
-        recursion yes;                 # enables recursive queries
-        allow-recursion { netmask; };  # allows recursive queries from "trusted” clients i.e. LB only
+        recursion no;                 # enables recursive queries
+        // allow-recursion { netmask; };  # allows recursive queries from "trusted” clients i.e. LB only
         listen-on { dns_ip_addr; };   # ns1 IP address - listen on this address only
         allow-transfer { none; };      # disable zone transfers by default
 

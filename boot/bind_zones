@@ -64,7 +64,7 @@ vm1.portal.simpledemo.openecomp.org.           IN      A       portal_ip_addr
 c1.vm1.portal.simpledemo.openecomp.org.        IN      A       portal_ip_addr
 c2.vm1.portal.simpledemo.openecomp.org.        IN      A       portal_ip_addr
 
-vm1.aaf.simpledemo.openecomp.org.	IN	A	aaf_ip_addr
+;vm1.aaf.simpledemo.openecomp.org.	IN	A	aaf_ip_addr
 
 vm1.mr.simpledemo.openecomp.org.	IN	A	mr_ip_addr	
 
