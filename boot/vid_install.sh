@@ -19,7 +19,6 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/docker_key.txt -o /opt/config/docker_key.txt
 curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/vid_vm_init.sh -o /opt/vid_vm_init.sh
 curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/vid_serv.sh -o /opt/vid_serv.sh
 chmod +x /opt/vid_vm_init.sh
@@ -28,8 +27,6 @@ mv /opt/vid_serv.sh /etc/init.d
 update-rc.d vid_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
-DOCKER_KEY=$(cat /opt/config/docker_key.txt)
-apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
 echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
 apt-get update
 apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual

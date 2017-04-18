@@ -20,7 +20,6 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/docker_key.txt -o /opt/config/docker_key.txt
 curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/mso_vm_init.sh -o /opt/mso_vm_init.sh
 curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/mso_serv.sh -o /opt/mso_serv.sh
 chmod +x /opt/mso_vm_init.sh
@@ -29,12 +28,10 @@ mv /opt/mso_serv.sh /etc/init.d
 update-rc.d mso_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
-DOCKER_KEY=$(cat /opt/config/docker_key.txt)
-apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
 echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
 apt-get update
 apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-apt-get install -y docker-engine
+apt-get install -y --allow-unauthenticated docker-engine
 
 mkdir /opt/docker
 curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
