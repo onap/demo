@@ -1,0 +1,53 @@
+{
+"input": {
+"module-name": "VNF-API",
+"rpc-name": "vnf-topology-activate",
+"mode": "sync",
+"sli-parameter": [
+{
+"parameter-name": "preload-data.vnf-topology-information.vnf-topology-identifier.vnf-type",
+"string-value": "E636c6e5747e4eda9dbb..base_vfw..module-0"
+}, 
+{
+"parameter-name": "preload-data.vnf-topology-information.vnf-parameters_length",
+"string-value": "2"
+},
+{
+"parameter-name": "preload-data.vnf-topology-information.vnf-parameters[0].vnf-parameter-name",
+"string-value": "vpg_name_0"
+},
+{
+"parameter-name": "preload-data.vnf-topology-information.vnf-parameters[0].vnf-parameter-value",
+"string-value": "testname1"
+},
+{
+"parameter-name": "preload-data.vnf-topology-information.vnf-parameters[1].vnf-parameter-name",
+"string-value": "vpg_private_ip_1"
+},
+{
+"parameter-name": "preload-data.vnf-topology-information.vnf-parameters[1].vnf-parameter-value",
+"string-value": "10.0.0.1"
+},
+{
+"parameter-name": "service-data.oper-status.order-status",
+"string-value": "PendingCreate"
+},
+{
+"parameter-name": "service-data.vnf-id",
+"string-value": "Vfmodule_Ete_Name3d4e75c0-119d-4c8e-a6bf-179a2bb51831"
+},
+{
+"parameter-name": "vnf-topology-operation-input.vnf-request-information.vnf-id",
+"string-value": "Vfmodule_Ete_Name3d4e75c0-119d-4c8e-a6bf-179a2bb51831"
+},
+{
+"parameter-name": "vnf-topology-operation-input.vnf-request-information.vnf-type",
+"string-value": "E636c6e5747e4eda9dbb..base_vfw..module-0"
+},
+{
+"parameter-name": "vnf-topology-operation-input.vnf-request-information.generic-vnf-id",
+"string-value": "Vnf_Ete_Name3d4e75c0-119d-4c8e-a6bf-179a2bb51831"
+}
+]
+}
+}
