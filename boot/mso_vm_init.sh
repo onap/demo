@@ -4,6 +4,8 @@ NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DMAAP_TOPIC=$(cat /opt/config/dmaap_topic.txt)
+OPENSTACK_USERNAME=$(cat /opt/config/openstack_username.txt)
+OPENSTACK_APIKEY=$(cat /opt/config/api_key.txt)
 export MSO_DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 # Deployments in OpenStack require a keystone file
@@ -11,14 +13,10 @@ if [ -e /opt/config/keystone.txt ]
 then
 	KEYSTONE_URL=$(cat /opt/config/keystone.txt)
 	DCP_CLLI="DEFAULT_KEYSTONE"
-	OPENSTACK_USERNAME="admin"
-	OPENSTACK_APIKEY="encryptedPassword"
 	AUTH_TYPE="USERNAME_PASSWORD"
 else
 	KEYSTONE_URL="https://identity.api.rackspacecloud.com/v2.0"
 	DCP_CLLI="RAX_KEYSTONE"
-	OPENSTACK_USERNAME=$(cat /opt/config/openstack_username.txt)
-	OPENSTACK_APIKEY=$(cat /opt/config/api_key.txt)
 	AUTH_TYPE="RACKSPACE_APIKEY"
 fi
 
