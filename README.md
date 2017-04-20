@@ -128,9 +128,9 @@ Instantiation via Command Line:
 ONAP HEAT Template for vanilla OpenStack
 ---
 
-The HEAT template for vanilla OpenStack is similar to the HEAT template for Rackspace. The main difference is the way in which some VMs resource-intensive VMs are defined. Unlike OpenStack, in fact, Rackspace requires to explicitly define a local disk for memory- or CPU-intensive VMs.
+The HEAT template for vanilla OpenStack is similar to the HEAT template for Rackspace. The main difference is the way resource-intensive VMs are defined. Unlike OpenStack, Rackspace requires to explicitly create a local disk for memory- or CPU-intensive VMs.
 
-The HEAT template for vanilla OpenStack tries to replicate typical application deployments in OpenStack. VMs have a private IP address in the ONAP Private Management Network space. Unlike the Rackspace deployment, they use floating IP addresses. Currently, floating IPs are automatically assigned by OpenStack. A router is also created that connects the ONAP Private Management Network to the external network.
+The HEAT template for vanilla OpenStack replicates typical application deployments in OpenStack. VMs have a private IP address in the ONAP Private Management Network space and use floating IP addresses. A router that connects the ONAP Private Management Network to the external network is also created.
 
 In addition to the parameters described in the previous section, the HEAT template for vanilla OpenStack uses the following parameters to define the image name and flavor of a VM:
 
@@ -143,6 +143,11 @@ In addition to the parameters described in the previous section, the HEAT templa
   
 Parameters for network configuration are also used:
 
+        aai_float_ip
+        appc_float_ip
+        ...
+        vid_float_ip
+        
         external_dns
         oam_network_cidr
         aai_ip_addr

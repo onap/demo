@@ -1,0 +1,869 @@
+heat_template_version: 2013-05-23
+
+description: Heat template to deploy ONAP components
+
+parameters:
+
+  # Generic parameters used across all ONAP components
+  public_net_id:
+    type: string
+    label: Public network name or ID
+    description: Public network that enables remote connection to the compute instance
+
+  key_name:
+    type: string
+    label: Key pair name
+    description: Public/Private key pair name
+
+  pub_key:
+    type: string
+    label: Public key
+    description: Public key or SSL certificate to be installed on the compute instance
+
+  nexus_repo:
+    type: string
+    label: Nexus Repository
+    description: Complete URL for the Nexus repository.
+
+  nexus_docker_repo:
+    type: string
+    label: Nexus Docker Images Repository
+    description: Complete URL for the Nexus repository for docker images.
+
+  nexus_username:
+    type: string
+    label: Nexus Repository Username
+    description: Nexus Repository username
+
+  nexus_password:
+    type: string
+    label: Nexus Repository Password
+    description: Nexus Repository Password
+
+  openstack_tenant_id:
+    type: string
+    label: Rackspace tenant ID
+    description: Rackspace tenant ID
+
+  openstack_username:
+    type: string
+    label: Rackspace username
+    description: Rackspace username
+
+  openstack_api_key:
+    type: string
+    label: Rackspace API Key
+    description: Rackspace API Key
+
+  openstack_password:
+    type: string
+    label: Rackspace Password
+    description: Rackspace Password
+
+  dmaap_topic:
+    type: string
+    label: DmaaP Topic
+    description: DmaaP Topic that MSO and A&AI listen to
+
+  artifacts_version:
+    type: string
+    label: Artifacts Version
+    description: Artifacts version of ONAP components
+
+  docker_version:
+    type: string
+    label: Docker Version
+    description: Docker version of ONAP docker images
+
+  gerrit_branch:
+    type: string
+    label: Gerrit code branch
+    description: Gerrit branch where to download the code from
+
+  cloud_env:
+    type: string
+    description: Cloud Provider Name
+
+
+  # Parameters for DCAE instantiation
+  dcae_zone:
+    type: string
+    label: DCAE Zone
+    description: DCAE Zone to use in VM names created by DCAE controller
+
+  dcae_state:
+    type: string
+    label: DCAE State
+    description: DCAE State to use in VM names created by DCAE controller
+
+  nexus_repo_root:
+    type: string
+    label: Root URL of nexus repository
+    description: Root URL of nexus repository
+
+  nexus_url_snapshot:
+    type: string
+    label: Snapshot of Maven repository for DCAE deployment
+    description: Snapshot of Maven repository
+
+  openstack_region:
+    type: string
+    label: Rackspace Region
+    description: Rackspace region where the DCAE controller will spin the VMs
+
+  gitlab_branch:
+    type: string
+    label: Branch of the Gitlab repository
+    description: Branch of the Gitlab repository
+
+  dcae_code_version:
+    type: string
+    description: DCAE Code Version Number
+
+
+resources:
+  random-str:
+    type: OS::Heat::RandomString
+    properties:
+      length: 4
+
+  # Public key used to access ONAP components
+  vm_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: 
+        str_replace:
+          template: base_rand
+          params:
+            base: { get_param: key_name }
+            rand: { get_resource: random-str }         
+      public_key: { get_param: pub_key }
+      save_private_key: false
+
+
+  # ONAP management private network
+  oam_ecomp:
+    type: OS::Neutron::Net
+    properties:
+      name: 
+        str_replace:
+          template: oam_ecomp_rand
+          params:
+            rand: { get_resource: random-str }
+
+  oam_ecomp_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: 
+        str_replace:
+          template: oam_ecomp_rand
+          params:
+            rand: { get_resource: random-str }
+      network_id: { get_resource: oam_ecomp }
+      cidr: 10.0.0.0/8
+
+
+  # DNS Server instantiation
+  dns_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.0.1}]
+
+  dns_vm:
+    type: OS::Nova::Server
+    properties:
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      flavor: 4 GB General Purpose v1
+      name: vm1-dns-server
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: dns_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __artifacts_version__: { get_param: artifacts_version }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dns_install.sh -o /opt/dns_install.sh
+            cd /opt
+            chmod +x dns_install.sh
+            ./dns_install.sh
+
+
+  # A&AI instantiation
+  aai_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.1.1}]
+
+  aai_volume:
+    type: OS::Cinder::Volume
+    properties:
+      name: vol1-aai
+      size: 50
+      volume_type: SSD
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+
+  aai_vm:
+    type: OS::Nova::Server
+    depends_on: sdc_vm
+    properties:
+      flavor: 15 GB Compute v1
+      name: vm1-aai
+      key_name: { get_resource: vm_key }
+      block_device_mapping:
+        - volume_id: { get_resource: aai_volume }
+          device_name: vda
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: aai_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
+            cd /opt
+            chmod +x aai_install.sh
+            ./aai_install.sh
+
+
+  # MSO instantiation
+  mso_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.5.1}]
+
+  mso_vm:
+    type: OS::Nova::Server
+    properties:
+      image: Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM)
+      flavor: 4 GB General Purpose v1
+      name: vm1-mso
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: mso_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __openstack_username__: { get_param: openstack_username }
+            __openstack_tenant_id__: { get_param: openstack_tenant_id }
+            __openstack_api_key__: { get_param: openstack_api_key }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config            
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__openstack_username__" > /opt/config/openstack_username.txt
+            echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
+            echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mso_install.sh -o /opt/mso_install.sh
+            cd /opt
+            chmod +x mso_install.sh
+            ./mso_install.sh
+
+
+  # Message Router instantiation
+  mrouter_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.11.1}]
+
+  mrouter_vm:
+    type: OS::Nova::Server
+    properties:
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      flavor: 15 GB I/O v1
+      name: vm1-message-router
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: mrouter_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mr_install.sh -o /opt/mr_install.sh
+            cd /opt
+            chmod +x mr_install.sh
+            ./mr_install.sh
+
+
+  # RobotE2E instantiation
+  robot_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.10.1}]
+ 
+  robot_vm:
+    type: OS::Nova::Server
+    properties:
+      image: Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM)
+      flavor: 2 GB General Purpose v1
+      name: vm1-robot
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: robot_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __network_name__: { get_attr: [oam_ecomp, name] }
+            __openstack_username__: { get_param: openstack_username }
+            __openstack_api_key__: { get_param : openstack_api_key }
+            __openstack_password__: { get_param: openstack_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __openstack_region__: { get_param: openstack_region }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__network_name__" > /opt/config/network.txt
+            echo "__openstack_username__" > /opt/config/openstack_username.txt
+            echo "__openstack_password__" > /opt/config/openstack_password.txt
+            echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
+            echo "__openstack_region__" > /opt/config/region.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_install.sh -o /opt/robot_install.sh
+            cd /opt
+            chmod +x robot_install.sh
+            ./robot_install.sh
+
+
+  # VID instantiation
+  vid_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.8.1}]
+
+  vid_vm:
+    type: OS::Nova::Server
+    properties:
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      flavor: 2 GB General Purpose v1
+      name: vm1-vid
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: vid_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/vid_install.sh -o /opt/vid_install.sh
+            cd /opt
+            chmod +x vid_install.sh
+            ./vid_install.sh
+
+
+  # SDN-C instantiation
+  sdnc_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.7.1}]
+
+  sdnc_vm:
+    type: OS::Nova::Server
+    properties:
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      flavor: 4 GB General Purpose v1
+      name: vm1-sdnc
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: sdnc_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/sdnc_install.sh -o /opt/sdnc_install.sh
+            cd /opt
+            chmod +x sdnc_install.sh
+            ./sdnc_install.sh
+
+
+  # SDC instantiation
+  sdc_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.3.1}]
+
+  sdc_volume_local:
+    type: OS::Cinder::Volume
+    properties:
+      name: vol1-sdc-local
+      size: 50
+      volume_type: SSD
+      image: Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM)
+
+  sdc_volume_data:
+    type: OS::Cinder::Volume
+    properties:
+      name: vol1-sdc-data
+      size: 100
+      volume_type: SSD
+
+  sdc_volume_attachment:
+    type: OS::Cinder::VolumeAttachment
+    properties:
+      volume_id: { get_resource: sdc_volume_data }
+      instance_uuid: { get_resource: sdc_vm }
+      mountpoint: /dev/xvdb
+
+  sdc_vm:
+    type: OS::Nova::Server
+    properties:
+      flavor: 15 GB Compute v1
+      name: vm1-sdc
+      key_name: { get_resource: vm_key }
+      block_device_mapping:
+        - volume_id: { get_resource: sdc_volume_local }
+          device_name: vda
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: sdc_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __env_name__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__env_name__" > /opt/config/env_name.txt
+            echo "10.0.11.1" > /opt/config/mr_ip_addr.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_install.sh -o /opt/asdc_install.sh
+            cd /opt
+            chmod +x asdc_install.sh
+            ./asdc_install.sh
+
+
+  # PORTAL instantiation
+  portal_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.9.1}]
+
+  portal_volume:
+    type: OS::Cinder::Volume
+    properties:
+      name: vol1-portal
+      size: 50
+      volume_type: SSD
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+
+  portal_vm:
+    type: OS::Nova::Server
+    properties:
+      flavor: 15 GB Memory v1
+      name: vm1-portal
+      key_name: { get_resource: vm_key }
+      block_device_mapping:
+        - volume_id: { get_resource: portal_volume }
+          device_name: vda
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: portal_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/portal_install.sh -o /opt/portal_install.sh
+            cd /opt
+            chmod +x portal_install.sh
+            ./portal_install.sh
+
+
+  # DCAE Controller instantiation
+  dcae_c_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.4.1}]
+  dcae_c_vm:
+    type: OS::Nova::Server
+    properties:
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      flavor: 8 GB General Purpose v1
+      name: vm1-dcae-controller
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: dcae_c_private_port }
+      user_data_format: RAW
+      user_data: 
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __nexus_url_snapshots__: { get_param: nexus_url_snapshot }
+            __gitlab_branch__: { get_param: gitlab_branch }
+            __dcae_zone__: { get_param: dcae_zone }
+            __dcae_state__: { get_param: dcae_state }
+            __artifacts_version__: { get_param: artifacts_version }
+            __tenant_id__: { get_param: openstack_tenant_id }
+            __openstack_private_network_name__: { get_attr: [oam_ecomp, name] }
+            __openstack_user__: { get_param: openstack_username }
+            __openstack_password__: { get_param: openstack_api_key }
+            __key_name__: { get_param: key_name }
+            __rand_str__: { get_resource: random-str }
+            __pub_key__: { get_param: pub_key }
+            __nexus_repo_root__: { get_param: nexus_repo_root }
+            __openstack_region__: { get_param: openstack_region }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+            __dcae_code_version__: { get_param: dcae_code_version }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__nexus_url_snapshots__" > /opt/config/nexus_url_snapshots.txt
+            echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__dcae_zone__" > /opt/config/dcae_zone.txt
+            echo "__dcae_state__" > /opt/config/dcae_state.txt
+            echo "__tenant_id__" > /opt/config/tenant_id.txt
+            echo "__openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
+            echo "__openstack_user__" > /opt/config/openstack_user.txt
+            echo "__openstack_password__" > /opt/config/openstack_password.txt
+            echo "__key_name__" > /opt/config/key_name.txt
+            echo "__rand_str__" > /opt/config/rand_str.txt
+            echo "__pub_key__" > /opt/config/pub_key.txt
+            echo "__nexus_repo_root__" > /opt/config/nexus_repo_root.txt
+            echo "__openstack_region__" > /opt/config/openstack_region.txt
+            echo "https://mycloud.rackspace.com/cloud" > /opt/config/horizon_url.txt
+            echo "https://identity.api.rackspacecloud.com/v2.0" > /opt/config/keystone_url.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__dcae_code_version__" > /opt/config/dcae_code_version.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh
+            cd /opt
+            chmod +x dcae_install.sh
+            ./dcae_install.sh
+
+
+  # Policy engine instantiation
+  policy_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.6.1}]
+
+  policy_volume:
+    type: OS::Cinder::Volume
+    properties:
+      name: vol1-policy
+      size: 50
+      volume_type: SSD
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+
+  policy_vm:
+    type: OS::Nova::Server
+    properties:
+      flavor: 15 GB Compute v1
+      name: vm1-policy
+      key_name: { get_resource: vm_key }
+      block_device_mapping:
+        - volume_id: { get_resource: policy_volume }
+          device_name: vda
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: policy_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/policy_install.sh -o /opt/policy_install.sh
+            cd /opt
+            chmod +x policy_install.sh
+            ./policy_install.sh
+
+
+  # APP-C instantiation
+  appc_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.2.1}]
+
+  appc_vm:
+    type: OS::Nova::Server
+    properties:
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      flavor: 4 GB General Purpose v1
+      name: vm1-appc
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: appc_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/appc_install.sh -o /opt/appc_install.sh
+            cd /opt
+            chmod +x appc_install.sh
+            ./appc_install.sh
