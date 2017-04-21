@@ -5,9 +5,7 @@ DCAE_COLLECTOR_PORT=$(cat /opt/config/dcae_collector_port.txt)
 REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
-VFW_PRIVATE_IP_O=$(cat /opt/config/vfw_private_ip_0.txt)
-VFW_PRIVATE_IP_1=$(cat /opt/config/vfw_private_ip_1.txt)
-VFW_PRIVATE_IP_2=$(cat /opt/config/vfw_private_ip_2.txt)
+INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
 # OpenStack network configuration 
@@ -15,11 +13,13 @@ if [[ $CLOUD_ENV == "openstack" ]]
 then
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
 
+	VFW_PRIVATE_IP_O=$(cat /opt/config/vfw_private_ip_0.txt)
 	echo "auto eth1" >> /etc/network/interfaces
 	echo "iface eth1 inet static" >> /etc/network/interfaces
 	echo "    address $VFW_PRIVATE_IP_O" >> /etc/network/interfaces
 	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
 
+	VFW_PRIVATE_IP_1=$(cat /opt/config/vfw_private_ip_1.txt)
 	echo "auto eth2" >> /etc/network/interfaces
 	echo "iface eth2 inet static" >> /etc/network/interfaces
 	echo "    address $VFW_PRIVATE_IP_1" >> /etc/network/interfaces
@@ -40,8 +40,8 @@ pip install jsonschema
 mkdir /opt/honeycomb
 cd /opt
 
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$DEMO_ARTIFACTS_VERSION/v_firewall_init.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$DEMO_ARTIFACTS_VERSION/vfirewall.sh
+wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_firewall_init.sh
+wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vfirewall.sh
 wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
 wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/ves/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/ves/ves_vfw_reporting/$DEMO_ARTIFACTS_VERSION/ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
