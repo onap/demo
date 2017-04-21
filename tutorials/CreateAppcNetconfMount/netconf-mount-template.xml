@@ -1,7 +1,7 @@
 <node xmlns="urn:TBD:params:xml:ns:yang:network-topology">
  <node-id>${prop.vpg_hostname}</node-id>
  <host xmlns="urn:opendaylight:netconf-node-topology">${prop.vpg_ipaddress}</host>
- <port xmlns="urn:opendaylight:netconf-node-topology">2883</port>
+ <port xmlns="urn:opendaylight:netconf-node-topology">2831</port>
  <username xmlns="urn:opendaylight:netconf-node-topology">admin</username>
  <password xmlns="urn:opendaylight:netconf-node-topology">admin</password>
  <tcp-only xmlns="urn:opendaylight:netconf-node-topology">false</tcp-only>
@@ -12,5 +12,5 @@
  <between-attempts-timeout-millis xmlns="urn:opendaylight:netconf-node-topology">2000</between-attempts-timeout-millis>
  <sleep-factor xmlns="urn:opendaylight:netconf-node-topology">1.5</sleep-factor>
  <!-- keepalive-delay set to 0 turns off keepalives-->
- <keepalive-delay xmlns="urn:opendaylight:netconf-node-topology">120</keepalive-delay>
+ <keepalive-delay xmlns="urn:opendaylight:netconf-node-topology">125</keepalive-delay>
 </node>
