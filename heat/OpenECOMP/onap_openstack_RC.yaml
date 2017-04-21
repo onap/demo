@@ -298,12 +298,12 @@ resources:
   vm_key:
     type: OS::Nova::KeyPair
     properties:
-      name: 
+      name:
         str_replace:
           template: base_rand
           params:
             base: { get_param: key_name }
-            rand: { get_resource: random-str }         
+            rand: { get_resource: random-str }
       public_key: { get_param: pub_key }
       save_private_key: false
 
@@ -312,7 +312,7 @@ resources:
   oam_ecomp:
     type: OS::Neutron::Net
     properties:
-      name: 
+      name:
         str_replace:
           template: oam_ecomp_rand
           params:
@@ -321,7 +321,7 @@ resources:
   oam_ecomp_subnet:
     type: OS::Neutron::Subnet
     properties:
-      name: 
+      name:
         str_replace:
           template: oam_ecomp_rand
           params:
@@ -438,7 +438,6 @@ resources:
 
   aai_vm:
     type: OS::Nova::Server
-    depends_on: sdc_vm
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_xlarge }
@@ -534,7 +533,7 @@ resources:
             #!/bin/bash
 
             # Create configuration files
-            mkdir -p /opt/config            
+            mkdir -p /opt/config
             echo "__nexus_repo__" > /opt/config/nexus_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
@@ -984,7 +983,7 @@ resources:
       networks:
         - port: { get_resource: dcae_c_private_port }
       user_data_format: RAW
-      user_data: 
+      user_data:
         str_replace:
           params:
             __nexus_repo__: { get_param: nexus_repo }
