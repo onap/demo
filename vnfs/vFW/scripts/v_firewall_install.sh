@@ -1,14 +1,12 @@
 #!/bin/bash
 
-DCAE_COLLECTOR_IP=$(cat /opt/config/dcae_collector_ip.txt)
-DCAE_COLLECTOR_PORT=$(cat /opt/config/dcae_collector_port.txt)
 REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
-# OpenStack network configuration 
+# OpenStack network configuration
 if [[ $CLOUD_ENV == "openstack" ]]
 then
 	echo 127.0.0.1 $(hostname) >> /etc/hosts

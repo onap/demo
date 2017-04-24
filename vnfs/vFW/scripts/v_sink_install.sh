@@ -1,7 +1,5 @@
 #!/bin/bash
 
-PROTECTED_NET_GW=$(cat /opt/config/protected_net_gw.txt)
-UNPROTECTED_NET=$(cat /opt/config/unprotected_net.txt | cut -d'/' -f1)
 REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)

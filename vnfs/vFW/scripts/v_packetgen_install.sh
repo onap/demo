@@ -1,15 +1,12 @@
 #!/bin/bash
 
-FW_IPADDR=$(cat /opt/config/fw_ipaddr.txt)
-PROTECTED_NET_CIDR=$(cat /opt/config/protected_net_cidr.txt)
-SINK_IPADDR=$(cat /opt/config/sink_ipaddr.txt)
 REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
-# Network configuration
+# OpenStack network configuration
 if [[ $CLOUD_ENV == "openstack" ]]
 then
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
