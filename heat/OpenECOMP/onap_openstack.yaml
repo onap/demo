@@ -125,6 +125,26 @@ parameters:
     type: string
     description: DCAE IP Address
 
+  dcae_pstg00_ip_addr:
+    type: string
+    description: DCAE IP Postgres VM Address
+
+  dcae_coll00_ip_addr:
+    type: string
+    description: DCAE IP Docker Host VM Address
+
+  dcae_cdap00_ip_addr:
+    type: string
+    description: DCAE IP CDAP VM0 Address
+
+  dcae_cdap01_ip_addr:
+    type: string
+    description: DCAE IP CDAP VM1 Address
+
+  dcae_cdap02_ip_addr:
+    type: string
+    description: DCAE IP CDAP VM2 Address
+
   dns_ip_addr:
     type: string
     description: DNS IP Address
@@ -162,6 +182,10 @@ parameters:
     description: VID IP Address
 
   # Parameters for DCAE instantiation
+  dcae_base_environment:
+    type: string
+    description: DCAE Base Environment Configuration to use, supported values RACKSPACE/2-NIC/...
+
   dcae_zone:
     type: string
     description: DCAE Zone to use in VM names created by DCAE controller
@@ -1203,7 +1227,15 @@ resources:
             __nexus_password__: { get_param: nexus_password }
             __nexus_url_snapshots__: { get_param: nexus_url_snapshot }
             __gitlab_branch__: { get_param: gitlab_branch }
+            __public_net_id__: { get_param: public_net_id }
+            __dcae_ip_addr__: { get_param: dcae_ip_addr }
+            __dcae_pstg00_ip_addr__: { get_param: dcae_pstg00_ip_addr }
+            __dcae_coll00_ip_addr__: { get_param: dcae_coll00_ip_addr }
+            __dcae_cdap00_ip_addr__: { get_param: dcae_cdap00_ip_addr }
+            __dcae_cdap01_ip_addr__: { get_param: dcae_cdap01_ip_addr }
+            __dcae_cdap02_ip_addr__: { get_param: dcae_cdap02_ip_addr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __dcae_base_environment__: { get_param: dcae_base_environment }
             __dcae_zone__: { get_param: dcae_zone }
             __dcae_state__: { get_param: dcae_state }
             __artifacts_version__: { get_param: artifacts_version }
@@ -1211,6 +1243,7 @@ resources:
             __openstack_private_network_name__: { get_attr: [oam_ecomp, name] }
             __openstack_user__: { get_param: openstack_username }
             __openstack_password__: { get_param: openstack_api_key }
+            __openstack_auth_method__: { get_param: openstack_auth_method }
             __key_name__: { get_param: key_name }
             __rand_str__: { get_resource: random-str }
             __pub_key__: { get_param: pub_key }
@@ -1268,6 +1301,7 @@ resources:
             cd /opt/dcae-startup-vm-controller
             mkdir -p /opt/app/dcae-controller
             cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
+            BASE: __dcae_base_environment__
             ZONE: __dcae_zone__
             STATE: __dcae_state__
             DCAE-VERSION: __artifacts_version__
@@ -1279,6 +1313,7 @@ resources:
             OPENSTACK-PRIVATE-NETWORK: __openstack_private_network_name__
             OPENSTACK-USER: __openstack_user__
             OPENSTACK-PASSWORD: __openstack_password__
+            OPENSTACK-AUTH-METHOD: __openstack_auth_method__
             OPENSTACK-KEYNAME: __key_name_____rand_str___dcae
             OPENSTACK-PUBKEY: __pub_key__
 
@@ -1291,6 +1326,15 @@ resources:
             DOCKER-REGISTRY: __nexus_docker_repo__
 
             GIT-MR-REPO: http://gerrit.onap.org/r/dcae/demo/startup/message-router.git
+            
+            public_net_id: __public_net_id__
+            dcae_ip_addr:        __dcae_ip_addr__
+            dcae_pstg00_ip_addr: __dcae_pstg00_ip_addr__
+            dcae_coll00_ip_addr: __dcae_coll00_ip_addr__
+            dcae_cdap00_ip_addr: __dcae_cdap00_ip_addr__
+            dcae_cdap01_ip_addr: __dcae_cdap01_ip_addr__
+            dcae_cdap02_ip_addr: __dcae_cdap02_ip_addr__
+            
             EOF_CONFIG
 
             # DNS/GW IP address configuration
