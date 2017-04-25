@@ -6,44 +6,34 @@ DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
-# OpenStack network configuration
-if [[ $CLOUD_ENV == "openstack" ]]
-then
-	echo 127.0.0.1 $(hostname) >> /etc/hosts
-
-	VPG_PRIVATE_IP_O=$(cat /opt/config/vpg_private_ip_0.txt)
-	echo "auto eth1" >> /etc/network/interfaces
-	echo "iface eth1 inet static" >> /etc/network/interfaces
-	echo "    address $VPG_PRIVATE_IP_O" >> /etc/network/interfaces
-	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
-
-	ifup eth1
-fi
-
 # Download required dependencies
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-get update
 apt-get install -y make wget openjdk-8-jdk gcc libcurl4-openssl-dev python-pip bridge-utils apt-transport-https ca-certificates
 pip install jsonschema
 
-# Download code for packet generator
+# Download vFirewall demo code for packet generator
+mkdir /opt/config
 mkdir /opt/honeycomb
 cd /opt
-
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_packetgen_init.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vpacketgen.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/run_traffic_fw_demo.sh
+wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_packetgen_for_dns_demo_init.sh
+wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vpacketgenfordnsdemo.sh
+wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/run_streams_dns.sh
+wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdnspacketgen_change_streams_ports.sh
 wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/vfw/vfw_pg_streams/$DEMO_ARTIFACTS_VERSION/vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
+wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/vlb/vlb_dns_streams/$DEMO_ARTIFACTS_VERSION/vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
 
+tar -zxvf vpp.tar.gz
 tar -zxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-tar -zxvf vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-mv vfw_pg_streams-$DEMO_ARTIFACTS_VERSION pg_streams
 mv sample-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
 sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/sample-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+tar -zxvf vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+mv vlb_dns_streams-$DEMO_ARTIFACTS_VERSION dns_streams
 rm *.tar.gz
-chmod +x v_packetgen_init.sh
-chmod +x vpacketgen.sh
+chmod +x v_packetgen_for_dns_demo_init.sh
+chmod +x vpacketgenfordnsdemo.sh
+chmod +x run_streams_dns.sh
+chmod +x vdnspacketgen_change_streams_ports.sh
 
 # Install VPP
 export UBUNTU="trusty"
@@ -56,6 +46,6 @@ sleep 1
 
 # Run instantiation script
 cd /opt
-mv vpacketgen.sh /etc/init.d
-update-rc.d vpacketgen.sh defaults
-./v_packetgen_init.sh
+mv vpacketgenfordnsdemo.sh /etc/init.d
+update-rc.d vpacketgenfordnsdemo.sh defaults
+./v_packetgen_for_dns_demo_init.sh

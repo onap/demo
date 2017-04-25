@@ -31,7 +31,6 @@ fi
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-get update
 apt-get install -y make wget openjdk-8-jdk gcc libcurl4-openssl-dev python-pip bridge-utils apt-transport-https ca-certificates
-apt-get install -y maven
 pip install jsonschema
 
 # Download artifacts for virtual firewall
