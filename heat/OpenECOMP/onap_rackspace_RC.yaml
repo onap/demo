@@ -7,77 +7,66 @@ parameters:
   # Generic parameters used across all ONAP components
   public_net_id:
     type: string
-    label: Public network name or ID
     description: Public network that enables remote connection to the compute instance
 
   key_name:
     type: string
-    label: Key pair name
     description: Public/Private key pair name
 
   pub_key:
     type: string
-    label: Public key
     description: Public key or SSL certificate to be installed on the compute instance
 
   nexus_repo:
     type: string
-    label: Nexus Repository
     description: Complete URL for the Nexus repository.
 
   nexus_docker_repo:
     type: string
-    label: Nexus Docker Images Repository
     description: Complete URL for the Nexus repository for docker images.
 
   nexus_username:
     type: string
-    label: Nexus Repository Username
     description: Nexus Repository username
 
   nexus_password:
     type: string
-    label: Nexus Repository Password
     description: Nexus Repository Password
 
   openstack_tenant_id:
     type: string
-    label: Rackspace tenant ID
     description: Rackspace tenant ID
 
   openstack_username:
     type: string
-    label: Rackspace username
     description: Rackspace username
 
   openstack_api_key:
     type: string
-    label: Rackspace API Key
     description: Rackspace API Key
 
   openstack_password:
     type: string
-    label: Rackspace Password
     description: Rackspace Password
+
+  openstack_auth_method:
+    type: string
+    description: Openstack authentication method (password VS. api-key)
 
   dmaap_topic:
     type: string
-    label: DmaaP Topic
-    description: DmaaP Topic that MSO and A&AI listen to
+    description: DMaaP topic name
 
   artifacts_version:
     type: string
-    label: Artifacts Version
     description: Artifacts version of ONAP components
 
   docker_version:
     type: string
-    label: Docker Version
     description: Docker version of ONAP docker images
 
   gerrit_branch:
     type: string
-    label: Gerrit code branch
     description: Gerrit branch where to download the code from
 
   cloud_env:
@@ -86,39 +75,61 @@ parameters:
 
 
   # Parameters for DCAE instantiation
+  dcae_base_environment:
+    type: string
+    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/...)
+
   dcae_zone:
     type: string
-    label: DCAE Zone
     description: DCAE Zone to use in VM names created by DCAE controller
 
   dcae_state:
     type: string
-    label: DCAE State
     description: DCAE State to use in VM names created by DCAE controller
 
   nexus_repo_root:
     type: string
-    label: Root URL of nexus repository
     description: Root URL of nexus repository
 
   nexus_url_snapshot:
     type: string
-    label: Snapshot of Maven repository for DCAE deployment
     description: Snapshot of Maven repository
 
   openstack_region:
     type: string
-    label: Rackspace Region
     description: Rackspace region where the DCAE controller will spin the VMs
 
   gitlab_branch:
     type: string
-    label: Branch of the Gitlab repository
     description: Branch of the Gitlab repository
 
   dcae_code_version:
     type: string
     description: DCAE Code Version Number
+
+  dcae_ip_addr:
+    type: string
+    description: DCAE IP Address
+ 
+  dcae_coll_ip_addr:
+    type: string
+    description: DCAE Collector IP Address
+
+  dcae_db_ip_addr:
+    type: string
+    description: DCAE Database IP Address
+
+  dcae_hdp1_ip_addr:
+    type: string
+    description: Hadoop VM1 IP Address
+
+  dcae_hdp2_ip_addr:
+    type: string
+    description: Hadoop VM2 IP Address
+
+  dcae_hdp3_ip_addr:
+    type: string
+    description: Hadoop VM3 IP Address
 
 
 resources:
@@ -707,6 +718,7 @@ resources:
             __openstack_private_network_name__: { get_attr: [oam_ecomp, name] }
             __openstack_user__: { get_param: openstack_username }
             __openstack_password__: { get_param: openstack_api_key }
+            __openstack_auth_method__: { get_param: openstack_auth_method }
             __key_name__: { get_param: key_name }
             __rand_str__: { get_resource: random-str }
             __pub_key__: { get_param: pub_key }
@@ -716,6 +728,14 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __dcae_code_version__: { get_param: dcae_code_version }
+            __public_net_id__: { get_param: public_net_id }
+            __dcae_base_environment__: { get_param: dcae_base_environment }
+            __dcae_ip_addr__: { get_param: dcae_ip_addr }
+            __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
+            __dcae_db_ip_addr__: { get_param: dcae_db_ip_addr }
+            __dcae_hdp1_ip_addr__: { get_param: dcae_hdp1_ip_addr }
+            __dcae_hdp2_ip_addr__: { get_param: dcae_hdp2_ip_addr }
+            __dcae_hdp3_ip_addr__: { get_param: dcae_hdp2_ip_addr }
           template: |
             #!/bin/bash
 
@@ -737,6 +757,7 @@ resources:
             echo "__openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
             echo "__openstack_user__" > /opt/config/openstack_user.txt
             echo "__openstack_password__" > /opt/config/openstack_password.txt
+            echo "__openstack_auth_method__" > /opt/config/openstack_auth_method.txt
             echo "__key_name__" > /opt/config/key_name.txt
             echo "__rand_str__" > /opt/config/rand_str.txt
             echo "__pub_key__" > /opt/config/pub_key.txt
@@ -746,6 +767,14 @@ resources:
             echo "https://identity.api.rackspacecloud.com/v2.0" > /opt/config/keystone_url.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__dcae_code_version__" > /opt/config/dcae_code_version.txt
+            echo "__public_net_id__" > /opt/config/public_net_id.txt
+            echo "__dcae_base_environment__" > /opt/config/dcae_base_environment.txt
+            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
+            echo "__dcae_coll_ip_addr__" > /opt/config/dcae_coll_ip_addr.txt
+            echo "__dcae_db_ip_addr__" > /opt/config/dcae_db_ip_addr.txt
+            echo "__dcae_hdp1_ip_addr__" > /opt/config/dcae_hdp1_ip_addr.txt
+            echo "__dcae_hdp2_ip_addr__" > /opt/config/dcae_hdp2_ip_addr.txt
+            echo "__dcae_hdp3_ip_addr__" > /opt/config/dcae_hdp3_ip_addr.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh

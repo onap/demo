@@ -7,6 +7,8 @@ DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 
+BASE=$(cat /opt/config/dcae_base_environment.txt)
+PUBLIC_NET_ID=$(cat /opt/config/public_net_id.txt)
 ZONE=$(cat /opt/config/dcae_zone.txt)
 STATE=$(cat /opt/config/dcae_state.txt)
 HORIZON_URL=$(cat /opt/config/horizon_url.txt)
@@ -14,6 +16,7 @@ OPENSTACK_USER=$(cat /opt/config/openstack_user.txt)
 OPENSTACK_PASSWORD=$(cat /opt/config/openstack_password.txt)
 OPENSTACK_KEYNAME=$(cat /opt/config/key_name.txt)"_"$(cat /opt/config/rand_str.txt)"_dcae"
 OPENSTACK_PUBKEY=$(cat /opt/config/pub_key.txt)
+OPENSTACK_AUTH_METHOD=$(cat /opt/config/openstack_auth_method.txt)
 KEYSTONE_URL=$(cat /opt/config/keystone_url.txt)
 OPENSTACK_TENANT_ID=$(cat /opt/config/tenant_id.txt)
 OPENSTACK_TENANT_NAME=OPEN-ECOMP
@@ -27,16 +30,25 @@ NEXUS_URL_SNAPSHOTS=$(cat /opt/config/nexus_url_snapshots.txt)
 DOCKER_REGISTRY=$(cat /opt/config/nexus_docker_repo.txt)
 DCAE_CODE_VERSION=$(cat /opt/config/dcae_code_version.txt)
 
-DCAE_COLL_FLOAT_IP=$(cat /opt/config/dcae_coll_float_ip.txt)
-DCAE_DB_FLOAT_IP=$(cat /opt/config/dcae_db_float_ip.txt)
-DCAE_HDP1_FLOAT_IP=$(cat /opt/config/dcae_hdp1_float_ip.txt)
-DCAE_HDP2_FLOAT_IP=$(cat /opt/config/dcae_hdp2_float_ip.txt)
-DCAE_HDP3_FLOAT_IP=$(cat /opt/config/dcae_hdp3_float_ip.txt)
+DCAE_IP_ADDR=$(cat /opt/config/dcae_ip_addr.txt)
+DCAE_COLL_IP_ADDR=$(cat /opt/config/dcae_coll_ip_addr.txt)
+DCAE_DB_IP_ADDR=$(cat /opt/config/dcae_db_ip_addr.txt)
+DCAE_HDP1_IP_ADDR=$(cat /opt/config/dcae_hdp1_ip_addr.txt)
+DCAE_HDP2_IP_ADDR=$(cat /opt/config/dcae_hdp2_ip_addr.txt)
+DCAE_HDP3_IP_ADDR=$(cat /opt/config/dcae_hdp3_ip_addr.txt)
 
-# Add host name to /etc/host to avoid warnings in openstack images
 if [[ $CLOUD_ENV == "openstack" ]]
 then
+	# Add host name to /etc/host to avoid warnings in openstack images
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
+
+	# Read floating IP mapping
+	DCAE_FLOAT_IP_ADDR=$(cat /opt/config/dcae_float_ip.txt)
+	DCAE_COLL_FLOAT_IP=$(cat /opt/config/dcae_coll_float_ip.txt)
+	DCAE_DB_FLOAT_IP=$(cat /opt/config/dcae_db_float_ip.txt)
+	DCAE_HDP1_FLOAT_IP=$(cat /opt/config/dcae_hdp1_float_ip.txt)
+	DCAE_HDP2_FLOAT_IP=$(cat /opt/config/dcae_hdp2_float_ip.txt)
+	DCAE_HDP3_FLOAT_IP=$(cat /opt/config/dcae_hdp3_float_ip.txt)
 fi
 
 # Download dependencies
@@ -70,10 +82,11 @@ resolvconf -u
 cd /opt
 git clone -b $GERRIT_BRANCH --single-branch http://gerrit.onap.org/r/dcae/demo/startup/controller.git dcae-startup-vm-controller
 
-# Build a configuration file for the DCAE Controller
+# Build a configuration file for the DCAE Controller. The floating IP block is used in OpenStack only and is empty for other environments
 cd /opt/dcae-startup-vm-controller
 mkdir -p /opt/app/dcae-controller
 cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
+BASE: $BASE
 ZONE: $ZONE
 STATE: $STATE
 DCAE-VERSION: $DCAE_CODE_VERSION
@@ -85,6 +98,7 @@ OPENSTACK-REGION: $OPENSTACK_REGION
 OPENSTACK-PRIVATE-NETWORK: $OPENSTACK_PRIVATE_NETWORK
 OPENSTACK-USER: $OPENSTACK_USER
 OPENSTACK-PASSWORD: $OPENSTACK_PASSWORD
+OPENSTACK-AUTH-METHOD: $OPENSTACK_AUTH_METHOD
 OPENSTACK-KEYNAME: $OPENSTACK_KEYNAME
 OPENSTACK-PUBKEY: $OPENSTACK_PUBKEY
 
@@ -97,6 +111,22 @@ NEXUS-RAWURL: $NEXUS_REPO
 DOCKER-REGISTRY: $DOCKER_REGISTRY
 
 GIT-MR-REPO: http://gerrit.onap.org/r/dcae/demo/startup/message-router.git
+
+public_net_id: $PUBLIC_NET_ID
+dcae_ip_addr: $DCAE_IP_ADDR
+dcae_pstg00_ip_addr: $DCAE_DB_IP_ADDR
+dcae_coll00_ip_addr: $DCAE_COLL_IP_ADDR
+dcae_cdap00_ip_addr: $DCAE_HDP1_IP_ADDR
+dcae_cdap01_ip_addr: $DCAE_HDP2_IP_ADDR
+dcae_cdap02_ip_addr: $DCAE_HDP3_IP_ADDR
+
+dcae_float_ip_addr: $DCAE_FLOAT_IP_ADDR
+dcae_pstg00_float_ip_addr: $DCAE_DB_FLOAT_IP
+dcae_coll00_float_ip_addr: $DCAE_COLL_FLOAT_IP
+dcae_cdap00_float_ip_addr: $DCAE_HDP1_FLOAT_IP
+dcae_cdap01_float_ip_addr: $DCAE_HDP2_FLOAT_IP
+dcae_cdap02_float_ip_addr: $DCAE_HDP3_FLOAT_IP
+
 EOF_CONFIG
 
 # Run docker containers

@@ -87,7 +87,7 @@ parameters:
 
   dmaap_topic:
     type: string
-    description: DmaaP Topic name
+    description: DMaaP Topic name
 
   openstack_tenant_id:
     type: string
@@ -96,6 +96,10 @@ parameters:
   openstack_username:
     type: string
     description: Openstack username
+
+  openstack_auth_method:
+    type: string
+    description: Openstack authentication method (password VS. api-key)
 
   openstack_api_key:
     type: string
@@ -126,7 +130,7 @@ parameters:
   ### Floating IP addresses ###
   aai_float_ip:
     type: string
-    description: A&AI Floating IP Address
+    description: AAI Floating IP Address
 
   appc_float_ip:
     type: string
@@ -199,7 +203,7 @@ parameters:
 
   aai_ip_addr:
     type: string
-    description: A&AI IP Address
+    description: AAI IP Address
 
   appc_ip_addr:
     type: string
@@ -208,6 +212,26 @@ parameters:
   dcae_ip_addr:
     type: string
     description: DCAE IP Address
+ 
+  dcae_coll_ip_addr:
+    type: string
+    description: DCAE Collector IP Address
+
+  dcae_db_ip_addr:
+    type: string
+    description: DCAE Database IP Address
+
+  dcae_hdp1_ip_addr:
+    type: string
+    description: Hadoop VM1 IP Address
+
+  dcae_hdp2_ip_addr:
+    type: string
+    description: Hadoop VM2 IP Address
+
+  dcae_hdp3_ip_addr:
+    type: string
+    description: Hadoop VM3 IP Address
 
   dns_ip_addr:
     type: string
@@ -251,7 +275,11 @@ parameters:
   # Parameters used by DCAE #
   #                         #
   ###########################
-  
+
+  dcae_base_environment:
+    type: string
+    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/...)
+
   dcae_zone:
     type: string
     description: DCAE Zone to use in VM names created by DCAE controller
@@ -1000,6 +1028,7 @@ resources:
             __openstack_private_network_name__: { get_attr: [oam_ecomp, name] }
             __openstack_user__: { get_param: openstack_username }
             __openstack_password__: { get_param: openstack_api_key }
+            __openstack_auth_method__: { get_param: openstack_auth_method }
             __key_name__: { get_param: key_name }
             __rand_str__: { get_resource: random-str }
             __pub_key__: { get_param: pub_key }
@@ -1011,6 +1040,15 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __dcae_code_version__: { get_param: dcae_code_version }
             __cloud_env__: { get_param: cloud_env }
+            __public_net_id__: { get_param: public_net_id }
+            __dcae_base_environment__: { get_param: dcae_base_environment }
+            __dcae_ip_addr__: { get_param: dcae_ip_addr }
+            __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
+            __dcae_db_ip_addr__: { get_param: dcae_db_ip_addr }
+            __dcae_hdp1_ip_addr__: { get_param: dcae_hdp1_ip_addr }
+            __dcae_hdp2_ip_addr__: { get_param: dcae_hdp2_ip_addr }
+            __dcae_hdp3_ip_addr__: { get_param: dcae_hdp2_ip_addr }
+            __dcae_float_ip__: { get_param: dcae_float_ip }
             __dcae_coll_float_ip__: { get_param: dcae_coll_float_ip }
             __dcae_db_float_ip__: { get_param: dcae_db_float_ip }
             __dcae_hdp1_float_ip__: { get_param: dcae_hdp1_float_ip }
@@ -1037,6 +1075,7 @@ resources:
             echo "__openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
             echo "__openstack_user__" > /opt/config/openstack_user.txt
             echo "__openstack_password__" > /opt/config/openstack_password.txt
+            echo "__openstack_auth_method__" > /opt/config/openstack_auth_method.txt
             echo "__key_name__" > /opt/config/key_name.txt
             echo "__rand_str__" > /opt/config/rand_str.txt
             echo "__pub_key__" > /opt/config/pub_key.txt
@@ -1045,7 +1084,16 @@ resources:
             echo "__horizon_url__" > /opt/config/horizon_url.txt
             echo "__keystone_url__" > /opt/config/keystone_url.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__public_net_id__" > /opt/config/public_net_id.txt
+            echo "__dcae_base_environment__" > /opt/config/dcae_base_environment.txt
             echo "__dcae_code_version__" > /opt/config/dcae_code_version.txt
+            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
+            echo "__dcae_coll_ip_addr__" > /opt/config/dcae_coll_ip_addr.txt
+            echo "__dcae_db_ip_addr__" > /opt/config/dcae_db_ip_addr.txt
+            echo "__dcae_hdp1_ip_addr__" > /opt/config/dcae_hdp1_ip_addr.txt
+            echo "__dcae_hdp2_ip_addr__" > /opt/config/dcae_hdp2_ip_addr.txt
+            echo "__dcae_hdp3_ip_addr__" > /opt/config/dcae_hdp3_ip_addr.txt
+            echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
             echo "__dcae_coll_float_ip__" > /opt/config/dcae_coll_float_ip.txt
             echo "__dcae_db_float_ip__" > /opt/config/dcae_db_float_ip.txt
             echo "__dcae_hdp1_float_ip__" > /opt/config/dcae_hdp1_float_ip.txt
