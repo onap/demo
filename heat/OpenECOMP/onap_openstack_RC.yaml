@@ -409,7 +409,7 @@ resources:
             __aai_ip_addr__: { get_param: aai_ip_addr }
             __appc_ip_addr__: { get_param: appc_ip_addr }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
-            __dcae_coll_float_ip__: { get_param: dcae_coll_float_ip }
+            __dcae_coll_ip_addr__: { get_param: dcae_coll_ipaddr }
             __mso_ip_addr__: { get_param: mso_ip_addr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __policy_ip_addr__: { get_param: policy_ip_addr }
@@ -433,7 +433,7 @@ resources:
             echo "__aai_ip_addr__" > /opt/config/aai_ip_addr.txt
             echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
             echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-            echo "__dcae_coll_float_ip__" > /opt/config/dcae_coll_float_ip.txt
+            echo "__dcae_coll_ip_addr__" > /opt/config/dcae_coll_ip_addr.txt
             echo "__mso_ip_addr__" > /opt/config/mso_ip_addr.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
