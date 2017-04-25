@@ -45,6 +45,13 @@ chmod +x /opt/FDserver/dnsmembership.sh
 chmod +x /opt/FDserver/add_dns.sh
 chmod +x /opt/FDserver/remove_dns.sh
 
+# Create a file with public IP of the VM if it doesn't exist. This is for VMs directly attached to the external network.
+if [ ! -e /opt/config/local_public_ipaddr.txt ]
+then
+	IP_ADDRESS=$(ifconfig eth0 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
+	echo $IP_ADDRESS > /opt/config/local_public_ipaddr.txt
+fi
+
 # Install VPP
 export UBUNTU="trusty"
 export RELEASE=".stable.1609"

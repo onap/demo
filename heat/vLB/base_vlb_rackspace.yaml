@@ -167,7 +167,6 @@ resources:
             __dcae_collector_ip__: { get_param: dcae_collector_ip }
             __dcae_collector_port__: { get_param: dcae_collector_port }
             __local_private_ipaddr__: { get_param: vlb_private_ip_0 }
-            __local_public_ipaddr__: { get_attr: [vlb_0, first_address] }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
@@ -181,7 +180,6 @@ resources:
             echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
             echo "__dcae_collector_port__" > /opt/config/dcae_collector_port.txt
             echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
-            echo "__local_public_ipaddr__" > /opt/config/local_public_ipaddr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
