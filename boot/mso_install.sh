@@ -9,9 +9,36 @@ OPENSTACK_API_KEY=$(cat /opt/config/openstack_api_key.txt)
 GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 
 # Add host name to /etc/host to avoid warnings in openstack images
-if [[ $CLOUD_ENV == "openstack" ]]
+if [[ $CLOUD_ENV != "rackspace" ]]
 then
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
+fi
+
+# Set private IP in /etc/network/interfaces manually in the presence of public interface
+# Some VM images don't add the private interface automatically, we have to do it during the component installation
+if [[ $CLOUD_ENV == "openstack_nofloat" ]]
+then
+	LOCAL_IP=$(cat /opt/config/local_ip_addr.txt)
+	CIDR=$(cat /opt/config/oam_network_cidr.txt)
+	BITMASK=$(echo $CIDR | cut -d"/" -f2)
+
+	# Compute the netmask based on the network cidr
+	if [[ $BITMASK == "8" ]]
+	then
+		NETMASK=255.0.0.0
+	elif [[ $BITMASK == "16" ]]
+	then
+		NETMASK=255.255.0.0
+	elif [[ $BITMASK == "24" ]]
+	then
+		NETMASK=255.255.255.0
+	fi
+
+	echo "auto eth1" >> /etc/network/interfaces
+	echo "iface eth1 inet static" >> /etc/network/interfaces
+	echo "    address $LOCAL_IP" >> /etc/network/interfaces
+	echo "    netmask $NETMASK" >> /etc/network/interfaces
+	ifup eth1
 fi
 
 # Download dependencies
@@ -48,7 +75,7 @@ MSO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
 echo -n "$OPENSTACK_API_KEY" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
 
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
-if [[ $CLOUD_ENV == "openstack" ]]
+if [[ $CLOUD_ENV != "rackspace" ]]
 then
 	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
 	grub-mkconfig -o /boot/grub/grub.cfg

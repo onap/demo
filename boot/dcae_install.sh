@@ -37,18 +37,36 @@ DCAE_HDP1_IP_ADDR=$(cat /opt/config/dcae_hdp1_ip_addr.txt)
 DCAE_HDP2_IP_ADDR=$(cat /opt/config/dcae_hdp2_ip_addr.txt)
 DCAE_HDP3_IP_ADDR=$(cat /opt/config/dcae_hdp3_ip_addr.txt)
 
-if [[ $CLOUD_ENV == "openstack" ]]
+if [[ $CLOUD_ENV != "rackspace" ]]
 then
 	# Add host name to /etc/host to avoid warnings in openstack images
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
+fi
 
-	# Read floating IP mapping
-	DCAE_FLOAT_IP_ADDR=$(cat /opt/config/dcae_float_ip.txt)
-	DCAE_COLL_FLOAT_IP=$(cat /opt/config/dcae_coll_float_ip.txt)
-	DCAE_DB_FLOAT_IP=$(cat /opt/config/dcae_db_float_ip.txt)
-	DCAE_HDP1_FLOAT_IP=$(cat /opt/config/dcae_hdp1_float_ip.txt)
-	DCAE_HDP2_FLOAT_IP=$(cat /opt/config/dcae_hdp2_float_ip.txt)
-	DCAE_HDP3_FLOAT_IP=$(cat /opt/config/dcae_hdp3_float_ip.txt)
+# Set private IP in /etc/network/interfaces manually in the presence of public interface
+# Some VM images don't add the private interface automatically, we have to do it during the component installation
+if [[ $CLOUD_ENV == "openstack_nofloat" ]]
+then
+	CIDR=$(cat /opt/config/oam_network_cidr.txt)
+	BITMASK=$(echo $CIDR | cut -d"/" -f2)
+
+	# Compute the netmask based on the network cidr
+	if [[ $BITMASK == "8" ]]
+	then
+		NETMASK=255.0.0.0
+	elif [[ $BITMASK == "16" ]]
+	then
+		NETMASK=255.255.0.0
+	elif [[ $BITMASK == "24" ]]
+	then
+		NETMASK=255.255.255.0
+	fi
+
+	echo "auto eth1" >> /etc/network/interfaces
+	echo "iface eth1 inet static" >> /etc/network/interfaces
+	echo "    address $DCAE_IP_ADDR" >> /etc/network/interfaces
+	echo "    netmask $NETMASK" >> /etc/network/interfaces
+	ifup eth1
 fi
 
 # Download dependencies
@@ -82,7 +100,7 @@ resolvconf -u
 cd /opt
 git clone -b $GERRIT_BRANCH --single-branch http://gerrit.onap.org/r/dcae/demo/startup/controller.git dcae-startup-vm-controller
 
-# Build a configuration file for the DCAE Controller. The floating IP block is used in OpenStack only and is empty for other environments
+# Build a configuration file for the DCAE Controller.
 cd /opt/dcae-startup-vm-controller
 mkdir -p /opt/app/dcae-controller
 cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
@@ -120,14 +138,30 @@ dcae_cdap00_ip_addr: $DCAE_HDP1_IP_ADDR
 dcae_cdap01_ip_addr: $DCAE_HDP2_IP_ADDR
 dcae_cdap02_ip_addr: $DCAE_HDP3_IP_ADDR
 
-dcae_float_ip_addr: $DCAE_FLOAT_IP_ADDR
-dcae_pstg00_float_ip_addr: $DCAE_DB_FLOAT_IP
-dcae_coll00_float_ip_addr: $DCAE_COLL_FLOAT_IP
-dcae_cdap00_float_ip_addr: $DCAE_HDP1_FLOAT_IP
-dcae_cdap01_float_ip_addr: $DCAE_HDP2_FLOAT_IP
-dcae_cdap02_float_ip_addr: $DCAE_HDP3_FLOAT_IP
-
 EOF_CONFIG
+
+# Add floating IP section to DCAE config file for OpenStack deployments that use floating IPs
+if [[ $CLOUD_ENV == "openstack" ]]
+then
+	# Read floating IP mapping
+	DCAE_FLOAT_IP_ADDR=$(cat /opt/config/dcae_float_ip.txt)
+	DCAE_COLL_FLOAT_IP=$(cat /opt/config/dcae_coll_float_ip.txt)
+	DCAE_DB_FLOAT_IP=$(cat /opt/config/dcae_db_float_ip.txt)
+	DCAE_HDP1_FLOAT_IP=$(cat /opt/config/dcae_hdp1_float_ip.txt)
+	DCAE_HDP2_FLOAT_IP=$(cat /opt/config/dcae_hdp2_float_ip.txt)
+	DCAE_HDP3_FLOAT_IP=$(cat /opt/config/dcae_hdp3_float_ip.txt)
+
+	cat >> /opt/app/dcae-controller/config.yaml << EOF_CONFIG
+
+	dcae_float_ip_addr: $DCAE_FLOAT_IP_ADDR
+	dcae_pstg00_float_ip_addr: $DCAE_DB_FLOAT_IP
+	dcae_coll00_float_ip_addr: $DCAE_COLL_FLOAT_IP
+	dcae_cdap00_float_ip_addr: $DCAE_HDP1_FLOAT_IP
+	dcae_cdap01_float_ip_addr: $DCAE_HDP2_FLOAT_IP
+	dcae_cdap02_float_ip_addr: $DCAE_HDP3_FLOAT_IP
+
+	EOF_CONFIG
+fi
 
 # Run docker containers
 cd /opt
