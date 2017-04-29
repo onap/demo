@@ -159,8 +159,7 @@ then
 	dcae_cdap00_float_ip_addr: $DCAE_HDP1_FLOAT_IP
 	dcae_cdap01_float_ip_addr: $DCAE_HDP2_FLOAT_IP
 	dcae_cdap02_float_ip_addr: $DCAE_HDP3_FLOAT_IP
-
-	EOF_CONFIG
+EOF_CONFIG
 fi
 
 # Run docker containers
