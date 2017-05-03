@@ -70,8 +70,8 @@ if [[ $CLOUD_ENV == "rackspace" ]]
 then
 	DISK="xvdb"
 else
-	DISK="vdb"
-	sed -i "s/xvdb/vdb/g" /opt/asdc_ext_volume_partitions.txt
+	DISK=$(ls /dev |grep -e '^.*db$')
+	sed -i "s/xvdb/$DISK/g" /opt/asdc_ext_volume_partitions.txt
 fi
 
 sfdisk /dev/$DISK < /opt/asdc_ext_volume_partitions.txt
