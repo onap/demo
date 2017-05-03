@@ -858,13 +858,6 @@ resources:
       name: vol1-sdc-data
       size: 100
 
-  sdc_volume_attachment:
-    type: OS::Cinder::VolumeAttachment
-    properties:
-      volume_id: { get_resource: sdc_volume_data }
-      instance_uuid: { get_resource: sdc_vm }
-      mountpoint: /dev/vdb
-
   sdc_vm:
     type: OS::Nova::Server
     properties:
@@ -878,6 +871,9 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: sdc_private_port }
+      block_device_mapping:
+        - device_name: /dev/vdb
+          volume_id: {get_resource: sdc_volume_data}
       user_data_format: RAW
       user_data:
         str_replace:
