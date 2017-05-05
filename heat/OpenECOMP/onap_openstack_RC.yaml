@@ -488,6 +488,7 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __sdc_ip_addr__: { get_param: sdc_ip_addr }
             __docker_version__: { get_param: docker_version }
             __cloud_env__: { get_param: cloud_env }
           template: |
@@ -501,6 +502,7 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
