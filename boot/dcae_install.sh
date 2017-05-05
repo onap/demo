@@ -140,7 +140,6 @@ dcae_coll00_ip_addr: $DCAE_COLL_IP_ADDR
 dcae_cdap00_ip_addr: $DCAE_HDP1_IP_ADDR
 dcae_cdap01_ip_addr: $DCAE_HDP2_IP_ADDR
 dcae_cdap02_ip_addr: $DCAE_HDP3_IP_ADDR
-
 EOF_CONFIG
 
 # Add floating IP section to DCAE config file for OpenStack deployments that use floating IPs
@@ -154,14 +153,14 @@ then
 	DCAE_HDP2_FLOAT_IP=$(cat /opt/config/dcae_hdp2_float_ip.txt)
 	DCAE_HDP3_FLOAT_IP=$(cat /opt/config/dcae_hdp3_float_ip.txt)
 
-	cat >> /opt/app/dcae-controller/config.yaml << EOF_CONFIG
+cat >> /opt/app/dcae-controller/config.yaml << EOF_CONFIG
 
-	dcae_float_ip_addr: $DCAE_FLOAT_IP_ADDR
-	dcae_pstg00_float_ip_addr: $DCAE_DB_FLOAT_IP
-	dcae_coll00_float_ip_addr: $DCAE_COLL_FLOAT_IP
-	dcae_cdap00_float_ip_addr: $DCAE_HDP1_FLOAT_IP
-	dcae_cdap01_float_ip_addr: $DCAE_HDP2_FLOAT_IP
-	dcae_cdap02_float_ip_addr: $DCAE_HDP3_FLOAT_IP
+dcae_float_ip_addr: $DCAE_FLOAT_IP_ADDR
+dcae_pstg00_float_ip_addr: $DCAE_DB_FLOAT_IP
+dcae_coll00_float_ip_addr: $DCAE_COLL_FLOAT_IP
+dcae_cdap00_float_ip_addr: $DCAE_HDP1_FLOAT_IP
+dcae_cdap01_float_ip_addr: $DCAE_HDP2_FLOAT_IP
+dcae_cdap02_float_ip_addr: $DCAE_HDP3_FLOAT_IP
 EOF_CONFIG
 fi
 
