@@ -28,6 +28,7 @@ NEXUS_USER=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWORD=$(cat /opt/config/nexus_password.txt)
 NEXUS_URL_SNAPSHOTS=$(cat /opt/config/nexus_url_snapshots.txt)
 DOCKER_REGISTRY=$(cat /opt/config/nexus_docker_repo.txt)
+DOCKER_VERSION=$(cat /opt/config/docker_version.txt)
 DCAE_CODE_VERSION=$(cat /opt/config/dcae_code_version.txt)
 
 DCAE_IP_ADDR=$(cat /opt/config/dcae_ip_addr.txt)
@@ -106,6 +107,7 @@ mkdir -p /opt/app/dcae-controller
 cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
 BASE: $BASE
 ZONE: $ZONE
+DNS-IP-ADDR=$DNS_IP_ADDR
 STATE: $STATE
 DCAE-VERSION: $DCAE_CODE_VERSION
 HORIZON-URL: $HORIZON_URL/$OPENSTACK_USER
@@ -127,6 +129,7 @@ NEXUS-URL-SNAPSHOTS: $NEXUS_URL_SNAPSHOTS
 NEXUS-RAWURL: $NEXUS_REPO
 
 DOCKER-REGISTRY: $DOCKER_REGISTRY
+DOCKER-VERSION: $DOCKER_VERSION
 
 GIT-MR-REPO: http://gerrit.onap.org/r/dcae/demo/startup/message-router.git
 
