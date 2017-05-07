@@ -1045,13 +1045,13 @@ resources:
             __dcae_db_ip_addr__: { get_param: dcae_db_ip_addr }
             __dcae_hdp1_ip_addr__: { get_param: dcae_hdp1_ip_addr }
             __dcae_hdp2_ip_addr__: { get_param: dcae_hdp2_ip_addr }
-            __dcae_hdp3_ip_addr__: { get_param: dcae_hdp2_ip_addr }
+            __dcae_hdp3_ip_addr__: { get_param: dcae_hdp3_ip_addr }
             __dcae_float_ip__: { get_param: dcae_float_ip }
             __dcae_coll_float_ip__: { get_param: dcae_coll_float_ip }
             __dcae_db_float_ip__: { get_param: dcae_db_float_ip }
             __dcae_hdp1_float_ip__: { get_param: dcae_hdp1_float_ip }
             __dcae_hdp2_float_ip__: { get_param: dcae_hdp2_float_ip }
-            __dcae_hdp3_float_ip__: { get_param: dcae_hdp2_float_ip }
+            __dcae_hdp3_float_ip__: { get_param: dcae_hdp3_float_ip }
           template: |
             #!/bin/bash
 

@@ -735,7 +735,7 @@ resources:
             __dcae_db_ip_addr__: { get_param: dcae_db_ip_addr }
             __dcae_hdp1_ip_addr__: { get_param: dcae_hdp1_ip_addr }
             __dcae_hdp2_ip_addr__: { get_param: dcae_hdp2_ip_addr }
-            __dcae_hdp3_ip_addr__: { get_param: dcae_hdp2_ip_addr }
+            __dcae_hdp3_ip_addr__: { get_param: dcae_hdp3_ip_addr }
           template: |
             #!/bin/bash
 
