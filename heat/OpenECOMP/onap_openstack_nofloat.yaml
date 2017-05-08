@@ -1,4 +1,4 @@
-heat_template_version: 2015-10-15
+heat_template_version: 2013-05-23
 
 description: Heat template to install ONAP components
 
@@ -117,17 +117,13 @@ parameters:
     type: string
     description: Cloud Provider Name
 
+
   ######################
   #                    #
   # Network parameters #
   #                    #
   ######################
-  
-  external_dns:
-    type: comma_delimited_list
-    description: External DNS for OAM ONAP network
 
-  ### Private IP addresses ###
   oam_network_cidr:
     type: string
     description: CIDR of the OAM ONAP network
@@ -287,19 +283,6 @@ resources:
             rand: { get_resource: random-str }
       network_id: { get_resource: oam_ecomp }
       cidr: { get_param: oam_network_cidr }
-      dns_nameservers: { get_param: external_dns }
-
-  router:
-    type: OS::Neutron::Router
-    properties:
-      external_gateway_info:
-        network: { get_param: public_net_id }
-
-  router_interface:
-    type: OS::Neutron::RouterInterface
-    properties:
-      router_id: { get_resource: router }
-      subnet_id: { get_resource: oam_ecomp_subnet }
 
 
   # DNS Server instantiation
@@ -308,12 +291,6 @@ resources:
     properties:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: dns_ip_addr }}]
-
-  dns_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: dns_private_port }
 
   dns_vm:
     type: OS::Nova::Server
@@ -327,6 +304,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: dns_private_port }
       user_data_format: RAW
       user_data:
@@ -334,7 +312,7 @@ resources:
           params:
             __nexus_repo__: { get_param: nexus_repo }
             __artifacts_version__: { get_param: artifacts_version }
-            __oam_network_cidr__: { get_attr: [oam_ecomp_subnet, cidr] }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __aai_ip_addr__: { get_param: aai_ip_addr }
             __appc_ip_addr__: { get_param: appc_ip_addr }
@@ -387,12 +365,6 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: aai_ip_addr }}]
 
-  aai_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: aai_private_port }
-
   aai_vm:
     type: OS::Nova::Server
     properties:
@@ -405,6 +377,7 @@ resources:
             base: { get_param: vm_base_name }      
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: aai_private_port }
       user_data_format: RAW
       user_data:
@@ -417,7 +390,9 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __aai_ip_addr__: { get_param: aai_ip_addr }
             __sdc_ip_addr__: { get_param: sdc_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __docker_version__: { get_param: docker_version }
             __cloud_env__: { get_param: cloud_env }
           template: |
@@ -430,8 +405,10 @@ resources:
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__aai_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
@@ -450,12 +427,6 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: mso_ip_addr }}]
 
-  mso_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: mso_private_port }
-
   mso_vm:
     type: OS::Nova::Server
     properties:
@@ -468,6 +439,7 @@ resources:
             base: { get_param: vm_base_name }      
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: mso_private_port }
       user_data_format: RAW
       user_data:
@@ -484,6 +456,8 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __mso_ip_addr__: { get_param: mso_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -497,7 +471,9 @@ resources:
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__mso_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__openstack_username__" > /opt/config/openstack_username.txt
             echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
@@ -521,12 +497,6 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: mr_ip_addr }}]
 
-  mrouter_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: mrouter_private_port }
-
   mrouter_vm:
     type: OS::Nova::Server
     properties:
@@ -539,6 +509,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: mrouter_private_port }
       user_data_format: RAW
       user_data:
@@ -549,7 +520,9 @@ resources:
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __mr_ip_addr__: { get_param: mr_ip_addr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
           template: |
@@ -562,7 +535,9 @@ resources:
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__mr_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
@@ -579,12 +554,6 @@ resources:
     properties:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: robot_ip_addr }}]
-
-  robot_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: robot_private_port }
  
   robot_vm:
     type: OS::Nova::Server
@@ -598,6 +567,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: robot_private_port }
       user_data_format: RAW
       user_data:
@@ -612,7 +582,9 @@ resources:
             __openstack_api_key__: { get_param : openstack_api_key }
             __artifacts_version__: { get_param: artifacts_version }
             __openstack_region__: { get_param: openstack_region }
+            __robot_ip_addr__: { get_param: robot_ip_addr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -630,8 +602,10 @@ resources:
             echo "__openstack_api_key__" > /opt/config/openstack_password.txt
             echo "__openstack_region__" > /opt/config/region.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__robot_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
@@ -649,12 +623,6 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: vid_ip_addr }}]
 
-  vid_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: vid_private_port }
-
   vid_vm:
     type: OS::Nova::Server
     properties:
@@ -667,6 +635,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: vid_private_port }
       user_data_format: RAW
       user_data:
@@ -677,7 +646,9 @@ resources:
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __vid_ip_addr__: { get_param: vid_ip_addr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -691,7 +662,9 @@ resources:
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__vid_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
@@ -710,12 +683,6 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: sdnc_ip_addr }}]
 
-  sdnc_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: sdnc_private_port }
-
   sdnc_vm:
     type: OS::Nova::Server
     properties:
@@ -728,6 +695,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: sdnc_private_port }
       user_data_format: RAW
       user_data:
@@ -738,7 +706,9 @@ resources:
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -752,7 +722,9 @@ resources:
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__sdnc_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
@@ -771,34 +743,36 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: sdc_ip_addr }}]
 
-  sdc_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: sdc_private_port }
-
   sdc_volume_data:
     type: OS::Cinder::Volume
     properties:
       name: vol1-sdc-data
       size: 100
 
+#  sdc_volume_attachment:
+#    type: OS::Cinder::VolumeAttachment
+#    properties:
+#      volume_id: { get_resource: sdc_volume_data }
+#      instance_uuid: { get_resource: sdc_vm }
+#      mountpoint: /dev/vdb
+
   sdc_vm:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_xlarge }
-      name: 
-        str_replace: 
+      name:
+        str_replace:
           template: base-sdc
           params:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: sdc_private_port }
       block_device_mapping:
         - device_name: /dev/vdb
-          volume_id: {get_resource: sdc_volume_data}
+          volume_id: { get_resource: sdc_volume_data }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -809,9 +783,10 @@ resources:
             __nexus_password__: { get_param: nexus_password }
             __env_name__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
+            __sdc_ip_addr__: { get_param: sdc_ip_addr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
-            __public_ip__: { get_attr: [sdc_floating_ip, floating_ip_address] }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -826,9 +801,10 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__env_name__" > /opt/config/env_name.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
-            echo "__public_ip__" > /opt/config/public_ip.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__sdc_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
@@ -847,12 +823,6 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: portal_ip_addr }}]
 
-  portal_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: portal_private_port }
-
   portal_vm:
     type: OS::Nova::Server
     properties:
@@ -865,6 +835,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: portal_private_port }
       user_data_format: RAW
       user_data:
@@ -875,8 +846,9 @@ resources:
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __portal_ip_addr__: { get_param: portal_ip_addr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __public_ip__: { get_attr: [portal_floating_ip, floating_ip_address] }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -889,8 +861,9 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__public_ip__" > /opt/config/public_ip.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__portal_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
@@ -910,12 +883,6 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
 
-  dcae_c_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: dcae_c_private_port }
-
   dcae_c_vm:
     type: OS::Nova::Server
     properties:
@@ -928,6 +895,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: dcae_c_private_port }
       user_data_format: RAW
       user_data:
@@ -940,6 +908,7 @@ resources:
             __nexus_url_snapshots__: { get_param: nexus_url_snapshot }
             __gitlab_branch__: { get_param: gitlab_branch }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __dcae_zone__: { get_param: dcae_zone }
             __dcae_state__: { get_param: dcae_state }
             __artifacts_version__: { get_param: artifacts_version }
@@ -997,6 +966,7 @@ resources:
             echo "__horizon_url__" > /opt/config/horizon_url.txt
             echo "__keystone_url__" > /opt/config/keystone_url.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__public_net_id__" > /opt/config/public_net_id.txt
             echo "__dcae_base_environment__" > /opt/config/dcae_base_environment.txt
             echo "__dcae_code_version__" > /opt/config/dcae_code_version.txt
@@ -1021,12 +991,6 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: policy_ip_addr }}]
 
-  policy_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: policy_private_port }
-
   policy_vm:
     type: OS::Nova::Server
     properties:
@@ -1039,6 +1003,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: policy_private_port }
       user_data_format: RAW
       user_data:
@@ -1049,8 +1014,9 @@ resources:
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
             __artifacts_version__: { get_param: artifacts_version }
+            __policy_ip_addr__: { get_param: policy_ip_addr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __public_ip__: { get_attr: [policy_floating_ip, floating_ip_address] }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -1064,8 +1030,9 @@ resources:
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__policy_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__public_ip__" > /opt/config/public_ip.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
@@ -1084,12 +1051,6 @@ resources:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: appc_ip_addr }}]
 
-  appc_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: appc_private_port }
-
   appc_vm:
     type: OS::Nova::Server
     properties:
@@ -1102,6 +1063,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: appc_private_port }
       user_data_format: RAW
       user_data:
@@ -1113,7 +1075,9 @@ resources:
             __nexus_password__: { get_param: nexus_password }
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
+            __appc_ip_addr__: { get_param: appc_ip_addr }
             __dns_ip_addr__: { get_param: dns_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -1127,7 +1091,9 @@ resources:
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__appc_ip_addr__" > /opt/config/local_ip_addr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
