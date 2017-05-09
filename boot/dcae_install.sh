@@ -38,6 +38,13 @@ DCAE_HDP1_IP_ADDR=$(cat /opt/config/dcae_hdp1_ip_addr.txt)
 DCAE_HDP2_IP_ADDR=$(cat /opt/config/dcae_hdp2_ip_addr.txt)
 DCAE_HDP3_IP_ADDR=$(cat /opt/config/dcae_hdp3_ip_addr.txt)
 
+UBUNTU_1404_IMAGE=$(cat /opt/config/ubuntu_1404_image.txt)
+UBUNTU_1604_IMAGE=$(cat /opt/config/ubuntu_1604_image.txt)
+FLAVOR_SMALL=$(cat /opt/config/flavor_small.txt)
+FLAVOR_MEDIUM=$(cat /opt/config/flavor_medium.txt)
+FLAVOR_LARGE=$(cat /opt/config/flavor_large.txt)
+FLAVOR_XLARGE=$(cat /opt/config/flavor_xlarge.txt)
+
 if [[ $CLOUD_ENV != "rackspace" ]]
 then
 	# Add host name to /etc/host to avoid warnings in openstack images
@@ -154,6 +161,13 @@ dcae_coll00_ip_addr: $DCAE_COLL_IP_ADDR
 dcae_cdap00_ip_addr: $DCAE_HDP1_IP_ADDR
 dcae_cdap01_ip_addr: $DCAE_HDP2_IP_ADDR
 dcae_cdap02_ip_addr: $DCAE_HDP3_IP_ADDR
+
+UBUNTU-1404-IMAGE: $UBUNTU_1404_IMAGE
+UBUNTU-1604-IMAGE: $UBUNTU_1604_IMAGE
+FLAVOR-SMALL: $FLAVOR_SMALL
+FLAVOR-MEDIUM: $FLAVOR_MEDIUM
+FLAVOR-LARGE: $FLAVOR_LARGE
+FLAVOR-XLARGE: $FLAVOR_XLARGE
 EOF_CONFIG
 
 # Add floating IP section to DCAE config file for OpenStack deployments that use floating IPs
