@@ -93,6 +93,20 @@ mkdir /opt/docker
 curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
 chmod +x /opt/docker/docker-compose
 
+# Set the MTU size of docker containers to the minimum MTU size supported by vNICs. OpenStack deployments may need to know the external DNS IP
+MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+
+if [ -s /opt/config/external_dns.txt ]
+then
+	echo "DOCKER_OPTS=\"--dns $(cat /opt/config/external_dns.txt) --mtu=$MTU\"" >> /etc/default/docker
+else
+	echo "DOCKER_OPTS=\"--mtu=$MTU\"" >> /etc/default/docker
+fi
+
+cp /lib/systemd/system/docker.service /etc/systemd/system
+sed -i "/ExecStart/s/$/ --mtu=$MTU/g" /etc/systemd/system/docker.service
+service docker restart
+
 # DNS IP address configuration
 echo "nameserver "$DNS_IP_ADDR >> /etc/resolvconf/resolv.conf.d/head
 resolvconf -u
@@ -107,7 +121,7 @@ mkdir -p /opt/app/dcae-controller
 cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
 BASE: $BASE
 ZONE: $ZONE
-DNS-IP-ADDR=$DNS_IP_ADDR
+DNS-IP-ADDR: $DNS_IP_ADDR
 STATE: $STATE
 DCAE-VERSION: $DCAE_CODE_VERSION
 HORIZON-URL: $HORIZON_URL/$OPENSTACK_USER

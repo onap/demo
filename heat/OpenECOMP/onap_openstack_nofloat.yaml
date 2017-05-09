@@ -117,13 +117,17 @@ parameters:
     type: string
     description: Cloud Provider Name
 
-
   ######################
   #                    #
   # Network parameters #
   #                    #
   ######################
 
+  external_dns:
+    type: comma_delimited_list
+    description: External DNS for OAM ONAP network
+
+  ### Private IP addresses ###
   oam_network_cidr:
     type: string
     description: CIDR of the OAM ONAP network
@@ -395,6 +399,7 @@ resources:
             __oam_network_cidr__: { get_param: oam_network_cidr }
             __docker_version__: { get_param: docker_version }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -412,6 +417,7 @@ resources:
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
@@ -461,6 +467,7 @@ resources:
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -482,6 +489,7 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mso_install.sh -o /opt/mso_install.sh
@@ -525,6 +533,7 @@ resources:
             __oam_network_cidr__: { get_param: oam_network_cidr }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -540,6 +549,7 @@ resources:
             echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mr_install.sh -o /opt/mr_install.sh
@@ -588,6 +598,7 @@ resources:
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -608,6 +619,7 @@ resources:
             echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_install.sh -o /opt/robot_install.sh
@@ -652,6 +664,7 @@ resources:
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -668,6 +681,7 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/vid_install.sh -o /opt/vid_install.sh
@@ -712,6 +726,7 @@ resources:
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -728,6 +743,7 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/sdnc_install.sh -o /opt/sdnc_install.sh
@@ -748,13 +764,6 @@ resources:
     properties:
       name: vol1-sdc-data
       size: 100
-
-#  sdc_volume_attachment:
-#    type: OS::Cinder::VolumeAttachment
-#    properties:
-#      volume_id: { get_resource: sdc_volume_data }
-#      instance_uuid: { get_resource: sdc_vm }
-#      mountpoint: /dev/vdb
 
   sdc_vm:
     type: OS::Nova::Server
@@ -790,6 +799,7 @@ resources:
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -808,6 +818,7 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_install.sh -o /opt/asdc_install.sh
@@ -852,6 +863,7 @@ resources:
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -868,6 +880,7 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/portal_install.sh -o /opt/portal_install.sh
@@ -936,6 +949,7 @@ resources:
             __dcae_hdp1_ip_addr__: { get_param: dcae_hdp1_ip_addr }
             __dcae_hdp2_ip_addr__: { get_param: dcae_hdp2_ip_addr }
             __dcae_hdp3_ip_addr__: { get_param: dcae_hdp3_ip_addr }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -976,6 +990,7 @@ resources:
             echo "__dcae_hdp1_ip_addr__" > /opt/config/dcae_hdp1_ip_addr.txt
             echo "__dcae_hdp2_ip_addr__" > /opt/config/dcae_hdp2_ip_addr.txt
             echo "__dcae_hdp3_ip_addr__" > /opt/config/dcae_hdp3_ip_addr.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh
@@ -1020,6 +1035,7 @@ resources:
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -1036,6 +1052,7 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/policy_install.sh -o /opt/policy_install.sh
@@ -1081,6 +1098,7 @@ resources:
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -1098,6 +1116,7 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/appc_install.sh -o /opt/appc_install.sh

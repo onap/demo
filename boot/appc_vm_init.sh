@@ -5,6 +5,7 @@ NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 export NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DMAAP_TOPIC=$(cat /opt/config/dmaap_topic.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
+export MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
 cd /opt/appc
 git pull
