@@ -1052,6 +1052,12 @@ resources:
             __dcae_hdp1_float_ip__: { get_param: dcae_hdp1_float_ip }
             __dcae_hdp2_float_ip__: { get_param: dcae_hdp2_float_ip }
             __dcae_hdp3_float_ip__: { get_param: dcae_hdp3_float_ip }
+            __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
+            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
+            __flavor_small__: { get_param: flavor_small }
+            __flavor_medium__: { get_param: flavor_medium }
+            __flavor_large__: { get_param: flavor_large }
+            __flavor_xlarge__: { get_param: flavor_xlarge }
           template: |
             #!/bin/bash
 
@@ -1097,6 +1103,12 @@ resources:
             echo "__dcae_hdp1_float_ip__" > /opt/config/dcae_hdp1_float_ip.txt
             echo "__dcae_hdp2_float_ip__" > /opt/config/dcae_hdp2_float_ip.txt
             echo "__dcae_hdp3_float_ip__" > /opt/config/dcae_hdp3_float_ip.txt
+            echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
+            echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
+            echo "__flavor_small__" > /opt/config/flavor_small.txt
+            echo "__flavor_medium__" > /opt/config/flavor_medium.txt
+            echo "__flavor_large__" > /opt/config/flavor_large.txt
+            echo "__flavor_xlarge__" > /opt/config/flavor_xlarge.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh
