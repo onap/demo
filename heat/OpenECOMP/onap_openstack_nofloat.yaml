@@ -936,6 +936,12 @@ resources:
             __dcae_hdp1_ip_addr__: { get_param: dcae_hdp1_ip_addr }
             __dcae_hdp2_ip_addr__: { get_param: dcae_hdp2_ip_addr }
             __dcae_hdp3_ip_addr__: { get_param: dcae_hdp3_ip_addr }
+            __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
+            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
+            __flavor_small__: { get_param: flavor_small }
+            __flavor_medium__: { get_param: flavor_medium }
+            __flavor_large__: { get_param: flavor_large }
+            __flavor_xlarge__: { get_param: flavor_xlarge }
           template: |
             #!/bin/bash
 
