@@ -1,0 +1,1475 @@
+heat_template_version: 2015-10-15
+
+description: Heat template to install ONAP components
+
+##############
+#            #
+# PARAMETERS #
+#            #
+##############
+
+parameters:
+
+  # Generic parameters used across all ONAP components
+  public_net_id:
+    type: string
+    description: Public network for floating IP address allocation
+
+  ubuntu_1404_image:
+    type: string
+    description: Name of the Ubuntu 14.04 image
+
+  ubuntu_1604_image:
+    type: string
+    description: Name of the Ubuntu 16.04 image
+
+  flavor_small:
+    type: string
+    description: Name of the Small Flavor supported by the cloud provider
+
+  flavor_medium:
+    type: string
+    description: Name of the Medium Flavor supported by the cloud provider
+
+  flavor_large:
+    type: string
+    description: Name of the Large Flavor supported by the cloud provider
+
+  flavor_xlarge:
+    type: string
+    description: Name of the Extra Large Flavor supported by the cloud provider
+    
+  vm_base_name:
+    type: string
+    description: Base name of ONAP VMs
+
+  key_name:
+    type: string
+    description: Public/Private key pair name
+
+  pub_key:
+    type: string
+    description: Public key to be installed on the compute instance
+
+  nexus_repo:
+    type: string
+    description: Complete URL for the Nexus repository.
+
+  nexus_docker_repo:
+    type: string
+    description: Complete URL for the Nexus repository for docker images.
+
+  nexus_username:
+    type: string
+    description: Nexus Repository username
+
+  nexus_password:
+    type: string
+    description: Nexus Repository Password
+    
+  artifacts_version:
+    type: string
+    description: Artifacts version of ONAP components
+    
+  docker_version:
+    type: string
+    label: Version number of ONAP docker images
+    
+  gerrit_branch:
+    type: string
+    label: Gerrit code branch
+    description: Gerrit branch where to download the code from
+
+  dmaap_topic:
+    type: string
+    description: DmaaP Topic name
+    
+  openstack_tenant_id:
+    type: string
+    description: Openstack tenant ID
+
+  openstack_username:
+    type: string
+    description: Openstack username
+
+  openstack_api_key:
+    type: string
+    description: Openstack API Key
+    
+  horizon_url:
+    type: string
+    description: URL of Openstack Horizon
+
+  keystone_url:
+    type: string
+    description: URL of Openstack Keystone
+    
+  # Network parameters
+  external_dns:
+    type: comma_delimited_list
+    description: External DNS for OAM ONAP network
+
+  oam_network_cidr:
+    type: string
+    description: CIDR of the OAM ONAP network
+    
+  aai_ip_addr:
+    type: string
+    description: A&AI IP Address
+    
+  appc_ip_addr: 
+    type: string
+    description: APP-C IP Address
+    
+  dcae_ip_addr:
+    type: string
+    description: DCAE IP Address
+    
+  dns_ip_addr:
+    type: string
+    description: DNS IP Address
+    
+  mso_ip_addr: 
+    type: string
+    description: MSO IP Address
+    
+  mr_ip_addr: 
+    type: string
+    description: Message Router IP Address
+    
+  policy_ip_addr:
+    type: string
+    description: Policy Engine IP Address
+    
+  portal_ip_addr:
+    type: string
+    description: Portal IP Address
+    
+  robot_ip_addr: 
+    type: string
+    description: Robot Framework IP Address
+
+  sdc_ip_addr:
+    type: string
+    description: SDC IP Address
+    
+  sdnc_ip_addr:
+    type: string
+    description: SDN-C IP Address
+    
+  vid_ip_addr:
+    type: string
+    description: VID IP Address
+
+  # Parameters for DCAE instantiation
+  dcae_zone:
+    type: string
+    description: DCAE Zone to use in VM names created by DCAE controller
+
+  dcae_state:
+    type: string
+    description: DCAE State to use in VM names created by DCAE controller
+
+  nexus_repo_root:
+    type: string
+    description: Root URL of Nexus repository
+    
+  nexus_url_snapshot:
+    type: string
+    description: Snapshot of Maven repository for DCAE deployment
+
+  openstack_region:
+    type: string
+    description: Region where the DCAE controller will spin the VMs
+
+  gitlab_branch:
+    type: string
+    description: Branch of the Gitlab repository
+
+
+#############
+#           #
+# RESOURCES #
+#           #
+#############
+
+resources:
+  random-str:
+    type: OS::Heat::RandomString
+    properties:
+      length: 4
+
+
+  # Public key used to access ONAP components
+  vm_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name: 
+        str_replace:
+          template: base_rand
+          params:
+            base: { get_param: key_name }
+            rand: { get_resource: random-str }         
+      public_key: { get_param: pub_key }
+      save_private_key: false
+
+
+  # ONAP management private network
+  oam_ecomp:
+    type: OS::Neutron::Net
+    properties:
+      name: 
+        str_replace:
+          template: oam_ecomp_rand
+          params:
+            rand: { get_resource: random-str }
+
+  oam_ecomp_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: 
+        str_replace:
+          template: oam_ecomp_rand
+          params:
+            rand: { get_resource: random-str }
+      network_id: { get_resource: oam_ecomp }
+      cidr: { get_param: oam_network_cidr }
+      dns_nameservers: { get_param: external_dns }
+
+  router:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info:
+        network: { get_param: public_net_id }
+
+  router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: router }
+      subnet_id: { get_resource: oam_ecomp_subnet }
+
+
+  # DNS Server instantiation
+  dns_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: dns_ip_addr }}]
+
+  dns_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: dns_private_port }
+
+  dns_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_small }
+      name: 
+        str_replace:
+          template: base-dns-server
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: dns_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __artifacts_version__: { get_param: artifacts_version }
+            __oam_network_cidr__: { get_attr: [oam_ecomp_subnet, cidr] }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __aai_ip_addr__: { get_param: aai_ip_addr }
+            __appc_ip_addr__: { get_param: appc_ip_addr }
+            __dcae_ip_addr__: { get_param: dcae_ip_addr }
+            __mso_ip_addr__: { get_param: mso_ip_addr }
+            __mr_ip_addr__: { get_param: mr_ip_addr }
+            __policy_ip_addr__: { get_param: policy_ip_addr }
+            __portal_ip_addr__: { get_param: portal_ip_addr }
+            __robot_ip_addr__: { get_param: robot_ip_addr }
+            __sdc_ip_addr__: { get_param: sdc_ip_addr }
+            __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
+            __vid_ip_addr__: { get_param: vid_ip_addr }
+
+          template: |
+            #!/bin/bash
+
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk bind9 bind9utils bind9-doc ntp ntpdate
+
+            # Download script
+            mkdir /etc/bind/zones
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/bind_zones -o /etc/bind/zones/db.simpledemo.openecomp.org
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/bind_options -o /etc/bind/named.conf.options
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/named.conf.local -o /etc/bind/named.conf.local
+
+            # Configure bind
+            #NETMASK=$(echo "__oam_network_cidr__" | cut -d"/" -f2)
+            #if [[ $NETMASK == "8" ]]
+            #then
+            #  ADDR=$(echo "__dns_ip_addr__" | cut -d"." -f1)
+            #elif [[ $NETMASK == "16" ]]
+            #then
+            #  ADDR=$(echo "__dns_ip_addr__" | cut -d"." -f1).$(echo "__dns_ip_addr__" | cut -d"." -f2)
+            #elif [[ $NETMASK == "24" ]]
+            #then
+            #  ADDR=$(echo "__dns_ip_addr__" | cut -d"." -f1).$(echo "__dns_ip_addr__" | cut -d"." -f2).$(echo "__dns_ip_addr__" | cut -d"." -f3)
+            #fi
+
+            #sed -i "s/netmask/$ADDR\/$NETMASK/g" /etc/bind/named.conf.options
+            sed -i "s/dns_ip_addr/"__dns_ip_addr__"/g" /etc/bind/named.conf.options
+
+            A=$(echo "__dcae_ip_addr__" | cut -d"." -f1)
+            B=$(echo "__dcae_ip_addr__" | cut -d"." -f2)
+            C=$(echo "__dcae_ip_addr__" | cut -d"." -f3)
+            sed -i "s/aai_ip_addr/"__aai_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/appc_ip_addr/"__appc_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/dcae_ip_addr/"__dcae_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/dns_ip_addr/"__dns_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/mso_ip_addr/"__mso_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/mr_ip_addr/"__mr_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/policy_ip_addr/"__policy_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/portal_ip_addr/"__portal_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/robot_ip_addr/"__robot_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/sdc_ip_addr/"__sdc_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/sdnc_ip_addr/"__sdnc_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/vid_ip_addr/"__vid_ip_addr__"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+            sed -i "s/dcae_coll_ip_addr/"$A.$B.$C"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+
+            modprobe ip_gre
+            sed -i "s/OPTIONS=.*/OPTIONS=\"-4 -u bind\"/g" /etc/default/bind9
+            
+            # Restart bind to pick up configuration changes
+            service bind9 restart
+
+
+  # A&AI instantiation
+  aai_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: aai_ip_addr }}]
+      
+  aai_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: aai_private_port }
+
+  aai_vm:
+    type: OS::Nova::Server
+    depends_on: sdc_vm
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_large }
+      name: 
+        str_replace:
+          template: base-aai
+          params:
+            base: { get_param: vm_base_name }      
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: aai_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: docker_version }
+          template: |
+            #!/bin/bash
+
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai_vm_init.sh -o /opt/aai_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai_serv.sh -o /opt/aai_serv.sh
+            chmod +x /opt/aai_vm_init.sh
+            chmod +x /opt/aai_serv.sh
+            mv /opt/aai_serv.sh /etc/init.d
+            update-rc.d aai_serv.sh defaults
+
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+
+            mkdir /opt/openecomp
+            mkdir /opt/openecomp/aai
+            mkdir /opt/openecomp/aai/logs
+            mkdir /opt/openecomp/aai/data
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+
+            # Reboot the VM to pick up configuration changes
+            reboot
+
+
+  # MSO instantiation
+  mso_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: mso_ip_addr }}]
+
+  mso_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: mso_private_port }
+
+  mso_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1604_image }
+      flavor: { get_param: flavor_large }
+      name: 
+        str_replace:
+          template: base-mso
+          params:
+            base: { get_param: vm_base_name }      
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: mso_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __openstack_username__: { get_param: openstack_username }
+            __openstack_tenant_id__: { get_param: openstack_tenant_id }
+            __openstack_api_key__: { get_param: openstack_api_key }
+            __keystone_url__: { get_param: keystone_url }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__openstack_username__" > /opt/config/openstack_username.txt
+            echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
+            echo "__keystone_url__" > /opt/config/keystone.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mso_vm_init.sh -o /opt/mso_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mso_serv.sh -o /opt/mso_serv.sh
+            chmod +x /opt/mso_vm_init.sh
+            chmod +x /opt/mso_serv.sh
+            mv /opt/mso_serv.sh /etc/init.d
+            update-rc.d mso_serv.sh defaults
+
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # Clone Gerrit repository
+            cd /opt
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/mso/docker-config.git test_lab
+            MSO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
+            echo -n "__openstack_api_key__" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
+
+            # Rename network interface
+            sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+            grub-mkconfig -o /boot/grub/grub.cfg
+            sed -i "s/ens3/eth0/g" /etc/network/interfaces.d/*.cfg
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+            
+            # Reboot the VM to pick up configuration changes
+            reboot
+
+
+  # Message Router instantiation
+  mrouter_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: mr_ip_addr }}]
+
+  mrouter_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: mrouter_private_port }
+
+  mrouter_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_large }
+      name: 
+        str_replace: 
+          template: base-message-router
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: mrouter_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+            
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mr_vm_init.sh -o /opt/mr_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mr_serv.sh -o /opt/mr_serv.sh
+            chmod +x /opt/mr_vm_init.sh
+            chmod +x /opt/mr_serv.sh
+            mv /opt/mr_serv.sh /etc/init.d
+            update-rc.d mr_serv.sh defaults
+
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # Clone Gerrit repository
+            cd /opt
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/dcae/demo/startup/message-router.git dcae-startup-vm-message-router
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+
+            # Reboot the VM to pick up configuration changes
+            reboot
+
+
+  # Robot Framework instantiation
+  robot_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: robot_ip_addr }}]
+
+  robot_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: robot_private_port }
+ 
+  robot_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1604_image }
+      flavor: { get_param: flavor_small }
+      name: 
+        str_replace: 
+          template: base-robot
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: robot_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __network_name__: { get_attr: [oam_ecomp, name] }
+            __openstack_username__: { get_param: openstack_username }
+            __openstack_api_key__: { get_param : openstack_api_key }
+            __artifacts_version__: { get_param: artifacts_version }
+            __openstack_region__: { get_param: openstack_region }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__network_name__" > /opt/config/network.txt
+            echo "__openstack_username__" > /opt/config/openstack_username.txt
+            echo "__openstack_api_key__" > /opt/config/openstack_password.txt
+            echo "__openstack_region__" > /opt/config/region.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+ 
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+            echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_vm_init.sh -o /opt/robot_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_serv.sh -o /opt/robot_serv.sh
+            chmod +x /opt/robot_vm_init.sh
+            chmod +x /opt/robot_serv.sh
+            mv /opt/robot_serv.sh /etc/init.d
+            update-rc.d robot_serv.sh defaults
+ 
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+ 
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose     
+
+            # Execute RobotETE-specific instructions: create share folder to run as a docker volume
+            mkdir -p /opt/eteshare/logs
+            mkdir -p /opt/eteshare/config
+
+            # Clone Gerrit repository
+            cd /opt
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/testsuite/properties.git testsuite/properties
+            
+            # Rename network interface
+            sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+            grub-mkconfig -o /boot/grub/grub.cfg
+            sed -i "s/ens3/eth0/g" /etc/network/interfaces.d/*.cfg
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+            
+            # Reboot the VM to pick up configuration changes
+            reboot
+
+
+  # VID instantiation
+  vid_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: vid_ip_addr }}]
+
+  vid_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: vid_private_port }
+
+  vid_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_medium }
+      name: 
+        str_replace: 
+          template: base-vid
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: vid_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk make git ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/vid_vm_init.sh -o /opt/vid_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/vid_serv.sh -o /opt/vid_serv.sh
+            chmod +x /opt/vid_vm_init.sh
+            chmod +x /opt/vid_serv.sh
+            mv /opt/vid_serv.sh /etc/init.d
+            update-rc.d vid_serv.sh defaults
+
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # Clone Gerrit repository
+            cd /opt
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/vid.git
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+            
+            # Reboot the VM to pick up configuration changes
+            reboot
+            
+            
+  # SDN-C instantiation
+  sdnc_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: sdnc_ip_addr }}]
+
+  sdnc_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: sdnc_private_port }
+
+  sdnc_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_large }
+      name: 
+        str_replace: 
+          template: base-sdnc
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: sdnc_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/sdnc_vm_init.sh -o /opt/sdnc_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/sdnc_serv.sh -o /opt/sdnc_serv.sh
+            chmod +x /opt/sdnc_vm_init.sh
+            chmod +x /opt/sdnc_serv.sh
+            mv /opt/sdnc_serv.sh /etc/init.d
+            update-rc.d sdnc_serv.sh defaults
+            
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # Clone Gerrit repository
+            cd /opt
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/sdnc/oam.git sdnc
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+            
+            # Reboot the VM to pick up configuration changes
+            reboot
+
+            
+  # SDC instantiation
+  sdc_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: sdc_ip_addr }}]
+
+  sdc_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: sdc_private_port }
+
+  sdc_volume_data:
+    type: OS::Cinder::Volume
+    properties:
+      name: vol1-sdc-data
+      size: 100
+
+  sdc_volume_attachment:
+    type: OS::Cinder::VolumeAttachment
+    properties:
+      volume_id: { get_resource: sdc_volume_data }
+      instance_uuid: { get_resource: sdc_vm }
+      mountpoint: /dev/vdb
+
+  sdc_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1604_image }
+      flavor: { get_param: flavor_xlarge }
+      name: 
+        str_replace: 
+          template: base-sdc
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: sdc_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __env_name__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __mr_ip_addr__: { get_param: mr_ip_addr }
+            __public_ip__: { get_attr: [sdc_floating_ip, floating_ip_address] }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+            
+            hn=`hostname`        
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__env_name__" > /opt/config/env_name.txt
+            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
+            echo "__public_ip__" > /opt/config/public_ip.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+          
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_vm_init.sh -o /opt/asdc_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_serv.sh -o /opt/asdc_serv.sh
+            chmod +x /opt/asdc_vm_init.sh
+            chmod +x /opt/asdc_serv.sh
+            mv /opt/asdc_serv.sh /etc/init.d
+            update-rc.d asdc_serv.sh defaults
+            
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # Create partition and mount the external volume
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_ext_volume_partitions.txt -o /opt/asdc_ext_volume_partitions.txt
+            sfdisk /dev/vdb < /opt/asdc_ext_volume_partitions.txt
+            mkfs -t ext4 /dev/vdb1
+            mkdir -p /data
+            mount /dev/vdb1 /data
+            echo "/dev/vdb1  /data           ext4    errors=remount-ro,noatime,barrier=0 0       1" >> /etc/fstab
+
+            # Run SDC-specific instructions
+            cd /opt
+            mkdir -p /data/environments
+            mkdir -p /data/scripts
+            mkdir -p /data/logs/BE
+            mkdir -p /data/logs/FE
+            chmod 777 /data
+            chmod 777 /data/logs/BE
+            chmod 777 /data/logs/FE
+
+            # Clone Gerrit repository
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/sdc.git
+
+            cat > /root/.bash_aliases << EOF
+            alias dcls='/data/scripts/docker_clean.sh \$1'
+            alias dlog='/data/scripts/docker_login.sh \$1'
+            alias rund='/data/scripts/docker_run.sh'
+            alias health='/data/scripts/docker_health.sh'
+            EOF
+            
+            # Rename network interface
+            sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+            grub-mkconfig -o /boot/grub/grub.cfg
+            sed -i "s/ens3/eth0/g" /etc/network/interfaces.d/*.cfg
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+            
+            # Reboot the VM to pick up configuration changes
+            reboot
+            
+            
+  # PORTAL instantiation
+  portal_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: portal_ip_addr }}]
+
+  portal_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: portal_private_port }
+
+  portal_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_large }
+      name: 
+        str_replace: 
+          template: base-portal
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: portal_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __public_ip__: { get_attr: [portal_floating_ip, floating_ip_address] }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+            
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__public_ip__" > /opt/config/public_ip.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git unzip mysql-client-core-5.6 ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/portal_vm_init.sh -o /opt/portal_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/portal_serv.sh -o /opt/portal_serv.sh
+            chmod +x /opt/portal_vm_init.sh
+            chmod +x /opt/portal_serv.sh
+            mv /opt/portal_serv.sh /etc/init.d
+            update-rc.d portal_serv.sh defaults
+            
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # Clone Gerrit repository
+            mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
+            cd /opt
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/portal.git
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+
+            # Reboot the VM to pick up configuration changes
+            reboot
+            
+            
+  # DCAE Controller instantiation
+  dcae_c_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
+
+  dcae_c_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: dcae_c_private_port }
+
+  dcae_c_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_medium }
+      name: 
+        str_replace: 
+          template: base-dcae-controller
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: dcae_c_private_port }
+      user_data_format: RAW
+      user_data: 
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __nexus_url_snapshots__: { get_param: nexus_url_snapshot }
+            __gitlab_branch__: { get_param: gitlab_branch }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __dcae_zone__: { get_param: dcae_zone }
+            __dcae_state__: { get_param: dcae_state }
+            __artifacts_version__: { get_param: artifacts_version }
+            __tenant_id__: { get_param: openstack_tenant_id }
+            __openstack_private_network_name__: { get_attr: [oam_ecomp, name] }
+            __openstack_user__: { get_param: openstack_username }
+            __openstack_password__: { get_param: openstack_api_key }
+            __key_name__: { get_param: key_name }
+            __rand_str__: { get_resource: random-str }
+            __pub_key__: { get_param: pub_key }
+            __nexus_repo_root__: { get_param: nexus_repo_root }
+            __openstack_region__: { get_param: openstack_region }
+            __horizon_url__ : { get_param: horizon_url }
+            __keystone_url__ : { get_param: keystone_url }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+            
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk make git ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dcae_vm_init.sh -o /opt/dcae_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dcae_serv.sh -o /opt/dcae_serv.sh
+            chmod +x /opt/dcae_vm_init.sh
+            chmod +x /opt/dcae_serv.sh
+            mv /opt/dcae_serv.sh /etc/init.d
+            update-rc.d dcae_serv.sh defaults
+
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+            
+            # Clone Gerrit repository
+            cd /opt
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/dcae/demo/startup/controller.git dcae-startup-vm-controller
+            
+            # DCAE Controller specific deployment
+            cd /opt/dcae-startup-vm-controller
+            mkdir -p /opt/app/dcae-controller
+            cat > /opt/app/dcae-controller/config.yaml << EOF_CONFIG
+            ZONE: __dcae_zone__
+            STATE: __dcae_state__
+            DCAE-VERSION: __artifacts_version__
+            HORIZON-URL: __horizon_url__/__openstack_user__
+            KEYSTONE-URL: __keystone_url__
+            OPENSTACK-TENANT-ID: __tenant_id__
+            OPENSTACK-TENANT-NAME: OPEN-ECOMP
+            OPENSTACK-REGION: __openstack_region__
+            OPENSTACK-PRIVATE-NETWORK: __openstack_private_network_name__
+            OPENSTACK-USER: __openstack_user__
+            OPENSTACK-PASSWORD: __openstack_password__
+            OPENSTACK-KEYNAME: __key_name_____rand_str___dcae
+            OPENSTACK-PUBKEY: __pub_key__
+            
+            NEXUS-URL-ROOT: __nexus_repo_root__
+            NEXUS-USER: __nexus_username__
+            NEXUS-PASSWORD: __nexus_password__
+            NEXUS-URL-SNAPSHOTS: __nexus_url_snapshots__
+            NEXUS-RAWURL: __nexus_repo__
+            
+            DOCKER-REGISTRY: __nexus_docker_repo__
+
+            GIT-MR-REPO: http://gerrit.onap.org/r/dcae/demo/startup/message-router.git
+            EOF_CONFIG
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+
+            # Reboot the VM to pick up configuration changes
+            reboot
+            
+            
+  # Policy Engine instantiation
+  policy_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: policy_ip_addr }}]
+
+  policy_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: policy_private_port }
+
+  policy_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_xlarge }
+      name: 
+        str_replace: 
+          template: base-policy
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: policy_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __public_ip__: { get_attr: [policy_floating_ip, floating_ip_address] }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+            
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__public_ip__" > /opt/config/public_ip.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/policy_vm_init.sh -o /opt/policy_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/policy_serv.sh -o /opt/policy_serv.sh
+            chmod +x /opt/policy_vm_init.sh
+            chmod +x /opt/policy_serv.sh
+            mv /opt/policy_serv.sh /etc/init.d
+            update-rc.d policy_serv.sh defaults
+
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # Clone Gerrit repository
+            cd /opt
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/policy/docker.git policy
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+            
+            # Reboot the VM to pick up configuration changes
+            reboot
+            
+            
+  # APP-C instantiation
+  appc_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: appc_ip_addr }}]
+
+  appc_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: appc_private_port }
+
+  appc_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_large }
+      name: 
+        str_replace: 
+          template: base-appc
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: appc_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+          template: |
+            #!/bin/bash
+            
+            hn=`hostname`
+            echo 127.0.0.1 $hn >> /etc/hosts
+            
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+
+            # Download dependencies
+            add-apt-repository -y ppa:openjdk-r/ppa
+            apt-get update
+            apt-get install -y apt-transport-https ca-certificates wget openjdk-7-jdk git ntp ntpdate
+
+            # Download scripts from Nexus
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/docker_key.txt -o /opt/config/docker_key.txt
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/appc_vm_init.sh -o /opt/appc_vm_init.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/appc_serv.sh -o /opt/appc_serv.sh
+            chmod +x /opt/appc_vm_init.sh
+            chmod +x /opt/appc_serv.sh
+            mv /opt/appc_serv.sh /etc/init.d
+            update-rc.d appc_serv.sh defaults
+            
+            # Download and install docker-engine and docker-compose
+            DOCKER_KEY=$(cat /opt/config/docker_key.txt)
+            apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys $DOCKER_KEY
+            echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
+            apt-get install -y docker-engine
+            service docker start
+
+            mkdir /opt/docker
+            curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # Clone Gerrit repository
+            cd /opt
+            git clone -b __gerrit_branch__ --single-branch http://gerrit.onap.org/r/appc/deployment.git appc
+            
+            # DNS/GW IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
+            
+            # Reboot the VM to pick up configuration changes
+            reboot
+            
