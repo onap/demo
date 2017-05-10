@@ -1,0 +1,7 @@
+export OS_REGION_NAME=RegionOne
+export OS_PROJECT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=admin
+export OS_AUTH_URL=http://192.168.0.10:5000/v2.0
+export OS_IDENTITY_API_VERSION=2.0
+export OS_VOLUME_API_VERSION=2
