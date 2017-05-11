@@ -16,6 +16,6 @@ docker pull $NEXUS_DOCKER_REPO/library/mariadb:10
 docker rm -f vid-mariadb
 docker rm -f vid-server
 
-docker run --name vid-mariadb -e MYSQL_DATABASE=vid_openecomp -e MYSQL_USER=vidadmin -e MYSQL_PASSWORD=Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U -e MYSQL_ROOT_PASSWORD=LF+tp_1WqgSY -v /opt/vid/lf_config/vid-my.cnf:/etc/mysql/my.cnf -v /opt/vid/lf_config/vid-pre-init.sql:/docker-entrypoint-initdb.d/vid-pre-init.sql -v /var/lib/mysql -d mariadb:10
+docker run --name vid-mariadb -e MYSQL_DATABASE=vid_openecomp_epsdk -e MYSQL_USER=vidadmin -e MYSQL_PASSWORD=Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U -e MYSQL_ROOT_PASSWORD=LF+tp_1WqgSY -v /opt/vid/lf_config/vid-my.cnf:/etc/mysql/my.cnf -v /opt/vid/lf_config/vid-pre-init.sql:/docker-entrypoint-initdb.d/vid-pre-init.sql -v /var/lib/mysql -d mariadb:10
 
 docker run -e VID_MYSQL_DBNAME=vid_openecomp -e VID_MYSQL_PASS=Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U --name vid-server -p 8080:8080 --link vid-mariadb:vid-mariadb-docker-instance -d $NEXUS_DOCKER_REPO/openecomp/vid:$DOCKER_IMAGE_VERSION
