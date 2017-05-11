@@ -123,9 +123,13 @@ parameters:
   #                    #
   ######################
 
-  external_dns:
+  dns_list:
     type: comma_delimited_list
-    description: External DNS for OAM ONAP network
+    description: List of External DNS for OAM ONAP network
+
+  external_dns:
+    type: string
+    description: First element of the dns_list for ONAP network
 
   ### Private IP addresses ###
   oam_network_cidr:
@@ -209,7 +213,7 @@ parameters:
 
   dcae_base_environment:
     type: string
-    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/...)
+    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/1-NIC-FLOATING-IPS)
 
   dcae_zone:
     type: string
@@ -287,7 +291,7 @@ resources:
             rand: { get_resource: random-str }
       network_id: { get_resource: oam_ecomp }
       cidr: { get_param: oam_network_cidr }
-      dns_nameservers: { get_param: external_dns }
+      dns_nameservers: { get_param: dns_list }
 
   router:
     type: OS::Neutron::Router

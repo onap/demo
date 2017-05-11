@@ -124,7 +124,7 @@ parameters:
   ######################
 
   external_dns:
-    type: comma_delimited_list
+    type: string
     description: External DNS for OAM ONAP network
 
   ### Private IP addresses ###
@@ -209,7 +209,7 @@ parameters:
 
   dcae_base_environment:
     type: string
-    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/...)
+    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/1-NIC-FLOATING-IPS)
 
   dcae_zone:
     type: string
