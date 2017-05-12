@@ -486,6 +486,7 @@ resources:
             __openstack_username__: { get_param: openstack_username }
             __openstack_tenant_id__: { get_param: openstack_tenant_id }
             __openstack_api_key__: { get_param: openstack_api_key }
+            __openstack_region__: { get_param: openstack_region }
             __keystone_url__: { get_param: keystone_url }
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
@@ -509,6 +510,7 @@ resources:
             echo "__openstack_username__" > /opt/config/openstack_username.txt
             echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
             echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
+            echo "__openstack_region__" > /opt/config/openstack_region.txt
             echo "__keystone_url__" > /opt/config/keystone.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt

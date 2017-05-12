@@ -13,12 +13,49 @@ export MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort
 if [ -e /opt/config/keystone.txt ]
 then
 	KEYSTONE_URL=$(cat /opt/config/keystone.txt)
+	OPENSTACK_REGION=$(cat /opt/config/openstack_region.txt)
 	DCP_CLLI="DEFAULT_KEYSTONE"
 	AUTH_TYPE="USERNAME_PASSWORD"
+	read -d '' CLOUD_SITES <<-EOF
+        "cloud_sites": [{
+                 "aic_version": "2.5",
+                 "id": "$OPENSTACK_REGION",
+                 "identity_service_id": "$DCP_CLLI",
+                 "lcp_clli": "$OPENSTACK_REGION",
+                 "region_id": "$OPENSTACK_REGION"
+        }],
+EOF
 else
 	KEYSTONE_URL="https://identity.api.rackspacecloud.com/v2.0"
 	DCP_CLLI="RAX_KEYSTONE"
 	AUTH_TYPE="RACKSPACE_APIKEY"
+	read -d '' CLOUD_SITES <<-EOF
+        "cloud_sites": [
+               {
+                 "id": "Dallas",
+                 "aic_version": "2.5",
+                 "lcp_clli": "DFW",
+                 "region_id": "DFW",
+                 "identity_service_id": "$DCP_CLLI"
+               },
+
+               {
+                 "id": "Northern Virginia",
+                 "aic_version": "2.5",
+                 "lcp_clli": "IAD",
+                 "region_id": "IAD",
+                 "identity_service_id": "$DCP_CLLI"
+               },
+
+               {
+                 "id": "Chicago",
+                 "aic_version": "2.5",
+                 "lcp_clli": "ORD",
+                 "region_id": "ORD",
+                 "identity_service_id": "$DCP_CLLI"
+               }
+         ],
+EOF
 fi
 
 # Update the MSO configuration file.
@@ -35,6 +72,7 @@ read -d '' MSO_CONFIG_UPDATES <<-EOF
       },
       "mso-po-adapter-config": 
 	  {
+		$CLOUD_SITES
 	    "identity_services": 
 	        [
 	            {"dcp_clli": "$DCP_CLLI", 
@@ -54,7 +92,6 @@ read -d '' MSO_CONFIG_UPDATES <<-EOF
 }
 EOF
 export MSO_CONFIG_UPDATES
-
 
 # Deploy the environment
 cd /opt/test_lab
