@@ -6,6 +6,20 @@ DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
+# OpenStack network configuration
+if [[ $CLOUD_ENV == "openstack" ]]
+then
+	echo 127.0.0.1 $(hostname) >> /etc/hosts
+
+	VDNS_PRIVATE_IP_O=$(cat /opt/config/local_private_ipaddr.txt)
+	echo "auto eth1" >> /etc/network/interfaces
+	echo "iface eth1 inet static" >> /etc/network/interfaces
+	echo "    address $VDNS_PRIVATE_IP_O" >> /etc/network/interfaces
+	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
+
+	ifup eth1
+fi
+
 # Download required dependencies
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-get update
