@@ -9,6 +9,10 @@ if [[ $CLOUD_ENV != "rackspace" ]]
 then
 	# Add host name to /etc/host to avoid warnings in openstack images
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
+	
+	# Allow remote login as root
+	mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
+	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
 
 	# Set the Bind configuration file name based on the deployment environment
 	ZONE_FILE="bind_zones"
