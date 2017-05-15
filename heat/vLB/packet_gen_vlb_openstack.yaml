@@ -1,0 +1,162 @@
+##########################################################################
+#
+#==================LICENSE_START==========================================
+# 
+#
+# Copyright © 2017 AT&T Intellectual Property. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#==================LICENSE_END============================================
+#
+# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+#
+##########################################################################
+
+heat_template_version: 2013-05-23
+description: Heat template to deploy a packet generator for the vLoadBalancer/vDNS demo app for ONAP
+
+##############
+#            #
+# PARAMETERS #
+#            #
+##############
+
+parameters:
+  public_net_id:
+    type: string
+    label: Public network name or ID
+    description: Public network that enables remote connection to VNF
+  vpg_image_name:
+    type: string
+    label: Image name or ID
+    description: Image to be used for compute instance
+  vpg_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used
+  vpg_name_0:
+    type: string
+    label: vPacketGenerator name
+    description: Name of the vPacketGenerator
+  key_name:
+    type: string
+    label: Key pair name
+    description: Public/Private key pair name
+  pub_key:
+    type: string
+    label: Public key
+    description: Public key to be installed on the compute instance
+  repo_url_blob:
+    type: string
+    label: Repository URL
+    description: URL of the repository that hosts the demo packages
+  repo_url_artifacts:
+    type: string
+    label: Repository URL
+    description: URL of the repository that hosts the demo packages
+  vlb_ipaddr:
+    type: string
+    label: Public IP of the vLoadBalancer to which we want to send traffic
+    description: Public IP of the vLoadBalancer to which we want to send traffic
+  demo_artifacts_version:
+    type: string
+    label: Artifacts version used in demo vnfs
+    description: Artifacts (jar, tar.gz) version used in demo vnfs
+  install_script_version:
+    type: string
+    label: Installation script version number
+    description: Version number of the scripts that install the vFW demo app
+  onap_private_net_id:
+    type: string
+    label: ONAP management network name or ID
+    description: Private network that connects ONAP component and the VNF
+  onap_private_subnet_id:
+    type: string
+    label: ONAP management sub-network name or ID
+    description: Private sub-network that connects ONAP component and the VNF
+  vpg_private_ip_0_for_floating:
+    type: string
+    label: vPG private IP address towards the OpenStack public network via floating IP
+    description: vPG private IP address towards the OpenStack public network via floating IP
+
+#############
+#           #
+# RESOURCES #
+#           #
+#############
+
+resources:
+
+  random-str:
+    type: OS::Heat::RandomString
+    properties:
+      length: 4
+
+  my_keypair:
+    type: OS::Nova::KeyPair
+    properties:
+      name:
+        str_replace:
+          template: base_rand
+          params:
+            base: { get_param: key_name }
+            rand: { get_resource: random-str }
+      public_key: { get_param: pub_key }
+      save_private_key: false
+
+  vpg_private_0_port_for_floating:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: onap_private_net_id }
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vpg_private_ip_0_for_floating }}]
+
+  vpg_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: vpg_private_0_port_for_floating }
+
+  vpg_0:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: vpg_image_name }
+      flavor: { get_param: vpg_flavor_name }
+      name: { get_param: vpg_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - port: { get_resource: vpg_private_0_port_for_floating }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __repo_url_blob__ : { get_param: repo_url_blob }
+            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
+            __vlb_ipaddr__: { get_param: vlb_ipaddr }
+            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
+            __install_script_version__ : { get_param: install_script_version }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir /opt/config
+            echo "__vlb_ipaddr__" > /opt/config/vlb_ipaddr.txt
+            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
+            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
+            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__install_script_version__" > /opt/config/install_script_version.txt
+
+            # Download and run install script
+            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vlb/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
+            cd /opt
+            chmod +x v_packetgen_install.sh
+            ./v_packetgen_install.sh
