@@ -26,6 +26,7 @@ sed -i  "s,horizon_url:.*,horizon_url: http://192.168.0.10/dashboard," onap_open
 sed -i  "s,keystone_url:.*,keystone_url: http://192.168.0.10/identity/,"  onap_openstack.env
 
 # Network parameters
+sed -i  "s/dns_list:.*/dns_list: 8.8.8.8/" onap_openstack.env
 sed -i  "s/external_dns:.*/external_dns: 8.8.8.8/" onap_openstack.env
 
 openstack stack create -t onap_openstack.yaml -e onap_openstack.env ONAP
