@@ -4,8 +4,8 @@ acl "trusted" {
 options {
         directory "/var/cache/bind";
 
-        recursion no;                 # enables recursive queries
-        // allow-recursion { netmask; };  # allows recursive queries from "trusted” clients i.e. LB only
+        recursion yes;                # enables recursive queries
+        allow-recursion { any; };     # allows recursive queries from "trusted” clients i.e. LB only
         listen-on { dns_ip_addr; };   # ns1 IP address - listen on this address only
         allow-transfer { none; };      # disable zone transfers by default
 
@@ -31,7 +31,7 @@ options {
         // If BIND logs error messages about the root key being expired,
         // you will need to update your keys.  See https://www.isc.org/bind-keys
         //========================================================================
-        dnssec-validation auto;
+        dnssec-validation no;
 
         auth-nxdomain no;    # conform to RFC1035
         listen-on-v6 { any; };
