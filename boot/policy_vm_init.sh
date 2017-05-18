@@ -23,16 +23,16 @@ echo $IP_ADDRESS > config/pe/ip_addr.txt
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
-docker pull $NEXUS_DOCKER_REPO/openecomp/policy/policy-db:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/openecomp/policy/policy-db:$DOCKER_IMAGE_VERSION openecomp/policy/policy-db:latest
+docker pull $NEXUS_DOCKER_REPO/onap/policy/policy-db:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/onap/policy/policy-db:$DOCKER_IMAGE_VERSION onap/policy/policy-db:latest
 
-docker pull $NEXUS_DOCKER_REPO/openecomp/policy/policy-pe:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/openecomp/policy/policy-pe:$DOCKER_IMAGE_VERSION openecomp/policy/policy-pe:latest
+docker pull $NEXUS_DOCKER_REPO/onap/policy/policy-pe:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/onap/policy/policy-pe:$DOCKER_IMAGE_VERSION onap/policy/policy-pe:latest
 
-docker pull $NEXUS_DOCKER_REPO/openecomp/policy/policy-drools:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/openecomp/policy/policy-drools:$DOCKER_IMAGE_VERSION openecomp/policy/policy-drools:latest
+docker pull $NEXUS_DOCKER_REPO/onap/policy/policy-drools:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/onap/policy/policy-drools:$DOCKER_IMAGE_VERSION onap/policy/policy-drools:latest
 
-docker pull $NEXUS_DOCKER_REPO/openecomp/policy/policy-nexus:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/openecomp/policy/policy-nexus:$DOCKER_IMAGE_VERSION openecomp/policy/policy-nexus:latest
+docker pull $NEXUS_DOCKER_REPO/onap/policy/policy-nexus:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/onap/policy/policy-nexus:$DOCKER_IMAGE_VERSION onap/policy/policy-nexus:latest
 
 /opt/docker/docker-compose up -d
