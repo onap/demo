@@ -1,0 +1,36 @@
+\hypertarget{manual_8c}{}\subsection{manual.\+c File Reference}
+\label{manual_8c}\index{manual.\+c@{manual.\+c}}
+\subsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_object}{Object}
+\begin{DoxyCompactList}\small\item\em \hyperlink{struct_object}{Object} type. \end{DoxyCompactList}\item 
+struct \hyperlink{struct_vehicle}{Vehicle}
+\begin{DoxyCompactList}\small\item\em \hyperlink{struct_vehicle}{Vehicle} type. \end{DoxyCompactList}\item 
+struct \hyperlink{struct_car}{Car}
+\begin{DoxyCompactList}\small\item\em \hyperlink{struct_car}{Car} type. \end{DoxyCompactList}\item 
+struct \hyperlink{struct_truck}{Truck}
+\begin{DoxyCompactList}\small\item\em \hyperlink{struct_truck}{Truck} type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{manual_8c_a840291bc02cba5474a4cb46a9b9566fe}{main} (void)
+\end{DoxyCompactItemize}
+
+
+\subsubsection{Function Documentation}
+\hypertarget{manual_8c_a840291bc02cba5474a4cb46a9b9566fe}{}\label{manual_8c_a840291bc02cba5474a4cb46a9b9566fe} 
+\index{manual.\+c@{manual.\+c}!main@{main}}
+\index{main@{main}!manual.\+c@{manual.\+c}}
+\paragraph{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+Main function.
+
+Ref \hyperlink{struct_vehicle_a6891d3d28853bc3fdd075596dc6de9f8}{vehicle\+Start()}, \hyperlink{struct_object_a71225073d06a793b9a6ea9263ed37b12}{obj\+Ref()}, \hyperlink{struct_object_a924ee0cecc906d148022b3f0d6325cfb}{obj\+Unref()}. 
+\begin{DoxyCode}
+83 \{
+84   \hyperlink{struct_car}{Car} c;
+85   \hyperlink{struct_vehicle_a6891d3d28853bc3fdd075596dc6de9f8}{vehicleStart}((\hyperlink{struct_vehicle}{Vehicle}*) &c);
+86 \}
+\end{DoxyCode}

@@ -1,0 +1,13 @@
+\form#0:$\mbox{\LaTeX}$
+\form#1:$(x_1,y_1)$
+\form#2:$(x_2,y_2)$
+\form#3:$\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}$
+\form#4:\[ |I_2|=\left| \int_{0}^T \psi(t) \left\{ u(a,t)- \int_{\gamma(t)}^a \frac{d\theta}{k(\theta,t)} \int_{a}^\theta c(\xi)u_t(\xi,t)\,d\xi \right\} dt \right| \]
+\form#5:\begin{eqnarray*} g &=& \frac{Gm_2}{r^2} \\ &=& \frac{(6.673 \times 10^{-11}\,\mbox{m}^3\,\mbox{kg}^{-1}\, \mbox{s}^{-2})(5.9736 \times 10^{24}\,\mbox{kg})}{(6371.01\,\mbox{km})^2} \\ &=& 9.82066032\,\mbox{m/s}^2 \end{eqnarray*}
+\form#6:$\min(n*p,\mbox{\em hits})$
+\form#7:$\min(n,\mbox{\em hits}-\mbox{\em first})$
+\form#8:$p$
+\form#9:$\lceil\frac{\mbox{\em hits}}{n}\rceil$
+\form#10:$2^{(16+\mbox{LOOKUP\_CACHE\_SIZE})}$
+\form#11:$2^{16} = 65536$
+\form#12:$\mbox{\TeX}$

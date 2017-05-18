@@ -1,0 +1,10 @@
+	{
+		"$schema": "http://json-schema.org/draft-04/schema#",
+
+    "title": "Vendor Event Listener API updated",
+		"type": "object",
+		"properties": {
+		  "event": {"$ref": "#/definitions/event"}
+		  },
+		"required": ["event"]
+}

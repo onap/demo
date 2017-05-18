@@ -1,0 +1,9 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Vendor Event Listener API - eventThrottlingState",
+    "type": "object",
+    "properties": {
+        "eventThrottlingState": {"$ref": "#/definitions/eventThrottlingState"}
+    },
+    "required": ["eventThrottlingState"]
+}
