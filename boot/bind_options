@@ -10,6 +10,7 @@ options {
         allow-transfer { none; };      # disable zone transfers by default
 
         forwarders {
+                external_dns
                 8.8.8.8;
                 8.8.4.4;
         };

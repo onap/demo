@@ -355,7 +355,7 @@ resources:
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
             __vid_ip_addr__: { get_param: vid_ip_addr }
             __cloud_env__: { get_param: cloud_env }
-
+            __external_dns__: { get_param: external_dns }
           template: |
             #!/bin/bash
 
@@ -378,6 +378,7 @@ resources:
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dns_install.sh -o /opt/dns_install.sh
