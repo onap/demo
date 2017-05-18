@@ -49,10 +49,6 @@ parameters:
     type: string
     label: vLoadBalancer private network name or ID
     description: Private network that connects vLoadBalancer with vDNSs
-  vlb_private_net_id_for_floating:
-    type: string
-    label: vLoadBalancer private network name or ID
-    description: Private network that connects vLoadBalancer with the public OpenStack network using floating IP
   onap_private_net_id:
     type: string
     label: ECOMP management network name or ID
@@ -65,10 +61,6 @@ parameters:
     type: string
     label: vLoadBalancer private network CIDR
     description: The CIDR of the vLoadBalancer private network
-  vlb_private_net_cidr_for_floating:
-    type: string
-    label: vLoadBalancer private network CIDR
-    description: The CIDR of the vLoadBalancer private network that connects vLoadBalancer with the public OpenStack network using floating IP
   onap_private_net_cidr:
     type: string
     label: ONAP private network CIDR
@@ -81,10 +73,6 @@ parameters:
     type: string
     label: vLoadBalancer private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vLoadBalancer to communicate with ONAP components
-  vlb_private_ip_2_for_floating:
-    type: string
-    label: vLoadBalancer private IP address towards the OpenStack public network via floating IP
-    description: vLoadBalancer private IP address towards the OpenStack public network via floating IP
   vdns_private_ip_0:
     type: string
     label: vDNS private IP address towards the private network
@@ -182,26 +170,6 @@ resources:
       name: { get_param: vlb_private_net_id }
       network_id: { get_resource: vlb_private_network }
       cidr: { get_param: vlb_private_net_cidr }
-      
-#  vlb_private_network_for_floating:
-#    type: OS::Neutron::Net
-#    properties:
-#      name: { get_param: vlb_private_net_id_for_floating }
-
-#  vlb_private_subnet_for_floating:
-#    type: OS::Neutron::Subnet
-#    properties:
-#      name: { get_param: vlb_private_net_id_for_floating }
-#      network_id: { get_resource: vlb_private_network_for_floating }
-#      network_id: { get_param: onap_private_net_id }
-#      cidr: { get_param: vlb_private_net_cidr_for_floating }
-      
-#  router_interface:
-#    type: OS::Neutron::RouterInterface
-#    properties:
-#      router_id: d6f7a5c3-8bae-4171-aebd-c53a8c85b2ee
-#      subnet_id: { get_resource: vlb_private_subnet_for_floating }
-#      subnet_id: { get_param: onap_private_subnet_id }
 
   vlb_private_0_port:
     type: OS::Neutron::Port
@@ -214,19 +182,6 @@ resources:
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vlb_private_ip_1 }}]
-      
-#  vlb_private_2_port_for_floating:
-#    type: OS::Neutron::Port
-#    properties:
-#      network: { get_param: onap_private_net_id }
-#      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vlb_private_ip_2_for_floating }}]
-  
-#  vlb_floating_ip:
-#    type: OS::Neutron::FloatingIP
-#    properties:
-#      floating_network_id: { get_param: public_net_id }
-#      port_id: { get_resource: vlb_private_1_port }
-#      port_id: { get_resource: vlb_private_2_port_for_floating }
 
   vlb_0:
     type: OS::Nova::Server
@@ -236,9 +191,6 @@ resources:
       name: { get_param: vlb_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
-#        - port: { get_resource: vlb_private_2_port_for_floating }
-#        - port: { get_resource: vlb_private_0_port }
-#        - port: { get_resource: vlb_private_1_port }
         - network: { get_param: public_net_id }
         - port: { get_resource: vlb_private_0_port }
         - port: { get_resource: vlb_private_1_port }
@@ -249,7 +201,6 @@ resources:
           params:
             __dcae_collector_ip__: { get_param: dcae_collector_ip }
             __dcae_collector_port__: { get_param: dcae_collector_port }
-            #__local_public_ipaddr__: { get_attr: [vlb_floating_ip, floating_ip_address] }
             __local_private_ipaddr__: { get_param: vlb_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vlb_private_ip_1 }
             __repo_url_blob__: { get_param: repo_url_blob }
@@ -264,7 +215,6 @@ resources:
             mkdir /opt/config
             echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
             echo "__dcae_collector_port__" > /opt/config/dcae_collector_port.txt
-            #echo "__local_public_ipaddr__" > /opt/config/local_public_ipaddr.txt
             echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
@@ -291,12 +241,6 @@ resources:
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vdns_private_ip_1 }}]
-
-#  vdns_floating_ip:
-#    type: OS::Neutron::FloatingIP
-#    properties:
-#      floating_network_id: { get_param: public_net_id }
-#      port_id: { get_resource: vdns_private_1_port }
 
   vdns_0:
     type: OS::Nova::Server

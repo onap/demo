@@ -151,12 +151,6 @@ resources:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vdns_private_ip_1 }}]
 
-#  vdns_floating_ip:
-#    type: OS::Neutron::FloatingIP
-#    properties:
-#      floating_network_id: { get_param: public_net_id }
-#      port_id: { get_resource: vdns_private_1_port }
-
   vdns_0:
     type: OS::Nova::Server
     properties:
