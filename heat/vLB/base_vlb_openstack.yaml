@@ -252,11 +252,11 @@ resources:
             #__local_public_ipaddr__: { get_attr: [vlb_floating_ip, floating_ip_address] }
             __local_private_ipaddr__: { get_param: vlb_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vlb_private_ip_1 }
-            __repo_url_blob__ : { get_param: repo_url_blob }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __cloud_env__ : { get_param: cloud_env }
+            __repo_url_blob__: { get_param: repo_url_blob }
+            __repo_url_artifacts__: { get_param: repo_url_artifacts }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __cloud_env__: { get_param: cloud_env }
           template: |
             #!/bin/bash
 
@@ -292,11 +292,11 @@ resources:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vdns_private_ip_1 }}]
 
-  vdns_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: vdns_private_1_port }
+#  vdns_floating_ip:
+#    type: OS::Neutron::FloatingIP
+#    properties:
+#      floating_network_id: { get_param: public_net_id }
+#      port_id: { get_resource: vdns_private_1_port }
 
   vdns_0:
     type: OS::Nova::Server
@@ -314,14 +314,15 @@ resources:
       user_data:
         str_replace:
           params:
-            __lb_oam_int__ : { get_param: vlb_private_ip_1 }
+            __lb_oam_int__: { get_param: vlb_private_ip_1 }
             __lb_private_ipaddr__: { get_param: vlb_private_ip_0 }
             __local_private_ipaddr__: { get_param: vdns_private_ip_0 }
-            __repo_url_blob__ : { get_param: repo_url_blob }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __cloud_env__ : { get_param: cloud_env }
+            __oam_private_ipaddr__: { get_param: vdns_private_ip_1 }
+            __repo_url_blob__: { get_param: repo_url_blob }
+            __repo_url_artifacts__: { get_param: repo_url_artifacts }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __cloud_env__: { get_param: cloud_env }
           template: |
             #!/bin/bash
 
@@ -330,6 +331,7 @@ resources:
             echo "__lb_oam_int__" > /opt/config/lb_oam_int.txt
             echo "__lb_private_ipaddr__" > /opt/config/lb_private_ipaddr.txt
             echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
+            echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt

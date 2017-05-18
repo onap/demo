@@ -17,7 +17,14 @@ then
 	echo "    address $VDNS_PRIVATE_IP_O" >> /etc/network/interfaces
 	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
 
+	VDNS_PRIVATE_IP_1=$(cat /opt/config/oam_private_ipaddr.txt)
+	echo "auto eth2" >> /etc/network/interfaces
+	echo "iface eth2 inet static" >> /etc/network/interfaces
+	echo "    address $VDNS_PRIVATE_IP_1" >> /etc/network/interfaces
+	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
+
 	ifup eth1
+	ifup eth2
 fi
 
 # Download required dependencies
