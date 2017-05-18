@@ -1,0 +1,19 @@
+DOXYGEN Version 1.8.12
+
+The binaries are located in the bin directory. 
+
+The manual for doxygen is included in HTML format in this package.
+Other formats can be downloaded separately.
+
+The HTML version of the manual can be found in the html directory.
+Please start reading at html/index.html.
+
+The examples that are included in the manual can be found in the examples 
+directory.
+
+The latest version of doxygen can be obtained at
+  http://www.stack.nl/~dimitri/doxygen
+
+Enjoy,
+
+Dimitri van Heesch (dimitri@stack.nl) (05 September 2016)
