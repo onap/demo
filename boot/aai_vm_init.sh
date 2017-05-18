@@ -17,7 +17,7 @@ sleep 180
 
 docker pull $NEXUS_DOCKER_REPO/openecomp/ajsc-aai:$DOCKER_IMAGE_VERSION
 docker rm -f aai-service
-docker run --name=aai-service --net=host -v /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt -it -e AAI_REPO_PATH=r/aai -e AAI_CHEF_ENV=simpledemo -d -e AAI_CHEF_LOC=/var/chef/aai-data/environments -e docker_gitbranch=master $NEXUS_DOCKER_REPO/openecomp/ajsc-aai:$DOCKER_IMAGE_VERSION
+docker run --name=aai-service --net=host -v /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt -it -e AAI_REPO_PATH=r/aai -e AAI_CHEF_ENV=simpledemo -d -e AAI_CHEF_LOC=/var/chef/aai-data/environments -e docker_gitbranch=release-1.0.0 $NEXUS_DOCKER_REPO/openecomp/ajsc-aai:$DOCKER_IMAGE_VERSION
 
 docker pull $NEXUS_DOCKER_REPO/openecomp/model-loader:$DOCKER_IMAGE_VERSION
 docker rm -f model-loader-service
