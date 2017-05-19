@@ -11,17 +11,25 @@ if [[ $CLOUD_ENV == "openstack" ]]
 then
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
 
+	# Allow remote login as root
+	mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
+	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
+
+	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+
 	VDNS_PRIVATE_IP_O=$(cat /opt/config/local_private_ipaddr.txt)
 	echo "auto eth1" >> /etc/network/interfaces
 	echo "iface eth1 inet static" >> /etc/network/interfaces
 	echo "    address $VDNS_PRIVATE_IP_O" >> /etc/network/interfaces
 	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
 
 	VDNS_PRIVATE_IP_1=$(cat /opt/config/oam_private_ipaddr.txt)
 	echo "auto eth2" >> /etc/network/interfaces
 	echo "iface eth2 inet static" >> /etc/network/interfaces
 	echo "    address $VDNS_PRIVATE_IP_1" >> /etc/network/interfaces
 	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
 
 	ifup eth1
 	ifup eth2

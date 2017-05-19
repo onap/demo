@@ -10,6 +10,11 @@ CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 if [[ $CLOUD_ENV == "openstack" ]]
 then
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
+
+	# Allow remote login as root
+	mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
+	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
+
 	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
 	VFW_PRIVATE_IP_O=$(cat /opt/config/vfw_private_ip_0.txt)
