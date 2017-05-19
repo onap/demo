@@ -227,12 +227,6 @@ resources:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vfw_private_ip_2 }}]
 
-  vfw_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: vfw_private_2_port }
-
   vfw_0:
     type: OS::Nova::Server
     properties:
@@ -241,9 +235,10 @@ resources:
       name: { get_param: vfw_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
-        - port: { get_resource: vfw_private_2_port }
+        - network: { get_param: public_net_id }
         - port: { get_resource: vfw_private_0_port }
         - port: { get_resource: vfw_private_1_port }
+        - port: { get_resource: vfw_private_2_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
@@ -257,6 +252,7 @@ resources:
             __install_script_version__ : { get_param: install_script_version }
             __vfw_private_ip_0__ : { get_param: vfw_private_ip_0 }
             __vfw_private_ip_1__ : { get_param: vfw_private_ip_1 }
+            __vfw_private_ip_2__ : { get_param: vfw_private_ip_2 }
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -271,6 +267,7 @@ resources:
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vfw_private_ip_0__" > /opt/config/vfw_private_ip_0.txt
             echo "__vfw_private_ip_1__" > /opt/config/vfw_private_ip_1.txt
+            echo "__vfw_private_ip_2__" > /opt/config/vfw_private_ip_2.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             
             # Download and run install script
@@ -281,12 +278,6 @@ resources:
 
 
   # Virtual Packet Generator instantiation
-  vpg_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: vpg_private_1_port }
-
   vpg_private_0_port:
     type: OS::Neutron::Port
     properties:
@@ -307,8 +298,9 @@ resources:
       name: { get_param: vpg_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
-        - port: { get_resource: vpg_private_1_port }
+        - network: { get_param: public_net_id }
         - port: { get_resource: vpg_private_0_port }
+        - port: { get_resource: vpg_private_1_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
@@ -322,6 +314,7 @@ resources:
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __vpg_private_ip_0__ : { get_param: vpg_private_ip_0 }
+            __vpg_private_ip_1__ : { get_param: vpg_private_ip_1 }
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -336,6 +329,7 @@ resources:
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
+            echo "__vpg_private_ip_1__" > /opt/config/vpg_private_ip_1.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             
             # Download and run install script
@@ -358,12 +352,6 @@ resources:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vsn_private_ip_1 }}]
 
-  vsn_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: vsn_private_1_port }
-
   vsn_0:
     type: OS::Nova::Server
     properties:
@@ -372,8 +360,9 @@ resources:
       name: { get_param: vsn_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
-        - port: { get_resource: vsn_private_1_port }
+        - network: { get_param: public_net_id }
         - port: { get_resource: vsn_private_0_port }
+        - port: { get_resource: vsn_private_1_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
@@ -385,6 +374,7 @@ resources:
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __install_script_version__ : { get_param: install_script_version }
             __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
+            __vsn_private_ip_1__ : { get_param: vsn_private_ip_1 }
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -396,6 +386,7 @@ resources:
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vsn_private_ip_0__" > /opt/config/vsn_private_ip_0.txt
+            echo "__vsn_private_ip_1__" > /opt/config/vsn_private_ip_1.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             
             # Download and run install script

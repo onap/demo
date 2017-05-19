@@ -214,7 +214,7 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 4 GB General Purpose v1
-      name: 
+      name:
         str_replace:
           template: base-dns-server
           params:
@@ -265,7 +265,7 @@ resources:
     type: OS::Nova::Server
     properties:
       flavor: 15 GB Compute v1
-      name: 
+      name:
         str_replace:
           template: base-aai
           params:
@@ -323,7 +323,7 @@ resources:
     properties:
       image: Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM)
       flavor: 4 GB General Purpose v1
-      name: 
+      name:
         str_replace:
           template: base-mso
           params:
@@ -386,7 +386,7 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 15 GB I/O v1
-      name: 
+      name:
         str_replace:
           template: base-message-router
           params:
@@ -439,7 +439,7 @@ resources:
     properties:
       image: Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM)
       flavor: 2 GB General Purpose v1
-      name: 
+      name:
         str_replace:
           template: base-robot
           params:
@@ -504,7 +504,7 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 2 GB General Purpose v1
-      name: 
+      name:
         str_replace:
           template: base-vid
           params:
@@ -559,7 +559,7 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 4 GB General Purpose v1
-      name: 
+      name:
         str_replace:
           template: base-sdnc
           params:
@@ -635,7 +635,7 @@ resources:
     type: OS::Nova::Server
     properties:
       flavor: 15 GB Compute v1
-      name: 
+      name:
         str_replace:
           template: base-sdc
           params:
@@ -703,7 +703,7 @@ resources:
     type: OS::Nova::Server
     properties:
       flavor: 15 GB Memory v1
-      name: 
+      name:
         str_replace:
           template: base-portal
           params:
@@ -760,7 +760,7 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 8 GB General Purpose v1
-      name: 
+      name:
         str_replace:
           template: base-dcae-controller
           params:
@@ -870,7 +870,7 @@ resources:
     type: OS::Nova::Server
     properties:
       flavor: 15 GB Compute v1
-      name: 
+      name:
         str_replace:
           template: base-policy
           params:
@@ -928,7 +928,7 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 4 GB General Purpose v1
-      name: 
+      name:
         str_replace:
           template: base-appc
           params:

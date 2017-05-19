@@ -10,21 +10,32 @@ CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 if [[ $CLOUD_ENV == "openstack" ]]
 then
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
+	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
 	VFW_PRIVATE_IP_O=$(cat /opt/config/vfw_private_ip_0.txt)
 	echo "auto eth1" >> /etc/network/interfaces
 	echo "iface eth1 inet static" >> /etc/network/interfaces
 	echo "    address $VFW_PRIVATE_IP_O" >> /etc/network/interfaces
 	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
 
 	VFW_PRIVATE_IP_1=$(cat /opt/config/vfw_private_ip_1.txt)
 	echo "auto eth2" >> /etc/network/interfaces
 	echo "iface eth2 inet static" >> /etc/network/interfaces
 	echo "    address $VFW_PRIVATE_IP_1" >> /etc/network/interfaces
 	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
+
+	VFW_PRIVATE_IP_2=$(cat /opt/config/vfw_private_ip_2.txt)
+	echo "auto eth3" >> /etc/network/interfaces
+	echo "iface eth3 inet static" >> /etc/network/interfaces
+	echo "    address $VFW_PRIVATE_IP_2" >> /etc/network/interfaces
+	echo "    netmask 255.255.255.0" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
 
 	ifup eth1
 	ifup eth2
+	ifup eth3
 fi
 
 # Download required dependencies

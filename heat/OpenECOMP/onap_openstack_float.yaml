@@ -418,7 +418,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_small }
-      name: 
+      name:
         str_replace:
           template: base-dns-server
           params:
@@ -498,7 +498,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_xlarge }
-      name: 
+      name:
         str_replace:
           template: base-aai
           params:
@@ -564,7 +564,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_large }
-      name: 
+      name:
         str_replace:
           template: base-mso
           params:
@@ -640,7 +640,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_large }
-      name: 
+      name:
         str_replace: 
           template: base-message-router
           params:
@@ -702,7 +702,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_small }
-      name: 
+      name:
         str_replace: 
           template: base-robot
           params:
@@ -774,7 +774,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_medium }
-      name: 
+      name:
         str_replace: 
           template: base-vid
           params:
@@ -838,7 +838,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_large }
-      name: 
+      name:
         str_replace: 
           template: base-sdnc
           params:
@@ -908,7 +908,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_xlarge }
-      name: 
+      name:
         str_replace: 
           template: base-sdc
           params:
@@ -981,7 +981,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_large }
-      name: 
+      name:
         str_replace: 
           template: base-portal
           params:
@@ -1047,7 +1047,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_medium }
-      name: 
+      name:
         str_replace: 
           template: base-dcae-controller
           params:
@@ -1185,7 +1185,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_xlarge }
-      name: 
+      name:
         str_replace: 
           template: base-policy
           params:
@@ -1251,7 +1251,7 @@ resources:
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_large }
-      name: 
+      name:
         str_replace: 
           template: base-appc
           params:
