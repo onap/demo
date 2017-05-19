@@ -37,6 +37,10 @@ parameters:
     type: string
     description: Public/Private key pair name
 
+  vm_base_name:
+    type: string
+    description: Base name of ONAP VMs
+
   pub_key:
     type: string
     description: Public key or SSL certificate to be installed on the compute instance
@@ -210,7 +214,11 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 4 GB General Purpose v1
-      name: vm1-dns-server
+      name: 
+        str_replace:
+          template: base-dns-server
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - network: { get_param: public_net_id }
@@ -257,7 +265,11 @@ resources:
     type: OS::Nova::Server
     properties:
       flavor: 15 GB Compute v1
-      name: vm1-aai
+      name: 
+        str_replace:
+          template: base-aai
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       block_device_mapping:
         - volume_id: { get_resource: aai_volume }
@@ -311,7 +323,11 @@ resources:
     properties:
       image: Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM)
       flavor: 4 GB General Purpose v1
-      name: vm1-mso
+      name: 
+        str_replace:
+          template: base-mso
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - network: { get_param: public_net_id }
@@ -370,7 +386,11 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 15 GB I/O v1
-      name: vm1-message-router
+      name: 
+        str_replace:
+          template: base-message-router
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - network: { get_param: public_net_id }
@@ -419,7 +439,11 @@ resources:
     properties:
       image: Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM)
       flavor: 2 GB General Purpose v1
-      name: vm1-robot
+      name: 
+        str_replace:
+          template: base-robot
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - network: { get_param: public_net_id }
@@ -480,7 +504,11 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 2 GB General Purpose v1
-      name: vm1-vid
+      name: 
+        str_replace:
+          template: base-vid
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - network: { get_param: public_net_id }
@@ -531,7 +559,11 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 4 GB General Purpose v1
-      name: vm1-sdnc
+      name: 
+        str_replace:
+          template: base-sdnc
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - network: { get_param: public_net_id }
@@ -603,7 +635,11 @@ resources:
     type: OS::Nova::Server
     properties:
       flavor: 15 GB Compute v1
-      name: vm1-sdc
+      name: 
+        str_replace:
+          template: base-sdc
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       block_device_mapping:
         - volume_id: { get_resource: sdc_volume_local }
@@ -667,7 +703,11 @@ resources:
     type: OS::Nova::Server
     properties:
       flavor: 15 GB Memory v1
-      name: vm1-portal
+      name: 
+        str_replace:
+          template: base-portal
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       block_device_mapping:
         - volume_id: { get_resource: portal_volume }
@@ -720,7 +760,11 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 8 GB General Purpose v1
-      name: vm1-dcae-controller
+      name: 
+        str_replace:
+          template: base-dcae-controller
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - network: { get_param: public_net_id }
@@ -826,7 +870,11 @@ resources:
     type: OS::Nova::Server
     properties:
       flavor: 15 GB Compute v1
-      name: vm1-policy
+      name: 
+        str_replace:
+          template: base-policy
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       block_device_mapping:
         - volume_id: { get_resource: policy_volume }
@@ -880,7 +928,11 @@ resources:
     properties:
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
       flavor: 4 GB General Purpose v1
-      name: vm1-appc
+      name: 
+        str_replace:
+          template: base-appc
+          params:
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - network: { get_param: public_net_id }
