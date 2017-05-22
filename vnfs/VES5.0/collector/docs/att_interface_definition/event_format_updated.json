@@ -1028,21 +1028,6 @@
 			},
 			"required": [ "countsInTheBucket" ]
 		},
-		"measurementGroup": {
-			"description": "measurement group",
-			"type": "object",
-			"properties": {
-				"name":  { "type": "string" },
-				"measurements": {
-					"description": "array of name value pair measurements",
-					"type": "array",
-					"items": {  
-						"$ref": "#/definitions/field" 
-					}
-				}
-			},
-			"required": [ "name", "measurements" ]
-		},
 		"measurementsForVfScalingFields": {
 			"description": "measurementsForVfScaling fields",
 			"type": "object",
@@ -1352,7 +1337,7 @@
 					}
 				}
 			},
-			"required": [ "name", "measurements" ]
+			"required": [ "name", "arrayOfFields" ]
 		},
 		"otherFields": {
 			"description": "fields for events belonging to the 'other' domain of the commonEventHeader domain enumeration",
