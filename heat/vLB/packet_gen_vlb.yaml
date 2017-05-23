@@ -23,6 +23,7 @@
 ##########################################################################
 
 heat_template_version: 2013-05-23
+
 description: Heat template to deploy a packet generator for the vLoadBalancer/vDNS demo app for ONAP
 
 ##############
@@ -68,22 +69,18 @@ parameters:
     type: string
     label: Public IP of the vLoadBalancer to which we want to send traffic
     description: Public IP of the vLoadBalancer to which we want to send traffic
-  demo_artifacts_version:
-    type: string
-    label: Artifacts version used in demo vnfs
-    description: Artifacts (jar, tar.gz) version used in demo vnfs
   install_script_version:
     type: string
     label: Installation script version number
     description: Version number of the scripts that install the vFW demo app
-  onap_private_net_id:
+  demo_artifacts_version:
     type: string
-    label: ONAP management network name or ID
-    description: Private network that connects ONAP component and the VNF
-  onap_private_subnet_id:
+    label: Artifacts version used in demo vnfs
+    description: Artifacts (jar, tar.gz) version used in demo vnfs
+  cloud_env:
     type: string
-    label: ONAP management sub-network name or ID
-    description: Private sub-network that connects ONAP component and the VNF
+    label: Cloud environment
+    description: Cloud environment (e.g., openstack, rackspace)
 
 #############
 #           #
@@ -110,6 +107,7 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
+ 
   vpg_0:
     type: OS::Nova::Server
     properties:
@@ -128,6 +126,7 @@ resources:
             __vlb_ipaddr__: { get_param: vlb_ipaddr }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
+            __cloud_env__: { get_param: cloud_env }
           template: |
             #!/bin/bash
 
@@ -138,6 +137,7 @@ resources:
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
             curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vlb/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
