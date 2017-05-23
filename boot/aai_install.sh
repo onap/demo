@@ -5,6 +5,7 @@ NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
+MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
 # Add host name to /etc/host to avoid warnings in openstack images
 if [[ $CLOUD_ENV != "rackspace" ]]
@@ -40,6 +41,7 @@ then
 	echo "iface eth1 inet static" >> /etc/network/interfaces
 	echo "    address $LOCAL_IP" >> /etc/network/interfaces
 	echo "    netmask $NETMASK" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
 	ifup eth1
 fi
 
@@ -67,8 +69,6 @@ curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose
 chmod +x /opt/docker/docker-compose
 
 # Set the MTU size of docker containers to the minimum MTU size supported by vNICs. OpenStack deployments may need to know the external DNS IP
-MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
-
 if [ -s /opt/config/external_dns.txt ]
 then
 	echo "DOCKER_OPTS=\"--dns $(cat /opt/config/external_dns.txt) --mtu=$MTU\"" >> /etc/default/docker

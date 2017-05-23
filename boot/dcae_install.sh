@@ -38,6 +38,8 @@ DCAE_HDP1_IP_ADDR=$(cat /opt/config/dcae_hdp1_ip_addr.txt)
 DCAE_HDP2_IP_ADDR=$(cat /opt/config/dcae_hdp2_ip_addr.txt)
 DCAE_HDP3_IP_ADDR=$(cat /opt/config/dcae_hdp3_ip_addr.txt)
 
+MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+
 if [[ $CLOUD_ENV != "rackspace" ]]
 then
 	# Add host name to /etc/host to avoid warnings in openstack images
@@ -71,6 +73,7 @@ then
 	echo "iface eth1 inet static" >> /etc/network/interfaces
 	echo "    address $DCAE_IP_ADDR" >> /etc/network/interfaces
 	echo "    netmask $NETMASK" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
 	ifup eth1
 fi
 
@@ -98,8 +101,6 @@ curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose
 chmod +x /opt/docker/docker-compose
 
 # Set the MTU size of docker containers to the minimum MTU size supported by vNICs. OpenStack deployments may need to know the external DNS IP
-MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
-
 if [ -s /opt/config/external_dns.txt ]
 then
 	echo "DOCKER_OPTS=\"--dns $(cat /opt/config/external_dns.txt) --mtu=$MTU\"" >> /etc/default/docker
