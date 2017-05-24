@@ -50,7 +50,6 @@ from base64 import b64decode
 import string
 import json
 import jsonschema
-from jsonschema import Draft4Validator
 from functools import partial
 
 _hello_resp = '''\
@@ -86,8 +85,8 @@ PROFILE = False
 #------------------------------------------------------------------------------
 # Credentials we expect clients to authenticate themselves with.
 #------------------------------------------------------------------------------
-vel_username = 'will'
-vel_password = 'pill'
+vel_username = ''
+vel_password = ''
 
 #------------------------------------------------------------------------------
 # The JSON schema which we will use to validate events.
@@ -146,8 +145,8 @@ def listener(environ, start_response, schema):
     else:
         credentials = None
 
-    # logger.debug('Credentials: {0}'.format(credentials))
-    logger.debug('Credentials: ****')
+    logger.debug('Credentials: {0}'.format(credentials))
+    #logger.debug('Credentials: ****')
 
     #--------------------------------------------------------------------------
     # If we have a schema file then check that the event matches that expected.
@@ -226,8 +225,8 @@ def listener(environ, start_response, schema):
             start_response('202 Accepted', [])
             yield ''
     else:
-        logger.warn('Failed to authenticate OK')
-        print('Failed to authenticate OK')
+        logger.warn('Failed to authenticate OK'+vel_username + ':' + vel_password)
+        print('Failed to authenticate OK'+vel_username + ':' + vel_password)
 
         #----------------------------------------------------------------------
         # Respond to the caller.
@@ -392,7 +391,7 @@ USAGE
                             help='Display version information')
         parser.add_argument('-a', '--api-version',
                             dest='api_version',
-                            default='3',
+                            default='5',
                             help='set API version')
         parser.add_argument('-c', '--config',
                             dest='config',
@@ -526,7 +525,6 @@ USAGE
             global throttle_schema
             global test_control_schema
             vel_schema = json.load(open(vel_schema_file, 'r'))
-            Draft4Validator.check_schema(vel_schema)
             logger.debug('Loaded the JSON schema file')
 
             #------------------------------------------------------------------

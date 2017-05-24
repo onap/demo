@@ -985,7 +985,7 @@
                     "description": "an instance conforming to the jsonObject schema", 
                     "type": "object" 
                 },
-		"objectInstanceEpochMicrosec":  {
+				"objectInstanceEpochMicrosec":  {
                     "description": "the unix time aka epoch time associated with this objectInstance--as microseconds elapsed since 1 Jan 1970 not including leap seconds", 
                     "type": "number" 
                 },
@@ -1027,6 +1027,21 @@
 				"lowEndOfLatencyBucket":  { "type": "number" }
 			},
 			"required": [ "countsInTheBucket" ]
+		},
+		"measurementGroup": {
+			"description": "measurement group",
+			"type": "object",
+			"properties": {
+				"name":  { "type": "string" },
+				"measurements": {
+					"description": "array of name value pair measurements",
+					"type": "array",
+					"items": {  
+						"$ref": "#/definitions/field" 
+					}
+				}
+			},
+			"required": [ "name", "measurements" ]
 		},
 		"measurementsForVfScalingFields": {
 			"description": "measurementsForVfScaling fields",
@@ -1337,7 +1352,7 @@
 					}
 				}
 			},
-			"required": [ "name", "arrayOfFields" ]
+			"required": [ "name", "measurements" ]
 		},
 		"otherFields": {
 			"description": "fields for events belonging to the 'other' domain of the commonEventHeader domain enumeration",
