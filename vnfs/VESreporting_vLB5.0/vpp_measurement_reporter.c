@@ -37,6 +37,8 @@ typedef struct dummy_vpp_metrics_struct {
 
 void read_vpp_metrics(vpp_metrics_struct *, char *);
 
+unsigned long long epoch_start = 0;
+
 int main(int argc, char** argv)
 {
   EVEL_ERR_CODES evel_rc = EVEL_SUCCESS;
@@ -92,7 +94,7 @@ int main(int argc, char** argv)
   memset(last_vpp_metrics, 0, sizeof(vpp_metrics_struct));
   read_vpp_metrics(last_vpp_metrics, vnic);
   gettimeofday(&time_val, NULL);
-  start_epoch = time_val.tv_sec * 1000000 + time_val.tv_usec;
+  epoch_start = time_val.tv_sec * 1000000 + time_val.tv_usec;
   sleep(READ_INTERVAL);
 
   /***************************************************************************/
@@ -182,7 +184,6 @@ int main(int argc, char** argv)
     else {
       printf("New measurement report failed (%s)\n", evel_error_string());
     }
-    evel_measurement_free_vnic_performance(vnic_performance);
 
     last_vpp_metrics->bytes_in = curr_vpp_metrics->bytes_in;
     last_vpp_metrics->bytes_out = curr_vpp_metrics->bytes_out;
