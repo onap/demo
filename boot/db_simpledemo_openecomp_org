@@ -21,6 +21,11 @@ c1.vm1.aai.simpledemo.openecomp.org.    IN      A       10.0.1.1
 c2.vm1.aai.simpledemo.openecomp.org.    IN      A       10.0.1.1
 c3.vm1.aai.simpledemo.openecomp.org.    IN      A       10.0.1.1
 
+vm2.aai.simpledemo.openecomp.org.       IN      A       10.0.1.2
+c1.vm2.aai.simpledemo.openecomp.org.    IN      A       10.0.1.2
+c2.vm2.aai.simpledemo.openecomp.org.    IN      A       10.0.1.2
+c3.vm2.aai.simpledemo.openecomp.org.    IN      A       10.0.1.2
+
 vm1.appc.simpledemo.openecomp.org.      IN      A       10.0.2.1
 c1.vm1.appc.simpledemo.openecomp.org.   IN      A       10.0.2.1
 c2.vm1.appc.simpledemo.openecomp.org.   IN      A       10.0.2.1
@@ -72,7 +77,9 @@ vm1.mr.simpledemo.openecomp.org.	IN	A	10.0.11.1
 ;CNAMES
 ;A&AI
 aai.api.simpledemo.openecomp.org.	IN 	CNAME 	vm1.aai.simpledemo.openecomp.org.
-aai.hbase.simpledemo.openecomp.org.	IN 	CNAME	vm1.aai.simpledemo.openecomp.org.
+aai.hbase.simpledemo.openecomp.org.	IN 	CNAME	vm2.aai.simpledemo.openecomp.org.
+aai.gremlinserver.simpledemo.openecomp.org.	IN 	CNAME 	vm2.aai.simpledemo.openecomp.org.
+aai.elasticsearch.simpledemo.openecomp.org.	IN 	CNAME 	vm2.aai.simpledemo.openecomp.org.
 
 ;APPC
 appc.api.simpledemo.openecomp.org.	IN	CNAME	vm1.appc.simpledemo.openecomp.org.

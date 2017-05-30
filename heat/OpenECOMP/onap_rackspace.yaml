@@ -246,14 +246,14 @@ resources:
             ./dns_install.sh
 
 
-  # A&AI instantiation
-  aai_private_port:
+  # A&AI instantiation (2 VMs)
+  aai1_private_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: oam_ecomp }
       fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.1.1}]
 
-  aai_volume:
+  aai1_volume:
     type: OS::Cinder::Volume
     properties:
       name: vol1-aai
@@ -261,22 +261,23 @@ resources:
       volume_type: SSD
       image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
 
-  aai_vm:
+  aai1_vm:
     type: OS::Nova::Server
+    depends_on: aai2_vm
     properties:
       flavor: 15 GB Compute v1
       name:
         str_replace:
-          template: base-aai
+          template: base-aai-inst1
           params:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       block_device_mapping:
-        - volume_id: { get_resource: aai_volume }
+        - volume_id: { get_resource: aai1_volume }
           device_name: vda
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: aai_private_port }
+        - port: { get_resource: aai1_private_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -288,6 +289,7 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -302,13 +304,82 @@ resources:
             echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "aai_instance_1" > /opt/config/aai_instance.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
             cd /opt
-            chmod +x aai_install.sh
-            ./aai_install.sh
+            chmod +x aai2_install.sh
+            ./aai2_install.sh
+
+
+  aai2_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": 10.0.1.2}]
+
+  aai2_volume:
+    type: OS::Cinder::Volume
+    properties:
+      name: vol2-aai
+      size: 50
+      volume_type: SSD
+      image: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+
+  aai2_vm:
+    type: OS::Nova::Server
+    properties:
+      flavor: 15 GB Compute v1
+      name:
+        str_replace:
+          template: base-aai-inst2
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      block_device_mapping:
+        - volume_id: { get_resource: aai2_volume }
+          device_name: vda
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: aai2_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "aai_instance_2" > /opt/config/aai_instance.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
+            cd /opt
+            chmod +x aai2_install.sh
+            ./aai2_install.sh
 
 
   # MSO instantiation
