@@ -55,10 +55,10 @@ apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git nt
 # Download scripts from Nexus
 curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/aai2_vm_init.sh -o /opt/aai2_vm_init.sh
 curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/aai2_serv.sh -o /opt/aai2_serv.sh
-chmod +x /opt/aai_vm_init.sh
-chmod +x /opt/aai_serv.sh
-mv /opt/aai_serv.sh /etc/init.d
-update-rc.d aai_serv.sh defaults
+chmod +x /opt/aai2_vm_init.sh
+chmod +x /opt/aai2_serv.sh
+mv /opt/aai2_serv.sh /etc/init.d
+update-rc.d aai2_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
 echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
@@ -102,4 +102,4 @@ then
 	sleep 300
 fi
 
-./aai_vm_init.sh
+./aai2_vm_init.sh
