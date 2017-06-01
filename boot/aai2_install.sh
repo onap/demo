@@ -53,8 +53,8 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/aai_vm_init.sh -o /opt/aai_vm_init.sh
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/aai_serv.sh -o /opt/aai_serv.sh
+curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/aai2_vm_init.sh -o /opt/aai2_vm_init.sh
+curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/aai2_serv.sh -o /opt/aai2_serv.sh
 chmod +x /opt/aai_vm_init.sh
 chmod +x /opt/aai_serv.sh
 mv /opt/aai_serv.sh /etc/init.d
