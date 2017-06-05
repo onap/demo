@@ -1,5 +1,26 @@
 #!/bin/bash
 
+# Convert Network CIDR to Netmask
+mask2cidr() {
+    nbits=0
+    IFS=.
+    for dec in $1 ; do
+        case $dec in
+            255) let nbits+=8;;
+            254) let nbits+=7;;
+            252) let nbits+=6;;
+            248) let nbits+=5;;
+            240) let nbits+=4;;
+            224) let nbits+=3;;
+            192) let nbits+=2;;
+            128) let nbits+=1;;
+            0);;
+            *) echo "Error: $dec is not recognized"; exit 1
+        esac
+    done
+    echo "$nbits"
+}
+
 # Start VPP
 start vpp
 sleep 1
@@ -12,12 +33,15 @@ PROTECTED_NET_CIDR=$(cat /opt/config/protected_net_cidr.txt)
 FW_IPADDR=$(cat /opt/config/fw_ipaddr.txt)
 SINK_IPADDR=$(cat /opt/config/sink_ipaddr.txt)
 
+IPADDR1_MASK=$(ifconfig eth1 | grep "Mask" | awk '{print $4}' | awk -F ":" '{print $2}')
+IPADDR1_CIDR=$(mask2cidr $IPADDR1_MASK)
+
 ifconfig eth1 down
 ifconfig eth1 hw ether $FAKE_HWADDR1
 ip addr flush dev eth1
 ifconfig eth1 up
 vppctl tap connect tap111 hwaddr $HWADDR1
-vppctl set int ip address tap-0 $IPADDR1"/24"
+vppctl set int ip address tap-0 $IPADDR1"/"$IPADDR1_CIDR
 vppctl set int state tap-0 up
 brctl addbr br0
 brctl addif br0 tap111

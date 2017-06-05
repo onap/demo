@@ -27,6 +27,8 @@ mask2cidr() {
 
 IPADDR1_MASK=$(ifconfig eth0 | grep "Mask" | awk '{print $4}' | awk -F ":" '{print $2}')
 IPADDR1_CIDR=$(mask2cidr $IPADDR1_MASK)
+IPADDR2_MASK=$(ifconfig eth1 | grep "Mask" | awk '{print $4}' | awk -F ":" '{print $2}')
+IPADDR2_CIDR=$(mask2cidr $IPADDR2_MASK)
 
 # Configure VPP for vPacketGenerator
 IPADDR1=$(ifconfig eth0 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
@@ -54,7 +56,7 @@ ifconfig eth1 hw ether $FAKE_HWADDR2
 ip addr flush dev eth1
 ifconfig eth1 up
 vppctl tap connect tap111 hwaddr $HWADDR2
-vppctl set int ip address tap-1 $IPADDR2"/24"
+vppctl set int ip address tap-1 $IPADDR2"/"$IPADDR2_CIDR
 vppctl set int state tap-1 up
 brctl addbr br1
 brctl addif br1 tap111

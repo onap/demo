@@ -253,6 +253,9 @@ resources:
             __vfw_private_ip_0__ : { get_param: vfw_private_ip_0 }
             __vfw_private_ip_1__ : { get_param: vfw_private_ip_1 }
             __vfw_private_ip_2__ : { get_param: vfw_private_ip_2 }
+            __unprotected_private_net_cidr__ : { get_param: unprotected_private_net_cidr }
+            __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
+            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -268,6 +271,9 @@ resources:
             echo "__vfw_private_ip_0__" > /opt/config/vfw_private_ip_0.txt
             echo "__vfw_private_ip_1__" > /opt/config/vfw_private_ip_1.txt
             echo "__vfw_private_ip_2__" > /opt/config/vfw_private_ip_2.txt
+            echo "__unprotected_private_net_cidr__" > /opt/config/unprotected_private_net_cidr.txt
+            echo "__protected_private_net_cidr__" > /opt/config/protected_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             
             # Download and run install script
@@ -315,6 +321,8 @@ resources:
             __install_script_version__ : { get_param: install_script_version }
             __vpg_private_ip_0__ : { get_param: vpg_private_ip_0 }
             __vpg_private_ip_1__ : { get_param: vpg_private_ip_1 }
+            __unprotected_private_net_cidr__ : { get_param: unprotected_private_net_cidr }
+            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -330,6 +338,8 @@ resources:
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
             echo "__vpg_private_ip_1__" > /opt/config/vpg_private_ip_1.txt
+            echo "__unprotected_private_net_cidr__" > /opt/config/unprotected_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             
             # Download and run install script
@@ -375,6 +385,8 @@ resources:
             __install_script_version__ : { get_param: install_script_version }
             __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
             __vsn_private_ip_1__ : { get_param: vsn_private_ip_1 }
+            __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
+            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -387,6 +399,8 @@ resources:
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vsn_private_ip_0__" > /opt/config/vsn_private_ip_0.txt
             echo "__vsn_private_ip_1__" > /opt/config/vsn_private_ip_1.txt
+            echo "__protected_private_net_cidr__" > /opt/config/protected_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             
             # Download and run install script

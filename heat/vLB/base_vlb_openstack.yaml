@@ -207,6 +207,8 @@ resources:
             __repo_url_artifacts__: { get_param: repo_url_artifacts }
             __demo_artifacts_version__: { get_param: demo_artifacts_version }
             __install_script_version__: { get_param: install_script_version }
+            __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
+            __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
             __cloud_env__: { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -221,6 +223,8 @@ resources:
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
@@ -266,6 +270,8 @@ resources:
             __repo_url_artifacts__: { get_param: repo_url_artifacts }
             __demo_artifacts_version__: { get_param: demo_artifacts_version }
             __install_script_version__: { get_param: install_script_version }
+            __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
+            __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
             __cloud_env__: { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -280,6 +286,8 @@ resources:
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
