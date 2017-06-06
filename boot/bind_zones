@@ -16,10 +16,15 @@ $TTL    604800
 simpledemo.openecomp.org.          IN      A       dns_ip_addr
 
 ;
-vm1.aai.simpledemo.openecomp.org.       IN      A       aai_ip_addr
-c1.vm1.aai.simpledemo.openecomp.org.    IN      A       aai_ip_addr
-c2.vm1.aai.simpledemo.openecomp.org.    IN      A       aai_ip_addr
-c3.vm1.aai.simpledemo.openecomp.org.    IN      A       aai_ip_addr
+vm1.aai.simpledemo.openecomp.org.       IN      A       aai1_ip_addr
+c1.vm1.aai.simpledemo.openecomp.org.    IN      A       aai1_ip_addr
+c2.vm1.aai.simpledemo.openecomp.org.    IN      A       aai1_ip_addr
+c3.vm1.aai.simpledemo.openecomp.org.    IN      A       aai1_ip_addr
+
+vm2.aai.simpledemo.openecomp.org.       IN      A       aai2_ip_addr
+c1.vm2.aai.simpledemo.openecomp.org.    IN      A       aai2_ip_addr
+c2.vm2.aai.simpledemo.openecomp.org.    IN      A       aai2_ip_addr
+c3.vm2.aai.simpledemo.openecomp.org.    IN      A       aai2_ip_addr
 
 vm1.appc.simpledemo.openecomp.org.      IN      A       appc_ip_addr
 c1.vm1.appc.simpledemo.openecomp.org.   IN      A       appc_ip_addr
@@ -72,7 +77,9 @@ vm1.mr.simpledemo.openecomp.org.	IN	A	mr_ip_addr
 ;CNAMES
 ;A&AI
 aai.api.simpledemo.openecomp.org.	IN 	CNAME 	vm1.aai.simpledemo.openecomp.org.
-aai.hbase.simpledemo.openecomp.org.	IN 	CNAME	vm1.aai.simpledemo.openecomp.org.
+aai.hbase.simpledemo.openecomp.org.	IN 	CNAME	vm2.aai.simpledemo.openecomp.org.
+aai.gremlinserver.simpledemo.openecomp.org.	IN 	CNAME 	vm2.aai.simpledemo.openecomp.org.
+aai.elasticsearch.simpledemo.openecomp.org.	IN 	CNAME 	vm2.aai.simpledemo.openecomp.org.
 
 ;APPC
 appc.api.simpledemo.openecomp.org.	IN	CNAME	vm1.appc.simpledemo.openecomp.org.

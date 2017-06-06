@@ -160,9 +160,13 @@ parameters:
     type: string
     description: CIDR of the OAM ONAP network
 
-  aai_ip_addr:
+  aai1_ip_addr:
     type: string
-    description: AAI IP Address
+    description: AAI Instance 1 IP Address
+
+  aai2_ip_addr:
+    type: string
+    description: AAI Instance 2 IP Address
 
   appc_ip_addr:
     type: string
@@ -364,7 +368,8 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __oam_network_cidr__: { get_attr: [oam_ecomp_subnet, cidr] }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __aai_ip_addr__: { get_param: aai_ip_addr }
+            __aai1_ip_addr__: { get_param: aai1_ip_addr }
+            __aai2_ip_addr__: { get_param: aai2_ip_addr }
             __appc_ip_addr__: { get_param: appc_ip_addr }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
             __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
@@ -388,7 +393,8 @@ resources:
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__aai_ip_addr__" > /opt/config/aai_ip_addr.txt
+            echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
+            echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
             echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
             echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
             echo "__dcae_coll_ip_addr__" > /opt/config/dcae_coll_ip_addr.txt
@@ -409,32 +415,33 @@ resources:
             ./dns_install.sh
 
 
-  # A&AI instantiation
-  aai_private_port:
+  # A&AI instantiation (2 VMs)
+  aai1_private_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: aai_ip_addr }}]
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: aai1_ip_addr }}]
 
-  aai_floating_ip:
+  aai1_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: aai_private_port }
+      port_id: { get_resource: aai1_private_port }
 
-  aai_vm:
+  aai1_vm:
     type: OS::Nova::Server
+    depends_on: aai2_vm
     properties:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_xlarge }
       name:
         str_replace:
-          template: base-aai
+          template: base-aai-inst1
           params:
             base: { get_param: vm_base_name }      
       key_name: { get_resource: vm_key }
       networks:
-        - port: { get_resource: aai_private_port }
+        - port: { get_resource: aai1_private_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -446,8 +453,8 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __sdc_ip_addr__: { get_param: sdc_ip_addr }
             __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
           template: |
@@ -461,17 +468,83 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "aai_instance_1" > /opt/config/aai_instance.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
             cd /opt
-            chmod +x aai_install.sh
-            ./aai_install.sh
+            chmod +x aai2_install.sh
+            ./aai2_install.sh
+
+
+  aai2_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_ecomp }
+      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: aai2_ip_addr }}]
+
+  aai2_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: aai2_private_port }
+
+  aai2_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_xlarge }
+      name:
+        str_replace:
+          template: base-aai-inst2
+          params:
+            base: { get_param: vm_base_name }      
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: aai2_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "aai_instance_2" > /opt/config/aai_instance.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
+            cd /opt
+            chmod +x aai2_install.sh
+            ./aai2_install.sh
 
 
   # MSO instantiation

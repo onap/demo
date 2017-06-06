@@ -65,7 +65,8 @@ if [[ $CLOUD_ENV != "rackspace" ]]
 then
 	sed -i "s/dns_ip_addr/"$(cat /opt/config/dns_ip_addr.txt)"/g" /etc/bind/named.conf.options
 	sed -i "s/external_dns/"$(cat /opt/config/external_dns.txt)"/g" /etc/bind/named.conf.options
-	sed -i "s/aai_ip_addr/"$(cat /opt/config/aai_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+	sed -i "s/aai1_ip_addr/"$(cat /opt/config/aai1_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+	sed -i "s/aai2_ip_addr/"$(cat /opt/config/aai2_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/appc_ip_addr/"$(cat /opt/config/appc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/dcae_ip_addr/"$(cat /opt/config/dcae_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/dns_ip_addr/"$(cat /opt/config/dns_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
