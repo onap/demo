@@ -87,12 +87,16 @@ mount /dev/$DISK"1" /data
 echo "/dev/"$DISK"1  /data           ext4    errors=remount-ro,noatime,barrier=0 0       1" >> /etc/fstab
 
 # Set the MTU size of docker containers to the minimum MTU size supported by vNICs. OpenStack deployments may need to know the external DNS IP
+DNS_FLAG=""
+if [ -s /opt/config/dns_ip_addr.txt ]
+then
+	DNS_FLAG=$DNS_FLAG"--dns $(cat /opt/config/dns_ip_addr.txt) "
+fi
 if [ -s /opt/config/external_dns.txt ]
 then
-	echo "DOCKER_OPTS=\"--dns $(cat /opt/config/external_dns.txt) --mtu=$MTU\"" >> /etc/default/docker
-else
-	echo "DOCKER_OPTS=\"--mtu=$MTU\"" >> /etc/default/docker
+	DNS_FLAG=$DNS_FLAG"--dns $(cat /opt/config/external_dns.txt) "
 fi
+echo "DOCKER_OPTS=\"$DNS_FLAG--mtu=$MTU\"" >> /etc/default/docker
 
 cp /lib/systemd/system/docker.service /etc/systemd/system
 sed -i "/ExecStart/s/$/ --mtu=$MTU/g" /etc/systemd/system/docker.service
