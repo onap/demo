@@ -102,6 +102,7 @@ then
 	mkdir -p /opt/aai/logroot/AAI-SDB
 	mkdir -p /opt/aai/logroot/AAI-DRMS
 	mkdir -p /opt/aai/logroot/AAI-UI
+	chown -R 999:999 /opt/aai/logroot/AAI-RESOURCES /opt/aai/logroot/AAI-TRAVERSAL
 
 	sleep 300
 fi
