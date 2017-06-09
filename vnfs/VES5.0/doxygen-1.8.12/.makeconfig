@@ -1,7 +1,0 @@
-RM        = rm -f
-VERSION   = 1.8.12
-INSTALL   = /usr/local
-INSTTOOL  = /usr/bin/install
-DOXYDOCS  = ..
-
-export TMAKEPATH

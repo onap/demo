@@ -1,3 +1,20 @@
+#*************************************************************************//**
+#*
+#* Copyright © 2017 AT&T Intellectual Property. All rights reserved.
+#*
+#* Licensed under the Apache License, Version 2.0 (the "License");
+#* you may not use this file except in compliance with the License.
+#* You may obtain a copy of the License at
+#*        http://www.apache.org/licenses/LICENSE-2.0
+#*
+#* Unless required by applicable law or agreed to in writing, software
+#* distributed under the License is distributed on an "AS IS" BASIS,
+#* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#* See the License for the specific language governing permissions and 
+#* limitations under the License.
+#*
+#****************************************************************************/
+
 #******************************************************************************
 # The ECOMP Vendor Event Listener (EVEL) API client library Makefile.
 #
@@ -6,45 +23,12 @@
 #
 # NOTE: because Makefiles assign special meaning to the TAB character you
 #       will need to set tabstops to 2 characters for the layout to look OK.
-#
-# License
-# -------
-#
-# Copyright(c) <2016>, AT&T Intellectual Property.  All other rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#
-# 1. Redistributions of source code must retain the above copyright notice,
-#    this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright notice,
-#    this list of conditions and the following disclaimer in the documentation
-#    and/or other materials provided with the distribution.
-# 3. All advertising materials mentioning features or use of this software
-#    must display the following acknowledgement:  This product includes
-#    software developed by the AT&T.
-# 4. Neither the name of AT&T nor the names of its contributors may be used to
-#    endorse or promote products derived from this software without specific
-#    prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY AT&T INTELLECTUAL PROPERTY ''AS IS'' AND ANY
-# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL AT&T INTELLECTUAL PROPERTY BE LIABLE FOR ANY
-# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#******************************************************************************
+#****************************************************************************/
 
 ARCH=$(shell getconf LONG_BIT)
 CODE_ROOT=$(CURDIR)/..
 EVELLIB_ROOT=$(CODE_ROOT)/code/evel_library
-EVELDEMO_ROOT=$(CODE_ROOT)/code/evel_demo
 EVELUNIT_ROOT=$(CODE_ROOT)/code/evel_unit
-EVELTRAINING_ROOT=$(CODE_ROOT)/code/evel_training
 LIBS_DIR=$(CODE_ROOT)/libs/x86_$(ARCH)
 OUTPUT_DIR=$(CODE_ROOT)/output/x86_$(ARCH)
 DOCS_ROOT=$(CODE_ROOT)/docs
@@ -120,14 +104,9 @@ DOCS_SERVER_PATH=/var/www/html/evel
 	$(JAVA) -jar $(PLANTUML) $(PLANTFLAGS) $<
 
 all:     api_library \
-         evel_library_demo \
-         evel_library_training
 
 clean:   api_library_clean \
          evel_unit_clean \
-         evel_library_demo_clean \
-         evel_library_training_clean \
-         docs_clean
 
 install: evel_install_centos evel_install_ubuntu
 
@@ -185,33 +164,6 @@ api_library_clean:
 	@$(RM) $(EVELLIB_ROOT)/*.d
 
 #******************************************************************************
-# Build the EVEL library demo.                                                *
-#******************************************************************************
-DEMO_SOURCES=$(EVELDEMO_ROOT)/evel_demo.c $(EVELDEMO_ROOT)/evel_test_control.c
-DEMO_OBJECTS=$(DEMO_SOURCES:.c=.o)
--include $(DEMO_SOURCES:.c=.d)
-
-evel_library_demo: api_library \
-                   $(OUTPUT_DIR)/evel_demo
-
-$(OUTPUT_DIR)/evel_demo: $(DEMO_OBJECTS)
-	@echo	Linking EVEL demo
-	@$(CC) $(CPPFLAGS) $(CFLAGS) -o $@ \
-                          -L $(LIBS_DIR) \
-                          $(DEMO_OBJECTS) \
-                          -level \
-                          -lpthread \
-                          -lcurl
-
-evel_library_demo_clean:
-	@echo	Cleaning EVEL demo
-	@$(RM) $(OUTPUT_DIR)/evel_demo
-	@$(RM) $(API_OBJECTS)
-	@$(RM) $(DEMO_OBJECTS)
-	@$(RM) $(EVELLIB_ROOT)/*.d
-	@$(RM) $(EVELDEMO_ROOT)/*.d
-
-#******************************************************************************
 # Build the EVEL library unit test.                                           *
 #******************************************************************************
 UNIT_SOURCES=$(EVELUNIT_ROOT)/evel_unit.c
@@ -237,32 +189,6 @@ evel_unit_clean:
 	@$(RM) $(UNIT_OBJECTS)
 	@$(RM) $(EVELLIB_ROOT)/*.d
 	@$(RM) $(EVELUNIT_ROOT)/*.d
-
-#******************************************************************************
-# Build the EVEL library training files.                                      *
-#******************************************************************************
-evel_library_training:
-	@echo	Making EVEL training
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/01-hello-world
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/02-library-link
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/03-include-header
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/04-basic-lifecycle
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/05-raise-event
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/06-username-password
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/07-raise-measurement
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/08-raise-mobile-flow
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/09-raise-state-change
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/10-raise-syslog
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/11-raise-other
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/12-suppress-fault-fields
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/13-suppress-fault-pairs
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/14-measurement-interval
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/15-raise-signaling
-	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/16-raise-service
-
-evel_library_training_clean:
-	@echo	Cleaning EVEL training
-	@$(RM) $(EVELTRAINING_ROOT)/*/hello_evel_world
 
 #******************************************************************************
 # Copy the EVEL demo onto the CentOS testbed as a package and build it.       *
@@ -345,10 +271,7 @@ delivery_baseline:	docs
 # Package the software for delivery.                                          *
 #******************************************************************************
 package: api_library_clean \
-         evel_unit_clean \
-         evel_library_demo_clean \
-         evel_library_training_clean \
-         docs
+         evel_unit_clean
 	@echo Packaging the software for delivery
 	@cd $(CODE_ROOT) && tar cfz output/evel-library-package.tgz  bldjobs \
                                                       code \
@@ -360,25 +283,3 @@ package: api_library_clean \
 package_clean:
 	@echo Clean delivery packages
 	@$(RM) $(OUTPUTDIR)/*.tgz
-
-#******************************************************************************
-# Create project documentation.                                               *
-#******************************************************************************
-doxygen_docs:
-	@echo Making Doxygen documentation
-	@$(DOXYGEN) Doxyfile
-
-pdf_docs: doxygen_docs  # This target is slightly broken.  Run manually.
-	@echo	Making PDF...
-	@$(MAKE) -C $(DOCS_ROOT)/source/evel/latex
-
-docs_clean:
-	@echo Cleaning docs...
-	@$(RM) $(DOCS_ROOT)/*.svg
-	@$(RM) -r $(DOCS_ROOT)/source/evel/html \
-	          $(DOCS_ROOT)/source/evel/latex
-
-docs_install: docs
-	@echo Copying docs to team web-server...
-	@$(SCP) -r $(DOCS_ROOT)/source/evel/html/* \
-	          root@$(TEAM_DOCS_SERVER):$(DOCS_SERVER_PATH)
