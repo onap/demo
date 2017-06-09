@@ -38,6 +38,120 @@ void read_vpp_metrics(vpp_metrics_struct *, char *);
 
 unsigned long long epoch_start = 0;
 
+#ifdef DOCKER
+int measure_traffic() 
+{
+
+  EVEL_ERR_CODES evel_rc = EVEL_SUCCESS;
+  FILE *fp;
+  int status;
+  char count[10];
+  time_t rawtime;
+  struct tm * timeinfo;
+  char period [21];
+  char cmd [100];
+  int concurrent_sessions = 0;
+  int configured_entities = 0;
+  double mean_request_latency = 0;
+  double measurement_interval = 1;
+  double memory_configured = 0;
+  double memory_used = 0;
+  int request_rate=0;
+  char secs [3];
+  int sec;
+  double loadavg;
+
+  printf("Checking app traffic\n");
+  time (&rawtime);
+  timeinfo = localtime (&rawtime);
+  strftime(period,21,"%d/%b/%Y:%H:%M:",timeinfo);
+  strftime(secs,3,"%S",timeinfo);
+  sec = atoi(secs);
+  if (sec == 0) sec = 59;
+  sprintf(secs, "%02d", sec);
+  strncat(period, secs, 21);
+  // ....x....1....x....2.
+  // 15/Oct/2016:17:51:19
+  strcpy(cmd, "sudo docker logs vHello | grep -c ");
+  strncat(cmd, period, 100);
+
+  fp = popen(cmd, "r");
+  if (fp == NULL) {
+    EVEL_ERROR("popen failed to execute command");
+  }
+
+  if (fgets(count, 10, fp) != NULL) {
+    request_rate = atoi(count);
+    printf("Reporting request rate for second: %s as %d\n", period, request_rate);
+
+    }
+    else {
+      EVEL_ERROR("New Measurement failed");
+    }
+    printf("Processed measurement\n");
+  
+  status = pclose(fp);
+  if (status == -1) {
+    EVEL_ERROR("pclose returned an error");
+  }
+  return request_rate;
+}
+
+#endif
+
+
+
+/**************************************************************************//**
+ * tap live cpu stats
+ *****************************************************************************/
+void evel_get_cpu_stats(EVENT_MEASUREMENT * measurement)
+{
+  FILE *fp;
+  char path[1024];
+  double usage=0.0;
+  double idle;
+  double intrpt;
+  double nice;
+  double softirq;
+  double steal;
+  double sys;
+  double user;
+  double wait;
+  MEASUREMENT_CPU_USE *cpu_use = NULL;
+
+  /* Open the command for reading. */
+  //fp = popen("/bin/ls /etc/", "r");
+  fp = popen("/usr/bin/top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 ", "r");
+  if (fp == NULL) {
+    printf("Failed to run command\n" );
+    exit(1);
+  }
+
+  /* Read the output a line at a time - output it. */
+  while (fgets(path, sizeof(path)-1, fp) != NULL) {
+    printf("%s", path+10);
+    sscanf(path+10," %lf us, %lf sy,  %lf ni,  %lf id,  %lf wa,  %lf hi,  %lf si,  %lf st",
+    &user,&sys,&nice,&idle,&wait,&intrpt,&softirq,&steal);
+  }
+
+  /* close */
+  pclose(fp);
+
+  cpu_use = evel_measurement_new_cpu_use_add(measurement, "cpu1", usage);
+  if( cpu_use != NULL ){
+  evel_measurement_cpu_use_idle_set(cpu_use,idle);
+  //evel_measurement_cpu_use_interrupt_set(cpu_use,intrpt);
+  //evel_measurement_cpu_use_nice_set(cpu_use,nice);
+  //evel_measurement_cpu_use_softirq_set(cpu_use,softirq);
+  //evel_measurement_cpu_use_steal_set(cpu_use,steal);
+  evel_measurement_cpu_use_system_set(cpu_use,sys);
+  evel_measurement_cpu_use_usageuser_set(cpu_use,user);
+  //evel_measurement_cpu_use_wait_set(cpu_use,wait);
+  //evel_measurement_cpu_use_add(measurement, "cpu2", usage,idle,intrpt,nice,softirq,steal,sys,user,wait);
+  }
+}
+
+
 
 int main(int argc, char** argv)
 {
@@ -68,6 +182,7 @@ int main(int argc, char** argv)
     fprintf(stderr, "Usage: %s <FQDN>|<IP address> <port> <interface>\n", argv[0]);
     exit(-1);
   }
+  srand(time(NULL));
 
   /**************************************************************************/
   /* Initialize                                                             */
@@ -137,12 +252,15 @@ int main(int argc, char** argv)
     if(vpp_m != NULL) {
       printf("New measurement report created...\n");
 
+      evel_measurement_type_set(vpp_m, "HTTP request rate");
+      evel_measurement_request_rate_set(vpp_m, rand()%10000);
 
-      evel_vnic_performance_rx_total_pkt_acc_set(vnic_performance, packets_in_this_round);
-      evel_vnic_performance_tx_total_pkt_acc_set(vnic_performance, packets_out_this_round);
-      
-      evel_vnic_performance_rx_octets_acc_set(vnic_performance, bytes_in_this_round);
-      evel_vnic_performance_tx_octets_acc_set(vnic_performance, bytes_out_this_round);
+      evel_vnic_performance_rx_total_pkt_delta_set(vnic_performance, packets_in_this_round);
+      evel_vnic_performance_tx_total_pkt_delta_set(vnic_performance, packets_out_this_round);
+
+      evel_vnic_performance_rx_octets_delta_set(vnic_performance, bytes_in_this_round);
+      evel_vnic_performance_tx_octets_delta_set(vnic_performance, bytes_out_this_round);
+      evel_get_cpu_stats(vpp_m);
 
       /***************************************************************************/
       /* Set parameters in the MEASUREMENT header packet                         */
@@ -159,8 +277,10 @@ int main(int argc, char** argv)
       evel_last_epoch_set(&vpp_m->header, epoch_now);
       epoch_start = epoch_now;
 
-      strcpy(vpp_m_header->reporting_entity_id.value, "No UUID available");
-      strcpy(vpp_m_header->reporting_entity_name, hostname);
+      //strcpy(vpp_m_header->reporting_entity_id.value, "No UUID available");
+      //strcpy(vpp_m_header->reporting_entity_name, hostname);
+      evel_reporting_entity_name_set(&vpp_m->header, "fwll");
+      evel_reporting_entity_id_set(&vpp_m->header, "No UUID available");
       evel_rc = evel_post_event(vpp_m_header);
 
       if(evel_rc == EVEL_SUCCESS) {
