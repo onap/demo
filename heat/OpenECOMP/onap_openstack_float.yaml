@@ -39,10 +39,18 @@ parameters:
   # Parameters used across all ONAP components #
   #                                            #
   ##############################################
-  
+
   public_net_id:
     type: string
     description: Public network for floating IP address allocation
+
+  public_subnet_id:
+    type: string
+    description: Public network subnet id
+
+  router_gateway_ip:
+    type: string
+    description: Public network gateway IP address
 
   ubuntu_1404_image:
     type: string
@@ -399,6 +407,9 @@ resources:
     properties:
       external_gateway_info:
         network: { get_param: public_net_id }
+        external_fixed_ips:
+          - ip_address: { get_param: router_gateway_ip }
+            subnet: { get_param: public_subnet_id }
 
   router_interface:
     type: OS::Neutron::RouterInterface
