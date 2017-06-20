@@ -1164,31 +1164,31 @@
 			"type": "object",
 			"properties": {
 				"memoryBuffered": { 
-                    "description": "kilobytes of temporary storage for raw disk blocks", 
+                    "description": "kibibytes of temporary storage for raw disk blocks", 
                     "type": "number" 
                 },
 				"memoryCached": { 
-                    "description": "kilobytes of memory used for cache", 
+                    "description": "kibibytes of memory used for cache", 
                     "type": "number" 
                 },
 				"memoryConfigured": { 
-                    "description": "kilobytes of memory configured in the virtual machine on which the VNFC reporting the event is running", 
+                    "description": "kibibytes of memory configured in the virtual machine on which the VNFC reporting the event is running", 
                     "type": "number" 
                 },
 				"memoryFree": { 
-                    "description": "kilobytes of physical RAM left unused by the system", 
+                    "description": "kibibytes of physical RAM left unused by the system", 
                     "type": "number" 
                 },
 				"memorySlabRecl": { 
-                    "description": "the part of the slab that can be reclaimed such as caches measured in kilobytes", 
+                    "description": "the part of the slab that can be reclaimed such as caches measured in kibibytes", 
                     "type": "number" 
                 },
 				"memorySlabUnrecl": { 
-                    "description": "the part of the slab that cannot be reclaimed even when lacking memory measured in kilobytes", 
+                    "description": "the part of the slab that cannot be reclaimed even when lacking memory measured in kibibytes", 
                     "type": "number" 
                 },
 				"memoryUsed": { 
-                    "description": "total memory minus the sum of free, buffered, cached and slab memory measured in kilobytes", 
+                    "description": "total memory minus the sum of free, buffered, cached and slab memory measured in kibibytes", 
                     "type": "number" 
                 },
 				"vmIdentifier": { 
