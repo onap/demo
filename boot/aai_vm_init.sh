@@ -10,7 +10,7 @@ DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/aaidocker/aai-hbase-1.2.3
 docker rm -f hbase-1.2.3
-docker run -d --net=host --name="hbase-1.2.3" aaidocker/aai-hbase-1.2.3
+docker run -d --net=host --name="hbase-1.2.3" $NEXUS_DOCKER_REPO/aaidocker/aai-hbase-1.2.3
 
 # Wait 3 minutes before instantiating the A&AI container
 sleep 180
