@@ -815,6 +815,18 @@ resources:
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
+            __keystone_url__: { get_param: keystone_url }
+            __aai1_ip_addr__: { get_param: aai1_ip_addr }
+            __aai2_ip_addr__: { get_param: aai2_ip_addr }
+            __appc_ip_addr__: { get_param: appc_ip_addr }
+            __dcae_ip_addr__: { get_param: dcae_ip_addr }
+            __mso_ip_addr__: { get_param: mso_ip_addr }
+            __mr_ip_addr__: { get_param: mr_ip_addr }
+            __policy_ip_addr__: { get_param: policy_ip_addr }
+            __portal_ip_addr__: { get_param: portal_ip_addr }
+            __sdc_ip_addr__: { get_param: sdc_ip_addr }
+            __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
+            __vid_ip_addr__: { get_param: vid_ip_addr }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
           template: |
@@ -834,6 +846,18 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__keystone_url__" > /opt/config/keystone.txt
+            echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
+            echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
+            echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
+            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
+            echo "__mso_ip_addr__" > /opt/config/mso_ip_addr.txt
+            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
+            echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
+            echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
+            echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
+            echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
+            echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
 
