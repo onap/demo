@@ -32,6 +32,7 @@
   <packaging>pom</packaging>
   <modelVersion>4.0.0</modelVersion>
   <prerequisites>
+    <nexusproxy>https://nexus.onap.org</nexusproxy>
     <maven>3.1.1</maven>
   </prerequisites>
 
@@ -102,12 +103,12 @@
     <repository>
       <id>ecomp-releases</id>
       <name>Demo Release Repository</name>
-      <url> https://nexus.onap.org/content/repositories/releases/</url>
+      <url>${nexusproxy}/content/repositories/releases/</url>
     </repository>
     <snapshotRepository>
       <id>ecomp-snapshots</id>
       <name>Demo Snapshot Repository</name>
-      <url> https://nexus.onap.org/content/repositories/snapshots/</url>
+      <url>${nexusproxy}/content/repositories/snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
