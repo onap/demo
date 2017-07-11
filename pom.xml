@@ -35,6 +35,10 @@
     <maven>3.1.1</maven>
   </prerequisites>
 
+  <properties>
+     <nexusproxy>https://nexus.onap.org</nexusproxy>
+  </properties>
+
   <modules>
     <module>vnfs/honeycomb_plugin/sample_plugin/parent-pom</module>
     <module>vnfs/vFW/pg_streams</module>
@@ -102,12 +106,12 @@
     <repository>
       <id>ecomp-releases</id>
       <name>Demo Release Repository</name>
-      <url> https://nexus.onap.org/content/repositories/releases/</url>
+      <url>${nexusproxy}/content/repositories/releases/</url>
     </repository>
     <snapshotRepository>
       <id>ecomp-snapshots</id>
       <name>Demo Snapshot Repository</name>
-      <url> https://nexus.onap.org/content/repositories/snapshots/</url>
+      <url>${nexusproxy}/content/repositories/snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
