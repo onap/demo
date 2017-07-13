@@ -1,0 +1,52 @@
+{
+    "name": "Project Clearwater",
+    "description": "Project Clearwater IMS",
+    "data": [
+        {
+            "file": "base_clearwater.yaml",
+            "type": "HEAT",
+            "isBase": "true",
+            "data": [
+                {
+                    "file": "base_clearwater.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "bono.yaml",
+            "type": "HEAT",
+            "isBase": "false"
+        },
+        {
+            "file": "dns.yaml",
+            "type": "HEAT",
+            "isBase": "false"
+        },
+        {
+            "file": "ellis.yaml",
+            "type": "HEAT",
+            "isBase": "false"
+        },
+        {
+            "file": "homer.yaml",
+            "type": "HEAT",
+            "isBase": "false"
+        },
+        {
+            "file": "homestead.yaml",
+            "type": "HEAT",
+            "isBase": "false"
+        },
+        {
+            "file": "ralf.yaml",
+            "type": "HEAT",
+            "isBase": "false"
+        },
+        {
+            "file": "sprout.yaml",
+            "type": "HEAT",
+            "isBase": "false"
+        }
+    ]
+}

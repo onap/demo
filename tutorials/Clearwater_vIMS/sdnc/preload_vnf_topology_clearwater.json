@@ -1,0 +1,47 @@
+{
+  "input":
+  {
+    "request-information":
+    {
+      "notification-url":"openecomp.org",
+      "order-number":"1",
+      "order-version":"1",
+      "request-action":"PreloadVNFRequest",
+      "request-id": "robot20"
+    },
+    "sdnc-request-header":
+    {
+      "svc-action": "reserve",
+      "svc-notification-url": "http://openecomp.org:8080/adapters/rest/SDNCNotify",
+      "svc-request-id":"robot20"
+    },
+    "vnf-topology-information":
+    {
+      "vnf-assignments":
+      {
+        "availability-zones":[],
+        "vnf-networks":[],
+        "vnf-vms":[]
+      },
+      "vnf-parameters":
+      [
+        {"vnf-parameter-name":"public_net_id","vnf-parameter-value": "00000000-0000-0000-0000-000000000000"},
+        {"vnf-parameter-name":"key_name","vnf-parameter-value":"cw-key"},
+        {"vnf-parameter-name":"pub_key","vnf-parameter-value":"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQXYJYYi3/OUZXUiCYWdtc7K0m5C0dJKVxPG0eI8EWZrEHYdfYe6WoTSDJCww+1qlBSpA5ac/Ba4Wn9vh+lR1vtUKkyIC/nrYb90ReUd385Glkgzrfh5HdR5y5S2cL/Frh86lAn9r6b3iWTJD8wBwXFyoe1S2nMTOIuG4RPNvfmyCTYVh8XTCCE8HPvh3xv2r4egawG1P4Q4UDwk+hDBXThY2KS8M5/8EMyxHV0ImpLbpYCTBA6KYDIRtqmgS6iKyy8v2D1aSY5mc9J0T5t9S2Gv+VZQNWQDDKNFnxqYaAo1uEoq/i1q63XC5AD3ckXb2VT6dp23BQMdDfbHyUWfJN imported-openssh-key"},
+        {"vnf-parameter-name":"repo_url","vnf-parameter-value":"http://repo.cw-ngv.com/stable"},
+        {"vnf-parameter-name":"zone","vnf-parameter-value":"vimstest.onap.org"},
+        {"vnf-parameter-name":"dn_range_start","vnf-parameter-value":"5555551000"},
+        {"vnf-parameter-name":"dn_range_length","vnf-parameter-value":"20"},
+        {"vnf-parameter-name":"dnssec_key","vnf-parameter-value":"9FPdYTWhk5+LbhrqtTPQKw=="}
+      ],
+      "vnf-topology-identifier":
+      {
+        "generic-vnf-name":"vIMSVNFTEST1",
+        "generic-vnf-type":"vIMS_Clearwater 1",
+        "service-type":"1e736900-db02-4bd2-9e7b-72ac1a08c3f7",
+        "vnf-name":"vIMSVNFTEST1",
+        "vnf-type":"VimsClearwater..base_clearwater..module-0"
+      }
+    }
+  }
+}
