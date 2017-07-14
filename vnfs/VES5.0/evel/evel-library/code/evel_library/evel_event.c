@@ -20,8 +20,7 @@
  * Implementation of EVEL functions relating to Event Headers - since
  * Heartbeats only contain the Event Header, the Heartbeat factory function is
  * here too.
- *
- ****************************************************************************/
+ *****************************************************************************/
 
 #include <string.h>
 #include <assert.h>
@@ -484,7 +483,11 @@ int evel_json_encode_event(char * json,
       break;
 
     case EVEL_DOMAIN_VOICE_QUALITY:
-      evel_json_encode_other(jbuf, (EVENT_VOICE_QUALITY *)event);
+      evel_json_encode_voice_quality(jbuf, (EVENT_VOICE_QUALITY *)event);
+      break;
+
+    case EVEL_DOMAIN_THRESHOLD_CROSS:
+      evel_json_encode_threshold_cross(jbuf, (EVENT_THRESHOLD_CROSS *)event);
       break;
 
     case EVEL_DOMAIN_INTERNAL:
@@ -639,7 +642,7 @@ void evel_json_encode_vendor_field(EVEL_JSON_BUFFER * jbuf,
   assert(vfield != NULL);
   assert(vfield->vendorname != NULL);
 
-  evel_json_open_named_object(jbuf, "vendorVnfNamedFields");
+  evel_json_open_named_object(jbuf, "vendorVnfNameFields");
 
   /***************************************************************************/
   /* Mandatory fields.                                                       */

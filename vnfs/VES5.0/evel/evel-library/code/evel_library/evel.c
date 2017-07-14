@@ -380,6 +380,13 @@ void evel_free_event(void * event)
       free(evt_ptr);
       break;
 
+    case EVEL_DOMAIN_THRESHOLD_CROSS:
+      EVEL_DEBUG("Event is a Threshold crossing at %lp", evt_ptr);
+      evel_free_threshold_cross((EVENT_THRESHOLD_CROSS *)evt_ptr);
+      memset(evt_ptr, 0, sizeof(EVENT_THRESHOLD_CROSS));
+      free(evt_ptr);
+      break;
+
     default:
       EVEL_ERROR("Unexpected event domain (%d)", evt_ptr->event_domain);
       assert(0);

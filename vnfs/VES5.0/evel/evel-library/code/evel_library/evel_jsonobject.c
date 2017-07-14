@@ -95,8 +95,6 @@ exit_label:
 EVEL_JSON_OBJECT_INSTANCE * evel_new_jsonobjinstance(const char *const yourjson)
 {
   EVEL_JSON_OBJECT_INSTANCE *jobjinst = NULL;
-  unsigned int length;
-  char *keyString = NULL;
   jsmntok_t *key;
   int resultCode;
   jsmn_parser p;

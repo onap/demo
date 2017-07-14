@@ -236,6 +236,10 @@ char * evel_event_domain(const EVEL_EVENT_DOMAINS domain)
       result = "voiceQuality";
       break;
 
+    case EVEL_DOMAIN_THRESHOLD_CROSS:
+      result = "thresholdCrossingAlert";
+      break;
+
     default:
       result = NULL;
       EVEL_ERROR("Unexpected domain %d", domain);
