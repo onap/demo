@@ -1,0 +1,116 @@
+{
+    "input": {
+        "vnf-topology-information": {
+            "vnf-topology-identifier": {
+                "service-type": "fa13b7b4-bfd0-4f48-95c6-e02f8b7099de",
+                "vnf-name": "vCPEInfraVNF02",
+                "vnf-type": "Vcpeinfra..base_vcpe_infra_rackspace..module-0",
+                "generic-vnf-name": "vCPEInfraVNF02",
+                "generic-vnf-type": "vCPEInfra 1"
+            },
+            "vnf-assignments": {
+                "availability-zones": [],
+                "vnf-networks": [],
+                "vnf-vms": []
+            },
+             "vnf-parameters": [
+                {
+                    "vnf-parameter-name": "repo_url_blob",
+                    "vnf-parameter-value": "https://nexus.onap.org/content/sites/raw"
+                },
+                {
+                    "vnf-parameter-name": "repo_url_artifacts",
+                    "vnf-parameter-value": "https://nexus.onap.org/content/groups/staging"
+                },
+                {
+                    "vnf-parameter-name": "demo_artifacts_version",
+                    "vnf-parameter-value": "1.1.0"
+                },
+                {
+                    "vnf-parameter-name": "onap_private_net_id",
+                    "vnf-parameter-value": "oam_ecomp_X408"
+                },
+                {
+                    "vnf-parameter-name": "onap_private_subnet_id",
+                    "vnf-parameter-value": "oam_ecomp_X408"
+                },
+                {
+                    "vnf-parameter-name": "onap_private_net_cidr",
+                    "vnf-parameter-value": "10.0.0.0/8"
+                },
+                {
+                    "vnf-parameter-name": "vaaa_private_net_id",
+                    "vnf-parameter-value": "zdfw1aaa01_private"
+                },
+                {
+                    "vnf-parameter-name": "vaaa_private_net_cidr",
+                    "vnf-parameter-value": "192.168.20.0/24"
+                },
+                {
+                    "vnf-parameter-name": "vaaa_private_ip_0",
+                    "vnf-parameter-value": "192.168.20.121"
+                },
+                {
+                    "vnf-parameter-name": "vaaa_private_ip_1",
+                    "vnf-parameter-value": "10.1.20.4"
+                },
+                {
+                    "vnf-parameter-name": "vdns_private_ip_0",
+                    "vnf-parameter-value": "192.168.20.122"
+                },
+                {
+                    "vnf-parameter-name": "vdns_private_ip_1",
+                    "vnf-parameter-value": "10.1.20.5"
+                },
+                {
+                    "vnf-parameter-name": "vdhcp_private_ip_0",
+                    "vnf-parameter-value": "192.168.20.123"
+                },
+                {
+                    "vnf-parameter-name": "vdhcp_private_ip_1",
+                    "vnf-parameter-value": "10.1.20.6"
+                },
+                {
+                    "vnf-parameter-name": "vaaa_name_0",
+                    "vnf-parameter-value": "zdcpe1cpe01aaa01"
+                },
+                {
+                    "vnf-parameter-name": "vdns_name_0",
+                    "vnf-parameter-value": "zdcpe11cpe01dns01"
+                },
+                {
+                    "vnf-parameter-name": "vdhcp_name_0",
+                    "vnf-parameter-value": "zdcpe1cpe01dhcp01"
+                },
+                {
+                    "vnf-parameter-name": "dcae_collector_ip",
+                    "vnf-parameter-value": "10.0.4.102"
+                },
+                {
+                    "vnf-parameter-name": "dcae_collector_port",
+                    "vnf-parameter-value": "8080"
+                },
+                {
+                    "vnf-parameter-name": "key_name",
+                    "vnf-parameter-value": "vaaa_key"
+                },
+                {
+                    "vnf-parameter-name": "pub_key",
+                    "vnf-parameter-value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQXYJYYi3/OUZXUiCYWdtc7K0m5C0dJKVxPG0eI8EWZrEHYdfYe6WoTSDJCww+1qlBSpA5ac/Ba4Wn9vh+lR1vtUKkyIC/nrYb90ReUd385Glkgzrfh5HdR5y5S2cL/Frh86lAn9r6b3iWTJD8wBwXFyoe1S2nMTOIuG4RPNvfmyCTYVh8XTCCE8HPvh3xv2r4egawG1P4Q4UDwk+hDBXThY2KS8M5/8EMyxHV0ImpLbpYCTBA6KYDIRtqmgS6iKyy8v2D1aSY5mc9J0T5t9S2Gv+VZQNWQDDKNFnxqYaAo1uEoq/i1q63XC5AD3ckXb2VT6dp23BQMdDfbHyUWfJN"
+                }
+            ]
+        },
+        "request-information": {
+            "request-id": "robot12",
+            "order-version": "1",
+            "notification-url": "openecomp.org",
+            "order-number": "1",
+            "request-action": "PreloadVNFRequest"
+        },
+        "sdnc-request-header": {
+            "svc-request-id": "robot12",
+            "svc-notification-url": "http:\/\/openecomp.org:8080\/adapters\/rest\/SDNCNotify",
+            "svc-action": "reserve"
+        }
+    }    
+}
