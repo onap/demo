@@ -80,7 +80,7 @@ fi
 # Download dependencies
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-get update
-apt-get install -y apt-transport-https ca-certificates wget make openjdk-8-jdk git ntp ntpdate
+apt-get install -y apt-transport-https ca-certificates wget make openjdk-8-jdk git ntp ntpdate make
 
 # Download scripts from Nexus
 curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/dcae_vm_init.sh -o /opt/dcae_vm_init.sh

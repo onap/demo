@@ -52,7 +52,7 @@ fi
 # Download dependencies
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-get update
-apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk bind9 bind9utils bind9-doc ntp ntpdate
+apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk bind9 bind9utils bind9-doc ntp ntpdate make
 
 # Download script
 mkdir /etc/bind/zones
