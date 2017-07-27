@@ -12,24 +12,29 @@ cd /opt
 chmod +x portal/deliveries/new_start.sh
 chmod +x portal/deliveries/new_stop.sh
 chmod +x portal/deliveries/dbstart.sh
+
 unzip -o portal/deliveries/etc.zip -d /PROJECT/OpenSource/UbuntuEP/
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
 docker pull $NEXUS_DOCKER_REPO/openecomp/portaldb:$DOCKER_IMAGE_VERSION
 docker pull $NEXUS_DOCKER_REPO/openecomp/portalapps:$DOCKER_IMAGE_VERSION
+docker pull $NEXUS_DOCKER_REPO/openecomp/portalwms:$DOCKER_IMAGE_VERSION
 
 docker create --name data_vol_portal -v /var/lib/mysql mariadb
 
 docker tag $NEXUS_DOCKER_REPO/openecomp/portaldb:$DOCKER_IMAGE_VERSION ecompdb:portal
 docker tag $NEXUS_DOCKER_REPO/openecomp/portalapps:$DOCKER_IMAGE_VERSION ep:1610-1
+docker tag $NEXUS_DOCKER_REPO/openecomp/portalwms:$DOCKER_IMAGE_VERSION widget-ms:latest
 
 docker rm -f ecompdb_portal
 docker rm -f 1610-1
+docker rm -f widget-ms:latest
 
 cd portal/deliveries
 ./dbstart.sh
 ./new_start.sh
+./widget_ms_start.sh
 
 sleep 180
 
