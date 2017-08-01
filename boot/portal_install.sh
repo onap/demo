@@ -52,8 +52,8 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git unzip mysql-client-core-5.6 ntp ntpdate make
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/portal_vm_init.sh -o /opt/portal_vm_init.sh
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/portal_serv.sh -o /opt/portal_serv.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/portal_vm_init.sh -o /opt/portal_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/portal_serv.sh -o /opt/portal_serv.sh
 chmod +x /opt/portal_vm_init.sh
 chmod +x /opt/portal_serv.sh
 mv /opt/portal_serv.sh /etc/init.d

@@ -26,12 +26,12 @@ pip install jsonschema
 mkdir /opt/config
 mkdir /opt/honeycomb
 cd /opt
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_packetgen_for_dns_demo_init.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vpacketgenfordnsdemo.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/run_streams_dns.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdnspacketgen_change_streams_ports.sh
-wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/vlb/vlb_dns_streams/$DEMO_ARTIFACTS_VERSION/vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_packetgen_for_dns_demo_init.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vpacketgenfordnsdemo.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/run_streams_dns.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdnspacketgen_change_streams_ports.sh
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb_dns_streams/$DEMO_ARTIFACTS_VERSION/vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
 
 tar -zxvf vpp.tar.gz
 tar -zxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz

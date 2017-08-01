@@ -58,11 +58,11 @@ mkdir /opt/config
 mkdir /opt/FDclient
 cd /opt
 
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_dns_init.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdns.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/dnsclient.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/set_gre_tunnel.sh
-wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/vlb/dns-client/$DEMO_ARTIFACTS_VERSION/dns-client-$DEMO_ARTIFACTS_VERSION.jar
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_dns_init.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdns.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/dnsclient.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/set_gre_tunnel.sh
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/dns-client/$DEMO_ARTIFACTS_VERSION/dns-client-$DEMO_ARTIFACTS_VERSION.jar
 
 mv dns-client-$DEMO_ARTIFACTS_VERSION.jar /opt/FDclient/
 mv dnsclient.sh /opt/FDclient/
@@ -75,15 +75,15 @@ chmod +x /opt/FDclient/set_gre_tunnel.sh
 
 # Download Bind config files
 cd /opt/config
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/db_dnsdemo_openecomp_org
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/named.conf.options
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/named.conf.local
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/db_dnsdemo_onap_org
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/named.conf.options
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/named.conf.local
 
 # Configure Bind
 modprobe ip_gre
 mkdir /etc/bind/zones
 sed -i "s/OPTIONS=.*/OPTIONS=\"-4 -u bind\"/g" /etc/default/bind9
-mv db_dnsdemo_openecomp_org /etc/bind/zones/db.dnsdemo.openecomp.org
+mv db_dnsdemo_onap_org /etc/bind/zones/db.dnsdemo.onap.org
 mv named.conf.options /etc/bind/
 mv named.conf.local /etc/bind/
 sleep 1

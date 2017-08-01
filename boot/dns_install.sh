@@ -56,9 +56,9 @@ apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk bind9 
 
 # Download script
 mkdir /etc/bind/zones
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/$ZONE_FILE -o /etc/bind/zones/db.simpledemo.openecomp.org
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/$OPTIONS_FILE -o /etc/bind/named.conf.options
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/named.conf.local -o /etc/bind/named.conf.local
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$ZONE_FILE -o /etc/bind/zones/db.simpledemo.openecomp.org
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$OPTIONS_FILE -o /etc/bind/named.conf.options
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/named.conf.local -o /etc/bind/named.conf.local
 
 # Set the private IP address of each ONAP VM in the Bind configuration in OpenStack deployments
 if [[ $CLOUD_ENV != "rackspace" ]]

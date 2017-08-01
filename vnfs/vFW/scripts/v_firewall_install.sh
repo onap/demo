@@ -67,11 +67,11 @@ pip install jsonschema
 mkdir /opt/honeycomb
 cd /opt
 
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_firewall_init.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vfirewall.sh
-wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/ves/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/ves/ves_vfw_reporting/$DEMO_ARTIFACTS_VERSION/ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_firewall_init.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vfirewall.sh
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves/ves_vfw_reporting/$DEMO_ARTIFACTS_VERSION/ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 
 tar -zxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves-$DEMO_ARTIFACTS_VERSION VES

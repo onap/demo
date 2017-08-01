@@ -52,8 +52,8 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates wget make openjdk-8-jdk git ntp ntpdate
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/mr_vm_init.sh -o /opt/mr_vm_init.sh
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/mr_serv.sh -o /opt/mr_serv.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mr_vm_init.sh -o /opt/mr_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mr_serv.sh -o /opt/mr_serv.sh
 chmod +x /opt/mr_vm_init.sh
 chmod +x /opt/mr_serv.sh
 mv /opt/mr_serv.sh /etc/init.d

@@ -52,8 +52,8 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/asdc_vm_init.sh -o /opt/asdc_vm_init.sh
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/asdc_serv.sh -o /opt/asdc_serv.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/asdc_vm_init.sh -o /opt/asdc_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/asdc_serv.sh -o /opt/asdc_serv.sh
 chmod +x /opt/asdc_vm_init.sh
 chmod +x /opt/asdc_serv.sh
 mv /opt/asdc_serv.sh /etc/init.d
@@ -70,7 +70,7 @@ curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose
 chmod +x /opt/docker/docker-compose
 
 # Create partition and mount the external volume
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/asdc_ext_volume_partitions.txt -o /opt/asdc_ext_volume_partitions.txt
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/asdc_ext_volume_partitions.txt -o /opt/asdc_ext_volume_partitions.txt
 
 if [[ $CLOUD_ENV == "rackspace" ]]
 then

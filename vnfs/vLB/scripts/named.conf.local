@@ -6,7 +6,7 @@
 // organization
 //include "/etc/bind/zones.rfc1918";
 
-zone "dnsdemo.openecomp.org" {
+zone "dnsdemo.onap.org" {
         type master;
-        file "/etc/bind/zones/db.dnsdemo.openecomp.org"; # zone file path
+        file "/etc/bind/zones/db.dnsdemo.onap.org"; # zone file path
 };

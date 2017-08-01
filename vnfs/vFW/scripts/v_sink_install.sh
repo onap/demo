@@ -57,8 +57,8 @@ sed -i "s/INTERFACE=.*/INTERFACE=\"-i eth1\"/g" /etc/darkstat/init.cfg
 
 # Download scripts for virtual sink
 cd /opt
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_sink_init.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vsink.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_sink_init.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vsink.sh
 chmod +x v_sink_init.sh
 chmod +x vsink.sh
 

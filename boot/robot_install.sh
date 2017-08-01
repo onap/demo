@@ -52,8 +52,8 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/robot_vm_init.sh -o /opt/robot_vm_init.sh
-curl -k $NEXUS_REPO/org.openecomp.demo/boot/$ARTIFACTS_VERSION/robot_serv.sh -o /opt/robot_serv.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/robot_vm_init.sh -o /opt/robot_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/robot_serv.sh -o /opt/robot_serv.sh
 chmod +x /opt/robot_vm_init.sh
 chmod +x /opt/robot_serv.sh
 mv /opt/robot_serv.sh /etc/init.d

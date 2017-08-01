@@ -18,15 +18,15 @@ echo "Version number: " $VERSION
 
 PATH_TO_PARENT=${WORKSPACE}
 PATH_TO_BOOT=${WORKSPACE}"/boot"
-PATH_TO_HEAT_MASTER=${WORKSPACE}"/heat/OpenECOMP"
+PATH_TO_HEAT_MASTER=${WORKSPACE}"/heat/ONAP"
 PATH_TO_HEAT_VFW=${WORKSPACE}"/heat/vFW"
 PATH_TO_HEAT_VLB=${WORKSPACE}"/heat/vLB"
 PATH_TO_VFW=${WORKSPACE}"/vnfs/vFW/scripts"
 PATH_TO_VLB=${WORKSPACE}"/vnfs/vLB/scripts"
 
-PARENT_GROUP_ID="org.openecomp.demo"
+PARENT_GROUP_ID="org.onap.demo"
 BOOT_GROUP_ID=$PARENT_GROUP_ID"/boot"
-HEAT_MASTER_GROUP_ID=$PARENT_GROUP_ID"/heat/OpenECOMP"
+HEAT_MASTER_GROUP_ID=$PARENT_GROUP_ID"/heat/ONAP"
 HEAT_VFW_GROUP_ID=$PARENT_GROUP_ID"/heat/vFW"
 HEAT_VLB_GROUP_ID=$PARENT_GROUP_ID"/heat/vLB"
 VFW_GROUP_ID=$PARENT_GROUP_ID"/vnfs/vfw"
@@ -37,7 +37,7 @@ USER=$(xpath -q -e "//servers/server[id='ecomp-raw']/username/text()" "$SETTINGS
 PASS=$(xpath -q -e "//servers/server[id='ecomp-raw']/password/text()" "$SETTINGS_FILE")
 NETRC=$(mktemp)
 echo "machine nexus.onap.org login ${USER} password ${PASS}" > "${NETRC}"
-#######################################
+####################################################
 
 ##### Upload scripts into Nexus raw repository #####
 cd $PATH_TO_PARENT

@@ -57,11 +57,11 @@ pip install jsonschema
 mkdir /opt/honeycomb
 cd /opt
 
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_packetgen_init.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vpacketgen.sh
-wget $REPO_URL_BLOB/org.openecomp.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/run_traffic_fw_demo.sh
-wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-wget $REPO_URL_ARTIFACTS/org/openecomp/demo/vnf/vfw/vfw_pg_streams/$DEMO_ARTIFACTS_VERSION/vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_packetgen_init.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vpacketgen.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/run_traffic_fw_demo.sh
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vfw/vfw_pg_streams/$DEMO_ARTIFACTS_VERSION/vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
 
 tar -zxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
 tar -zxvf vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
