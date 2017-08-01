@@ -27,10 +27,13 @@ docker tag $NEXUS_DOCKER_REPO/openecomp/portaldb:$DOCKER_IMAGE_VERSION ecompdb:p
 docker tag $NEXUS_DOCKER_REPO/openecomp/portalapps:$DOCKER_IMAGE_VERSION ep:1610-1
 docker tag $NEXUS_DOCKER_REPO/openecomp/portalwms:$DOCKER_IMAGE_VERSION widget-ms:latest
 
+# Remove the named containers
+# These names are in os_settings.sh
 docker rm -f ecompdb_portal
-docker rm -f 1610-1
-docker rm -f widget-ms:latest
+docker rm -f onap_portal
+docker rm -f ecomp-portal-widget-ms
 
+# Recreate the named containers
 cd portal/deliveries
 ./dbstart.sh
 ./new_start.sh
