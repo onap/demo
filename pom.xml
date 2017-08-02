@@ -95,7 +95,7 @@
         <configuration>
           <nexusUrl>https://nexus.onap.org/</nexusUrl>
           <stagingProfileId>176c31dfe190a</stagingProfileId>
-          <serverId>ecomp-staging</serverId>
+          <serverId>onap-staging</serverId>
         </configuration>
       </plugin>
 
@@ -104,12 +104,12 @@
 
   <distributionManagement>
     <repository>
-      <id>ecomp-releases</id>
+      <id>onap-releases</id>
       <name>Demo Release Repository</name>
       <url>https://nexus.onap.org/content/repositories/releases/</url>
     </repository>
     <snapshotRepository>
-      <id>ecomp-snapshots</id>
+      <id>onap-snapshots</id>
       <name>Demo Snapshot Repository</name>
       <url>https://nexus.onap.org/content/repositories/snapshots/</url>
     </snapshotRepository>
