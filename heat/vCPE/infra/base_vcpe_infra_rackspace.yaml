@@ -235,7 +235,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vaaa/__install_script_version__/v_aaa_install.sh -o /opt/v_aaa_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vaaa/__install_script_version__/v_aaa_install.sh -o /opt/v_aaa_install.sh
             cd /opt
             chmod +x v_aaa_install.sh
             ./v_aaa_install.sh
@@ -293,7 +293,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vdns/__install_script_version__/v_dns_install.sh -o /opt/v_dns_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vdns/__install_script_version__/v_dns_install.sh -o /opt/v_dns_install.sh
             cd /opt
             chmod +x v_dns_install.sh
             ./v_dns_install.sh
@@ -351,7 +351,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vdhcp/__install_script_version__/v_dhcp_install.sh -o /opt/v_dhcp_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vdhcp/__install_script_version__/v_dhcp_install.sh -o /opt/v_dhcp_install.sh
             cd /opt
             chmod +x v_dhcp_install.sh
             ./v_dhcp_install.sh

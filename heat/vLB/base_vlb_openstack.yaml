@@ -228,7 +228,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vlb/__install_script_version__/v_lb_install.sh -o /opt/v_lb_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vlb/__install_script_version__/v_lb_install.sh -o /opt/v_lb_install.sh
             cd /opt
             chmod +x v_lb_install.sh
             ./v_lb_install.sh
@@ -291,7 +291,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vlb/__install_script_version__/v_dns_install.sh -o /opt/v_dns_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vlb/__install_script_version__/v_dns_install.sh -o /opt/v_dns_install.sh
             cd /opt
             chmod +x v_dns_install.sh
             ./v_dns_install.sh

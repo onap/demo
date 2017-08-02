@@ -140,7 +140,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vlb/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vlb/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
             cd /opt
             chmod +x v_packetgen_install.sh
             ./v_packetgen_install.sh

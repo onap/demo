@@ -277,7 +277,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vfw/__install_script_version__/v_firewall_install.sh -o /opt/v_firewall_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_firewall_install.sh -o /opt/v_firewall_install.sh
             cd /opt
             chmod +x v_firewall_install.sh
             ./v_firewall_install.sh
@@ -343,7 +343,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vfw/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
             cd /opt
             chmod +x v_packetgen_install.sh
             ./v_packetgen_install.sh
@@ -404,7 +404,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vfw/__install_script_version__/v_sink_install.sh -o /opt/v_sink_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_sink_install.sh -o /opt/v_sink_install.sh
             cd /opt
             chmod +x v_sink_install.sh
             ./v_sink_install.sh

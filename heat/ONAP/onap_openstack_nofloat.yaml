@@ -387,7 +387,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dns_install.sh -o /opt/dns_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dns_install.sh -o /opt/dns_install.sh
             cd /opt
             chmod +x dns_install.sh
             ./dns_install.sh
@@ -453,7 +453,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
             cd /opt
             chmod +x aai2_install.sh
             ./aai2_install.sh
@@ -517,7 +517,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
             cd /opt
             chmod +x aai2_install.sh
             ./aai2_install.sh
@@ -591,7 +591,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mso_install.sh -o /opt/mso_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/mso_install.sh -o /opt/mso_install.sh
             cd /opt
             chmod +x mso_install.sh
             ./mso_install.sh
@@ -651,7 +651,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/mr_install.sh -o /opt/mr_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/mr_install.sh -o /opt/mr_install.sh
             cd /opt
             chmod +x mr_install.sh
             ./mr_install.sh
@@ -745,7 +745,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/robot_install.sh -o /opt/robot_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/robot_install.sh -o /opt/robot_install.sh
             cd /opt
             chmod +x robot_install.sh
             ./robot_install.sh
@@ -807,7 +807,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/vid_install.sh -o /opt/vid_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/vid_install.sh -o /opt/vid_install.sh
             cd /opt
             chmod +x vid_install.sh
             ./vid_install.sh
@@ -869,7 +869,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/sdnc_install.sh -o /opt/sdnc_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/sdnc_install.sh -o /opt/sdnc_install.sh
             cd /opt
             chmod +x sdnc_install.sh
             ./sdnc_install.sh
@@ -944,7 +944,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/asdc_install.sh -o /opt/asdc_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/asdc_install.sh -o /opt/asdc_install.sh
             cd /opt
             chmod +x asdc_install.sh
             ./asdc_install.sh
@@ -1006,7 +1006,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/portal_install.sh -o /opt/portal_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/portal_install.sh -o /opt/portal_install.sh
             cd /opt
             chmod +x portal_install.sh
             ./portal_install.sh
@@ -1128,7 +1128,7 @@ resources:
             echo "__flavor_xlarge__" > /opt/config/flavor_xlarge.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh
             cd /opt
             chmod +x dcae_install.sh
             ./dcae_install.sh
@@ -1190,7 +1190,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/policy_install.sh -o /opt/policy_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/policy_install.sh -o /opt/policy_install.sh
             cd /opt
             chmod +x policy_install.sh
             ./policy_install.sh
@@ -1254,7 +1254,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.openecomp.demo/boot/__artifacts_version__/appc_install.sh -o /opt/appc_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/appc_install.sh -o /opt/appc_install.sh
             cd /opt
             chmod +x appc_install.sh
             ./appc_install.sh
