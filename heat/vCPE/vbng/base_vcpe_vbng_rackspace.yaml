@@ -45,26 +45,22 @@ parameters:
     type: string
     label: Public network name or ID
     description: Public network that enables remote connection to VNF
-  vbng_in_private_net_id:
+  brgemu_bng_private_net_id:
     type: string
     label: vBNG IN private network name or ID
     description: Private network that connects vBRG to vBNG
-  vbng_in_private_net_cidr:
+  brgemu_bng_private_net_cidr:
     type: string
     label: vBNG IN private network CIDR
     description: The CIDR of the input side of vBNG private network
-  vbng_vgmux_private_net_id:
+  bng_gmux_private_net_id:
     type: string
     label: vBNG vGMUX private network name or ID
     description: Private network that connects vBNG to vGMUX
-  vbng_vgmux_private_net_cidr:
+  bng_gmux_private_net_cidr:
     type: string
     label: vGMUX private network CIDR
     description: The CIDR of the input side of vGMUX private network
-  vgmux_private_net_id:
-    type: string
-    label: vGMUX private network name or ID
-    description: Private network that connects vGMUX to vGWs
   onap_private_net_id:
     type: string
     label: ONAP management network name or ID
@@ -73,10 +69,6 @@ parameters:
     type: string
     label: ONAP management sub-network name or ID
     description: Private sub-network that connects ONAP components and the VNF
-  vgmux_private_net_cidr:
-    type: string
-    label: vGMUX private network CIDR
-    description: The CIDR of the vGMUX private network
   onap_private_net_cidr:
     type: string
     label: ONAP private network CIDR
@@ -93,26 +85,10 @@ parameters:
     type: string
     label: vBNG to vGMUX  private IP address
     description: Private IP address that is assigned to the vBNG to vGMUX port
-  vgmux_private_ip_0:
-    type: string
-    label: vGMUX private IP address towards the private network
-    description: Private IP address that is assigned to the vGMUX to communicate with the vCPE components
-  vgmux_private_ip_1:
-    type: string
-    label: vGMUX private IP address towards the ONAP management network
-    description: Private IP address that is assigned to the vGMUX to communicate with ONAP components
-  vgmux_private_ip_2:
-    type: string
-    label: vGMUX private IP address towards the ONAP management network
-    description: Private IP address that is assigned to the vGMUX to communicate with ONAP components
   vbng_name_0:
     type: string
     label: vBNG name
     description: Name of the vBNG
-  vgmux_name_0:
-    type: string
-    label: vGMUX name
-    description: Name of the vGMUX
   vnf_id:
     type: string
     label: VNF ID
@@ -183,44 +159,34 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  vbng_in_private_network:
+  brgemu_bng_private_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: vbng_in_private_net_id }
-  vbng_in_private_subnet:
+      name: { get_param: brgemu_bng_private_net_id }
+  brgemu_bng_in_private_subnet:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: vbng_in_private_net_id }
-      network_id: { get_resource: vbng_in_private_network }
-      cidr: { get_param: vbng_in_private_net_cidr }
-  vbng_vgmux_private_network:
+      name: { get_param: brgemu_bng_private_net_id }
+      network_id: { get_resource: brgemu_bng_private_network }
+      cidr: { get_param: brgemu_bng_private_net_cidr }
+  bng_gmux_private_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: vbng_vgmux_private_net_id }
-  vbng_vgmux_private_subnet:
+      name: { get_param: bng_gmux_private_net_id }
+  bng_gmux_private_subnet:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: vbng_vgmux_private_net_id }
-      network_id: { get_resource: vbng_vgmux_private_network }
-      cidr: { get_param: vbng_vgmux_private_net_cidr }
-  vgmux_private_network:
-    type: OS::Neutron::Net
-    properties:
-      name: { get_param: vgmux_private_net_id }
-  vgmux_private_subnet:
-    type: OS::Neutron::Subnet
-    properties:
-      name: { get_param: vgmux_private_net_id }
-      network_id: { get_resource: vgmux_private_network }
-      cidr: { get_param: vgmux_private_net_cidr }
+      name: { get_param: bng_gmux_private_net_id }
+      network_id: { get_resource: bng_gmux_private_network }
+      cidr: { get_param: bng_gmux_private_net_cidr }
 
 
   # Virtual BNG Instantiation
   vbng_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: vbng_in_private_network }
-      fixed_ips: [{"subnet": { get_resource: vbng_in_private_subnet}, "ip_address": { get_param: vbng_private_ip_0 }}]
+      network: { get_resource: brgemu_bng_private_network }
+      fixed_ips: [{"subnet": { get_resource: brgemu_bng_private_subnet}, "ip_address": { get_param: vbng_private_ip_0 }}]
 
   vbng_private_1_port:
     type: OS::Neutron::Port
@@ -231,8 +197,8 @@ resources:
   vbng_private_2_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: vbng_vgmux_private_network }
-      fixed_ips: [{"subnet": { get_resource: vbng_vgmux_private_subnet}, "ip_address": { get_param: vbng_private_ip_2 }}]
+      network: { get_resource: bng_gmux_private_network }
+      fixed_ips: [{"subnet": { get_resource: bng_gmux_private_subnet}, "ip_address": { get_param: vbng_private_ip_2 }}]
 
   vbng_0:
     type: OS::Nova::Server
@@ -274,6 +240,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
+<<<<<<< HEAD:heat/vCPE/metro/base_vcpe_metro_rackspace.yaml
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vbng/__install_script_version__/v_aaa_install.sh -o /opt/v_aaa_install.sh
             cd /opt
             chmod +x v_aaa_install.sh
@@ -340,7 +307,10 @@ resources:
 
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vgmux/__install_script_version__/v_dns_install.sh -o /opt/v_dns_install.sh
+=======
+            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vbng/__install_script_version__/v_bng_install.sh -o /opt/v_bng_install.sh
+>>>>>>> 12724d7... Updatd after network review 2017-08-03:heat/vCPE/vbng/base_vcpe_vbng_rackspace.yaml
             cd /opt
-            chmod +x v_dns_install.sh
-            ./v_dns_install.sh
+            chmod +x v_bng_install.sh
+            ./v_bng_install.sh
 

@@ -45,7 +45,7 @@ parameters:
     type: string
     label: Public network name or ID
     description: Public network that enables remote connection to VNF
-  vaaa_private_net_id:
+  cpe_signal_net_id:
     type: string
     label: vAAA private network name or ID
     description: Private network that connects vAAA with vDNSs
@@ -53,11 +53,15 @@ parameters:
     type: string
     label: ONAP management network name or ID
     description: Private network that connects ONAP components and the VNF
+  cpe_public_net_id:
+    type: string
+    label: vCPE Public network (emulates internet) name or ID
+    description: Private network that connects vGW to emulated internet
   onap_private_subnet_id:
     type: string
     label: ONAP management sub-network name or ID
     description: Private sub-network that connects ONAP components and the VNF
-  vaaa_private_net_cidr:
+  cpe_signal_net_cidr:
     type: string
     label: vAAA private network CIDR
     description: The CIDR of the vAAA private network
@@ -65,6 +69,10 @@ parameters:
     type: string
     label: ONAP private network CIDR
     description: The CIDR of the protected private network
+  cpe_public_net_cidr:
+    type: string
+    label: vCPE public network CIDR
+    description: The CIDR of the vCPE public 
   vaaa_private_ip_0:
     type: string
     label: vAAA private IP address towards the private network
@@ -171,24 +179,35 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  vaaa_private_network:
+  cpe_signal_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: vaaa_private_net_id }
-
-  vaaa_private_subnet:
+      name: { get_param: cpe_signal_net_id }
+  cpe_signal_subnet:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: vaaa_private_net_id }
-      network_id: { get_resource: vaaa_private_network }
-      cidr: { get_param: vaaa_private_net_cidr }
+      name: { get_param: cpe_signal_net_id }
+      network_id: { get_resource: cpe_signal_network }
+      cidr: { get_param: cpe_signal_net_cidr }
+
+  cpe_public_network:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: cpe_public_net_id }
+  cpe_public_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: { get_param: cpe_public_net_id }
+      network_id: { get_resource: cpe_public_network }
+      cidr: { get_param: cpe_public_net_cidr }
+
 
   # Virtual Load Balancer Instantiation
   vaaa_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: vaaa_private_network }
-      fixed_ips: [{"subnet": { get_resource: vaaa_private_subnet }, "ip_address": { get_param: vaaa_private_ip_0 }}]
+      network: { get_resource: cpe_signal_network }
+      fixed_ips: [{"subnet": { get_resource: cpe_signal_subnet }, "ip_address": { get_param: vaaa_private_ip_0 }}]
 
   vaaa_private_1_port:
     type: OS::Neutron::Port
@@ -245,8 +264,8 @@ resources:
   vdns_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: vaaa_private_network }
-      fixed_ips: [{"subnet": { get_resource: vaaa_private_subnet }, "ip_address": { get_param: vdns_private_ip_0 }}]
+      network: { get_resource: cpe_public_network }
+      fixed_ips: [{"subnet": { get_resource: cpe_public_subnet }, "ip_address": { get_param: vdns_private_ip_0 }}]
 
   vdns_private_1_port:
     type: OS::Neutron::Port
@@ -303,8 +322,8 @@ resources:
   vdhcp_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: vaaa_private_network }
-      fixed_ips: [{"subnet": { get_resource: vaaa_private_subnet }, "ip_address": { get_param: vdhcp_private_ip_0 }}]
+      network: { get_resource: cpe_signal_network }
+      fixed_ips: [{"subnet": { get_resource: cpe_signal_subnet }, "ip_address": { get_param: vdhcp_private_ip_0 }}]
 
   vdhcp_private_1_port:
     type: OS::Neutron::Port

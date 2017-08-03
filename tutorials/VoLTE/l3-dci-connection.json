@@ -1,0 +1,13 @@
+{
+   "l3-dci-connect": {
+	   "id": "${device.id}",
+	   "name": "${device.name}",
+	   "description": "${device.description}",
+	   "router_id": "${device.router_id}",
+	   "local_subnets": ["${device.local_subnets}"],
+	   "local_network_all":false,
+	   "evpn_irts": ["${device.evpn_irts}"],
+	   "evpn_erts": ["${device.evpn_erts}"],
+	   "l3_vni": "${device.wan.l3_vni}"
+   }
+}
