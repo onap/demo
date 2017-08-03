@@ -3,12 +3,12 @@
     "description": "", 
     "data": [
         {
-            "file": "base_vcpe_metro_rackspace.yaml", 
+            "file": "base_vcpe_vgmux_rackspace.yaml", 
             "type": "HEAT", 
             "isBase": "true", 
             "data": [
                 {
-                    "file": "base_vcpe_metro_rackspace.env", 
+                    "file": "base_vcpe_vgmux_rackspace.env", 
                     "type": "HEAT_ENV"
                 }
             ]
