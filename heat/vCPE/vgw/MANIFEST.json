@@ -1,0 +1,17 @@
+{
+    "name": "", 
+    "description": "", 
+    "data": [
+        {
+            "file": "base_vcpe_vgw_rackspace.yaml", 
+            "type": "HEAT", 
+            "isBase": "true", 
+            "data": [
+                {
+                    "file": "base_vcpe_vgw_rackspace.env", 
+                    "type": "HEAT_ENV"
+                }
+            ]
+        }
+    ]
+}
