@@ -305,10 +305,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vgmux/__install_script_version__/v_dns_install.sh -o /opt/v_dns_install.sh
-=======
             curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vbng/__install_script_version__/v_bng_install.sh -o /opt/v_bng_install.sh
->>>>>>> 12724d7... Updatd after network review 2017-08-03:heat/vCPE/vbng/base_vcpe_vbng_rackspace.yaml
             cd /opt
             chmod +x v_bng_install.sh
             ./v_bng_install.sh
