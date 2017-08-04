@@ -394,7 +394,7 @@ resources:
       network: { get_resource: cpe_public_network }
       fixed_ips: [{"subnet": { get_resource: cpe_public_subnet }, "ip_address": { get_param: vweb_private_ip_0 }}]
 
-  vdhcp_private_1_port:
+  vweb_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
