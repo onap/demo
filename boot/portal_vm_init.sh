@@ -14,14 +14,9 @@ NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
-source portal/deliveries/os_settings.sh
 
-# Remove the following lines after merging change to os_settings.sh:
-DB_VOL_NAME=data_vol_portal
-EP_TAG_NAME=portalapps
-DB_TAG_NAME=portaldb
-WMS_TAG_NAME=portalwms
-# End os_settings.sh dupe lines
+# Get container, image and tag names used below
+source portal/deliveries/os_settings.sh
 
 # Unpack property files
 unzip -o portal/deliveries/etc.zip -d /PROJECT/OpenSource/UbuntuEP/
