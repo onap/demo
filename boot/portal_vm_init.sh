@@ -1,42 +1,58 @@
 #!/bin/bash
+# Starts docker containers for ONAP Portal
 
-NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
-NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
-NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
-DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
+# be verbose
+set -x
 
+# Refresh source area with start scripts
 cd /opt/portal
 git pull
 cd /opt
 
-chmod +x portal/deliveries/new_start.sh
-chmod +x portal/deliveries/new_stop.sh
-chmod +x portal/deliveries/dbstart.sh
+# Establish environment variables
+NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
+NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
+NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
+DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
+source portal/deliveries/os_settings.sh
 
+# Remove the following lines after merging change to os_settings.sh:
+DB_VOL_NAME=data_vol_portal
+EP_TAG_NAME=portalapps
+DB_TAG_NAME=portaldb
+WMS_TAG_NAME=portalwms
+# End os_settings.sh dupe lines
+
+# Unpack property files
 unzip -o portal/deliveries/etc.zip -d /PROJECT/OpenSource/UbuntuEP/
 
+# Refresh images
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
+docker pull $NEXUS_DOCKER_REPO/openecomp/${DB_TAG_NAME}:$DOCKER_IMAGE_VERSION
+docker pull $NEXUS_DOCKER_REPO/openecomp/${EP_TAG_NAME}:$DOCKER_IMAGE_VERSION
+docker pull $NEXUS_DOCKER_REPO/openecomp/${WMS_TAG_NAME}:$DOCKER_IMAGE_VERSION
 
-docker pull $NEXUS_DOCKER_REPO/openecomp/portaldb:$DOCKER_IMAGE_VERSION
-docker pull $NEXUS_DOCKER_REPO/openecomp/portalapps:$DOCKER_IMAGE_VERSION
-docker pull $NEXUS_DOCKER_REPO/openecomp/portalwms:$DOCKER_IMAGE_VERSION
+# Remove lingering containers; order matters.
+docker rm -f $DB_CONT_NAME
+docker rm -f $DB_VOL_NAME
+docker rm -f $EP_CONT_NAME
+docker rm -f $WMS_CONT_NAME
 
-docker create --name data_vol_portal -v /var/lib/mysql mariadb
-
-docker tag $NEXUS_DOCKER_REPO/openecomp/portaldb:$DOCKER_IMAGE_VERSION ecompdb:portal
-docker tag $NEXUS_DOCKER_REPO/openecomp/portalapps:$DOCKER_IMAGE_VERSION ep:1610-1
-docker tag $NEXUS_DOCKER_REPO/openecomp/portalwms:$DOCKER_IMAGE_VERSION widget-ms:latest
-
-# Remove the named containers
-# These names are in os_settings.sh
-docker rm -f ecompdb_portal
-docker rm -f onap_portal
-docker rm -f ecomp-portal-widget-ms
+docker create --name $DB_VOL_NAME -v /var/lib/mysql mariadb
+docker tag $NEXUS_DOCKER_REPO/openecomp/${DB_TAG_NAME}:$DOCKER_IMAGE_VERSION $DB_IMG_NAME
+docker tag $NEXUS_DOCKER_REPO/openecomp/${EP_TAG_NAME}:$DOCKER_IMAGE_VERSION $EP_IMG_NAME
+# WMS image has no version in the registry
+docker tag $NEXUS_DOCKER_REPO/openecomp/${WMS_TAG_NAME}:$DOCKER_IMAGE_VERSION ${WMS_IMG_NAME}:latest
 
 # Recreate the named containers
 cd portal/deliveries
+echo "Starting database"
 ./dbstart.sh
+echo "Delaying for database"
+sleep 10
+echo "Starting apps"
 ./new_start.sh
+echo "Starting widget-ms"
 ./widget_ms_start.sh
 
 sleep 180
@@ -54,6 +70,7 @@ then
 	do
 		sleep 1
 	done
-	mysql -u root -p'Aa123456' -h $IP_ADDRESS < /opt/portal/deliveries/Apps_Users_OnBoarding_Script.sql
+	# no longer necessary; done at docker build time
+	# mysql -u root -p'Aa123456' -h $IP_ADDRESS < /opt/portal/deliveries/Apps_Users_OnBoarding_Script.sql
 	echo "yes" > /opt/config/boot.txt
 fi
