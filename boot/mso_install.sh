@@ -92,7 +92,7 @@ resolvconf -u
 
 # Clone Gerrit repository
 cd /opt
-git clone -b $GERRIT_BRANCH --single-branch http://gerrit.onap.org/r/mso/docker-config.git test_lab
+git clone -b $GERRIT_BRANCH --single-branch http://gerrit.onap.org/r/so/docker-config.git test_lab
 MSO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
 echo -n "$OPENSTACK_API_KEY" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
 
