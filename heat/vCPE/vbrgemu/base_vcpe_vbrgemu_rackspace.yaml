@@ -28,7 +28,7 @@ description: Heat template to deploy vCPE vBRG Emulator (vBRGEMU ) for ONAP
 
 #######################################################################
 #                                                                     #
-# PARAMETERS 							      #
+# PARAMETERS 							                                            #
 #                                                                     #
 #     0_port should get IP address from DHCP discover through vBNG    #
 #     DCAE is not monitoring the BRGEMULATOR                          #
@@ -47,27 +47,19 @@ parameters:
     type: string
     label: Public network name or ID
     description: Public network that enables remote connection to VNF
-  brgemu_bng_private_net_id:
+  vbrgemu_bng_private_net_id:
     type: string
     label: vBNG private network name or ID
     description: Private network that connects vBRGEMU to vBNG
-  onap_private_net_id:
+  vbrgemu_private_net_id:
     type: string
-    label: ONAP management network name or ID
-    description: Private network that connects ONAP components and the VNF
-  onap_private_subnet_id:
+    label: vBRGEMU Home private network name or ID
+    description: Private network that connects vBRGEMU to local devices
+  vbrgemu_private_net_cidr:
     type: string
-    label: ONAP management sub-network name or ID
-    description: Private sub-network that connects ONAP components and the VNF
-  brgemu_bng_private_net_cidr:
-    type: string
-    label: BRGEMUL vBNG private network CIDR
-    description: The CIDR of the vBNG private network
-  onap_private_net_cidr:
-    type: string
-    label: ONAP private network CIDR
-    description: The CIDR of the protected private network
-  vbrgemu_private_ip_0:
+    label: vBRGEMU Home private network CIDR
+    description: The CIDR of the input side of vBRGEMU Home private network
+  vbrgemu_private_ip_1:
     type: string
     label: vGW IN private IP address
     description: Private IP address that is assigned to the vBRGEMU (SHOULD NOT BE NEEDED) 
@@ -137,15 +129,30 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
+  vbrgemu_private_network:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: vbrgemu_private_net_id }
+
+  vbrgemu_private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: { get_param: vbrgemu_private_net_id }
+      network_id: { get_resource: vbrgemu_private_network }
+      cidr: { get_param: vbrgemu_private_net_cidr }
 
   # Virtual BRG Emulator Instantiation
-  #   0_port should get IP address from DHCP discover through vBNG
+  # 0_port should get IP address from DHCP discover through vBNG
   vbrgemu_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: brgemu_bng_private_net_id}
-    # fixed_ips: [{"subnet": { get_resource: vbng_vbrgemu_private_subnet}, "ip_address": { get_param: vbrgemu_private_ip_0 }}]
+      network: { get_param: vbrgemu_bng_private_net_id}
 
+  vbrgemu_private_0_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: vbrgemu_private_net_id}
+      fixed_ips: [{"subnet": { get_resource: vbrgemu_private_subnet}, "ip_address": { get_param: vbrgemu_private_ip_1 }}]
 
   vbrgemu_0:
     type: OS::Nova::Server
@@ -158,7 +165,6 @@ resources:
         - network: { get_param: public_net_id }
         - port: { get_resource: vbrgemu_private_0_port }
         - port: { get_resource: vbrgemu_private_1_port }
-        - port: { get_resource: vbrgemu_private_2_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
@@ -185,4 +191,3 @@ resources:
             cd /opt
             chmod +x v_brgemu_install.sh
             ./v_brgemu_install.sh
-

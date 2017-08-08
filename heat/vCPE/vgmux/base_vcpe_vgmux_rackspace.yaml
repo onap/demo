@@ -24,7 +24,7 @@
 
 heat_template_version: 2013-05-23
 
-description: Heat template to deploy vCPE Infrastructue Metro vGMUX  for ONAP
+description: Heat template to deploy vCPE Infrastructue Metro vGMUX for ONAP
 
 ##############
 #            #
@@ -49,10 +49,6 @@ parameters:
     type: string
     label: vBNG vGMUX private network name or ID
     description: Private network that connects vBNG to vGMUX
-  bng_mux_private_net_cidr:
-    type: string
-    label: vGMUX private network CIDR
-    description: The CIDR of the input side of vGMUX private network
   mux_gw_private_net_id:
     type: string
     label: vCPE Public network name or ID
@@ -73,7 +69,7 @@ parameters:
     type: string
     label: ONAP private network CIDR
     description: The CIDR of the protected private network
-  mux_gw_private_ip_0:
+  vgmux_private_ip_0:
     type: string
     label: vGMUX private IP address towards the private network
     description: Private IP address that is assigned to the vGMUX to communicate with the vBNG
@@ -81,10 +77,6 @@ parameters:
     type: string
     label: vGMUX private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vGMUX to communicate with ONAP components
-  vgmux_private_ip_2:
-    type: string
-    label: vGMUX private IP address towards the ONAP management network
-    description: Private IP address that is assigned to the vGMUX to communicate with vGW  SHOULD NOT BE NEEDED
   vgmux_name_0:
     type: string
     label: vGMUX name
@@ -159,21 +151,11 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  bng_mux_private_network:
-    type: OS::Neutron::Net
-    properties:
-      name: { get_param: bng_mux_private_net_id }
-  bng_mux_private_subnet:
-    type: OS::Neutron::Subnet
-    properties:
-      name: { get_param: bng_mux_private_net_id }
-      network_id: { get_resource: bng_mux_private_network }
-      cidr: { get_param: bng_mux_private_net_cidr }
-
   mux_gw_private_network:
     type: OS::Neutron::Net
     properties:
       name: { get_param: mux_gw_private_net_id }
+
   mux_gw_private_subnet:
     type: OS::Neutron::Subnet
     properties:
@@ -183,23 +165,23 @@ resources:
 
 
   # Virtual GMUX Instantiation
-  mux_gw_private_0_port:
+  vgmux_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: bng_mux_private_network }
-      fixed_ips: [{"subnet": { get_resource: bng_mux_private_subnet}, "ip_address": { get_param: mux_gw_private_ip_0 }}]
+      network: { get_param: bng_mux_private_network }
+      fixed_ips: [{"subnet": { get_param: bng_mux_private_net_id}, "ip_address": { get_param: vgmux_private_ip_0 }}]
 
-  mux_gw_private_1_port:
+  vgmux_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: mux_gw_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vgmux_private_ip_1 }}]
 
-  mux_gw_private_2_port:
+  vgmux_private_2_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: mux_gw_private_network }
-      fixed_ips: [{"subnet": {  get_resource: mux_gw_private_subnet}, "ip_address": { get_param: mux_gw_private_ip_2 }}]
+      #fixed_ips: [{"subnet": {  get_resource: mux_gw_private_subnet}, "ip_address": { get_param: mux_gw_private_ip_2 }}]
 
   vgmux_0:
     type: OS::Nova::Server
@@ -210,17 +192,17 @@ resources:
       key_name: { get_resource: my_keypair }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: mux_gw_private_0_port }
-        - port: { get_resource: mux_gw_private_1_port }
-        - port: { get_resource: mux_gw_private_2_port }
+        - port: { get_resource: vgmux_private_0_port }
+        - port: { get_resource: vgmux_private_1_port }
+        - port: { get_resource: vgmux_private_2_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
         str_replace:
           params:
-            __gmux_oam_int__ : { get_param: mux_gw_private_ip_1 }
-            __gmux_private_ipaddr__: { get_param: mux_gw_private_ip_2 }
-            __local_private_ipaddr__: { get_param: mux_gw_private_ip_1 }
+            __gmux_oam_int__ : { get_param: vgmux_private_ip_1 }
+            #__gmux_private_ipaddr__: { get_param: vgmux_private_ip_2 }
+            __local_private_ipaddr__: { get_param: vgmux_private_ip_0 }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }

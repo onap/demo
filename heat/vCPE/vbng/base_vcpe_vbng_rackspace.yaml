@@ -24,7 +24,7 @@
 
 heat_template_version: 2013-05-23
 
-description: Heat template to deploy vCPE Infrastructue Metro elements (vBNG, vGMUX ) for ONAP
+description: Heat template to deploy vCPE virtual Broadband Network Gateway (vBNG) for ONAP
 
 ##############
 #            #
@@ -69,10 +69,10 @@ parameters:
     type: string
     label: ONAP management sub-network name or ID
     description: Private sub-network that connects ONAP components and the VNF
-  onap_private_net_cidr:
+  cpe_signal_net_id:
     type: string
-    label: ONAP private network CIDR
-    description: The CIDR of the protected private network
+    label: vCPE private network name or ID
+    description: Private network that connects vCPE elements with vCPE infrastructure elements
   vbng_private_ip_0:
     type: string
     label: vBNG IN private IP address
@@ -83,7 +83,11 @@ parameters:
     description: Private IP address that is assigned to the vBNG to communicate with ONAP components
   vbng_private_ip_2:
     type: string
-    label: vBNG to vGMUX  private IP address
+    label: vBNG to CPE_SIGNAL private IP address
+    description: Private IP address that is assigned to the vBNG in the CPE_SIGNAL network
+  vbng_private_ip_3:
+    type: string
+    label: vBNG to vGMUX private IP address
     description: Private IP address that is assigned to the vBNG to vGMUX port
   vbng_name_0:
     type: string
@@ -163,16 +167,19 @@ resources:
     type: OS::Neutron::Net
     properties:
       name: { get_param: brgemu_bng_private_net_id }
+
   brgemu_bng_in_private_subnet:
     type: OS::Neutron::Subnet
     properties:
       name: { get_param: brgemu_bng_private_net_id }
       network_id: { get_resource: brgemu_bng_private_network }
       cidr: { get_param: brgemu_bng_private_net_cidr }
+
   bng_gmux_private_network:
     type: OS::Neutron::Net
     properties:
       name: { get_param: bng_gmux_private_net_id }
+
   bng_gmux_private_subnet:
     type: OS::Neutron::Subnet
     properties:
@@ -197,8 +204,14 @@ resources:
   vbng_private_2_port:
     type: OS::Neutron::Port
     properties:
+      network: { get_param: cpe_signal_net_id }
+      fixed_ips: [{"subnet": { get_param: cpe_signal_net_id}, "ip_address": { get_param: vbng_private_ip_2 }}]
+
+  vbng_private_3_port:
+    type: OS::Neutron::Port
+    properties:
       network: { get_resource: bng_gmux_private_network }
-      fixed_ips: [{"subnet": { get_resource: bng_gmux_private_subnet}, "ip_address": { get_param: vbng_private_ip_2 }}]
+      fixed_ips: [{"subnet": { get_resource: bng_gmux_private_subnet}, "ip_address": { get_param: vbng_private_ip_3 }}]
 
   vbng_0:
     type: OS::Nova::Server
@@ -244,69 +257,3 @@ resources:
             cd /opt
             chmod +x v_bng_install.sh
             ./v_bng_install.sh
-
-
-  # Virtual GMUX Instantiation
-  vgmux_private_0_port:
-    type: OS::Neutron::Port
-    properties:
-      network: { get_resource: vbng_vgmux_private_network }
-      fixed_ips: [{"subnet": { get_resource: vbng_vgmux_private_subnet}, "ip_address": { get_param: vgmux_private_ip_0 }}]
-
-  vgmux_private_1_port:
-    type: OS::Neutron::Port
-    properties:
-      network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vgmux_private_ip_1 }}]
-
-  vgmux_private_2_port:
-    type: OS::Neutron::Port
-    properties:
-      network: { get_resource: vgmux_private_network }
-      fixed_ips: [{"subnet": {  get_resource: vgmux_private_subnet}, "ip_address": { get_param: vgmux_private_ip_2 }}]
-
-  vgmux_0:
-    type: OS::Nova::Server
-    properties:
-      image: { get_param: vcpe_image_name }
-      flavor: { get_param: vcpe_flavor_name }
-      name: { get_param: vgmux_name_0 }
-      key_name: { get_resource: my_keypair }
-      networks:
-        - network: { get_param: public_net_id }
-        - port: { get_resource: vgmux_private_0_port }
-        - port: { get_resource: vgmux_private_1_port }
-        - port: { get_resource: vgmux_private_2_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __gmux_oam_int__ : { get_param: vgmux_private_ip_1 }
-            __gmux_private_ipaddr__: { get_param: vgmux_private_ip_2 }
-            __local_private_ipaddr__: { get_param: vgmux_private_ip_1 }
-            __repo_url_blob__ : { get_param: repo_url_blob }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __cloud_env__ : { get_param: cloud_env }
-          template: |
-            #!/bin/bash
-
-            # Create configuration files
-            mkdir /opt/config
-            echo "__gmux_oam_int__" > /opt/config/gmux_oam_int.txt
-            echo "__gmux_private_ipaddr__" > /opt/config/gmux_private_ipaddr.txt
-            echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
-            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
-            echo "__install_script_version__" > /opt/config/install_script_version.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-
-            # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vbng/__install_script_version__/v_bng_install.sh -o /opt/v_bng_install.sh
-            cd /opt
-            chmod +x v_bng_install.sh
-            ./v_bng_install.sh
-

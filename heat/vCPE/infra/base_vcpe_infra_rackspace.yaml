@@ -65,17 +65,13 @@ parameters:
     type: string
     label: vAAA private network CIDR
     description: The CIDR of the vAAA private network
-  onap_private_net_cidr:
-    type: string
-    label: ONAP private network CIDR
-    description: The CIDR of the protected private network
   cpe_public_net_cidr:
     type: string
     label: vCPE public network CIDR
     description: The CIDR of the vCPE public 
   vaaa_private_ip_0:
     type: string
-    label: vAAA private IP address towards the private network
+    label: vAAA private IP address towards the CPE_SIGNAL private network
     description: Private IP address that is assigned to the vAAA to communicate with the vCPE components 
   vaaa_private_ip_1:
     type: string
@@ -83,7 +79,7 @@ parameters:
     description: Private IP address that is assigned to the vAAA to communicate with ONAP components
   vdns_private_ip_0:
     type: string
-    label: vDNS private IP address towards the private network
+    label: vDNS private IP address towards the CPE_PUBLIC private network
     description: Private IP address that is assigned to the vDNS to communicate with the vCPE components
   vdns_private_ip_1:
     type: string
@@ -91,7 +87,7 @@ parameters:
     description: Private IP address that is assigned to the vDNS to communicate with ONAP components
   vdhcp_private_ip_0:
     type: string
-    label: vDHCP  private IP address towards the private network
+    label: vDHCP  private IP address towards the CPE_SIGNAL private network
     description: Private IP address that is assigned to the vDHCP to communicate with the vCPE components
   vdhcp_private_ip_1:
     type: string
@@ -99,7 +95,7 @@ parameters:
     description: Private IP address that is assigned to the vDHCP to communicate with ONAP components
   vweb_private_ip_0:
     type: string
-    label: vWEB private IP address towards the vGW 
+    label: vWEB private IP address towards the CPE_PUBLIC private network
     description: Private IP address that is assigned to the vWEB to communicate with the vGWs 
   vweb_private_ip_1:
     type: string
@@ -195,6 +191,7 @@ resources:
     type: OS::Neutron::Net
     properties:
       name: { get_param: cpe_signal_net_id }
+
   cpe_signal_subnet:
     type: OS::Neutron::Subnet
     properties:
@@ -206,6 +203,7 @@ resources:
     type: OS::Neutron::Net
     properties:
       name: { get_param: cpe_public_net_id }
+
   cpe_public_subnet:
     type: OS::Neutron::Subnet
     properties:

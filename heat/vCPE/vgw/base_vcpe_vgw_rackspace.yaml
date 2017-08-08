@@ -24,7 +24,7 @@
 
 heat_template_version: 2013-05-23
 
-description: Heat template to deploy vCPE vGateway (vG ) for ONAP
+description: Heat template to deploy vCPE vGateway (vG) for ONAP
 
 ##############
 #            #
@@ -49,34 +49,14 @@ parameters:
     type: string
     label: vGMUX private network name or ID
     description: Private network that connects vGMUX to vGWs
-  mux_gw_private_subnet_id:
-    type: string
-    label: vGMUX private sub-network name or ID
-    description: Private sub-network that connects vGMUX to vGWs (IS THIS NEEDED ?) 
   onap_private_net_id:
     type: string
     label: ONAP management network name or ID
     description: Private network that connects ONAP components and the VNF
-  onap_private_subnet_id:
-    type: string
-    label: ONAP management sub-network name or ID
-    description: Private sub-network that connects ONAP components and the VNF
   cpe_public_net_id:
     type: string
     label: vCPE network that emulates internetmanagement name or ID
     description: Private network that connects vGW to emulated internet 
-  cpe_public_subnet_id:
-    type: string
-    label: vCPE sub-network that emulates internetmanagement name or ID
-    description: Private network that connects vGW to emulated internet 
-  onap_private_net_cidr:
-    type: string
-    label: ONAP private network CIDR
-    description: The CIDR of the protected private network
-  vgw_private_ip_0:
-    type: string
-    label: vGW IN private IP address
-    description: Private IP address that is assigned to the vGW IN (SHOULD NOT BE NEEDED)
   vgw_private_ip_1:
     type: string
     label: vGW private IP address towards the ONAP management network
@@ -155,8 +135,6 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
-
-
   # Virtual GW Instantiation
   #   mux_gw_private_net created by mux heat template
   #   cpe_public_net created by infra heat template (vDNS)
@@ -164,26 +142,24 @@ resources:
     type: OS::Neutron::Port
     properties:
       network: { get_param: mux_gw_private_net_id}
-  #    fixed_ips: [{"subnet": { get_param: mux_gw_private_subnet_id}, "ip_address": { get_param: vgw_private_ip_0 }}]
 
-  vgmux_private_1_port:
+  vgw_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vgw_private_ip_1 }}]
 
-  vgmux_private_2_port:
+  vgw_private_2_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: cpe_public_net_id}
-  #fixed_ips: [{"subnet": {  get_param: cpe_public_subnet_id}, "ip_address": { get_param: vgw_private_ip_2 }}]
 
-  vgmux_0:
+  vgw_0:
     type: OS::Nova::Server
     properties:
       image: { get_param: vcpe_image_name }
       flavor: { get_param: vcpe_flavor_name }
-      name: { get_param: vgmux_name_0 }
+      name: { get_param: vgw_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
         - network: { get_param: public_net_id }
@@ -195,9 +171,9 @@ resources:
       user_data:
         str_replace:
           params:
-            __gmux_oam_int__ : { get_param: vgw_private_ip_1 }
-            __gmux_private_ipaddr__: { get_param: vgw_private_ip_2 }
-            __local_private_ipaddr__: { get_param: vgw_private_ip_1 }
+            #__gmux_oam_int__ : { get_param: vgw_private_ip_1 }
+            #__gmux_private_ipaddr__: { get_param: vgw_private_ip_2 }
+            #__local_private_ipaddr__: { get_param: vgw_private_ip_1 }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
