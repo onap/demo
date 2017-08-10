@@ -758,6 +758,8 @@ resources:
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
             __vid_ip_addr__: { get_param: vid_ip_addr }
             __external_dns__: { get_param: external_dns }
+            __vm_image_name__: { get_param: ubuntu_1404_image}
+            __vm_flavor__: { get_param: flavor_medium}
           template: |
             #!/bin/bash
 
@@ -789,6 +791,8 @@ resources:
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__vm_image_name__" > /opt/config/vm_image_name.txt
+            echo "__vm_flavor__" > /opt/config/vm_flavor.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/robot_install.sh -o /opt/robot_install.sh

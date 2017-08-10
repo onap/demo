@@ -49,14 +49,34 @@ parameters:
     type: string
     label: vGMUX private network name or ID
     description: Private network that connects vGMUX to vGWs
+  mux_gw_private_net_cidr:
+    type: string
+    label: vGMUX private network CIDR
+    description: The CIDR of the vGMUX private network
   onap_private_net_id:
     type: string
     label: ONAP management network name or ID
     description: Private network that connects ONAP components and the VNF
+  onap_private_subnet_id:
+    type: string
+    label: ONAP management sub-network name or ID
+    description: Private sub-network that connects ONAP components and the VNF
+  onap_private_net_cidr:
+    type: string
+    label: ONAP private network CIDR
+    description: The CIDR of the protected private network
   cpe_public_net_id:
     type: string
     label: vCPE network that emulates internetmanagement name or ID
-    description: Private network that connects vGW to emulated internet 
+    description: Private network that connects vGW to emulated internet
+  cpe_public_net_cidr:
+    type: string
+    label: vCPE public network CIDR
+    description: The CIDR of the vCPE public
+  vgw_private_ip_0:
+    type: string
+    label: vGW private IP address towards the vGMUX
+    description: Private IP address that is assigned to the vGW to communicate with vGMUX
   vgw_private_ip_1:
     type: string
     label: vGW private IP address towards the ONAP management network
@@ -142,6 +162,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network: { get_param: mux_gw_private_net_id}
+      fixed_ips: [{"subnet": { get_param: mux_gw_private_net_id }, "ip_address": { get_param: vgw_private_ip_0 }}]
 
   vgw_private_1_port:
     type: OS::Neutron::Port
@@ -171,9 +192,11 @@ resources:
       user_data:
         str_replace:
           params:
-            #__gmux_oam_int__ : { get_param: vgw_private_ip_1 }
-            #__gmux_private_ipaddr__: { get_param: vgw_private_ip_2 }
-            #__local_private_ipaddr__: { get_param: vgw_private_ip_1 }
+            __mux_gw_private_net_ipaddr__ : { get_param: vgw_private_ip_0 }
+            __oam_ipaddr__ : { get_param: vgw_private_ip_1 }
+            __oam_cidr__ : { get_param: onap_private_net_cidr }
+            __cpe_public_net_cidr__ : { get_param: cpe_public_net_cidr }
+            __mux_gw_private_net_cidr__ : { get_param: mux_gw_private_net_cidr }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
@@ -184,9 +207,11 @@ resources:
 
             # Create configuration files
             mkdir /opt/config
-            echo "__gmux_oam_int__" > /opt/config/gw_oam_int.txt
-            echo "__gmux_private_ipaddr__" > /opt/config/gw_private_ipaddr.txt
-            echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
+            echo "__oam_ipaddr__" > /opt/config/oam_ipaddr.txt
+            echo "__oam_cidr__" > /opt/config/oam_cidr.txt
+            echo "__cpe_public_net_cidr__" > /opt/config/cpe_public_net_cidr.txt
+            echo "__mux_gw_private_net_ipaddr__" > /opt/config/mux_gw_private_net_ipaddr.txt
+            echo "__mux_gw_private_net_cidr__" > /opt/config/mux_gw_private_net_cidr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
@@ -194,7 +219,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vgw/__install_script_version__/v_gw_install.sh -o /opt/v_gw_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_gw_install.sh -o /opt/v_gw_install.sh
             cd /opt
             chmod +x v_gw_install.sh
             ./v_gw_install.sh

@@ -48,6 +48,7 @@
     <module>vnfs/VES</module>
     <module>vnfs/VESreporting_vLB</module>
     <module>vnfs/VESreporting_vFW</module>
+    <module>vnfs/vCPE/kea-sdnc-notify-mod</module>
   </modules>
 
   <build>

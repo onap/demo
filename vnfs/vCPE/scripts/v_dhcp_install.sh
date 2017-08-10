@@ -25,8 +25,8 @@ then
 
 	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
-	IP=$(cat /opt/config/local_private_ipaddr.txt)
-	BITS=$(cat /opt/config/vdhcp_private_net_cidr.txt | cut -d"/" -f2)
+	IP=$(cat /opt/config/cpe_signal_ipaddr.txt)
+	BITS=$(cat /opt/config/cpe_signal_net_cidr.txt | cut -d"/" -f2)
 	NETMASK=$(cdr2mask $BITS)
 	echo "auto eth1" >> /etc/network/interfaces
 	echo "iface eth1 inet static" >> /etc/network/interfaces
@@ -34,8 +34,8 @@ then
 	echo "    netmask $NETMASK" >> /etc/network/interfaces
 	echo "    mtu $MTU" >> /etc/network/interfaces
 
-	IP=$(cat /opt/config/oam_private_ipaddr.txt)
-	BITS=$(cat /opt/config/onap_private_net_cidr.txt | cut -d"/" -f2)
+	IP=$(cat /opt/config/oam_ipaddr.txt)
+	BITS=$(cat /opt/config/oam_cidr.txt | cut -d"/" -f2)
 	NETMASK=$(cdr2mask $BITS)
 	echo "auto eth2" >> /etc/network/interfaces
 	echo "iface eth2 inet static" >> /etc/network/interfaces
@@ -53,31 +53,21 @@ apt-get update
 apt-get install -y wget openjdk-8-jdk apt-transport-https ca-certificates kea-dhcp4-server g++ libcurl4-gnutls-dev libboost-dev kea-dev
 sleep 1
 
-#  download the kea hook 
+#  download the kea hook
 cd /opt
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vcpe/vdhcp/$DEMO_ARTIFACTS_VERSION/kea-sdnc-notify-mod.tar.gz 
-tar -zxvf kea-sdnc-notify-mod.tar.gz 
-mv kea-sdnc-notify-mod  VDHCP
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vcpe/$DEMO_ARTIFACTS_VERSION/kea-sdnc-notify-mod.tar.gz
+tar -zxvf kea-sdnc-notify-mod.tar.gz
+mv kea-sdnc-notify-mod VDHCP
 rm *.tar.gz
 cd VDHCP
 # build.sh takes a minute or two to run
 ./build.sh
 mv kea-sdnc-notify.so /usr/local/lib
 
-
-# Download vDHCP demo code for DHCP Server
-#cd /opt
-
-#wget $REPO_URL_BLOB/org.onap.demo/vnfs/vCPE/$INSTALL_SCRIPT_VERSION/v_dhcp_init.sh
-#wget $REPO_URL_BLOB/org.onap.demo/vnfs/vCPE/$INSTALL_SCRIPT_VERSION/vdhcp.sh
-
-#chmod +x v_dhcp_init.sh
-#chmod +x vdhcp.sh
-
 # Download DHCP config files
-cd /opt/config
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vCPE/$INSTALL_SCRIPT_VERSION/kea-dhcp4.conf
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vCPE/$INSTALL_SCRIPT_VERSION/kea-sdnc-notify.conf
+cd /opt
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-dhcp4.conf
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-sdnc-notify.conf
 
 # Configure DHCP
 mv kea-dhcp4.conf /etc/kea/kea-dhcp4.conf
@@ -94,8 +84,15 @@ sleep 1
 #rc5.d/S03kea-dhcp4-server
 #rc6.d/K01kea-dhcp4-server
 ######################################################################################
-# Run instantiation script
-#cd /opt
-#mv vdhcp.sh /etc/init.d
-#update-rc.d vdhcp.sh defaults
-#./v_dhcp_init.sh
+
+# Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
+if [[ $CLOUD_ENV != "rackspace" ]]
+then
+	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+	grub-mkconfig -o /boot/grub/grub.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
+	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+	reboot
+fi

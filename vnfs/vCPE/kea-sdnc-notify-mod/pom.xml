@@ -33,7 +33,7 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.onap.demo.vnf.vCPE</groupId>
+  <groupId>org.onap.demo.vnf.vcpe</groupId>
   <artifactId>kea-sdnc-notify-mod</artifactId>
 
   <build>

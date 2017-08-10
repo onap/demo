@@ -554,6 +554,20 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "https://identity.api.rackspacecloud.com/v2.0" > /opt/config/keystone.txt
+            echo "10.0.1.1" > /opt/config/aai1_ip_addr.txt
+            echo "10.0.1.2" > /opt/config/aai2_ip_addr.txt
+            echo "10.0.2.1" > /opt/config/appc_ip_addr.txt
+            echo "10.0.4.1" > /opt/config/dcae_ip_addr.txt
+            echo "10.0.5.1" > /opt/config/mso_ip_addr.txt
+            echo "10.0.11.1" > /opt/config/mr_ip_addr.txt
+            echo "10.0.6.1" > /opt/config/policy_ip_addr.txt
+            echo "10.0.9.1" > /opt/config/portal_ip_addr.txt
+            echo "10.0.3.1" > /opt/config/sdc_ip_addr.txt
+            echo "10.0.7.1" > /opt/config/sdnc_ip_addr.txt
+            echo "10.0.8.1" > /opt/config/vid_ip_addr.txt
+            echo "Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)" > /opt/config/vm_image_name.txt
+            echo "4 GB General Purpose v1" > /opt/config/vm_flavor.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script

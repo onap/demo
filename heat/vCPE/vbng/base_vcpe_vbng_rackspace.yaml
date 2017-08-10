@@ -69,10 +69,18 @@ parameters:
     type: string
     label: ONAP management sub-network name or ID
     description: Private sub-network that connects ONAP components and the VNF
+  onap_private_net_cidr:
+    type: string
+    label: ONAP private network CIDR
+    description: The CIDR of the protected private network
   cpe_signal_net_id:
     type: string
     label: vCPE private network name or ID
     description: Private network that connects vCPE elements with vCPE infrastructure elements
+  cpe_signal_private_net_cidr:
+    type: string
+    label: vAAA private network CIDR
+    description: The CIDR of the vAAA private network
   vbng_private_ip_0:
     type: string
     label: vBNG IN private IP address
@@ -175,25 +183,12 @@ resources:
       network_id: { get_resource: brgemu_bng_private_network }
       cidr: { get_param: brgemu_bng_private_net_cidr }
 
-  bng_gmux_private_network:
-    type: OS::Neutron::Net
-    properties:
-      name: { get_param: bng_gmux_private_net_id }
-
-  bng_gmux_private_subnet:
-    type: OS::Neutron::Subnet
-    properties:
-      name: { get_param: bng_gmux_private_net_id }
-      network_id: { get_resource: bng_gmux_private_network }
-      cidr: { get_param: bng_gmux_private_net_cidr }
-
-
   # Virtual BNG Instantiation
   vbng_private_0_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: brgemu_bng_private_network }
-      fixed_ips: [{"subnet": { get_resource: brgemu_bng_private_subnet}, "ip_address": { get_param: vbng_private_ip_0 }}]
+      fixed_ips: [{"subnet": { get_resource: brgemu_bng_private_subnet }, "ip_address": { get_param: vbng_private_ip_0 }}]
 
   vbng_private_1_port:
     type: OS::Neutron::Port
@@ -205,13 +200,13 @@ resources:
     type: OS::Neutron::Port
     properties:
       network: { get_param: cpe_signal_net_id }
-      fixed_ips: [{"subnet": { get_param: cpe_signal_net_id}, "ip_address": { get_param: vbng_private_ip_2 }}]
+      fixed_ips: [{"subnet": { get_param: cpe_signal_net_id }, "ip_address": { get_param: vbng_private_ip_2 }}]
 
   vbng_private_3_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: bng_gmux_private_network }
-      fixed_ips: [{"subnet": { get_resource: bng_gmux_private_subnet}, "ip_address": { get_param: vbng_private_ip_3 }}]
+      network: { get_param: bng_gmux_private_net_id }
+      fixed_ips: [{"subnet": { get_param: bng_gmux_private_net_id }, "ip_address": { get_param: vbng_private_ip_3 }}]
 
   vbng_0:
     type: OS::Nova::Server
@@ -230,9 +225,16 @@ resources:
       user_data:
         str_replace:
           params:
+            __oam_ipaddr__: { get_param: vbng_private_ip_1 }
+            __brgemu_bng_net_ipaddr__: { get_param: vbng_private_ip_0 }
+            __cpe_signal_net_ipaddr__: { get_param: vbng_private_ip_2 }
+            __bng_gmux_net_ipaddr__: { get_param: vbng_private_ip_3 }
+            __oam_cidr__: { get_param: onap_private_net_cidr }
+            __brgemu_bng_cidr__: { get_param: brgemu_bng_private_net_cidr }
+            __cpe_signal_cidr__: { get_param: cpe_signal_private_net_cidr }
+            __bng_gmux_cidr__: { get_param: bng_gmux_private_net_cidr }
             __dcae_collector_ip__: { get_param: dcae_collector_ip }
             __dcae_collector_port__: { get_param: dcae_collector_port }
-            __local_private_ipaddr__: { get_param: vbng_private_ip_1 }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
@@ -243,9 +245,16 @@ resources:
 
             # Create configuration files
             mkdir /opt/config
+            echo "__brgemu_bng_net_ipaddr__" > /opt/config/brgemu_bng_net_ipaddr.txt
+            echo "__cpe_signal_net_ipaddr__" > /opt/config/cpe_signal_net_ipaddr.txt
+            echo "__bng_gmux_net_ipaddr__" > /opt/config/bng_gmux_net_ipaddr.txt
+            echo "__oam_ipaddr__" > /opt/config/oam_ipaddr.txt
+            echo "__oam_cidr__" > /opt/config/oam_cidr.txt
+            echo "__bng_gmux_cidr__" > /opt/config/bng_gmux_net_cidr.txt
+            echo "__cpe_signal_cidr__" > /opt/config/cpe_signal_net_cidr.txt
+            echo "__brgemu_bng_cidr__" > /opt/config/brgemu_bng_net_cidr.txt
             echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
             echo "__dcae_collector_port__" > /opt/config/dcae_collector_port.txt
-            echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
@@ -253,7 +262,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vbng/__install_script_version__/v_bng_install.sh -o /opt/v_bng_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_bng_install.sh -o /opt/v_bng_install.sh
             cd /opt
             chmod +x v_bng_install.sh
             ./v_bng_install.sh

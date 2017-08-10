@@ -3,7 +3,7 @@
 
 Kea module utilizing hooks api to notify SDNC of macaddr, yiaddr, dhcp-msg-name via HTTP POST request.
 
-# ONAP installation of vDHCP will intall and configure on the vDHCP VM
+# ONAP installation of vDHCP will install and configure on the vDHCP VM
 #
 # for local development/testing follow these steps.
 #
@@ -47,7 +47,7 @@ apt-get install g++ libcurl4-gnutls-dev libboost-dev kea-dev
 
 ./build.sh
 
-## Intallation in  ONAP
+## Installation in  ONAP
 The vdhcp install scripts for ONAP will do the build on the vDHCP VM from these source files and copy the resulting library into /usr/local/lib and the configuration files into /etc/kea
 
 ## Testing locally

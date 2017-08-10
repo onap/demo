@@ -24,7 +24,7 @@
 
 heat_template_version: 2013-05-23
 
-description: Heat template to deploy vCPE vBRG Emulator (vBRGEMU ) for ONAP
+description: Heat template to deploy vCPE vBRG Emulator (vBRGEMU) for ONAP
 
 #######################################################################
 #                                                                     #
@@ -51,6 +51,10 @@ parameters:
     type: string
     label: vBNG private network name or ID
     description: Private network that connects vBRGEMU to vBNG
+  vbrgemu_bng_private_net_cidr:
+    type: string
+    label: vBNG IN private network CIDR
+    description: The CIDR of the input side of vBNG private network
   vbrgemu_private_net_id:
     type: string
     label: vBRGEMU Home private network name or ID
@@ -62,7 +66,7 @@ parameters:
   vbrgemu_private_ip_1:
     type: string
     label: vGW IN private IP address
-    description: Private IP address that is assigned to the vBRGEMU (SHOULD NOT BE NEEDED) 
+    description: Private IP address towards the BRGEMU-BNG network
   vbrgemu_name_0:
     type: string
     label: vGW  name
@@ -146,13 +150,13 @@ resources:
   vbrgemu_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: vbrgemu_bng_private_net_id}
+      network: { get_param: vbrgemu_bng_private_net_id }
 
-  vbrgemu_private_0_port:
+  vbrgemu_private_1_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: vbrgemu_private_net_id}
-      fixed_ips: [{"subnet": { get_resource: vbrgemu_private_subnet}, "ip_address": { get_param: vbrgemu_private_ip_1 }}]
+      network: { get_param: vbrgemu_private_net_id }
+      fixed_ips: [{"subnet": { get_resource: vbrgemu_private_subnet }, "ip_address": { get_param: vbrgemu_private_ip_1 }}]
 
   vbrgemu_0:
     type: OS::Nova::Server
@@ -170,6 +174,9 @@ resources:
       user_data:
         str_replace:
           params:
+            __brgemu_net_ipaddr__: { get_param: vbrgemu_private_ip_1 }
+            __brgemu_cidr__: { get_param: vbrgemu_private_net_cidr }
+            __brgemu_bng_private_net_cidr__: { get_param: vbrgemu_bng_private_net_cidr }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
@@ -180,6 +187,9 @@ resources:
 
             # Create configuration files
             mkdir /opt/config
+            echo "__brgemu_net_ipaddr__" > /opt/config/brgemu_net_ipaddr.txt
+            echo "__brgemu_cidr__" > /opt/config/brgemu_net_cidr.txt
+            echo "__brgemu_bng_private_net_cidr__" > /opt/config/brgemu_bng_private_net_cidr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
@@ -187,7 +197,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.openecomp.demo/vnfs/vbrgemu/__install_script_version__/v_brgemu_install.sh -o /opt/v_brgemu_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_brgemu_install.sh -o /opt/v_brgemu_install.sh
             cd /opt
             chmod +x v_brgemu_install.sh
             ./v_brgemu_install.sh
