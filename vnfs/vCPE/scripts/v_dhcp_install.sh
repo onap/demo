@@ -56,20 +56,27 @@ sleep 1
 #  download the kea hook
 cd /opt
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vcpe/kea-sdnc-notify-mod/$DEMO_ARTIFACTS_VERSION/kea-sdnc-notify-mod-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-tar -zxvf kea-sdnc-notify-mod.tar.gz
-mv kea-sdnc-notify-mod VDHCP
+tar -zxvf kea-sdnc-notify-mod-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+mv kea-sdnc-notify-mod-$DEMO_ARTIFACTS_VERSION VDHCP
 rm *.tar.gz
 cd VDHCP
 # build.sh takes a minute or two to run
 ./build.sh
-mv kea-sdnc-notify.so /usr/local/lib
+mv build/kea-sdnc-notify.so /usr/local/lib
 
 # Download DHCP config files
 cd /opt
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-dhcp4.conf
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-sdnc-notify.conf
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_dhcp_init.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_dhcp.sh
+chmod +x v_dhcp_init.sh
+chmod +x v_dhcp.sh
+mv v_dhcp.sh /etc/init.d
+update-rc.d v_dhcp.sh defaults
 
 # Configure DHCP
+cp kea-dhcp4.conf /etc/kea-dhcp4-server.conf
 mv kea-dhcp4.conf /etc/kea/kea-dhcp4.conf
 mv kea-sdnc-notify.conf /etc/kea/kea-sdnc-notify.conf
 sleep 1
@@ -96,3 +103,5 @@ then
 	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
 	reboot
 fi
+
+./v_dhcp_init.sh

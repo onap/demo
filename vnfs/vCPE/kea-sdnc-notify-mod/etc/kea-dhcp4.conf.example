@@ -3,7 +3,7 @@
   {
 # For testing, you can use veth pair as described in README.md
   "interfaces-config": {
-    "interfaces": ["veth0" ]
+    "interfaces": ["eth0" ]
   },
 
 # How to load the hook library.
