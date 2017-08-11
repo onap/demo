@@ -94,5 +94,4 @@ then
 	reboot
 fi
 
-# Run docker containers. For openstack Ubuntu 16.04 images this will run as a service after the VM has restarted
 ./v_bng_init.sh
