@@ -454,7 +454,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_vweb_install.sh -o /opt/v_vweb_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_web_install.sh -o /opt/v_web_install.sh
             cd /opt
-            chmod +x v_vweb_install.sh
-            ./v_vweb_install.sh
+            chmod +x v_web_install.sh
+            ./v_web_install.sh
