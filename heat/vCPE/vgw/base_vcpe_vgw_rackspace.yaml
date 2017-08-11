@@ -161,7 +161,7 @@ resources:
   vgw_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: mux_gw_private_net_id}
+      network: { get_param: mux_gw_private_net_id }
       fixed_ips: [{"subnet": { get_param: mux_gw_private_net_id }, "ip_address": { get_param: vgw_private_ip_0 }}]
 
   vgw_private_1_port:

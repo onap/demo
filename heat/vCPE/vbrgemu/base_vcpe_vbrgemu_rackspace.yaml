@@ -155,7 +155,7 @@ resources:
   vbrgemu_private_1_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: vbrgemu_private_net_id }
+      network: { get_resource: vbrgemu_private_network }
       fixed_ips: [{"subnet": { get_resource: vbrgemu_private_subnet }, "ip_address": { get_param: vbrgemu_private_ip_1 }}]
 
   vbrgemu_0:

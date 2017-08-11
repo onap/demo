@@ -176,7 +176,7 @@ resources:
     properties:
       name: { get_param: brgemu_bng_private_net_id }
 
-  brgemu_bng_in_private_subnet:
+  brgemu_bng_private_subnet:
     type: OS::Neutron::Subnet
     properties:
       name: { get_param: brgemu_bng_private_net_id }
