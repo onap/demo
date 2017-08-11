@@ -63,10 +63,14 @@ parameters:
     type: string
     label: vBRGEMU Home private network CIDR
     description: The CIDR of the input side of vBRGEMU Home private network
+  vbrgemu_private_ip_0:
+    type: string
+    label: vGW private IP address
+    description: Private IP address towards the BRGEMU-BNG network
   vbrgemu_private_ip_1:
     type: string
-    label: vGW IN private IP address
-    description: Private IP address towards the BRGEMU-BNG network
+    label: vGW private IP address
+    description: Private IP address towards the BRGEMU private network
   vbrgemu_name_0:
     type: string
     label: vGW  name
@@ -146,11 +150,12 @@ resources:
       cidr: { get_param: vbrgemu_private_net_cidr }
 
   # Virtual BRG Emulator Instantiation
-  # 0_port should get IP address from DHCP discover through vBNG
+  # 0_port should get IP address from DHCP discover through vBNG once the VNF is running
   vbrgemu_private_0_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: vbrgemu_bng_private_net_id }
+      fixed_ips: [{"subnet": { get_param: vbrgemu_bng_private_net_id }, "ip_address": { get_param: vbrgemu_private_ip_0 }}]
 
   vbrgemu_private_1_port:
     type: OS::Neutron::Port

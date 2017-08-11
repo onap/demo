@@ -81,6 +81,10 @@ parameters:
     type: string
     label: vGW private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vGW to communicate with ONAP components
+  vgw_private_ip_2:
+    type: string
+    label: vGW private IP address towards the vCPE public network
+    description: Private IP address that is assigned to the vGW to communicate with vCPE public network
   vgw_name_0:
     type: string
     label: vGW  name
@@ -174,6 +178,7 @@ resources:
     type: OS::Neutron::Port
     properties:
       network: { get_param: cpe_public_net_id}
+      fixed_ips: [{"subnet": { get_param: cpe_public_net_id }, "ip_address": { get_param: vgw_private_ip_2 }}]
 
   vgw_0:
     type: OS::Nova::Server
