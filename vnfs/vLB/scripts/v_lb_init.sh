@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start VPP
-start vpp
+systemctl start vpp
 sleep 1
 
 # Compute the network CIDR from the Netmask
@@ -25,30 +25,41 @@ mask2cidr() {
     echo "$nbits"
 }
 
-IPADDR1_MASK=$(ifconfig eth0 | grep "Mask" | awk '{print $4}' | awk -F ":" '{print $2}')
+IPADDR1_MASK=$(ifconfig eth3 | grep "Mask" | awk '{print $4}' | awk -F ":" '{print $2}')
 IPADDR1_CIDR=$(mask2cidr $IPADDR1_MASK)
 IPADDR2_MASK=$(ifconfig eth1 | grep "Mask" | awk '{print $4}' | awk -F ":" '{print $2}')
 IPADDR2_CIDR=$(mask2cidr $IPADDR2_MASK)
 
 # Configure VPP for vPacketGenerator
-IPADDR1=$(ifconfig eth0 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
+IPADDR1=$(ifconfig eth3 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
 IPADDR2=$(ifconfig eth1 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
-HWADDR1=$(ifconfig eth0 | grep HWaddr | tr -s ' ' | cut -d' ' -f5)
+HWADDR1=$(ifconfig eth3 | grep HWaddr | tr -s ' ' | cut -d' ' -f5)
 HWADDR2=$(ifconfig eth1 | grep HWaddr | tr -s ' ' | cut -d' ' -f5)
-FAKE_HWADDR1=$(echo -n 00; dd bs=1 count=5 if=/dev/urandom 2>/dev/null |hexdump -v -e '/1 ":%02X"')
-FAKE_HWADDR2=$(echo -n 00; dd bs=1 count=5 if=/dev/urandom 2>/dev/null |hexdump -v -e '/1 ":%02X"')
+FAKE_HWADDR1=$(echo -n 00; dd bs=1 count=5 if=/dev/urandom 2>/dev/null | hexdump -v -e '/1 ":%02X"')
+FAKE_HWADDR2=$(echo -n 00; dd bs=1 count=5 if=/dev/urandom 2>/dev/null | hexdump -v -e '/1 ":%02X"')
 GW=$(route -n | grep "^0.0.0.0" | awk '{print $2}')
+PKTGEN_IPADDR=$(cat /opt/config/pktgen_ipaddr.txt)
+VIP=$(cat /opt/config/vip.txt)
 
-ifconfig eth0 down
-ifconfig eth0 hw ether $FAKE_HWADDR1
-ip addr flush dev eth0
-ifconfig eth0 up
+while [ $(ping -c 1 $PKTGEN_IPADDR | grep received | cut -d" " -f4) != 1 ]; 
+do
+	echo "Wait";
+	sleep 1;
+done
+
+sleep 3
+PKTGEN_MAC=$(arp -n | grep -w $PKTGEN_IPADDR | tr -s ' ' | cut -d' ' -f3)
+
+ifconfig eth3 down
+ifconfig eth3 hw ether $FAKE_HWADDR1
+ip addr flush dev eth3
+ifconfig eth3 up
 vppctl tap connect tappub hwaddr $HWADDR1
-vppctl set int ip address tap-0 $IPADDR1"/"$IPADDR1_CIDR
+vppctl set int ip address tap-0 $VIP"/"$IPADDR1_CIDR
 vppctl set int state tap-0 up
 brctl addbr br0
 brctl addif br0 tappub
-brctl addif br0 eth0
+brctl addif br0 eth3
 ifconfig br0 up
 
 ifconfig eth1 down
@@ -66,8 +77,11 @@ sleep 1
 
 vppctl lb conf ip4-src-address $IPADDR2
 vppctl lb vip $IPADDR1"/32" encap gre4
-vppctl ip route add 0.0.0.0/0 via $GW
 sleep 1
+
+vppctl set ip arp proxy $IPADDR1" - "$IPADDR1
+vppctl set interface proxy-arp tap-0 enable
+vppctl set ip arp tap-0 $PKTGEN_IPADDR $PKTGEN_MAC
 
 cd /opt/FDserver
 ./dnsmembership.sh &>/dev/null &disown
