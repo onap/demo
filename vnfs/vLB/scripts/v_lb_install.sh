@@ -25,7 +25,7 @@ then
 
 	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
-	IP=$(cat /opt/config/local_private_ipaddr.txt)
+	IP=$(cat /opt/config/ip_to_dns_net.txt)
 	BITS=$(cat /opt/config/vlb_private_net_cidr.txt | cut -d"/" -f2)
 	NETMASK=$(cdr2mask $BITS)
 	echo "auto eth1" >> /etc/network/interfaces
@@ -43,8 +43,18 @@ then
 	echo "    netmask $NETMASK" >> /etc/network/interfaces
 	echo "    mtu $MTU" >> /etc/network/interfaces
 
+	IP=$(cat /opt/config/ip_to_pktgen_net.txt)
+	BITS=$(cat /opt/config/pktgen_private_net_cidr.txt | cut -d"/" -f2)
+	NETMASK=$(cdr2mask $BITS)
+	echo "auto eth3" >> /etc/network/interfaces
+	echo "iface eth3 inet static" >> /etc/network/interfaces
+	echo "    address $IP" >> /etc/network/interfaces
+	echo "    netmask $NETMASK" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
+
 	ifup eth1
 	ifup eth2
+	ifup eth3
 fi
 
 # Download required dependencies
@@ -86,16 +96,9 @@ chmod +x /opt/FDserver/dnsmembership.sh
 chmod +x /opt/FDserver/add_dns.sh
 chmod +x /opt/FDserver/remove_dns.sh
 
-# Create a file with public IP of the VM if it doesn't exist. This is for VMs directly attached to the external network.
-if [ ! -e /opt/config/local_public_ipaddr.txt ]
-then
-	IP_ADDRESS=$(ifconfig eth0 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
-	echo $IP_ADDRESS > /opt/config/local_public_ipaddr.txt
-fi
-
 # Install VPP
-export UBUNTU="trusty"
-export RELEASE=".stable.1609"
+export UBUNTU="xenial"
+export RELEASE=".stable.1707"
 rm /etc/apt/sources.list.d/99fd.io.list
 echo "deb [trusted=yes] https://nexus.fd.io/content/repositories/fd.io$RELEASE.ubuntu.$UBUNTU.main/ ./" | sudo tee -a /etc/apt/sources.list.d/99fd.io.list
 apt-get update
@@ -112,4 +115,17 @@ sleep 1
 cd /opt
 mv vlb.sh /etc/init.d
 update-rc.d vlb.sh defaults
+
+# Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
+if [[ $CLOUD_ENV != "rackspace" ]]
+then
+	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+	grub-mkconfig -o /boot/grub/grub.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
+	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+	reboot
+fi
+
 ./v_lb_init.sh

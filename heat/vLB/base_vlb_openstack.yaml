@@ -49,6 +49,10 @@ parameters:
     type: string
     label: vLoadBalancer private network name or ID
     description: Private network that connects vLoadBalancer with vDNSs
+  pktgen_private_net_id:
+    type: string
+    label: vPacketGen private network name or ID
+    description: Private network that connects vLoadBalancer with vPacketGen
   onap_private_net_id:
     type: string
     label: ECOMP management network name or ID
@@ -61,6 +65,10 @@ parameters:
     type: string
     label: vLoadBalancer private network CIDR
     description: The CIDR of the vLoadBalancer private network
+  pktgen_private_net_cidr:
+    type: string
+    label: vPacketGen private network CIDR
+    description: The CIDR of the vPacketGen private network
   onap_private_net_cidr:
     type: string
     label: ONAP private network CIDR
@@ -73,6 +81,10 @@ parameters:
     type: string
     label: vLoadBalancer private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vLoadBalancer to communicate with ONAP components
+  vlb_private_ip_2:
+    type: string
+    label: vLoadBalancer private IP address towards the vPacketGen network
+    description: Private IP address that is assigned to the vLoadBalancer to communicate with vPacketGen
   vdns_private_ip_0:
     type: string
     label: vDNS private IP address towards the private network
@@ -81,6 +93,26 @@ parameters:
     type: string
     label: vDNS private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vDNS to communicate with ONAP components
+  vpg_private_ip_0:
+    type: string
+    label: vPacketGen private IP address towards the vPacketGen private network
+    description: Private IP address that is assigned to the vPacketGen to communicate with the vLoadBalancer
+  vpg_private_ip_1:
+    type: string
+    label: vPacketGen private IP address towards the ONAP management network
+    description: Private IP address that is assigned to the vPacketGen to communicate with ONAP components
+  vip:
+    type: string
+    label: Virtual Private IP of the vLoadBalancer
+    description: Virtual Private IP that is assigned to the vLoadBalancer's VPP layer
+  gre_ipaddr:
+    type: string
+    label: IP Address of the GRE tunnel
+    description: IP address assigned to the GRE tunnel on the vLoadBalancer
+  pg_int:
+    type: string
+    label: IP Address of the output vPacketGen interface
+    description: IP address assigned to the output interface of the vPacketGen's VPP layer
   vlb_name_0:
     type: string
     label: vLoadBalancer name
@@ -171,6 +203,18 @@ resources:
       network_id: { get_resource: vlb_private_network }
       cidr: { get_param: vlb_private_net_cidr }
 
+  pktgen_private_network:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: pktgen_private_net_id }
+
+  pktgen_private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: { get_param: pktgen_private_net_id }
+      network_id: { get_resource: pktgen_private_network }
+      cidr: { get_param: pktgen_private_net_cidr }
+
   vlb_private_0_port:
     type: OS::Neutron::Port
     properties:
@@ -183,6 +227,12 @@ resources:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vlb_private_ip_1 }}]
 
+  vlb_private_2_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: pktgen_private_network }
+      fixed_ips: [{"subnet": { get_resource: pktgen_private_subnet }, "ip_address": { get_param: vlb_private_ip_2 }}]
+
   vlb_0:
     type: OS::Nova::Server
     properties:
@@ -194,6 +244,7 @@ resources:
         - network: { get_param: public_net_id }
         - port: { get_resource: vlb_private_0_port }
         - port: { get_resource: vlb_private_1_port }
+        - port: { get_resource: vlb_private_2_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
@@ -201,7 +252,11 @@ resources:
           params:
             __dcae_collector_ip__: { get_param: dcae_collector_ip }
             __dcae_collector_port__: { get_param: dcae_collector_port }
-            __local_private_ipaddr__: { get_param: vlb_private_ip_0 }
+            __ip_to_dns_net__: { get_param: vlb_private_ip_0 }
+            __ip_to_pktgen_net__: { get_param: vlb_private_ip_2 }
+            __vip__: { get_param: vip }
+            __gre_ipaddr__: { get_param: gre_ipaddr }
+            __pktgen_ipaddr__: { get_param: vpg_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vlb_private_ip_1 }
             __repo_url_blob__: { get_param: repo_url_blob }
             __repo_url_artifacts__: { get_param: repo_url_artifacts }
@@ -209,6 +264,7 @@ resources:
             __install_script_version__: { get_param: install_script_version }
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
+            __pktgen_private_net_cidr__: { get_param: pktgen_private_net_cidr }
             __cloud_env__: { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -217,13 +273,18 @@ resources:
             mkdir /opt/config
             echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
             echo "__dcae_collector_port__" > /opt/config/dcae_collector_port.txt
-            echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
+            echo "__ip_to_dns_net__" > /opt/config/ip_to_dns_net.txt
+            echo "__ip_to_pktgen_net__" > /opt/config/ip_to_pktgen_net.txt
+            echo "__vip__" > /opt/config/vip.txt
+            echo "__gre_ipaddr__" > /opt/config/gre_ipaddr.txt
+            echo "__pktgen_ipaddr__" > /opt/config/pktgen_ipaddr.txt
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
+            echo "__pktgen_private_net_cidr__" > /opt/config/pktgen_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
@@ -295,3 +356,65 @@ resources:
             cd /opt
             chmod +x v_dns_install.sh
             ./v_dns_install.sh
+
+
+  vpg_private_0_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: pktgen_private_network }
+      fixed_ips: [{"subnet": { get_resource: pktgen_private_subnet }, "ip_address": { get_param: vpg_private_ip_0 }}]
+
+  vpg_private_1_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: onap_private_net_id }
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vpg_private_ip_1 }}]
+
+  vpg_0:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: vlb_image_name }
+      flavor: { get_param: vlb_flavor_name }
+      name: { get_param: vpg_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: vpg_private_0_port }
+        - port: { get_resource: vpg_private_1_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __repo_url_blob__: { get_param: repo_url_blob }
+            __repo_url_artifacts__: { get_param: repo_url_artifacts }
+            __local_private_ipaddr__: { get_param: vpg_private_ip_0 }
+            __oam_private_ipaddr__: { get_param: vpg_private_ip_1 }
+            __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
+            __pktgen_private_net_cidr__: { get_param: pktgen_private_net_cidr }
+            __vlb_ipaddr__: { get_param: vlb_private_ip_2 }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __pg_int__: { get_param: pg_int }
+            __cloud_env__: { get_param: cloud_env }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir /opt/config
+            echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
+            echo "__pktgen_private_net_cidr__" > /opt/config/pktgen_private_net_cidr.txt
+            echo "__vlb_ipaddr__" > /opt/config/vlb_ipaddr.txt
+            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
+            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
+            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__pg_int__" > /opt/config/pg_int.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+
+            # Download and run install script
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vlb/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
+            cd /opt
+            chmod +x v_packetgen_install.sh
+            ./v_packetgen_install.sh

@@ -92,4 +92,17 @@ sleep 1
 cd /opt
 mv vdns.sh /etc/init.d
 update-rc.d vdns.sh defaults
+
+# Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
+if [[ $CLOUD_ENV != "rackspace" ]]
+then
+	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+	grub-mkconfig -o /boot/grub/grub.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
+	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+	reboot
+fi
+
 ./v_dns_init.sh

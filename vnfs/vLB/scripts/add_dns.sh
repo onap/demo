@@ -7,11 +7,14 @@ then
 fi
 
 DNS_IPADDR=$1
-MY_PUBLIC_IP=$(cat /opt/config/local_public_ipaddr.txt)
-MY_PRIVATE_IP=$(cat /opt/config/local_private_ipaddr.txt)
+IP_TO_PKTGEN_NET=$(cat /opt/config/ip_to_pktgen_net.txt)
+IP_TO_DNS_NET=$(cat /opt/config/ip_to_dns_net.txt)
+GRE_IPADDR=$(cat /opt/config/gre_ipaddr.txt)
 
-vppctl lb as $MY_PUBLIC_IP"/32" $DNS_IPADDR
-GRE=$(vppctl create gre tunnel src $MY_PRIVATE_IP dst $DNS_IPADDR)
+#vppctl lb as $MY_PUBLIC_IP"/32" $DNS_IPADDR
+vppctl lb as $IP_TO_PKTGEN_NET"/32" $DNS_IPADDR
+GRE=$(vppctl create gre tunnel src $IP_TO_DNS_NET dst $DNS_IPADDR)
+vppctl set int ip address $GRE $GRE_IPADDR"/24"
 vppctl set int state $GRE up
 
 # Update the number of vDNSs currently active

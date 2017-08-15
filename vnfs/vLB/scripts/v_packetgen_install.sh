@@ -14,6 +14,26 @@ then
 	# Allow remote login as root
 	mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
 	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
+
+	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+
+	IP=$(cat /opt/config/local_private_ipaddr.txt)
+	BITS=$(cat /opt/config/pktgen_private_net_cidr.txt | cut -d"/" -f2)
+	NETMASK=$(cdr2mask $BITS)
+	echo "auto eth1" >> /etc/network/interfaces
+	echo "iface eth1 inet static" >> /etc/network/interfaces
+	echo "    address $IP" >> /etc/network/interfaces
+	echo "    netmask $NETMASK" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
+
+	IP=$(cat /opt/config/oam_private_ipaddr.txt)
+	BITS=$(cat /opt/config/onap_private_net_cidr.txt | cut -d"/" -f2)
+	NETMASK=$(cdr2mask $BITS)
+	echo "auto eth2" >> /etc/network/interfaces
+	echo "iface eth2 inet static" >> /etc/network/interfaces
+	echo "    address $IP" >> /etc/network/interfaces
+	echo "    netmask $NETMASK" >> /etc/network/interfaces
+	echo "    mtu $MTU" >> /etc/network/interfaces
 fi
 
 # Download required dependencies
@@ -46,8 +66,8 @@ chmod +x run_streams_dns.sh
 chmod +x vdnspacketgen_change_streams_ports.sh
 
 # Install VPP
-export UBUNTU="trusty"
-export RELEASE=".stable.1609"
+export UBUNTU="xenial"
+export RELEASE=".stable.1707"
 rm /etc/apt/sources.list.d/99fd.io.list
 echo "deb [trusted=yes] https://nexus.fd.io/content/repositories/fd.io$RELEASE.ubuntu.$UBUNTU.main/ ./" | sudo tee -a /etc/apt/sources.list.d/99fd.io.list
 apt-get update
@@ -58,4 +78,17 @@ sleep 1
 cd /opt
 mv vpacketgenfordnsdemo.sh /etc/init.d
 update-rc.d vpacketgenfordnsdemo.sh defaults
+
+# Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
+if [[ $CLOUD_ENV != "rackspace" ]]
+then
+	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+	grub-mkconfig -o /boot/grub/grub.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
+	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+	reboot
+fi
+
 ./v_packetgen_for_dns_demo_init.sh

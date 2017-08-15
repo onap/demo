@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start VPP
-start vpp
+systemctl start vpp
 sleep 1
 
 # Compute the network CIDR from the Netmask
@@ -25,30 +25,29 @@ mask2cidr() {
     echo "$nbits"
 }
 
-IPADDR1_MASK=$(ifconfig eth0 | grep "Mask" | awk '{print $4}' | awk -F ":" '{print $2}')
+IPADDR1_MASK=$(ifconfig eth1 | grep "Mask" | awk '{print $4}' | awk -F ":" '{print $2}')
 IPADDR1_CIDR=$(mask2cidr $IPADDR1_MASK)
 
 # Configure VPP for vPacketGenerator
-IPADDR1=$(ifconfig eth0 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
-HWADDR1=$(ifconfig eth0 | grep HWaddr | tr -s ' ' | cut -d' ' -f5)
+IPADDR1=$(ifconfig eth1 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
+HWADDR1=$(ifconfig eth1 | grep HWaddr | tr -s ' ' | cut -d' ' -f5)
 FAKE_HWADDR1=$(echo -n 00; dd bs=1 count=5 if=/dev/urandom 2>/dev/null | hexdump -v -e '/1 ":%02X"')
 VLB_IPADDR=$(cat /opt/config/vlb_ipaddr.txt)
 GW=$(route -n | grep "^0.0.0.0" | awk '{print $2}')
 
-ifconfig eth0 down
-ifconfig eth0 hw ether $FAKE_HWADDR1
-ip addr flush dev eth0
-ifconfig eth0 up
+ifconfig eth1 down
+ifconfig eth1 hw ether $FAKE_HWADDR1
+ip addr flush dev eth1
+ifconfig eth1 up
 vppctl tap connect tap111 hwaddr $HWADDR1
 vppctl set int ip address tap-0 $IPADDR1"/"$IPADDR1_CIDR
 vppctl set int state tap-0 up
 brctl addbr br0
 brctl addif br0 tap111
-brctl addif br0 eth0
+brctl addif br0 eth1
 ifconfig br0 up
 vppctl ip route add 0.0.0.0/0 via $GW
 sleep 1
-
 
 # Set br0 with public IP and valid MAC so that Linux will have public network access
 ifconfig br0 hw ether $HWADDR1
@@ -56,20 +55,15 @@ ifconfig br0 $IPADDR1 netmask $IPADDR1_MASK
 route add default gw $GW
 
 #Adding static arp entry for VPP so that it will be able to send packets to default GW
-ping -c 1 $VLB_IPADDR &>/dev/null &disown
+while [ $(ping -c 1 $VLB_IPADDR | grep received | cut -d" " -f4) != 1 ]; 
+do
+	echo "Wait";
+	sleep 1;
+done
+
 sleep 3
-
-GW_MAC=$(arp -n | grep -w $GW | tr -s ' ' | cut -d' ' -f3)
 VLB_MAC=$(arp -n | grep -w $VLB_IPADDR | tr -s ' ' | cut -d' ' -f3)
-
-# If VLB is in our network, we will use its MAC
-if [ ! -z "$VLB_MAC" ]
-then
-	vppctl set ip arp tap-0 $VLB_IPADDR $VLB_MAC
-fi
-
-# Add arp entry for default GW
-vppctl set ip arp tap-0 $GW $GW_MAC
+vppctl set ip arp tap-0 $VLB_IPADDR $VLB_MAC
 
 # Install packet streams
 sed -i -e "0,/UDP/ s/UDP:.*/UDP: "$IPADDR1" -> "$VLB_IPADDR"/" /opt/dns_streams/stream_dns1
@@ -104,6 +98,8 @@ vppctl exec /opt/dns_streams/stream_dns7
 vppctl exec /opt/dns_streams/stream_dns8
 vppctl exec /opt/dns_streams/stream_dns9
 vppctl exec /opt/dns_streams/stream_dns10
+
+vppctl set int ip address pg0 $(cat /opt/config/pg_int.txt)"/"$IPADDR1_CIDR
 sleep 1
 
 # Start HoneyComb
@@ -117,4 +113,3 @@ sleep 20
 cd /opt
 chmod +x run_streams_dns.sh
 ./run_streams_dns.sh &>/dev/null &disown
-
