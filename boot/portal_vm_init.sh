@@ -20,6 +20,8 @@ source portal/deliveries/os_settings.sh
 
 # Unpack property files
 unzip -o portal/deliveries/etc.zip -d /PROJECT/OpenSource/UbuntuEP/
+# Copy (ecomp-portal-BE-os) logback.xml for volume mapping
+mv portal/deliveries/os_logback.xml /PROJECT/OpenSource/UbuntuEP/etc/ECOMPPORTALAPP/
 
 # Refresh images
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
