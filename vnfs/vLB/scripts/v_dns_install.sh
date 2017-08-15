@@ -42,9 +42,6 @@ then
 	echo "    address $IP" >> /etc/network/interfaces
 	echo "    netmask $NETMASK" >> /etc/network/interfaces
 	echo "    mtu $MTU" >> /etc/network/interfaces
-
-	ifup eth1
-	ifup eth2
 fi
 
 # Download required dependencies
@@ -54,7 +51,6 @@ apt-get install -y wget openjdk-8-jdk bind9 bind9utils bind9-doc apt-transport-h
 sleep 1
 
 # Download vDNS demo code for DNS Server
-mkdir /opt/config
 mkdir /opt/FDclient
 cd /opt
 

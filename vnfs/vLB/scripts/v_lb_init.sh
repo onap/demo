@@ -39,16 +39,8 @@ FAKE_HWADDR1=$(echo -n 00; dd bs=1 count=5 if=/dev/urandom 2>/dev/null | hexdump
 FAKE_HWADDR2=$(echo -n 00; dd bs=1 count=5 if=/dev/urandom 2>/dev/null | hexdump -v -e '/1 ":%02X"')
 GW=$(route -n | grep "^0.0.0.0" | awk '{print $2}')
 PKTGEN_IPADDR=$(cat /opt/config/pktgen_ipaddr.txt)
+PKTGEN_MAC=$(cat /opt/config/pktgen_mac.txt)
 VIP=$(cat /opt/config/vip.txt)
-
-while [ $(ping -c 1 $PKTGEN_IPADDR | grep received | cut -d" " -f4) != 1 ]; 
-do
-	echo "Wait";
-	sleep 1;
-done
-
-sleep 3
-PKTGEN_MAC=$(arp -n | grep -w $PKTGEN_IPADDR | tr -s ' ' | cut -d' ' -f3)
 
 ifconfig eth3 down
 ifconfig eth3 hw ether $FAKE_HWADDR1

@@ -121,6 +121,10 @@ parameters:
     type: string
     label: vDNS name
     description: Name of the vDNS
+  vpg_name_0:
+    type: string
+    label: vPKTGEN name
+    description: Name of the vPKTGEN
   vnf_id:
     type: string
     label: VNF ID
@@ -265,6 +269,7 @@ resources:
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
             __pktgen_private_net_cidr__: { get_param: pktgen_private_net_cidr }
+            __pktgen_mac__: { get_attr: [vpg_private_0_port, mac_address] }
             __cloud_env__: { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -286,6 +291,7 @@ resources:
             echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
             echo "__pktgen_private_net_cidr__" > /opt/config/pktgen_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__pktgen_mac__" > /opt/config/pktgen_mac.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
@@ -395,6 +401,7 @@ resources:
             __demo_artifacts_version__: { get_param: demo_artifacts_version }
             __install_script_version__: { get_param: install_script_version }
             __pg_int__: { get_param: pg_int }
+            __vlb_mac__: { get_attr: [vlb_private_2_port, mac_address] }
             __cloud_env__: { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -411,6 +418,7 @@ resources:
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__pg_int__" > /opt/config/pg_int.txt
+            echo "__vlb_mac__" > /opt/config/vlb_mac.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script

@@ -33,6 +33,7 @@ IPADDR1=$(ifconfig eth1 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d'
 HWADDR1=$(ifconfig eth1 | grep HWaddr | tr -s ' ' | cut -d' ' -f5)
 FAKE_HWADDR1=$(echo -n 00; dd bs=1 count=5 if=/dev/urandom 2>/dev/null | hexdump -v -e '/1 ":%02X"')
 VLB_IPADDR=$(cat /opt/config/vlb_ipaddr.txt)
+VLB_MAC=$(cat /opt/config/vlb_mac.txt)
 GW=$(route -n | grep "^0.0.0.0" | awk '{print $2}')
 
 ifconfig eth1 down
@@ -53,16 +54,7 @@ sleep 1
 ifconfig br0 hw ether $HWADDR1
 ifconfig br0 $IPADDR1 netmask $IPADDR1_MASK
 route add default gw $GW
-
-#Adding static arp entry for VPP so that it will be able to send packets to default GW
-while [ $(ping -c 1 $VLB_IPADDR | grep received | cut -d" " -f4) != 1 ]; 
-do
-	echo "Wait";
-	sleep 1;
-done
-
-sleep 3
-VLB_MAC=$(arp -n | grep -w $VLB_IPADDR | tr -s ' ' | cut -d' ' -f3)
+sleep 1
 vppctl set ip arp tap-0 $VLB_IPADDR $VLB_MAC
 
 # Install packet streams

@@ -51,10 +51,6 @@ then
 	echo "    address $IP" >> /etc/network/interfaces
 	echo "    netmask $NETMASK" >> /etc/network/interfaces
 	echo "    mtu $MTU" >> /etc/network/interfaces
-
-	ifup eth1
-	ifup eth2
-	ifup eth3
 fi
 
 # Download required dependencies
