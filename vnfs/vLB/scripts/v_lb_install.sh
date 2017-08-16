@@ -60,7 +60,6 @@ apt-get install -y make gcc wget openjdk-8-jdk bridge-utils libcurl4-openssl-dev
 sleep 1
 
 # Download vLB demo code for load balancer
-mkdir /opt/config
 mkdir /opt/FDserver
 cd /opt
 

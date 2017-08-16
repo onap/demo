@@ -51,7 +51,6 @@ apt-get install -y make wget openjdk-8-jdk gcc libcurl4-openssl-dev python-pip b
 pip install jsonschema
 
 # Download vFirewall demo code for packet generator
-mkdir /opt/config
 mkdir /opt/honeycomb
 cd /opt
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_packetgen_for_dns_demo_init.sh
