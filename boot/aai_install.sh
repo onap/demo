@@ -5,6 +5,8 @@ NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
+GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
+AAI_INSTANCE=$(cat /opt/config/aai_instance.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
 # Add host name to /etc/host to avoid warnings in openstack images
@@ -89,7 +91,20 @@ echo "nameserver "$DNS_IP_ADDR >> /etc/resolvconf/resolv.conf.d/head
 resolvconf -u
 
 # Run docker containers
-mkdir -p /opt/openecomp/aai/logs
-mkdir -p /opt/openecomp/aai/data
 cd /opt
+git clone -b $GERRIT_BRANCH --single-branch http://gerrit.onap.org/r/aai/test-config
+
+if [[ $AAI_INSTANCE == "aai_instance_1" ]]
+then
+	mkdir -p /opt/aai/logroot/AAI-RESOURCES
+	mkdir -p /opt/aai/logroot/AAI-TRAVERSAL
+	mkdir -p /opt/aai/logroot/AAI-ML
+	mkdir -p /opt/aai/logroot/AAI-SDB
+	mkdir -p /opt/aai/logroot/AAI-DRMS
+	mkdir -p /opt/aai/logroot/AAI-UI
+	chown -R 999:999 /opt/aai/logroot/AAI-RESOURCES /opt/aai/logroot/AAI-TRAVERSAL
+
+	sleep 300
+fi
+
 ./aai_vm_init.sh

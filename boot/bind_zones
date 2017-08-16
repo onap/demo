@@ -77,6 +77,8 @@ vm1.mr.simpledemo.openecomp.org.	IN	A	mr_ip_addr
 ;CNAMES
 ;A&AI
 aai.api.simpledemo.openecomp.org.	IN 	CNAME 	vm1.aai.simpledemo.openecomp.org.
+aai.ui.simpledemo.openecomp.org.    IN  CNAME   vm1.aai.simpledemo.openecomp.org.
+aai.searchservice.simpledemo.openecomp.org.     IN      CNAME   vm1.aai.simpledemo.openecomp.org.
 aai.hbase.simpledemo.openecomp.org.	IN 	CNAME	vm2.aai.simpledemo.openecomp.org.
 aai.gremlinserver.simpledemo.openecomp.org.	IN 	CNAME 	vm2.aai.simpledemo.openecomp.org.
 aai.elasticsearch.simpledemo.openecomp.org.	IN 	CNAME 	vm2.aai.simpledemo.openecomp.org.

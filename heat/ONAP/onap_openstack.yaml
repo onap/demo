@@ -495,10 +495,10 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
             cd /opt
-            chmod +x aai2_install.sh
-            ./aai2_install.sh
+            chmod +x aai_install.sh
+            ./aai_install.sh
 
 
   aai2_private_port:
@@ -560,10 +560,10 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai2_install.sh -o /opt/aai2_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
             cd /opt
-            chmod +x aai2_install.sh
-            ./aai2_install.sh
+            chmod +x aai_install.sh
+            ./aai_install.sh
 
 
   # MSO instantiation
