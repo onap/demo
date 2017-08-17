@@ -11,7 +11,6 @@ IP_TO_PKTGEN_NET=$(cat /opt/config/ip_to_pktgen_net.txt)
 IP_TO_DNS_NET=$(cat /opt/config/ip_to_dns_net.txt)
 GRE_IPADDR=$(cat /opt/config/gre_ipaddr.txt)
 
-#vppctl lb as $MY_PUBLIC_IP"/32" $DNS_IPADDR
 vppctl lb as $IP_TO_PKTGEN_NET"/32" $DNS_IPADDR
 GRE=$(vppctl create gre tunnel src $IP_TO_DNS_NET dst $DNS_IPADDR)
 vppctl set int ip address $GRE $GRE_IPADDR"/24"
