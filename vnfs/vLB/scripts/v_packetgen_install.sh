@@ -53,8 +53,8 @@ pip install jsonschema
 # Download vFirewall demo code for packet generator
 mkdir /opt/honeycomb
 cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_packetgen_for_dns_demo_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vpacketgenfordnsdemo.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_packetgen_init.sh
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vpacketgen.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/run_streams_dns.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdnspacketgen_change_streams_ports.sh
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
@@ -67,8 +67,8 @@ sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "
 tar -zxvf vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv vlb_dns_streams-$DEMO_ARTIFACTS_VERSION dns_streams
 rm *.tar.gz
-chmod +x v_packetgen_for_dns_demo_init.sh
-chmod +x vpacketgenfordnsdemo.sh
+chmod +x v_packetgen_init.sh
+chmod +x vpacketgen.sh
 chmod +x run_streams_dns.sh
 chmod +x vdnspacketgen_change_streams_ports.sh
 
@@ -83,8 +83,8 @@ sleep 1
 
 # Run instantiation script
 cd /opt
-mv vpacketgenfordnsdemo.sh /etc/init.d
-update-rc.d vpacketgenfordnsdemo.sh defaults
+mv vpacketgen.sh /etc/init.d
+update-rc.d vpacketgen.sh defaults
 
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
@@ -98,4 +98,4 @@ then
 	reboot
 fi
 
-./v_packetgen_for_dns_demo_init.sh
+./v_packetgen_init.sh

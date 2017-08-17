@@ -10,7 +10,7 @@
 ### END INIT INFO
 
 dir="/opt"
-cmd="./v_packetgen_for_dns_demo_init.sh"
+cmd="./v_packetgen_init.sh"
 user="root"
 
 name=`basename $0`
