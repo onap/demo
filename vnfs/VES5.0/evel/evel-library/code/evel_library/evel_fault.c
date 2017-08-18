@@ -36,6 +36,8 @@
  *          function and are immutable once set.  Optional fields have explicit
  *          setter functions, but again values may only be set once so that the
  *          Fault has immutable properties.
+ * @param event_name  Unique Event Name confirming Domain AsdcModel Description
+ * @param event_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
  * @param   condition   The condition indicated by the Fault.
  * @param   specific_problem  The specific problem triggering the fault.
  * @param   priority    The priority of the event.
@@ -47,7 +49,9 @@
  *          not used (i.e. posted) it must be released using ::evel_free_fault.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_FAULT * evel_new_fault(const char * const condition,
+EVENT_FAULT * evel_new_fault(const char * ev_name,
+			     const char * ev_id,
+			     const char * const condition,
                              const char * const specific_problem,
 			     EVEL_EVENT_PRIORITIES priority,
                              EVEL_SEVERITIES severity,
@@ -81,7 +85,7 @@ EVENT_FAULT * evel_new_fault(const char * const condition,
   /* Initialize the header & the fault fields.  Optional string values are   */
   /* uninitialized (NULL).                                                   */
   /***************************************************************************/
-  evel_init_header(&fault->header,"Fault");
+  evel_init_header_nameid(&fault->header,ev_name,ev_id);
   fault->header.event_domain = EVEL_DOMAIN_FAULT;
   fault->header.priority = priority;
   fault->major_version = EVEL_FAULT_MAJOR_VERSION;

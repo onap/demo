@@ -144,6 +144,16 @@ EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
   evel_throt_api_url = strdup(throt_api_url);
   assert(evel_throt_api_url != NULL);
 
+
+  curl_version_info_data *d = curl_version_info(CURLVERSION_NOW);
+  /* compare with the 24 bit hex number in 8 bit fields */
+  if(d->version_num >= 0x072100) {
+     /* this is libcurl 7.33.0 or later */
+     EVEL_INFO("7.33 or later Curl version %x.",d->version_num);
+  }
+  else {
+     EVEL_INFO("Old Curl version.");
+  }
   /***************************************************************************/
   /* Start the CURL library. Note that this initialization is not threadsafe */
   /* which imposes a constraint that the EVEL library is initialized before  */
@@ -408,7 +418,7 @@ EVEL_ERR_CODES event_handler_terminate()
     /*************************************************************************/
     /* Make sure that the event handler knows it's time to die.              */
     /*************************************************************************/
-    event = evel_new_internal_event(EVT_CMD_TERMINATE);
+    event = evel_new_internal_event(EVT_CMD_TERMINATE,"EVELinternal","EVELid");
     if (event == NULL)
     {
       /***********************************************************************/

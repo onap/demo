@@ -34,6 +34,8 @@
  *          explicit setter functions, but again values may only be set once
  *          so that the State Change has immutable properties.
  *
+ * @param event_name  Unique Event Name confirming Domain AsdcModel Description
+ * @param event_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
  * @param new_state     The new state of the reporting entity.
  * @param old_state     The old state of the reporting entity.
  * @param interface     The card or port name of the reporting entity.
@@ -43,7 +45,9 @@
  *          ::evel_free_state_change
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_STATE_CHANGE * evel_new_state_change(const EVEL_ENTITY_STATE new_state,
+EVENT_STATE_CHANGE * evel_new_state_change(const char* ev_name,
+                                           const char *ev_id,
+					   const EVEL_ENTITY_STATE new_state,
                                            const EVEL_ENTITY_STATE old_state,
                                            const char * const interface)
 {
@@ -73,7 +77,7 @@ EVENT_STATE_CHANGE * evel_new_state_change(const EVEL_ENTITY_STATE new_state,
   /* Initialize the header & the State Change fields.  Optional string       */
   /* values are uninitialized (NULL).                                        */
   /***************************************************************************/
-  evel_init_header(&state_change->header,"StateChange");
+  evel_init_header_nameid(&state_change->header,ev_name,ev_id);
   state_change->header.event_domain = EVEL_DOMAIN_STATE_CHANGE;
   state_change->major_version = EVEL_STATE_CHANGE_MAJOR_VERSION;
   state_change->minor_version = EVEL_STATE_CHANGE_MINOR_VERSION;

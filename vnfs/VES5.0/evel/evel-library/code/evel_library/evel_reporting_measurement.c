@@ -44,12 +44,13 @@
  *          that the Report has immutable properties.
  *
  * @param   measurement_interval
-
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  * @returns pointer to the newly manufactured ::EVENT_REPORT.  If the event is
  *          not used (i.e. posted) it must be released using ::evel_free_event.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_REPORT * evel_new_report(double measurement_interval)
+EVENT_REPORT * evel_new_report(double measurement_interval,const char *ev_name, const char *ev_id)
 {
   EVENT_REPORT * report = NULL;
 
@@ -75,7 +76,7 @@ EVENT_REPORT * evel_new_report(double measurement_interval)
   /***************************************************************************/
   /* Initialize the header & the report fields.                              */
   /***************************************************************************/
-  evel_init_header(&report->header,"Report");
+  evel_init_header_nameid(&report->header,ev_name,ev_id);
   report->header.event_domain = EVEL_DOMAIN_REPORT;
   report->measurement_interval = measurement_interval;
 

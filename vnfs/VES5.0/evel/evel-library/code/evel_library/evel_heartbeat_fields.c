@@ -35,6 +35,8 @@
  *          this factory function and are immutable once set.  Optional fields
  *          have explicit setter functions, but again values may only be set
  *          once so that the event has immutable properties.
+ * @param event_name  Unique Event Name confirming Domain AsdcModel Description
+ * @param event_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
  * @param vendor_id     The vendor id to encode in the event instance id.
  * @param event_id      The vendor event id to encode in the event instance id.
  * @returns pointer to the newly manufactured ::EVENT_HEARTBEAT_FIELD.  If the event
@@ -42,7 +44,7 @@
  *          ::evel_free_hrtbt_field.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_HEARTBEAT_FIELD * evel_new_heartbeat_field(int interval)
+EVENT_HEARTBEAT_FIELD * evel_new_heartbeat_field(int interval,const char* ev_name, const char *ev_id)
 {
   EVENT_HEARTBEAT_FIELD * event = NULL;
 
@@ -68,7 +70,7 @@ EVENT_HEARTBEAT_FIELD * evel_new_heartbeat_field(int interval)
   /***************************************************************************/
   /* Initialize the header & the Heartbeat fields fields.                           */
   /***************************************************************************/
-  evel_init_header(&event->header,"HeartbeatFields");
+  evel_init_header_nameid(&event->header,ev_name,ev_id);
   event->header.event_domain = EVEL_DOMAIN_HEARTBEAT_FIELD;
   event->major_version = EVEL_HEARTBEAT_FIELD_MAJOR_VERSION;
   event->minor_version = EVEL_HEARTBEAT_FIELD_MINOR_VERSION;

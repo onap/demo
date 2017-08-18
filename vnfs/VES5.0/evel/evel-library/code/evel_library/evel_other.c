@@ -39,7 +39,7 @@
  *          not used (i.e. posted) it must be released using ::evel_free_other.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_OTHER * evel_new_other()
+EVENT_OTHER * evel_new_other(const char *ev_name, const char *ev_id)
 {
   EVENT_OTHER * other = NULL;
   EVEL_ENTER();
@@ -64,7 +64,7 @@ EVENT_OTHER * evel_new_other()
   /* Initialize the header & the Other fields.  Optional string values are   */
   /* uninitialized (NULL).                                                   */
   /***************************************************************************/
-  evel_init_header(&other->header,"OtherEvent");
+  evel_init_header_nameid(&other->header,ev_name,ev_id);
   other->header.event_domain = EVEL_DOMAIN_OTHER;
   other->major_version = EVEL_OTHER_EVENT_MAJOR_VERSION;
   other->minor_version = EVEL_OTHER_EVENT_MINOR_VERSION;

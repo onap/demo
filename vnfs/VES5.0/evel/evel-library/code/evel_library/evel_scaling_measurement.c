@@ -37,13 +37,15 @@
  *          that the Measurement has immutable properties.
  *
  * @param   measurement_interval
+ * @param event_name  Unique Event Name confirming Domain AsdcModel Description
+ * @param event_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
  *
  * @returns pointer to the newly manufactured ::EVENT_MEASUREMENT.  If the
  *          event is not used (i.e. posted) it must be released using
  *          ::evel_free_event.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval)
+EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval, const char* ev_name, const char *ev_id)
 {
   EVENT_MEASUREMENT * measurement = NULL;
 
@@ -69,7 +71,7 @@ EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval)
   /***************************************************************************/
   /* Initialize the header & the measurement fields.                         */
   /***************************************************************************/
-  evel_init_header(&measurement->header,"vnfScalingMeasurement");
+  evel_init_header_nameid(&measurement->header,ev_name,ev_id);
   measurement->header.event_domain = EVEL_DOMAIN_MEASUREMENT;
   measurement->measurement_interval = measurement_interval;
   dlist_initialize(&measurement->additional_info);
@@ -3711,3 +3713,4 @@ void evel_free_measurement(EVENT_MEASUREMENT * event)
 
   EVEL_EXIT();
 }
+

@@ -226,7 +226,7 @@ EVEL_ERR_CODES event_handler_run();
  *          ::evel_free_event.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_INTERNAL * evel_new_internal_event(EVT_HANDLER_COMMAND command);
+EVENT_INTERNAL * evel_new_internal_event(EVT_HANDLER_COMMAND command,const char* ev_name, const char *ev_id);
 
 /**************************************************************************//**
  * Free an internal event.

@@ -33,6 +33,8 @@
  *          function and are immutable once set.  Optional fields have explicit
  *          setter functions, but again values may only be set once so that the
  *          Syslog has immutable properties.
+ * @param event_name  Unique Event Name confirming Domain AsdcModel Description
+ * @param event_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
  * @param   event_source_type  The type of Syslog event source.
  * @param   syslog_msg         The Syslog event message.
  * @param   syslog_tag         The messgaeId identifying the type of message.
@@ -41,7 +43,8 @@
  *          ::evel_free_syslog.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_SYSLOG * evel_new_syslog(EVEL_SOURCE_TYPES event_source_type,
+EVENT_SYSLOG * evel_new_syslog(const char* ev_name, const char *ev_id,
+			       EVEL_SOURCE_TYPES event_source_type,
                                const char * const syslog_msg,
                                const char * const syslog_tag)
 {
@@ -71,7 +74,7 @@ EVENT_SYSLOG * evel_new_syslog(EVEL_SOURCE_TYPES event_source_type,
   /* Initialize the header & the Syslog fields.  Optional string values are  */
   /* uninitialized (NULL).                                                   */
   /***************************************************************************/
-  evel_init_header(&syslog->header,"Syslog");
+  evel_init_header_nameid(&syslog->header,ev_name,ev_id);
   syslog->header.event_domain = EVEL_DOMAIN_SYSLOG;
   syslog->major_version = EVEL_SYSLOG_MAJOR_VERSION;
   syslog->minor_version = EVEL_SYSLOG_MINOR_VERSION;

@@ -140,6 +140,7 @@ API_SOURCES=$(EVELLIB_ROOT)/evel.c \
             $(EVELLIB_ROOT)/evel_throttle.c \
             $(EVELLIB_ROOT)/evel_internal_event.c \
             $(EVELLIB_ROOT)/evel_event_mgr.c \
+            $(EVELLIB_ROOT)/evel_threshold_cross.c \
             $(EVELLIB_ROOT)/evel_voicequality.c \
             $(EVELLIB_ROOT)/evel_logging.c \
             $(EVELLIB_ROOT)/jsmn.c

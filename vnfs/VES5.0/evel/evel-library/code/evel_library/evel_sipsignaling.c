@@ -33,6 +33,8 @@
  *          this factory function and are immutable once set.  Optional fields
  *          have explicit setter functions, but again values may only be set
  *          once so that the event has immutable properties.
+ * @param event_name  Unique Event Name confirming Domain AsdcModel Description
+ * @param event_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
  * @param vendor_name   The vendor id to encode in the event vnf field.
  * @param module        The module to encode in the event.
  * @param vnfname       The Virtual network function to encode in the event.
@@ -41,7 +43,8 @@
  *          ::evel_free_signaling.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_SIGNALING * evel_new_signaling(const char * const vendor_name,
+EVENT_SIGNALING * evel_new_signaling(const char* ev_name, const char *ev_id,
+				     const char * const vendor_name,
                                      const char * const correlator,
                                      const char * const local_ip_address,
                                      const char * const local_port,
@@ -72,7 +75,7 @@ EVENT_SIGNALING * evel_new_signaling(const char * const vendor_name,
   /***************************************************************************/
   /* Initialize the header & the Signaling fields.                           */
   /***************************************************************************/
-  evel_init_header(&event->header,"SipSignaling");
+  evel_init_header_nameid(&event->header,ev_name,ev_id);
   event->header.event_domain = EVEL_DOMAIN_SIPSIGNALING;
   event->major_version = EVEL_SIGNALING_MAJOR_VERSION;
   event->minor_version = EVEL_SIGNALING_MINOR_VERSION;

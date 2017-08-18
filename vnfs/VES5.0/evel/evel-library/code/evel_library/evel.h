@@ -1486,6 +1486,21 @@ size_t evel_write_callback(void *contents,
 EVENT_HEADER * evel_new_heartbeat(void);
 
 /**************************************************************************//**
+ * Create a new heartbeat event of given name and type.
+ *
+ * @note that the heartbeat is just a "naked" commonEventHeader!
+ *
+ * @param event_name  Unique Event Name confirming Domain AsdcModel Description
+ * @param event_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
+ *
+ * @returns pointer to the newly manufactured ::EVENT_HEADER.  If the event is
+ *          not used it must be released using ::evel_free_event
+ * @retval  NULL  Failed to create the event.
+ *****************************************************************************/
+EVENT_HEADER * evel_new_heartbeat_nameid(const char* ev_name, const char *ev_id);
+
+
+/**************************************************************************//**
  * Free an event header.
  *
  * Free off the event header supplied.  Will free all the contained allocated
@@ -1560,6 +1575,23 @@ void evel_reporting_entity_name_set(EVENT_HEADER * const header,
 void evel_reporting_entity_id_set(EVENT_HEADER * const header,
                                   const char * const entity_id);
 
+/**************************************************************************//**
+ * Set the NFC Naming code property of the event header.
+ *
+ * @param header        Pointer to the ::EVENT_HEADER.
+ * @param nfcnamingcode String
+ *****************************************************************************/
+void evel_nfcnamingcode_set(EVENT_HEADER * const header,
+                         const char * const nfcnam);
+/**************************************************************************//**
+ * Set the NF Naming code property of the event header.
+ *
+ * @param header        Pointer to the ::EVENT_HEADER.
+ * @param nfnamingcode String
+ *****************************************************************************/
+void evel_nfnamingcode_set(EVENT_HEADER * const header,
+                         const char * const nfnam);
+
 /*****************************************************************************/
 /*****************************************************************************/
 /*                                                                           */
@@ -1575,6 +1607,8 @@ void evel_reporting_entity_id_set(EVENT_HEADER * const header,
  *          function and are immutable once set.  Optional fields have explicit
  *          setter functions, but again values may only be set once so that the
  *          Fault has immutable properties.
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  * @param   condition   The condition indicated by the Fault.
  * @param   specific_problem  The specific problem triggering the fault.
  * @param   priority    The priority of the event.
@@ -1586,7 +1620,8 @@ void evel_reporting_entity_id_set(EVENT_HEADER * const header,
  *          not used (i.e. posted) it must be released using ::evel_free_fault.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_FAULT * evel_new_fault(const char * const condition,
+EVENT_FAULT * evel_new_fault(const char* ev_name, const char *ev_id,
+			     const char * const condition,
                              const char * const specific_problem,
                              EVEL_EVENT_PRIORITIES priority,
                              EVEL_SEVERITIES severity,
@@ -1678,13 +1713,15 @@ void evel_fault_type_set(EVENT_FAULT * fault, const char * const type);
  *          that the Measurement has immutable properties.
  *
  * @param   measurement_interval
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  *
  * @returns pointer to the newly manufactured ::EVENT_MEASUREMENT.  If the
  *          event is not used (i.e. posted) it must be released using
  *          ::evel_free_event.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval);
+EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval,const char* ev_name, const char *ev_id);
 
 /**************************************************************************//**
  * Free a Measurement.
@@ -2557,13 +2594,15 @@ void evel_measurement_vnic_performance_add(EVENT_MEASUREMENT * const measurement
  *          that the Report has immutable properties.
  *
  * @param   measurement_interval
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  *
  * @returns pointer to the newly manufactured ::EVENT_REPORT.  If the event is
  *          not used (i.e. posted) it must be released using
  *          ::evel_free_report.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_REPORT * evel_new_report(double measurement_interval);
+EVENT_REPORT * evel_new_report(double measurement_interval,const char* ev_name, const char *ev_id);
 
 /**************************************************************************//**
  * Free a Report.
@@ -2637,6 +2676,8 @@ void evel_report_custom_measurement_add(EVENT_REPORT * report,
  *          explicit setter functions, but again values may only be set once so
  *          that the Mobile Flow has immutable properties.
  *
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  * @param   flow_direction
  * @param   gtp_per_flow_metrics
  * @param   ip_protocol_type
@@ -2652,6 +2693,7 @@ void evel_report_custom_measurement_add(EVENT_REPORT * report,
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
 EVENT_MOBILE_FLOW * evel_new_mobile_flow(
+		      const char* ev_name, const char *ev_id,
                       const char * const flow_direction,
                       MOBILE_GTP_PER_FLOW_METRICS * gtp_per_flow_metrics,
                       const char * const ip_protocol_type,
@@ -3372,6 +3414,8 @@ void evel_mobile_gtp_metrics_qci_cos_count_add(
  *          this factory function and are immutable once set.  Optional fields
  *          have explicit setter functions, but again values may only be set
  *          once so that the event has immutable properties.
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  * @param vendor_name   The vendor id to encode in the event vnf field.
  * @param module        The module to encode in the event.
  * @param vnfname       The Virtual network function to encode in the event.
@@ -3380,7 +3424,8 @@ void evel_mobile_gtp_metrics_qci_cos_count_add(
  *          ::evel_free_signaling.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_SIGNALING * evel_new_signaling(const char * const vendor_name,
+EVENT_SIGNALING * evel_new_signaling(const char* ev_name, const char *ev_id,
+				     const char * const vendor_name,
                                      const char * const correlator,
 				     const char * const local_ip_address,
 				     const char * const local_port,
@@ -3582,6 +3627,8 @@ void evel_signaling_summary_sip_set(EVENT_SIGNALING * const event,
  *          setter functions, but again values may only be set once so that the
  *          Syslog has immutable properties.
  *
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  * @param new_state     The new state of the reporting entity.
  * @param old_state     The old state of the reporting entity.
  * @param interface     The card or port name of the reporting entity.
@@ -3591,7 +3638,8 @@ void evel_signaling_summary_sip_set(EVENT_SIGNALING * const event,
  *          ::evel_free_state_change
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_STATE_CHANGE * evel_new_state_change(const EVEL_ENTITY_STATE new_state,
+EVENT_STATE_CHANGE * evel_new_state_change(const char* ev_name, const char *ev_id,
+					   const EVEL_ENTITY_STATE new_state,
                                            const EVEL_ENTITY_STATE old_state,
                                            const char * const interface);
 
@@ -3656,6 +3704,8 @@ void evel_state_change_addl_field_add(EVENT_STATE_CHANGE * const state_change,
  *          setter functions, but again values may only be set once so that the
  *          Syslog has immutable properties.
  *
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  * @param   event_source_type
  * @param   syslog_msg
  * @param   syslog_tag
@@ -3665,7 +3715,8 @@ void evel_state_change_addl_field_add(EVENT_STATE_CHANGE * const state_change,
  *          not used it must be released using ::evel_free_syslog
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_SYSLOG * evel_new_syslog(EVEL_SOURCE_TYPES event_source_type,
+EVENT_SYSLOG * evel_new_syslog(const char* ev_name, const char *ev_id,
+				EVEL_SOURCE_TYPES event_source_type,
                                const char * const syslog_msg,
                                const char * const syslog_tag);
 
@@ -3834,12 +3885,14 @@ void evel_syslog_severity_set(EVENT_SYSLOG * syslog, const char * const severty)
 /**************************************************************************//**
  * Create a new other event.
  *
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  *
  * @returns pointer to the newly manufactured ::EVENT_OTHER.  If the event is
  *          not used it must be released using ::evel_free_other.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_OTHER * evel_new_other(void);
+EVENT_OTHER * evel_new_other(const char* ev_name, const char *ev_id);
 
 /**************************************************************************//**
  * Free an Other.
@@ -3987,6 +4040,8 @@ typedef struct voice_quality_additional_info {
  *          factory function and are immutable once set.  Optional fields have 
  *          explicit setter functions, but again values may only be set once 
  *          so that the Voice Quality has immutable properties.
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  * @param   calleeSideCodec			Callee codec for the call.
  * @param   callerSideCodec			Caller codec for the call.
  * @param   correlator				Constant across all events on this call.
@@ -3998,7 +4053,8 @@ typedef struct voice_quality_additional_info {
 			::evel_free_voice_quality.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_VOICE_QUALITY * evel_new_voice_quality(const char * const calleeSideCodec,
+EVENT_VOICE_QUALITY * evel_new_voice_quality(const char* ev_name, const char *ev_id,
+	const char * const calleeSideCodec,
 	const char * const callerSideCodec, const char * const correlator,
 	const char * const midCallRtcp, const char * const vendorVnfNameFields);
 
@@ -4248,6 +4304,8 @@ typedef struct event_threshold_cross {
  *          setter functions, but again values may only be set once so that the
  *          TCA has immutable properties.
  *
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc
  * @param char* tcriticality   Performance Counter Criticality MAJ MIN,
  * @param char* tname          Performance Counter Threshold name
  * @param char* tthresholdCrossed  Counter Threshold crossed value
@@ -4265,6 +4323,7 @@ typedef struct event_threshold_cross {
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
 EVENT_THRESHOLD_CROSS * evel_new_threshold_cross(
+				const char* ev_name, const char *ev_id,
                                char * tcriticality,
 	                       char * tname,
 	                       char * tthresholdCrossed,

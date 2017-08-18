@@ -52,6 +52,51 @@ void evel_set_next_event_sequence(const int sequence)
   EVEL_EXIT();
 }
 
+
+/**************************************************************************//**
+ * Create a new heartbeat event of given name and type.
+ *
+ * @note that the heartbeat is just a "naked" commonEventHeader!
+ *
+ * @param event_name    Unique Event Name: in format
+ * {DomainAbbreviation}_{AsdcModel or ApplicationPlatform}_{DescriptionOfInfoBeingConveyed}
+ * @param event_id     Uniquely identify event for correlation and analysis
+ *
+ * @returns pointer to the newly manufactured ::EVENT_HEADER.  If the event is
+ *          not used it must be released using ::evel_free_event
+ * @retval  NULL  Failed to create the event.
+ *****************************************************************************/
+EVENT_HEADER * evel_new_heartbeat_nameid(const char* ev_name, const char *ev_id)
+{
+  EVENT_HEADER * heartbeat = NULL;
+  EVEL_ENTER();
+
+  assert(ev_name != NULL);
+  assert(ev_id != NULL);
+
+  /***************************************************************************/
+  /* Allocate the header.                                                    */
+  /***************************************************************************/
+  heartbeat = malloc(sizeof(EVENT_HEADER));
+  if (heartbeat == NULL)
+  {
+    log_error_state("Out of memory");
+    goto exit_label;
+  }
+  memset(heartbeat, 0, sizeof(EVENT_HEADER));
+
+  /***************************************************************************/
+  /* Initialize the header.  Get a new event sequence number.  Note that if  */
+  /* any memory allocation fails in here we will fail gracefully because     */
+  /* everything downstream can cope with NULLs.                              */
+  /***************************************************************************/
+  evel_init_header_nameid(heartbeat,ev_name,ev_id);
+
+exit_label:
+  EVEL_EXIT();
+  return heartbeat;
+}
+
 /**************************************************************************//**
  * Create a new heartbeat event.
  *
@@ -118,6 +163,55 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
      header->event_name = strdup(functional_role);
   else
      header->event_name = strdup(eventname);
+  header->last_epoch_microsec = tv.tv_usec + 1000000 * tv.tv_sec;
+  header->priority = EVEL_PRIORITY_NORMAL;
+  header->reporting_entity_name = strdup(openstack_vm_name());
+  header->source_name = strdup(openstack_vm_name());
+  header->sequence = event_sequence;
+  header->start_epoch_microsec = header->last_epoch_microsec;
+  header->major_version = EVEL_HEADER_MAJOR_VERSION;
+  header->minor_version = EVEL_HEADER_MINOR_VERSION;
+  event_sequence++;
+
+  /***************************************************************************/
+  /* Optional parameters.                                                    */
+  /***************************************************************************/
+  evel_init_option_string(&header->event_type);
+  evel_init_option_string(&header->nfcnaming_code);
+  evel_init_option_string(&header->nfnaming_code);
+  evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
+  evel_force_option_string(&header->source_id, openstack_vm_uuid());
+  evel_init_option_intheader(&header->internal_field);
+
+  EVEL_EXIT();
+}
+
+
+/**************************************************************************//**
+ * Initialize a newly created event header.
+ *
+ * @param header  Pointer to the header being initialized.
+ *****************************************************************************/
+void evel_init_header_nameid(EVENT_HEADER * const header,const char *const eventname, const char *eventid)
+{
+  struct timeval tv;
+
+  EVEL_ENTER();
+
+  assert(header != NULL);
+  assert(eventname != NULL);
+  assert(eventid != NULL);
+
+  gettimeofday(&tv, NULL);
+
+  /***************************************************************************/
+  /* Initialize the header.  Get a new event sequence number.  Note that if  */
+  /* any memory allocation fails in here we will fail gracefully because     */
+  /* everything downstream can cope with NULLs.                              */
+  /***************************************************************************/
+  header->event_domain = EVEL_DOMAIN_HEARTBEAT;
+  header->event_id = strdup(eventid);
+  header->event_name = strdup(eventname);
   header->last_epoch_microsec = tv.tv_usec + 1000000 * tv.tv_sec;
   header->priority = EVEL_PRIORITY_NORMAL;
   header->reporting_entity_name = strdup(openstack_vm_name());

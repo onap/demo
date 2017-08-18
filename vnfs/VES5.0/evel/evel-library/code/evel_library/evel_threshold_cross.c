@@ -35,6 +35,8 @@
  *          setter functions, but again values may only be set once so that the
  *          TCA has immutable properties.
  *
+ * @param event_name  Unique Event Name confirming Domain AsdcVnfModel Description
+ * @param event_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
  * @param char* tcriticality   Performance Counter Criticality MAJ MIN,
  * @param char* tname          Performance Counter Threshold name
  * @param char* tthresholdCrossed  Counter Threshold crossed value
@@ -51,7 +53,8 @@
  *          ::evel_free_threshold_cross
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_THRESHOLD_CROSS * evel_new_threshold_cross( char *  tcriticality,
+EVENT_THRESHOLD_CROSS * evel_new_threshold_cross(const char * ev_name, const char * ev_id,
+			   char *  tcriticality,
                            char *  tname,
                            char *  tthresholdCrossed,
                            char *  tvalue,
@@ -87,7 +90,7 @@ EVENT_THRESHOLD_CROSS * evel_new_threshold_cross( char *  tcriticality,
   /***************************************************************************/
   /* Initialize the header & the threshold crossing fields.                  */
   /***************************************************************************/
-  evel_init_header(&event->header,"thresholdCrossingAlert");
+  evel_init_header_nameid(&event->header,ev_name,ev_id);
   event->header.event_domain = EVEL_DOMAIN_THRESHOLD_CROSS;
   event->major_version = EVEL_THRESHOLD_CROSS_MAJOR_VERSION;
   event->minor_version = EVEL_THRESHOLD_CROSS_MINOR_VERSION;

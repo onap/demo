@@ -34,6 +34,8 @@
  *          factory function and are immutable once set.  Optional fields have 
  *          explicit setter functions, but again values may only be set once 
  *          so that the Voice Quality has immutable properties.
+ * @param event_name    Unique Event Name
+ * @param event_id    A universal identifier of the event for analysis etc.
  * @param   calleeSideCodec         Callee codec for the call.
  * @param   callerSideCodec         Caller codec for the call.
  * @param   correlator              Constant across all events on this call.
@@ -45,7 +47,8 @@
             ::evel_free_voice_quality.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_VOICE_QUALITY * evel_new_voice_quality(const char * const calleeSideCodec,
+EVENT_VOICE_QUALITY * evel_new_voice_quality(const char* ev_name, const char *ev_id,
+					const char * const calleeSideCodec,
     const char * const callerSideCodec, const char * const correlator,
     const char * const midCallRtcp, const char * const vendorName) {
     
@@ -82,7 +85,7 @@ EVENT_VOICE_QUALITY * evel_new_voice_quality(const char * const calleeSideCodec,
         /* Initialize the header & the fault fields.  Optional integer values are   */
         /* initialized as 0.                                                        */
         /***************************************************************************/
-        evel_init_header(&voiceQuality->header,"voiceQuality");
+        evel_init_header_nameid(&voiceQuality->header,ev_name,ev_id);
         voiceQuality->header.event_domain = EVEL_DOMAIN_VOICE_QUALITY;
         voiceQuality->major_version = EVEL_VOICEQ_MAJOR_VERSION;
         voiceQuality->minor_version = EVEL_VOICEQ_MINOR_VERSION;
