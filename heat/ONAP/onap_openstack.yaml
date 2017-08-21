@@ -995,8 +995,8 @@ resources:
   sdc_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_sdc }
-      fixed_ips: [{"subnet": { get_resource: oam_sdc_subnet }, "ip_address": { get_param: sdc_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: sdc_ip_addr }}]
 
   sdc_floating_ip:
     type: OS::Neutron::FloatingIP
