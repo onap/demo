@@ -352,6 +352,56 @@ parameters:
     type: string
     description: DCAE Code Version Number
 
+  #####################
+  #                   #
+  # ONAP repositories #
+  #                   #
+  #####################
+
+  aai_repo:
+    type: string
+    description: AAI repository
+
+  appc_repo:
+    type: string
+    description: APPC repository
+
+  dcae_repo:
+    type: string
+    description: DCAE repository
+
+  mr_repo:
+    type: string
+    description: Message Router repository
+
+  mso_repo:
+    type: string
+    description: MSO repository
+
+  policy_repo:
+    type: string
+    description: Policy repository
+
+  portal_repo:
+    type: string
+    description: Portal repository
+
+  robot_repo:
+    type: string
+    description: Robot repository
+
+  sdc_repo:
+    type: string
+    description: SDC repository
+
+  sdnc_repo:
+    type: string
+    description: SDNC repository
+
+  vid_repo:
+    type: string
+    description: VID repository
+
 
 #############
 #           #
@@ -381,24 +431,24 @@ resources:
 
 
   # ONAP management private network
-  oam_ecomp:
+  oam_onap:
     type: OS::Neutron::Net
     properties:
       name:
         str_replace:
-          template: oam_ecomp_rand
+          template: oam_onap_rand
           params:
             rand: { get_resource: random-str }
 
-  oam_ecomp_subnet:
+  oam_onap_subnet:
     type: OS::Neutron::Subnet
     properties:
       name:
         str_replace:
-          template: oam_ecomp_rand
+          template: oam_onap_rand
           params:
             rand: { get_resource: random-str }
-      network_id: { get_resource: oam_ecomp }
+      network_id: { get_resource: oam_onap }
       cidr: { get_param: oam_network_cidr }
       dns_nameservers: { get_param: dns_list }
 
@@ -415,15 +465,15 @@ resources:
     type: OS::Neutron::RouterInterface
     properties:
       router_id: { get_resource: router }
-      subnet_id: { get_resource: oam_ecomp_subnet }
+      subnet_id: { get_resource: oam_onap_subnet }
 
 
   # DNS Server instantiation
   dns_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: dns_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: dns_ip_addr }}]
 
   dns_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -451,7 +501,7 @@ resources:
           params:
             __nexus_repo__: { get_param: nexus_repo }
             __artifacts_version__: { get_param: artifacts_version }
-            __oam_network_cidr__: { get_attr: [oam_ecomp_subnet, cidr] }
+            __oam_network_cidr__: { get_attr: [oam_onap_subnet, cidr] }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __aai1_ip_addr__: { get_param: aai1_ip_addr }
             __aai2_ip_addr__: { get_param: aai2_ip_addr }
@@ -504,8 +554,8 @@ resources:
   aai1_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: aai1_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: aai1_ip_addr }}]
 
   aai1_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -543,6 +593,7 @@ resources:
             __cloud_env__: { get_param: cloud_env }
             __gerrit_branch__: { get_param: gerrit_branch }
             __external_dns__: { get_param: external_dns }
+            __aai_repo__: { get_param: aai_repo }
           template: |
             #!/bin/bash
 
@@ -560,6 +611,7 @@ resources:
             echo "aai_instance_1" > /opt/config/aai_instance.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__aai_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
@@ -571,8 +623,8 @@ resources:
   aai2_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: aai2_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: aai2_ip_addr }}]
 
   aai2_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -609,6 +661,7 @@ resources:
             __cloud_env__: { get_param: cloud_env }
             __gerrit_branch__: { get_param: gerrit_branch }
             __external_dns__: { get_param: external_dns }
+            __aai_repo__: { get_param: aai_repo }
           template: |
             #!/bin/bash
 
@@ -626,6 +679,7 @@ resources:
             echo "aai_instance_2" > /opt/config/aai_instance.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__aai_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
@@ -638,8 +692,8 @@ resources:
   mso_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: mso_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: mso_ip_addr }}]
 
   mso_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -681,6 +735,7 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
+            __mso_repo__: { get_param: mso_repo }
           template: |
             #!/bin/bash
 
@@ -702,6 +757,7 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__mso_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/mso_install.sh -o /opt/mso_install.sh
@@ -714,8 +770,8 @@ resources:
   mrouter_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: mr_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: mr_ip_addr }}]
 
   mrouter_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -750,6 +806,7 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
+            __mr_repo__: { get_param: mr_repo }
           template: |
             #!/bin/bash
 
@@ -764,6 +821,7 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__mr_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/mr_install.sh -o /opt/mr_install.sh
@@ -776,8 +834,8 @@ resources:
   robot_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: robot_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: robot_ip_addr }}]
 
   robot_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -807,7 +865,7 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __network_name__: { get_attr: [oam_ecomp, name] }
+            __network_name__: { get_attr: [oam_onap, name] }
             __openstack_username__: { get_param: openstack_username }
             __openstack_api_key__: { get_param : openstack_api_key }
             __artifacts_version__: { get_param: artifacts_version }
@@ -829,8 +887,9 @@ resources:
             __vid_ip_addr__: { get_param: vid_ip_addr }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
-            __vm_image_name__: { get_param: ubuntu_1404_image}
-            __vm_flavor__: { get_param: flavor_medium}
+            __vm_image_name__: { get_param: ubuntu_1404_image }
+            __vm_flavor__: { get_param: flavor_medium }
+            __robot_repo__: { get_param: robot_repo }
           template: |
             #!/bin/bash
 
@@ -864,6 +923,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__vm_image_name__" > /opt/config/vm_image_name.txt
             echo "__vm_flavor__" > /opt/config/vm_flavor.txt
+            echo "__robot_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/robot_install.sh -o /opt/robot_install.sh
@@ -876,8 +936,8 @@ resources:
   vid_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: vid_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: vid_ip_addr }}]
 
   vid_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -913,6 +973,7 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
+            __vid_repo__: { get_param: vid_repo }
           template: |
             #!/bin/bash
 
@@ -928,6 +989,7 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__vid_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/vid_install.sh -o /opt/vid_install.sh
@@ -940,8 +1002,8 @@ resources:
   sdnc_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: sdnc_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: sdnc_ip_addr }}]
 
   sdnc_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -977,6 +1039,7 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
+            __sdnc_repo__: { get_param: sdnc_repo }
           template: |
             #!/bin/bash
 
@@ -992,6 +1055,7 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__sdnc_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/sdnc_install.sh -o /opt/sdnc_install.sh
@@ -1004,8 +1068,8 @@ resources:
   sdc_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: sdc_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: sdc_ip_addr }}]
 
   sdc_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1053,6 +1117,7 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
+            __sdc_repo__: { get_param: sdc_repo }
           template: |
             #!/bin/bash
 
@@ -1071,6 +1136,7 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__sdc_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/asdc_install.sh -o /opt/asdc_install.sh
@@ -1083,8 +1149,8 @@ resources:
   portal_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: portal_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: portal_ip_addr }}]
 
   portal_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1121,6 +1187,7 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
+            __portal_repo__: { get_param: portal_repo }
           template: |
             #!/bin/bash
 
@@ -1137,6 +1204,7 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__portal_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/portal_install.sh -o /opt/portal_install.sh
@@ -1149,8 +1217,8 @@ resources:
   dcae_c_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
 
   dcae_c_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1187,7 +1255,7 @@ resources:
             __dcae_state__: { get_param: dcae_state }
             __artifacts_version__: { get_param: artifacts_version }
             __tenant_id__: { get_param: openstack_tenant_id }
-            __openstack_private_network_name__: { get_attr: [oam_ecomp, name] }
+            __openstack_private_network_name__: { get_attr: [oam_onap, name] }
             __openstack_user__: { get_param: openstack_username }
             __openstack_password__: { get_param: openstack_api_key }
             __openstack_auth_method__: { get_param: openstack_auth_method }
@@ -1223,6 +1291,8 @@ resources:
             __flavor_medium__: { get_param: flavor_medium }
             __flavor_large__: { get_param: flavor_large }
             __flavor_xlarge__: { get_param: flavor_xlarge }
+            __dcae_repo__: { get_param: dcae_repo }
+            __mr_repo__: { get_param: mr_repo }
           template: |
             #!/bin/bash
 
@@ -1275,6 +1345,8 @@ resources:
             echo "__flavor_medium__" > /opt/config/flavor_medium.txt
             echo "__flavor_large__" > /opt/config/flavor_large.txt
             echo "__flavor_xlarge__" > /opt/config/flavor_xlarge.txt
+            echo "__dcae_repo__" > /opt/config/remote_repo.txt
+            echo "__mr_repo__" > /opt/config/mr_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh
@@ -1287,8 +1359,8 @@ resources:
   policy_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: policy_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: policy_ip_addr }}]
 
   policy_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1325,6 +1397,7 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
+            __policy_repo__: { get_param: policy_repo }
           template: |
             #!/bin/bash
 
@@ -1341,6 +1414,7 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__policy_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/policy_install.sh -o /opt/policy_install.sh
@@ -1353,8 +1427,8 @@ resources:
   appc_private_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: oam_ecomp }
-      fixed_ips: [{"subnet": { get_resource: oam_ecomp_subnet }, "ip_address": { get_param: appc_ip_addr }}]
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: appc_ip_addr }}]
 
   appc_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1391,6 +1465,7 @@ resources:
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
+            __appc_repo__: { get_param: appc_repo }
           template: |
             #!/bin/bash
 
@@ -1407,6 +1482,7 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__appc_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/appc_install.sh -o /opt/appc_install.sh

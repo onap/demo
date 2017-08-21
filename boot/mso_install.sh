@@ -8,6 +8,7 @@ CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 OPENSTACK_API_KEY=$(cat /opt/config/openstack_api_key.txt)
 GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+CODE_REPO=$(cat /opt/config/remote_repo.txt)
 
 # Add host name to /etc/host to avoid warnings in openstack images
 if [[ $CLOUD_ENV != "rackspace" ]]
@@ -92,7 +93,7 @@ resolvconf -u
 
 # Clone Gerrit repository
 cd /opt
-git clone -b $GERRIT_BRANCH --single-branch http://gerrit.onap.org/r/so/docker-config.git test_lab
+git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO test_lab
 MSO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
 echo -n "$OPENSTACK_API_KEY" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
 

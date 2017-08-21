@@ -6,6 +6,8 @@ ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
+CODE_REPO=$(cat /opt/config/remote_repo.txt)
+MR_REPO=$(cat /opt/config/mr_repo.txt)
 
 BASE=$(cat /opt/config/dcae_base_environment.txt)
 PUBLIC_NET_ID=$(cat /opt/config/public_net_id.txt)
@@ -122,7 +124,7 @@ resolvconf -u
 
 # Clone Gerrit repository
 cd /opt
-git clone -b $GERRIT_BRANCH --single-branch http://gerrit.onap.org/r/dcae/demo/startup/controller.git dcae-startup-vm-controller
+git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO dcae-startup-vm-controller
 
 # Build a configuration file for the DCAE Controller.
 cd /opt/dcae-startup-vm-controller
@@ -154,7 +156,7 @@ NEXUS-RAWURL: $NEXUS_REPO
 DOCKER-REGISTRY: $DOCKER_REGISTRY
 DOCKER-VERSION: $DOCKER_VERSION
 
-GIT-MR-REPO: http://gerrit.onap.org/r/dcae/demo/startup/message-router.git
+GIT-MR-REPO: $MR_REPO
 
 public_net_id: $PUBLIC_NET_ID
 dcae_ip_addr: $DCAE_IP_ADDR

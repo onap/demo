@@ -7,6 +7,7 @@ DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+CODE_REPO=$(cat /opt/config/remote_repo.txt)
 
 # Add host name to /etc/host to avoid warnings in openstack images
 if [[ $CLOUD_ENV != "rackspace" ]]
@@ -116,7 +117,7 @@ chmod 777 /data
 chmod 777 /data/logs/BE
 chmod 777 /data/logs/FE
 
-git clone -b $GERRIT_BRANCH --single-branch http://gerrit.onap.org/r/sdc.git
+git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO
 
 cat > /root/.bash_aliases << EOF
 alias dcls='/data/scripts/docker_clean.sh \$1'

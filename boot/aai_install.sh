@@ -8,6 +8,7 @@ CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 AAI_INSTANCE=$(cat /opt/config/aai_instance.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+CODE_REPO=$(cat /opt/config/remote_repo.txt)
 
 # Add host name to /etc/host to avoid warnings in openstack images
 if [[ $CLOUD_ENV != "rackspace" ]]
@@ -92,7 +93,7 @@ resolvconf -u
 
 # Run docker containers
 cd /opt
-git clone -b $GERRIT_BRANCH --single-branch http://gerrit.onap.org/r/aai/test-config
+git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO
 
 if [[ $AAI_INSTANCE == "aai_instance_1" ]]
 then
