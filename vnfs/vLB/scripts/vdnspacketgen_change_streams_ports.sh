@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#Disable all streams via Honeycomb (so that it will in consistent state)
-curl -X PUT -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d '{"pg-streams":{"pg-stream": []}}' "http://localhost:8183/restconf/config/sample-plugin:sample-plugin/pg-streams"
+#Disable all streams
+killall -9 run_streams_dns.sh
 
 vppctl pac del dns1
 vppctl pac del dns2
@@ -13,7 +13,6 @@ vppctl pac del dns7
 vppctl pac del dns8
 vppctl pac del dns9
 vppctl pac del dns10
-
 
 #Update destination (vLB) IP
 VLB_IPADDR=$(cat /opt/config/vlb_ipaddr.txt)
@@ -51,3 +50,7 @@ vppctl exec /opt/dns_streams/stream_dns7
 vppctl exec /opt/dns_streams/stream_dns8
 vppctl exec /opt/dns_streams/stream_dns9
 vppctl exec /opt/dns_streams/stream_dns10
+
+#Resume stream execution
+cd /opt
+./run_streams_dns.sh &>/dev/null

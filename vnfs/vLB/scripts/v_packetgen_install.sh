@@ -51,19 +51,14 @@ apt-get install -y make wget openjdk-8-jdk gcc libcurl4-openssl-dev python-pip b
 pip install jsonschema
 
 # Download vFirewall demo code for packet generator
-mkdir /opt/honeycomb
 cd /opt
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_packetgen_init.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vpacketgen.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/run_streams_dns.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdnspacketgen_change_streams_ports.sh
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb_dns_streams/$DEMO_ARTIFACTS_VERSION/vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
 
 tar -zxvf vpp.tar.gz
-tar -zxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-mv sample-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
-sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/sample-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
 tar -zxvf vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv vlb_dns_streams-$DEMO_ARTIFACTS_VERSION dns_streams
 rm *.tar.gz

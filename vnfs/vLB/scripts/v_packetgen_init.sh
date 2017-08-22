@@ -94,13 +94,6 @@ vppctl exec /opt/dns_streams/stream_dns10
 vppctl set int ip address pg0 $(cat /opt/config/pg_int.txt)"/"$IPADDR1_CIDR
 sleep 1
 
-# Start HoneyComb
-VERSION=$(cat /opt/config/demo_artifacts_version.txt)
-echo "" > /var/lib/honeycomb/persist/context/data.json
-echo "" > /var/lib/honeycomb/persist/config/data.json
-/opt/honeycomb/sample-distribution-$VERSION/honeycomb &>/dev/null &disown
-sleep 20
-
 # Enable traffic flows
 cd /opt
 chmod +x run_streams_dns.sh

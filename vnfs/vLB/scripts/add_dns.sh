@@ -13,7 +13,7 @@ GRE_IPADDR=$(cat /opt/config/gre_ipaddr.txt)
 
 vppctl lb as $IP_TO_PKTGEN_NET"/32" $DNS_IPADDR
 GRE=$(vppctl create gre tunnel src $IP_TO_DNS_NET dst $DNS_IPADDR)
-vppctl set int ip address $GRE $GRE_IPADDR"/24"
+vppctl set int ip address $GRE $GRE_IPADDR"/32"
 vppctl set int state $GRE up
 
 # Update the number of vDNSs currently active
