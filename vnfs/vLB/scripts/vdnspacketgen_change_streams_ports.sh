@@ -53,4 +53,4 @@ vppctl exec /opt/dns_streams/stream_dns10
 
 #Resume stream execution
 cd /opt
-./run_streams_dns.sh &>/dev/null
+./run_streams_dns.sh &>/dev/null &disown
