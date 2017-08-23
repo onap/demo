@@ -93,5 +93,8 @@ resolvconf -u
 # Clone Gerrit repository and run docker containers
 mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
 cd /opt
-git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO
+#git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO
+
+#PORTAL ALREADY IS AT RELEASE-1.1.0. HARDCODE THE BRANCH NAME. THIS IS A TEMPORARY SOLUTION.
+git clone -b release-1.1.0 --single-branch $CODE_REPO
 ./portal_vm_init.sh
