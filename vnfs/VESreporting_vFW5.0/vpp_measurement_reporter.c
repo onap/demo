@@ -245,7 +245,7 @@ int main(int argc, char** argv)
       packets_out_this_round = 0;
     }
 
-    vpp_m = evel_new_measurement(READ_INTERVAL);
+    vpp_m = evel_new_measurement(READ_INTERVAL,"Measurement_vVNF","TrafficStats_1.2.3.4");
     vnic_performance = (MEASUREMENT_VNIC_PERFORMANCE *)evel_measurement_new_vnic_performance("eth0", "true");
     evel_meas_vnic_performance_add(vpp_m, vnic_performance);
 
@@ -277,6 +277,8 @@ int main(int argc, char** argv)
       evel_last_epoch_set(&vpp_m->header, epoch_now);
       epoch_start = epoch_now;
 
+      evel_nfcnamingcode_set(&vpp_m->header, "vVNF");
+      evel_nfnamingcode_set(&vpp_m->header, "vVNF");
       //strcpy(vpp_m_header->reporting_entity_id.value, "No UUID available");
       //strcpy(vpp_m_header->reporting_entity_name, hostname);
       evel_reporting_entity_name_set(&vpp_m->header, "fwll");
