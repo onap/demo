@@ -84,10 +84,12 @@ int pkt4_send(CalloutHandle& handle) {
     hwaddr = hwaddr_ptr->toText(false);
     yiaddr = new_yiaddr.toText();
     msg_name = response4_ptr->getName();
-    post_data = "{ macaddr=" + hwaddr + "&yiaddr=" + yiaddr + "&msg=" + msg_name + "}";
-    final_url = json_params[0] + hwaddr;
+    /* POST string for DMaaP */
+    post_data = "{\n\"macaddr\":\"" + hwaddr + "\",\n\"yiaddr\":\"" + yiaddr + "\",\n\"msg_name\":\"" + msg_name + "\"\n}";
+    final_url = json_params[0] ;
     LOG_DEBUG(logger, 0, "SNL_BASE").arg(final_url);
     LOG_DEBUG(logger, 0, "SNL_BASE").arg(yiaddr);
+    LOG_DEBUG(logger, 0, "SNL_BASE").arg(post_data);
 
 
     if ( msg_name == "DHCPACK")
@@ -106,6 +108,7 @@ int pkt4_send(CalloutHandle& handle) {
         return(1);
     }
 
+    list = curl_slist_append(list, "Content-type: application/json");
     list = curl_slist_append(list, "Accept: application/json");
     if (list == NULL) {
         curl_easy_cleanup(curl);
@@ -126,15 +129,11 @@ int pkt4_send(CalloutHandle& handle) {
     curl_opt_res += curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
     curl_opt_res += curl_easy_setopt(curl, CURLOPT_HEADER, 1L);
 
-    // If we don't set a timeout, curl will try for 300 seconds by default.
+    // Default curl timeout is 300 seconds 
     curl_opt_res += curl_easy_setopt(curl, CURLOPT_TIMEOUT, 1L);
     curl_opt_res += curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 1L);
-    // libcurl's docs say to cast as void, don't blame me.
     curl_opt_res += curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)response_memfile);
-    // CURLOPT_URL takes a char*
     curl_opt_res += curl_easy_setopt(curl, CURLOPT_URL, (final_url).c_str());
-    
-    // let curl use strlen
     curl_opt_res += curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, -1L );
     curl_opt_res += curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str() );
     curl_opt_res += curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);
