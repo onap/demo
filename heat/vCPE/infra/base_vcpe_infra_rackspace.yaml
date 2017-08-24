@@ -76,7 +76,7 @@ parameters:
   vaaa_private_ip_0:
     type: string
     label: vAAA private IP address towards the CPE_SIGNAL private network
-    description: Private IP address that is assigned to the vAAA to communicate with the vCPE components 
+    description: Private IP address that is assigned to the vAAA to communicate with the vCPE components
   vaaa_private_ip_1:
     type: string
     label: vAAA private IP address towards the ONAP management network
@@ -137,6 +137,10 @@ parameters:
     type: string
     label: DCAE collector port
     description: Port of the DCAE collector
+  mr_ip_addr:
+    type: string
+    label: Message Router IP address
+    description: IP address of the Message Router that for vDHCP configuration 
   key_name:
     type: string
     label: Key pair name
@@ -370,9 +374,10 @@ resources:
         str_replace:
           params:
             __oam_ipaddr__ : { get_param: vdhcp_private_ip_1 }
-            __cpe_signal_ipaddr__: { get_param: vdhcp_private_ip_0 }
-            __oam_cidr__: { get_param: onap_private_net_cidr }
-            __cpe_signal_net_cidr__: { get_param: cpe_signal_net_cidr }
+            __cpe_signal_ipaddr__ : { get_param: vdhcp_private_ip_0 }
+            __oam_cidr__ : { get_param: onap_private_net_cidr }
+            __cpe_signal_net_cidr__ : { get_param: cpe_signal_net_cidr }
+            __mr_ip_addr__ : { get_param: mr_ip_addr }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
@@ -387,6 +392,7 @@ resources:
             echo "__cpe_signal_ipaddr__" > /opt/config/cpe_signal_ipaddr.txt
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__cpe_signal_net_cidr__" > /opt/config/cpe_signal_net_cidr.txt
+            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt

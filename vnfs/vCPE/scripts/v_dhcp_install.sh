@@ -5,6 +5,7 @@ REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
+MR_IP_ADDR=$(cat /opt/config/mr_ip_addr.txt)
 
 # Convert Network CIDR to Netmask
 cdr2mask () {
@@ -78,6 +79,7 @@ update-rc.d v_dhcp.sh defaults
 # Configure DHCP
 cp kea-dhcp4.conf /etc/kea-dhcp4-server.conf
 mv kea-dhcp4.conf /etc/kea/kea-dhcp4.conf
+sed -i "s/DMAAP_IPADDR/"$MR_IP_ADDR"/g" kea-sdnc-notify.conf
 mv kea-sdnc-notify.conf /etc/kea/kea-sdnc-notify.conf
 sleep 1
 
