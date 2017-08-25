@@ -28,12 +28,18 @@ docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/openecomp/${DB_TAG_NAME}:$DOCKER_IMAGE_VERSION
 docker pull $NEXUS_DOCKER_REPO/openecomp/${EP_TAG_NAME}:$DOCKER_IMAGE_VERSION
 docker pull $NEXUS_DOCKER_REPO/openecomp/${WMS_TAG_NAME}:$DOCKER_IMAGE_VERSION
+# Add CLI docker image
+docker pull $NEXUS_DOCKER_REPO/onap/cli:$DOCKER_IMAGE_VERSION
 
 # Remove lingering containers; order matters.
 docker rm -f $DB_CONT_NAME
 docker rm -f $DB_VOL_NAME
 docker rm -f $EP_CONT_NAME
 docker rm -f $WMS_CONT_NAME
+docker rm -f cli
+
+# Run CLI docker on 8080 in deamon mode
+docker run -d --name cli -p 8080:8080 -e MODE=deamon $NEXUS_DOCKER_REPO/onap/cli:$DOCKER_IMAGE_VERSION
 
 docker create --name $DB_VOL_NAME -v /var/lib/mysql mariadb
 docker tag $NEXUS_DOCKER_REPO/openecomp/${DB_TAG_NAME}:$DOCKER_IMAGE_VERSION $DB_IMG_NAME
