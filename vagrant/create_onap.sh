@@ -2,7 +2,7 @@
 set -ex
 
 source /vagrant/openrc
-cp /demo/heat/OpenECOMP/* .
+cp /demo/heat/ONAP/* .
 
 # Parameters used across all ONAP components
 pub_net=$(openstack network list -f value|grep public | cut -f1 -d' ')
