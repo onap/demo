@@ -93,4 +93,7 @@ then
 	reboot
 fi
 
+# Install a cron job that restart streams every minute. This allows to map streams to different vDNSs when we scale out the VNF
+echo "* * * * * /opt/vdnspacketgen_change_streams_ports.sh" | crontab
+
 ./v_packetgen_init.sh
