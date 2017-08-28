@@ -16,7 +16,7 @@ vppctl pac del dns10
 
 #Update destination (vLB) IP
 VLB_IPADDR=$(cat /opt/config/vlb_ipaddr.txt)
-IPADDR1=$(ifconfig br0 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
+IPADDR1=$(cat /opt/config/local_private_ipaddr.txt)
 sed -i -e "0,/UDP/ s/UDP:.*/UDP: "$IPADDR1" -> "$VLB_IPADDR"/" /opt/dns_streams/stream_dns1
 sed -i -e "0,/UDP/ s/UDP:.*/UDP: "$IPADDR1" -> "$VLB_IPADDR"/" /opt/dns_streams/stream_dns2
 sed -i -e "0,/UDP/ s/UDP:.*/UDP: "$IPADDR1" -> "$VLB_IPADDR"/" /opt/dns_streams/stream_dns3
