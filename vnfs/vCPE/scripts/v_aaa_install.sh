@@ -62,6 +62,9 @@ chmod +x v_aaa.sh
 mv v_aaa.sh /etc/init.d
 update-rc.d v_aaa.sh defaults
 
+# Download and install FreeRADIUS as AAA server
+apt-get install -y freeradius
+
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
 then

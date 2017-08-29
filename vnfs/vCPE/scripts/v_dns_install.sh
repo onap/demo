@@ -50,17 +50,23 @@ fi
 # Download required dependencies
 add-apt-repository -y ppa:openjdk-r/ppa
 apt-get update
-apt-get install -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
+apt-get install -y wget openjdk-8-jdk bind9 bind9utils bind9-doc apt-transport-https ca-certificates kea-dhcp4-server g++ libcurl4-gnutls-dev libboost-dev kea-dev
 sleep 1
 
-# Download DHCP config files
+# Download DNS and DHCP config files
 cd /opt
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-dhcp4_no_hook.conf
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_dns_init.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_dns.sh
+mv kea-dhcp4_no_hook.conf /etc/kea/kea-dhcp4.conf
 chmod +x v_dns_init.sh
 chmod +x v_dns.sh
 mv v_dns.sh /etc/init.d
 update-rc.d v_dns.sh defaults
+
+# Install Bind
+mkdir /etc/bind/zones
+sed -i "s/OPTIONS=.*/OPTIONS=\"-4 -u bind\"/g" /etc/default/bind9
 
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]

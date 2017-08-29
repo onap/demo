@@ -54,7 +54,7 @@ apt-get update
 apt-get install -y wget openjdk-8-jdk apt-transport-https ca-certificates kea-dhcp4-server g++ libcurl4-gnutls-dev libboost-dev kea-dev
 sleep 1
 
-#  download the kea hook
+# Download the kea hook
 cd /opt
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vcpe/kea-sdnc-notify-mod/$DEMO_ARTIFACTS_VERSION/kea-sdnc-notify-mod-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 tar -zxvf kea-sdnc-notify-mod-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
