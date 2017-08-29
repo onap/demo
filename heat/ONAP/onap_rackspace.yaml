@@ -205,6 +205,10 @@ parameters:
     type: string
     description: VID repository
 
+  clamp_repo:
+    type: string
+    description: CLAMP repository
+
 
 resources:
   random-str:
@@ -1128,3 +1132,68 @@ resources:
             cd /opt
             chmod +x appc_install.sh
             ./appc_install.sh
+
+
+  # CLAMP instantiation
+  clamp_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": 10.0.12.1}]
+
+  clamp_vm:
+    type: OS::Nova::Server
+    properties:
+      image: Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM)
+      flavor: 4 GB General Purpose v1
+      name:
+        str_replace:
+          template: base-clamp
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: clamp_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __openstack_username__: { get_param: openstack_username }
+            __openstack_tenant_id__: { get_param: openstack_tenant_id }
+            __openstack_api_key__: { get_param: openstack_api_key }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+            __mso_repo__: { get_param: clamp_repo }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__openstack_username__" > /opt/config/openstack_username.txt
+            echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
+            echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__clamp_repo__" > /opt/config/remote_repo.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/clamp_install.sh -o /opt/clamp_install.sh
+            cd /opt
+            chmod +x clamp_install.sh
+            ./clamp_install.sh

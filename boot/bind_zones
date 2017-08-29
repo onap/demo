@@ -69,9 +69,13 @@ vm1.portal.simpledemo.openecomp.org.           IN      A       portal_ip_addr
 c1.vm1.portal.simpledemo.openecomp.org.        IN      A       portal_ip_addr
 c2.vm1.portal.simpledemo.openecomp.org.        IN      A       portal_ip_addr
 
+vm1.clamp.simpledemo.openecomp.org.           IN      A       clamp_ip_addr
+c1.vm1.clamp.simpledemo.openecomp.org.        IN      A       clamp_ip_addr
+c2.vm1.clamp.simpledemo.openecomp.org.        IN      A       clamp_ip_addr
+
 ;vm1.aaf.simpledemo.openecomp.org.	IN	A	aaf_ip_addr
 
-vm1.mr.simpledemo.openecomp.org.	IN	A	mr_ip_addr	
+vm1.mr.simpledemo.openecomp.org.	IN	A	mr_ip_addr
 
 
 ;CNAMES
@@ -114,6 +118,9 @@ mr.api.simpledemo.openecomp.org.        IN      A   dcae_coll_ip_addr
 collector.api.simpledemo.openecomp.org. IN      A   dcae_coll_ip_addr
 ;dbc.api.simpledemo.openecomp.org.	IN	CNAME  	vm1.mr.simpledemo.openecomp.org.
 ;drprov.api.simpledemo.openecomp.org.	IN	CNAME  	vm1.mr.simpledemo.openecomp.org.
+
+CLAMP
+clamp.api.simpledemo.openecomp.org.	IN	CNAME	vm1.clamp.simpledemo.openecomp.org.
 
 ;AAF
 ;aaf.api.simpledemo.openecomp.org.	IN	CNAME	vm1.aaf.simpledemo.openecomp.org.

@@ -69,9 +69,13 @@ vm1.portal.simpledemo.openecomp.org.           IN      A       10.0.9.1
 c1.vm1.portal.simpledemo.openecomp.org.        IN      A       10.0.9.1
 c2.vm1.portal.simpledemo.openecomp.org.        IN      A       10.0.9.1
 
-vm1.aaf.simpledemo.openecomp.org.	IN	A	10.0.12.1
+vm1.aaf.simpledemo.openecomp.org.	IN	A	10.0.13.1
 
-vm1.mr.simpledemo.openecomp.org.	IN	A	10.0.11.1	
+vm1.mr.simpledemo.openecomp.org.	IN	A	10.0.11.1
+
+vm1.clamp.simpledemo.openecomp.org.           IN      A       10.0.12.1
+c1.vm1.clamp.simpledemo.openecomp.org.        IN      A       10.0.12.1
+c2.vm1.clamp.simpledemo.openecomp.org.        IN      A       10.0.12.1
 
 
 ;CNAMES
@@ -114,6 +118,9 @@ mr.api.simpledemo.openecomp.org.        IN      A   10.0.4.102
 collector.api.simpledemo.openecomp.org. IN      A   10.0.4.102
 ;dbc.api.simpledemo.openecomp.org.	IN	CNAME  	vm1.mr.simpledemo.openecomp.org.
 ;drprov.api.simpledemo.openecomp.org.	IN	CNAME  	vm1.mr.simpledemo.openecomp.org.
+
+CLAMP
+clamp.api.simpledemo.openecomp.org.	IN	CNAME	vm1.clamp.simpledemo.openecomp.org.
 
 ;AAF
 aaf.api.simpledemo.openecomp.org.	IN	CNAME	vm1.aaf.simpledemo.openecomp.org.

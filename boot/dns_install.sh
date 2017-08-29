@@ -79,6 +79,7 @@ then
 	sed -i "s/sdnc_ip_addr/"$(cat /opt/config/sdnc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/vid_ip_addr/"$(cat /opt/config/vid_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/dcae_coll_ip_addr/"$(cat /opt/config/dcae_coll_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+	sed -i "s/clamp_ip_addr/"$(cat /opt/config/clamp_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 fi
 
 # Configure Bind

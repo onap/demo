@@ -228,6 +228,10 @@ parameters:
     type: string
     description: VID IP Address
 
+  clamp_ip_addr:
+    type: string
+    description: CLAMP IP Address
+
 
   ###########################
   #                         #
@@ -316,6 +320,10 @@ parameters:
   vid_repo:
     type: string
     description: VID repository
+
+  clamp_repo:
+    type: string
+    description: CLAMP repository
 
 
 #############
@@ -409,6 +417,7 @@ resources:
             __sdc_ip_addr__: { get_param: sdc_ip_addr }
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
             __vid_ip_addr__: { get_param: vid_ip_addr }
+            __clamp_ip_addr__: { get_param: clamp_ip_addr }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
           template: |
@@ -434,6 +443,7 @@ resources:
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
+            echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
@@ -1338,3 +1348,79 @@ resources:
             cd /opt
             chmod +x appc_install.sh
             ./appc_install.sh
+
+
+  # CLAMP instantiation
+  clamp_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: clamp_ip_addr }}]
+
+  clamp_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1604_image }
+      flavor: { get_param: flavor_medium }
+      name:
+        str_replace:
+          template: base-clamp
+          params:
+            base: { get_param: vm_base_name }      
+      key_name: { get_resource: vm_key }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: clamp_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __openstack_username__: { get_param: openstack_username }
+            __openstack_tenant_id__: { get_param: openstack_tenant_id }
+            __openstack_api_key__: { get_param: openstack_api_key }
+            __openstack_region__: { get_param: openstack_region }
+            __keystone_url__: { get_param: keystone_url }
+            __dmaap_topic__: { get_param: dmaap_topic }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __clamp_ip_addr__: { get_param: clamp_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
+            __docker_version__: { get_param: docker_version }
+            __gerrit_branch__: { get_param: gerrit_branch }
+            __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
+            __clamp_repo__: { get_param: clamp_repo }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__clamp_ip_addr__" > /opt/config/local_ip_addr.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
+            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+            echo "__openstack_username__" > /opt/config/openstack_username.txt
+            echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
+            echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
+            echo "__openstack_region__" > /opt/config/openstack_region.txt
+            echo "__keystone_url__" > /opt/config/keystone.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__clamp_repo__" > /opt/config/remote_repo.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/clamp_install.sh -o /opt/clamp_install.sh
+            cd /opt
+            chmod +x clamp_install.sh
+            ./clamp_install.sh
