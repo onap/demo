@@ -829,10 +829,10 @@ resources:
             echo "__sdc_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/asdc_install.sh -o /opt/asdc_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/sdc_install.sh -o /opt/sdc_install.sh
             cd /opt
-            chmod +x asdc_install.sh
-            ./asdc_install.sh
+            chmod +x sdc_install.sh
+            ./sdc_install.sh
 
 
   # PORTAL instantiation

@@ -10,7 +10,7 @@
 ### END INIT INFO
 
 dir="/opt"
-cmd="./asdc_vm_init.sh"
+cmd="./sdc_vm_init.sh"
 user="root"
 
 name=`basename $0`
