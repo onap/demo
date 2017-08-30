@@ -63,9 +63,9 @@ read -d '' MSO_CONFIG_UPDATES <<-EOF
 {
 "default_attributes":
   {
-    "asdc-connections":
+    "sdc-connections":
       {
-	    "asdc-controller1":
+	    "sdc-controller1":
 	    {
 	        "environmentName": "$DMAAP_TOPIC"
 	    }

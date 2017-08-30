@@ -53,12 +53,12 @@ apt-get update
 apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/asdc_vm_init.sh -o /opt/asdc_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/asdc_serv.sh -o /opt/asdc_serv.sh
-chmod +x /opt/asdc_vm_init.sh
-chmod +x /opt/asdc_serv.sh
-mv /opt/asdc_serv.sh /etc/init.d
-update-rc.d asdc_serv.sh defaults
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_vm_init.sh -o /opt/sdc_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_serv.sh -o /opt/sdc_serv.sh
+chmod +x /opt/sdc_vm_init.sh
+chmod +x /opt/sdc_serv.sh
+mv /opt/sdc_serv.sh /etc/init.d
+update-rc.d sdc_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
 echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
@@ -71,17 +71,17 @@ curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose
 chmod +x /opt/docker/docker-compose
 
 # Create partition and mount the external volume
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/asdc_ext_volume_partitions.txt -o /opt/asdc_ext_volume_partitions.txt
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_ext_volume_partitions.txt -o /opt/sdc_ext_volume_partitions.txt
 
 if [[ $CLOUD_ENV == "rackspace" ]]
 then
 	DISK="xvdb"
 else
 	DISK=$(ls /dev |grep -e '^.*db$')
-	sed -i "s/xvdb/$DISK/g" /opt/asdc_ext_volume_partitions.txt
+	sed -i "s/xvdb/$DISK/g" /opt/sdc_ext_volume_partitions.txt
 fi
 
-sfdisk /dev/$DISK < /opt/asdc_ext_volume_partitions.txt
+sfdisk /dev/$DISK < /opt/sdc_ext_volume_partitions.txt
 mkfs -t ext4 /dev/$DISK"1"
 mkdir -p /data
 mount /dev/$DISK"1" /data
@@ -139,4 +139,4 @@ then
 fi
 
 # Run docker containers. For openstack Ubuntu 16.04 images this will run as a service after the VM has restarted
-./asdc_vm_init.sh
+./sdc_vm_init.sh
