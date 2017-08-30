@@ -1693,11 +1693,11 @@
 					"type": "string"
 				},
 				"vfModuleName": {
-					"description": "ASDC vfModuleName for the vfModule generating the event",
+					"description": "SDC vfModuleName for the vfModule generating the event",
 					"type": "string"
 				},
 				"vnfName": {
-					"description": "ASDC modelName for the VNF generating the event",
+					"description": "SDC modelName for the VNF generating the event",
 					"type": "string"
 				}
 			},
