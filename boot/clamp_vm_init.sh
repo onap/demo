@@ -3,9 +3,6 @@
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
-DMAAP_TOPIC=$(cat /opt/config/dmaap_topic.txt)
-OPENSTACK_USERNAME=$(cat /opt/config/openstack_username.txt)
-OPENSTACK_APIKEY=$(cat /opt/config/api_key.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 # Fetch the latest code/scripts
