@@ -54,9 +54,10 @@ then
 fi
 
 # Download required dependencies
-add-apt-repository -y ppa:openjdk-r/ppa
+echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install -y make gcc wget openjdk-8-jdk bridge-utils libcurl4-openssl-dev apt-transport-https ca-certificates
+apt-get install --allow-unauthenticated -y make gcc wget openjdk-8-jdk bridge-utils libcurl4-openssl-dev apt-transport-https ca-certificates
 sleep 1
 
 # Download vLB demo code for load balancer

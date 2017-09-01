@@ -50,9 +50,10 @@ then
 fi
 
 # Download dependencies
-add-apt-repository -y ppa:openjdk-r/ppa
+echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk bind9 bind9utils bind9-doc ntp ntpdate make
+apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk bind9 bind9utils bind9-doc ntp ntpdate make
 
 # Download script
 mkdir /etc/bind/zones

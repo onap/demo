@@ -46,9 +46,10 @@ then
 fi
 
 # Download required dependencies
-add-apt-repository -y ppa:openjdk-r/ppa
+echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install -y make wget openjdk-8-jdk apt-transport-https ca-certificates darkstat
+apt-get install --allow-unauthenticated -y make wget openjdk-8-jdk apt-transport-https ca-certificates darkstat
 
 # Configure and run Darkstat
 sed -i "s/START_DARKSTAT=.*/START_DARKSTAT=yes/g" /etc/darkstat/init.cfg

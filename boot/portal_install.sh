@@ -48,9 +48,10 @@ then
 fi
 
 # Download dependencies
-add-apt-repository -y ppa:openjdk-r/ppa
+echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install -y apt-transport-https ca-certificates wget openjdk-8-jdk git unzip mysql-client-core-5.6 ntp ntpdate make
+apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git unzip mysql-client-core-5.6 ntp ntpdate make
 
 # Download scripts from Nexus
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/portal_vm_init.sh -o /opt/portal_vm_init.sh
