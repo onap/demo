@@ -58,9 +58,10 @@ then
 fi
 
 # Download required dependencies
-add-apt-repository -y ppa:openjdk-r/ppa
+echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu xenial main" >> /etc/apt/sources.list.d/java.list
+echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu xenial main" >> /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
+apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
 sleep 1
 
 # Download DHCP config files
