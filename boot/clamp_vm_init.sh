@@ -15,14 +15,16 @@ rm -rf src/
 
 # No configuration change here as directly done in the CLAMP repo
 
-# Pull the clamp docker image from nexus and tag it
+# Pull the clamp docker image from nexus
 # Maria db will be pulled automatically from docker.io during docker-compose
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
 docker pull $NEXUS_DOCKER_REPO/onap/clamp:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/onap/clamp:$DOCKER_IMAGE_VERSION onap/clamp:latest
 
 cd extra/docker/clamp/
+
+# Change the Clamp docker image name in the docker-compose.yml to match the one downloaded
+sed -i "/image: onap\/clamp/c\    image: $NEXUS_DOCKER_REPO\/onap\/clamp:$DOCKER_IMAGE_VERSION" docker-compose.yml
 
 # Start Clamp and MariaDB containers with docker compose and clamp/extra/docker/clamp/docker-compose.yml
 /opt/docker/docker-compose up -d
