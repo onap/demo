@@ -63,6 +63,19 @@ chmod +x v_web.sh
 mv v_web.sh /etc/init.d
 update-rc.d v_web.sh defaults
 
+# Install Apache2 web server
+apt-get update
+apt install -y apache2
+mv /var/www/html/index.html /var/www/html/index.html.example
+cat > /var/www/html/index.html << EOF
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+<center><h1>Welcome to the vCPE Use Case Web Server!</h1><center>
+</body>
+</html>
+EOF
+
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
 then
