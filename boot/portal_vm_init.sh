@@ -36,6 +36,8 @@ docker pull $NEXUS_DOCKER_REPO/onap/cli:$DOCKER_IMAGE_VERSION
 docker tag $NEXUS_DOCKER_REPO/openecomp/${DB_IMG_NAME}:$DOCKER_IMAGE_VERSION $DB_IMG_NAME:$PORTAL_TAG
 docker tag $NEXUS_DOCKER_REPO/openecomp/${EP_IMG_NAME}:$DOCKER_IMAGE_VERSION $EP_IMG_NAME:$PORTAL_TAG
 docker tag $NEXUS_DOCKER_REPO/openecomp/${WMS_IMG_NAME}:$DOCKER_IMAGE_VERSION $WMS_IMG_NAME:$PORTAL_TAG
+# Add tagging for CLI docker image as expected by docker-compose file
+docker tag $NEXUS_DOCKER_REPO/onap/cli:$DOCKER_IMAGE_VERSION onap/cli:$PORTAL_TAG
 
 # docker-compose is not in /usr/bin
 /opt/docker/docker-compose down
