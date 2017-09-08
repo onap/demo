@@ -4,6 +4,8 @@ REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
+INSTALL_PACKAGE_REPO_URL=$(cat /opt/config/install_package_repo_url.txt)
+INSTALL_PACKAGE_REPO_BRANCH=$(cat /opt/config/install_package_repo_branch.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
 # Convert Network CIDR to Netmask
@@ -43,6 +45,31 @@ echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s)
 apt-get update
 apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
 sleep 1
+
+# Download and install the VPP pacakges.
+# These packages are required for the for the VPP packages
+apt-get install -y libpython2.7-minimal libpython2.7-stdlib \
+	       python2.7-minimal python-minimal \
+	       libpython-stdlib python libpython-dev \
+	       python-dev python2.7-minimal python2.7 \
+	       libpython2.7-dev libpython2.7 libexpat1 \
+	       libexpat1-dev libc-dev-bin linux-libc-dev \
+	       libc-dev python2.7-dev \
+	       python-cffi-backend-api-9729
+
+cd /opt
+git clone ${INSTALL_PACKAGE_REPO_URL} -b ${INSTALL_PACKAGE_REPO_BRANCH} vBRG
+cd /opt/vBRG/packages/
+dpkg -i *.deb
+systemctl stop vpp
+cp -rf /opt/vBRG/etc/vpp/* /etc/vpp/
+
+# Install Honeycomb for management
+tar -xzvf vpp-integration-distribution-1.17.04.1-SNAPSHOT-hc.tar.gz -C /opt
+mv /opt/vpp-integration-distribution-1.17.04.1-SNAPSHOT /opt/honeycomb
+sed -i 's/127.0.0.1/0.0.0.0/g' /opt/honeycomb/config/honeycomb.json
+cp -f /opt/vBRG/etc/systemd/system/honeycomb.service /etc/systemd/system/
+systemctl enable /etc/systemd/system/honeycomb.service
 
 # Download DHCP config files
 cd /opt

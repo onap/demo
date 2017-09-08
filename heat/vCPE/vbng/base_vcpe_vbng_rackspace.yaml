@@ -145,6 +145,14 @@ parameters:
     type: string
     label: Cloud environment
     description: Cloud environment (e.g., openstack, rackspace)
+  install_package_repo_url:
+    type: string
+    label: Installation package repo URL
+    description: Git reporitory for the installation packages
+  install_package_repo_branch:
+    type: string
+    label: Installation package git branch
+    description: Git branch for the installation packages
 
 #############
 #           #
@@ -240,6 +248,8 @@ resources:
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
+            __install_package_repo_url__ : { get_param: install_package_repo_url }
+            __install_package_repo_branch__ : { get_param: install_package_repo_branch }
           template: |
             #!/bin/bash
 
@@ -260,6 +270,8 @@ resources:
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__install_package_repo_url__" > /opt/config/install_package_repo_url.txt
+            echo "__install_package_repo_branch__" > /opt/config/install_package_repo_branch.txt
 
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_bng_install.sh -o /opt/v_bng_install.sh

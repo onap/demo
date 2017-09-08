@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Scripts at Start and Stop
+Requires=vpp.service
+After=vpp.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStop=/usr/local/bin/save_config.sh
+
+[Install]
+WantedBy=multi-user.target

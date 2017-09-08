@@ -74,6 +74,30 @@ apt-get update
 apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
 sleep 1
 
+# Download and install the VPP pacakges.
+# These packages are required for the for the VPP packages
+apt-get install -y libpython2.7-minimal libpython2.7-stdlib \
+	       python2.7-minimal python-minimal \
+	       libpython-stdlib python libpython-dev \
+	       python-dev python2.7-minimal python2.7 \
+	       libpython2.7-dev libpython2.7 libexpat1 \
+	       libexpat1-dev libc-dev-bin linux-libc-dev \
+	       libc-dev python2.7-dev \
+	       python-cffi-backend-api-9729
+
+cd /opt
+git clone ${INSTALL_PACKAGE_REPO_URL} -b ${INSTALL_PACKAGE_REPO_BRANCH} vBNG
+cp vBNG/usr/lib/libfreeradiusclient.so /usr/lib/
+ldconfig
+
+mkdir -p /usr/local/etc/radiusclient
+cp -f /opt/vBNG/usr/local/etc/radiusclient/* /usr/local/etc/radiusclient/
+
+cd /opt/vBNG/packages/
+dpkg -i *.deb
+systemctl stop vpp
+cp -rf /opt/vBNG/etc/vpp/* /etc/vpp/
+
 # Download DHCP config files
 cd /opt
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_bng_init.sh

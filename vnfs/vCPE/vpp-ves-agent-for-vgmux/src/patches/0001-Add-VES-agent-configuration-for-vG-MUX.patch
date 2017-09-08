@@ -1,0 +1,1079 @@
+From 9a00b1af18dfe4c2df185299b8bd2db7f5d061c0 Mon Sep 17 00:00:00 2001
+From: Johnson Li <johnson.li@intel.com>
+Date: Fri, 8 Sep 2017 17:35:16 +0800
+Subject: [PATCH] Add VES agent configuration for vG-MUX
+
+Signed-off-by: Johnson Li <johnson.li@intel.com>
+
+diff --git a/pom.xml b/pom.xml
+index 538a5d98..581bedfc 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -44,13 +44,14 @@
+     <module>nat</module>
+     <module>lisp</module>
+     <module>release-notes</module>
+-    <module>vpp-integration</module>
+     <module>acl</module>
+     <module>dhcp</module>
++    <module>ves</module>
+     <module>samples</module>
+     <module>vpp-classifier</module>
+     <module>l3</module>
+     <module>vpp-management</module>
++    <module>vpp-integration</module>
+     <module>it</module>
+   </modules>
+ </project>
+\ No newline at end of file
+diff --git a/ves/asciidoc/Readme.adoc b/ves/asciidoc/Readme.adoc
+new file mode 100644
+index 00000000..682e7555
+--- /dev/null
++++ b/ves/asciidoc/Readme.adoc
+@@ -0,0 +1,3 @@
++= ves-agent
++
++Overview of ves-agent
+diff --git a/ves/pom.xml b/ves/pom.xml
+new file mode 100644
+index 00000000..1ded0109
+--- /dev/null
++++ b/ves/pom.xml
+@@ -0,0 +1,56 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++ Copyright (c) 2017 Cisco and/or its affiliates.
++ Licensed under the Apache License, Version 2.0 (the "License");
++ you may not use this file except in compliance with the License.
++ You may obtain a copy of the License at:
++
++     http://www.apache.org/licenses/LICENSE-2.0
++
++ Unless required by applicable law or agreed to in writing, software
++ distributed under the License is distributed on an "AS IS" BASIS,
++ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ See the License for the specific language governing permissions and
++ limitations under the License.
++--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++
++  <parent>
++    <groupId>io.fd.hc2vpp.common</groupId>
++    <artifactId>hc2vpp-parent</artifactId>
++    <version>1.17.04.1-SNAPSHOT</version>
++    <relativePath>../common/hc2vpp-parent</relativePath>
++  </parent>
++
++  <groupId>io.fd.hc2vpp.ves</groupId>
++  <artifactId>ves-agent</artifactId>
++  <version>1.17.04.1-SNAPSHOT</version>
++  <name>ves-agent</name>
++  <packaging>pom</packaging>
++  <modelVersion>4.0.0</modelVersion>
++  <description>Agent for VNF Event Stream plugin</description>
++
++  <modules>
++    <module>ves-api</module>
++    <module>ves-impl</module>
++  </modules>
++
++  <!-- DO NOT install or deploy the repo root pom as it's only needed to initiate a build -->
++  <build>
++    <plugins>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-deploy-plugin</artifactId>
++        <configuration>
++          <skip>true</skip>
++        </configuration>
++      </plugin>
++      <plugin>
++        <groupId>org.apache.maven.plugins</groupId>
++        <artifactId>maven-install-plugin</artifactId>
++        <configuration>
++          <skip>true</skip>
++        </configuration>
++      </plugin>
++    </plugins>
++  </build>
++</project>
+diff --git a/ves/ves-api/asciidoc/Readme.adoc b/ves/ves-api/asciidoc/Readme.adoc
+new file mode 100644
+index 00000000..b561268c
+--- /dev/null
++++ b/ves/ves-api/asciidoc/Readme.adoc
+@@ -0,0 +1,3 @@
++= vesagent-api
++
++Overview of vesagent-api
+\ No newline at end of file
+diff --git a/ves/ves-api/pom.xml b/ves/ves-api/pom.xml
+new file mode 100644
+index 00000000..78bf47b9
+--- /dev/null
++++ b/ves/ves-api/pom.xml
+@@ -0,0 +1,52 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++ Copyright (c) 2017 Cisco and/or its affiliates.
++ Licensed under the Apache License, Version 2.0 (the "License");
++ you may not use this file except in compliance with the License.
++ You may obtain a copy of the License at:
++
++     http://www.apache.org/licenses/LICENSE-2.0
++
++ Unless required by applicable law or agreed to in writing, software
++ distributed under the License is distributed on an "AS IS" BASIS,
++ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ See the License for the specific language governing permissions and
++ limitations under the License.
++--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++  <parent>
++    <groupId>io.fd.hc2vpp.common</groupId>
++    <artifactId>api-parent</artifactId>
++    <version>1.17.04.1-SNAPSHOT</version>
++    <relativePath>../../common/api-parent</relativePath>
++  </parent>
++
++  <modelVersion>4.0.0</modelVersion>
++  <groupId>io.fd.hc2vpp.ves</groupId>
++  <artifactId>ves-api</artifactId>
++  <name>ves-api</name>
++  <version>1.17.04.1-SNAPSHOT</version>
++  <packaging>bundle</packaging>
++
++  <dependencies>
++    <dependency>
++      <groupId>org.opendaylight.mdsal.model</groupId>
++      <artifactId>iana-if-type-2014-05-08</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.opendaylight.mdsal.model</groupId>
++      <artifactId>ietf-yang-types-20130715</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.opendaylight.mdsal.model</groupId>
++      <artifactId>ietf-interfaces</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.opendaylight.mdsal.model</groupId>
++      <artifactId>ietf-inet-types-2013-07-15</artifactId>
++    </dependency>
++    <dependency>
++      <groupId>org.opendaylight.mdsal.model</groupId>
++      <artifactId>yang-ext</artifactId>
++    </dependency>
++  </dependencies>
++</project>
+diff --git a/ves/ves-api/src/main/yang/vesagent.yang b/ves/ves-api/src/main/yang/vesagent.yang
+new file mode 100644
+index 00000000..a3c79797
+--- /dev/null
++++ b/ves/ves-api/src/main/yang/vesagent.yang
+@@ -0,0 +1,71 @@
++module vesagent {
++
++    yang-version 1;
++    namespace "urn:opendaylight:params:xml:ns:yang:vpp:vesagent";
++    prefix "vesagent";
++
++    description
++        "This YANG module defines the generic configuration and
++        operational data for VES Agent in VPP";
++
++    revision "2017-08-01" {
++        description
++            "Initial revision of VES Agent model";
++    }
++
++    import ietf-inet-types {
++        prefix inet;
++    }
++
++    grouping vesagent-attributes {
++        container config {
++            description
++                "VNF Event Stream Agent configuration";
++
++            leaf server-addr {
++                type inet:ipv4-address;
++                description
++                    "VES Collector's IP address.";
++            }
++
++            leaf server-port {
++                type uint32;
++                description
++                    "VES Collector's Server Port.";
++            }
++
++            leaf read-interval {
++                type uint32;
++                description
++                    "Seconds of time period for each loop.";
++            }
++
++            leaf is-add {
++                type uint32;
++                description
++                    "0-Delete VES agent, NonZero-Start VES agent.";
++            }
++        }
++
++        container mode {
++            description
++                "VNF Event Stream Agent Working Mode.";
++
++            leaf base-packet-loss {
++                type uint32;
++                description
++                    "Base packet Loss for Demo Mode";
++            }
++
++            leaf working-mode {
++                type string;
++                description
++                    "VES Working Mode, Demo Or Real Only.";
++            }
++        }
++    }
++
++    container vesagent {
++        uses vesagent-attributes;
++    }
++}
+diff --git a/ves/ves-impl/asciidoc/Readme.adoc b/ves/ves-impl/asciidoc/Readme.adoc
+new file mode 100644
+index 00000000..e07fb05f
+--- /dev/null
++++ b/ves/ves-impl/asciidoc/Readme.adoc
+@@ -0,0 +1,3 @@
++= vesagent-impl
++
++Overview of vesagent-impl
+\ No newline at end of file
+diff --git a/ves/ves-impl/pom.xml b/ves/ves-impl/pom.xml
+new file mode 100644
+index 00000000..5ed2c1b4
+--- /dev/null
++++ b/ves/ves-impl/pom.xml
+@@ -0,0 +1,157 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!--
++ Copyright (c) 2017 Cisco and/or its affiliates.
++ Licensed under the Apache License, Version 2.0 (the "License");
++ you may not use this file except in compliance with the License.
++ You may obtain a copy of the License at:
++
++     http://www.apache.org/licenses/LICENSE-2.0
++
++ Unless required by applicable law or agreed to in writing, software
++ distributed under the License is distributed on an "AS IS" BASIS,
++ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ See the License for the specific language governing permissions and
++ limitations under the License.
++--><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
++    <parent>
++        <groupId>io.fd.hc2vpp.common</groupId>
++        <artifactId>vpp-impl-parent</artifactId>
++        <version>1.17.04.1-SNAPSHOT</version>
++        <relativePath>../../vpp-common/vpp-impl-parent</relativePath>
++    </parent>
++
++    <modelVersion>4.0.0</modelVersion>
++    <groupId>io.fd.hc2vpp.ves</groupId>
++    <artifactId>ves-impl</artifactId>
++    <name>${project.artifactId}</name>
++    <version>1.17.04.1-SNAPSHOT</version>
++    <packaging>bundle</packaging>
++
++    <properties>
++        <honeycomb.infra.version>1.17.04.1-SNAPSHOT</honeycomb.infra.version>
++        <hc2vpp.common.version>1.17.04.1-SNAPSHOT</hc2vpp.common.version>
++    </properties>
++
++    <dependencies>
++        <dependency>
++            <groupId>${project.groupId}</groupId>
++            <artifactId>ves-api</artifactId>
++            <version>${project.version}</version>
++        </dependency>
++
++        <!--VPP common-->
++        <dependency>
++            <groupId>io.fd.hc2vpp.common</groupId>
++            <artifactId>vpp-translate-utils</artifactId>
++        </dependency>
++
++        <!-- JVPP -->
++        <dependency>
++            <groupId>io.fd.vpp</groupId>
++            <artifactId>jvpp-registry</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>io.fd.vpp</groupId>
++            <artifactId>jvpp-ves</artifactId>
++            <version>17.04.2-SNAPSHOT</version>
++        </dependency>
++
++        <!-- Honeycomb infrastructure-->
++        <dependency>
++            <groupId>io.fd.honeycomb</groupId>
++            <artifactId>minimal-distribution</artifactId>
++            <version>${honeycomb.infra.version}</version>
++        </dependency>
++
++        <dependency>
++            <groupId>io.fd.honeycomb</groupId>
++            <artifactId>translate-api</artifactId>
++            <version>${honeycomb.infra.version}</version>
++        </dependency>
++
++        <dependency>
++            <groupId>io.fd.honeycomb</groupId>
++            <artifactId>translate-spi</artifactId>
++            <version>${honeycomb.infra.version}</version>
++        </dependency>
++
++        <dependency>
++            <groupId>io.fd.honeycomb</groupId>
++            <artifactId>cfg-init</artifactId>
++            <version>${honeycomb.infra.version}</version>
++        </dependency>
++
++        <!-- Translation -->
++        <dependency>
++            <groupId>io.fd.hc2vpp.common</groupId>
++            <artifactId>vpp-translate-utils</artifactId>
++        </dependency>
++
++        <!-- DI -->
++        <dependency>
++            <groupId>com.google.inject</groupId>
++            <artifactId>guice</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>net.jmob</groupId>
++            <artifactId>guice.conf</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>com.google.inject.extensions</groupId>
++            <artifactId>guice-multibindings</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>io.fd.honeycomb</groupId>
++            <artifactId>translate-impl</artifactId>
++            <version>1.17.04.1-SNAPSHOT</version>
++        </dependency>
++
++
++        <!-- Testing dependencies-->
++        <dependency>
++            <groupId>com.google.inject</groupId>
++            <artifactId>guice</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>net.jmob</groupId>
++            <artifactId>guice.conf</artifactId>
++        </dependency>
++        <dependency>
++            <groupId>com.google.inject.extensions</groupId>
++            <artifactId>guice-multibindings</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>junit</groupId>
++            <artifactId>junit</artifactId>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>io.fd.hc2vpp.common</groupId>
++            <artifactId>vpp-translate-test</artifactId>
++            <version>${hc2vpp.common.version}</version>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.mockito</groupId>
++            <artifactId>mockito-core</artifactId>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>com.google.inject.extensions</groupId>
++            <artifactId>guice-testlib</artifactId>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>org.hamcrest</groupId>
++            <artifactId>hamcrest-all</artifactId>
++            <scope>test</scope>
++        </dependency>
++        <dependency>
++            <groupId>io.fd.honeycomb.infra</groupId>
++            <artifactId>test-tools</artifactId>
++            <version>${project.version}</version>
++            <scope>test</scope>
++        </dependency>
++    </dependencies>
++</project>
+diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/VesModule.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/VesModule.java
+new file mode 100644
+index 00000000..0cd60068
+--- /dev/null
++++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/VesModule.java
+@@ -0,0 +1,67 @@
++/*
++ * Copyright (c) 2017 Intel Corp and/or its affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at:
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package io.fd.hc2vpp.ves;
++
++import com.google.common.annotations.VisibleForTesting;
++import com.google.inject.AbstractModule;
++import com.google.inject.Provider;
++import com.google.inject.Singleton;
++import com.google.inject.multibindings.Multibinder;
++import io.fd.hc2vpp.ves.jvpp.JVppVesProvider;
++import io.fd.hc2vpp.ves.read.VesReaderFactory;
++import io.fd.hc2vpp.ves.write.VesWriterFactory;
++import io.fd.honeycomb.translate.read.ReaderFactory;
++import io.fd.honeycomb.translate.write.WriterFactory;
++import io.fd.vpp.jvpp.ves.future.FutureJVppVesFacade;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++/**
++ * VesModule class instantiating ves plugin components.
++ */
++public final class VesModule extends AbstractModule {
++
++    private static final Logger LOG = LoggerFactory.getLogger(VesModule.class);
++    private final Class<? extends Provider<FutureJVppVesFacade>> jvppVesProviderClass;
++
++    public VesModule() {
++        this(JVppVesProvider.class);
++    }
++
++    @VisibleForTesting
++    VesModule(Class<? extends Provider<FutureJVppVesFacade>> jvppVesProvider) {
++        this.jvppVesProviderClass = jvppVesProvider;
++    }
++
++    @Override
++    protected void configure() {
++        LOG.info("Installing VES Agent module");
++
++        // Bind to Plugin's JVPP
++        bind(FutureJVppVesFacade.class).toProvider(jvppVesProviderClass).in(Singleton.class);
++
++        LOG.info("Injecting writers factories");
++        final Multibinder<WriterFactory> writerFactoryBinder = Multibinder.newSetBinder(binder(), WriterFactory.class);
++        writerFactoryBinder.addBinding().to(VesWriterFactory.class);
++
++        LOG.info("Injecting readers factories");
++        final Multibinder<ReaderFactory> readerFactoryBinder = Multibinder.newSetBinder(binder(), ReaderFactory.class);
++        readerFactoryBinder.addBinding().to(VesReaderFactory.class);
++
++        LOG.info("Module VES Agent successfully configured");
++    }
++}
+diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/jvpp/JVppVesProvider.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/jvpp/JVppVesProvider.java
+new file mode 100644
+index 00000000..8afed84e
+--- /dev/null
++++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/jvpp/JVppVesProvider.java
+@@ -0,0 +1,59 @@
++/*
++ * Copyright (c) 2017 Intel Corp and/or its affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at:
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package io.fd.hc2vpp.ves.jvpp;
++
++import com.google.inject.Inject;
++import io.fd.honeycomb.infra.distro.ProviderTrait;
++import io.fd.vpp.jvpp.JVppRegistry;
++import io.fd.vpp.jvpp.ves.JVppVesImpl;
++import io.fd.vpp.jvpp.ves.future.FutureJVppVesFacade;
++import java.io.IOException;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++/**
++ * Provides future API for jvpp-ves plugin. Must be a singleton due to shutdown hook usage.
++ * Registers shutdown hook to free plugin's resources on shutdown.
++ */
++public final class JVppVesProvider extends ProviderTrait<FutureJVppVesFacade> {
++
++    private static final Logger LOG = LoggerFactory.getLogger(JVppVesProvider.class);
++
++    @Inject
++    private JVppRegistry registry;
++
++    @Override
++    protected FutureJVppVesFacade create() {
++        try {
++            final JVppVesImpl jvppVes = new JVppVesImpl();
++            Runtime.getRuntime().addShutdownHook(new Thread() {
++                @Override
++                public void run() {
++                    LOG.info("Unloading jvpp-ves plugin");
++                    jvppVes.close();
++                    LOG.info("Successfully unloaded jvpp-ves plugin");
++                }
++            });
++
++            LOG.info("Successfully loaded jvpp-ves plugin");
++            return new FutureJVppVesFacade(registry, jvppVes);
++        } catch (IOException e) {
++            throw new IllegalStateException("Unable to open VPP management connection", e);
++        }
++    }
++}
++
+diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/read/VesReaderFactory.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/read/VesReaderFactory.java
+new file mode 100644
+index 00000000..bef652fd
+--- /dev/null
++++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/read/VesReaderFactory.java
+@@ -0,0 +1,50 @@
++/*
++ * Copyright (c) 2017 Intel Corp and/or its affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at:
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package io.fd.hc2vpp.ves.read;
++
++import com.google.inject.Inject;
++import io.fd.honeycomb.translate.read.ReaderFactory;
++import io.fd.honeycomb.translate.read.registry.ModifiableReaderRegistryBuilder;
++import io.fd.vpp.jvpp.core.future.FutureJVppCore;
++import javax.annotation.Nonnull;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.Vesagent;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.VesagentBuilder;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.Config;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.ConfigBuilder;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.Mode;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.ModeBuilder;
++import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
++
++/**
++ * Factory producing writers for VES Agent plugin's data.
++ */
++public final class VesReaderFactory implements ReaderFactory {
++
++    private static final InstanceIdentifier<Vesagent> VESAGENT_ID = InstanceIdentifier.create(Vesagent.class);
++    private static final InstanceIdentifier<Config> CONFIG_ID = InstanceIdentifier.create(Config.class);
++    private static final InstanceIdentifier<Mode> MODE_ID = InstanceIdentifier.create(Mode.class);
++
++    @Inject
++    private FutureJVppCore vppApi;
++
++    @Override
++    public void init(@Nonnull final ModifiableReaderRegistryBuilder registry) {
++        registry.addStructuralReader(VESAGENT_ID, VesagentBuilder.class);
++        registry.addStructuralReader(CONFIG_ID, ConfigBuilder.class);
++        registry.addStructuralReader(MODE_ID, ModeBuilder.class);
++    }
++}
+diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesConfigCustomizer.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesConfigCustomizer.java
+new file mode 100644
+index 00000000..e06afa73
+--- /dev/null
++++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesConfigCustomizer.java
+@@ -0,0 +1,127 @@
++/*
++ * Copyright (c) 2017 Intel Corp and/or its affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at:
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package io.fd.hc2vpp.ves.write;
++
++import static com.google.common.base.Preconditions.checkArgument;
++
++import io.fd.hc2vpp.common.translate.util.ByteDataTranslator;
++import io.fd.hc2vpp.common.translate.util.FutureJVppCustomizer;
++import io.fd.hc2vpp.common.translate.util.Ipv4Translator;
++import io.fd.hc2vpp.common.translate.util.Ipv6Translator;
++import io.fd.hc2vpp.common.translate.util.JvppReplyConsumer;
++import io.fd.honeycomb.translate.spi.write.WriterCustomizer;
++import io.fd.honeycomb.translate.write.WriteContext;
++import io.fd.honeycomb.translate.write.WriteFailedException;
++import io.fd.vpp.jvpp.core.future.FutureJVppCore;
++//import io.fd.vpp.jvpp.ves.future.FutureJVppVes;
++import io.fd.vpp.jvpp.ves.dto.VesAgentConfig;
++import io.fd.vpp.jvpp.ves.future.FutureJVppVesFacade;
++import javax.annotation.Nonnull;
++//import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.Vesagent;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.Config;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.ConfigBuilder;
++import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++final class VesConfigCustomizer extends FutureJVppCustomizer implements WriterCustomizer<Config>,
++    JvppReplyConsumer, ByteDataTranslator, Ipv6Translator, Ipv4Translator {
++    private static final Logger LOG = LoggerFactory.getLogger(VesConfigCustomizer.class);
++
++    private final FutureJVppVesFacade jvppVes;
++
++    VesConfigCustomizer(final FutureJVppCore vppApi, final FutureJVppVesFacade jvppVes) {
++        super(vppApi);
++        this.jvppVes = jvppVes;
++    }
++
++    @Override
++    public void writeCurrentAttributes(@Nonnull final InstanceIdentifier<Config> iid, @Nonnull final Config dataAfter,
++                                       @Nonnull final WriteContext writeContext) throws WriteFailedException {
++        ConfigBuilder configBuilder = new ConfigBuilder();
++        InstanceIdentifier<Config> id = iid;
++
++        LOG.debug("Writing VES Agent Config {} dataAfter={}", id, dataAfter);
++        checkArgument(dataAfter.getServerAddr() != null && dataAfter.getServerAddr().getValue() != null
++            && dataAfter.getServerPort() != 0, "VES Server Address and Port need to be configured");
++
++        configBuilder.setServerAddr(dataAfter.getServerAddr())
++                     .setServerPort(dataAfter.getServerPort())
++                     .setReadInterval(dataAfter.getReadInterval())
++                     .setIsAdd(1L);
++
++        setVesAgentConfig(id, configBuilder.build());
++    }
++
++    @Override
++    public void updateCurrentAttributes(@Nonnull final InstanceIdentifier<Config> iid, @Nonnull final Config dataBefore,
++                                        @Nonnull final Config dataAfter, @Nonnull final WriteContext writeContext)
++        throws WriteFailedException {
++        ConfigBuilder configBuilder = new ConfigBuilder();
++        InstanceIdentifier<Config> id = iid;
++
++        checkArgument(dataBefore.getServerAddr() != null && dataBefore.getServerAddr().getValue() != null
++            && dataBefore.getServerPort() != 0, "VES Server Address and Port need to be configured");
++        checkArgument(dataAfter.getServerAddr() != null && dataAfter.getServerAddr().getValue() != null
++            && dataAfter.getServerPort() != 0, "VES Server Address and Port need to be configured");
++
++        // remove old configuration:
++        configBuilder.setServerAddr(dataBefore.getServerAddr())
++                     .setServerPort(dataBefore.getServerPort())
++                     .setReadInterval(dataBefore.getReadInterval())
++                     .setIsAdd(0L);
++        setVesAgentConfig(id, configBuilder.build());
++
++        // and add new one:
++        configBuilder.setServerAddr(dataAfter.getServerAddr())
++                     .setServerPort(dataAfter.getServerPort())
++                     .setReadInterval(dataAfter.getReadInterval())
++                     .setIsAdd(1L);
++        setVesAgentConfig(id, configBuilder.build());
++    }
++
++    @Override
++    public void deleteCurrentAttributes(@Nonnull final InstanceIdentifier<Config> iid, @Nonnull final Config dataBefore,
++                                        @Nonnull final WriteContext writeContext) throws WriteFailedException {
++        ConfigBuilder configBuilder = new ConfigBuilder();
++        InstanceIdentifier<Config> id = iid;
++        LOG.debug("Removing VES Agent {} dataBefore={}", id, dataBefore);
++
++        checkArgument(dataBefore.getServerAddr() != null && dataBefore.getServerAddr().getValue() != null
++            && dataBefore.getServerPort() != 0, "VES Server Address and Port need to be dataBeforeured");
++
++        configBuilder.setServerAddr(dataBefore.getServerAddr())
++                     .setServerPort(dataBefore.getServerPort())
++                     .setReadInterval(dataBefore.getReadInterval())
++                     .setIsAdd(0L);
++
++        setVesAgentConfig(id, configBuilder.build());
++    }
++
++    private void setVesAgentConfig(final InstanceIdentifier<Config> id, final Config config)
++        throws WriteFailedException {
++        final VesAgentConfig request = new VesAgentConfig();
++
++        request.serverPort = config.getServerPort().byteValue();
++        request.readInterval = config.getReadInterval().byteValue();
++        request.isAdd = config.getIsAdd().byteValue();
++        request.serverAddr = ipv4AddressNoZoneToArray(config.getServerAddr().getValue());
++
++        LOG.debug("VES agent config change id={} request={}", id, request);
++        getReplyForWrite(jvppVes.vesAgentConfig(request).toCompletableFuture(), id);
++    }
++}
+diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesModeCustomizer.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesModeCustomizer.java
+new file mode 100644
+index 00000000..8b6d5a9a
+--- /dev/null
++++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesModeCustomizer.java
+@@ -0,0 +1,97 @@
++/*
++ * Copyright (c) 2017 Intel Corp and/or its affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at:
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package io.fd.hc2vpp.ves.write;
++
++import static com.google.common.base.Preconditions.checkArgument;
++
++import io.fd.hc2vpp.common.translate.util.ByteDataTranslator;
++import io.fd.hc2vpp.common.translate.util.FutureJVppCustomizer;
++import io.fd.hc2vpp.common.translate.util.Ipv4Translator;
++import io.fd.hc2vpp.common.translate.util.Ipv6Translator;
++import io.fd.hc2vpp.common.translate.util.JvppReplyConsumer;
++import io.fd.honeycomb.translate.spi.write.WriterCustomizer;
++import io.fd.honeycomb.translate.write.WriteContext;
++import io.fd.honeycomb.translate.write.WriteFailedException;
++import io.fd.vpp.jvpp.core.future.FutureJVppCore;
++//import io.fd.vpp.jvpp.ves.future.FutureJVppVes;
++import io.fd.vpp.jvpp.ves.dto.VesAgentMode;
++import io.fd.vpp.jvpp.ves.future.FutureJVppVesFacade;
++import javax.annotation.Nonnull;
++//import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.Vesagent;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.Mode;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.ModeBuilder;
++import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++final class VesModeCustomizer extends FutureJVppCustomizer implements WriterCustomizer<Mode>,
++    JvppReplyConsumer, ByteDataTranslator, Ipv6Translator, Ipv4Translator {
++    private static final Logger LOG = LoggerFactory.getLogger(VesModeCustomizer.class);
++
++    private final FutureJVppVesFacade jvppVes;
++
++    VesModeCustomizer(final FutureJVppCore vppApi, final FutureJVppVesFacade jvppVes) {
++        super(vppApi);
++        this.jvppVes = jvppVes;
++    }
++
++    @Override
++    public void writeCurrentAttributes(@Nonnull final InstanceIdentifier<Mode> iid, @Nonnull final Mode dataAfter,
++                                       @Nonnull final WriteContext writeContext) throws WriteFailedException {
++        LOG.debug("Writing VES Agent Working Mode {} dataAfter={}", iid, dataAfter);
++
++        checkArgument(dataAfter.getWorkingMode() != null && dataAfter.getBasePacketLoss() <= 100,
++                      "VES Agent Working Mode need to be correctly configured.");
++
++        setVesAgentMode(iid, dataAfter);
++    }
++
++    @Override
++    public void updateCurrentAttributes(@Nonnull final InstanceIdentifier<Mode> iid, @Nonnull final Mode dataBefore,
++                                        @Nonnull final Mode dataAfter, @Nonnull final WriteContext writeContext)
++        throws WriteFailedException {
++        LOG.debug("Writing VES Agent Working Mode {} {}-->{}", iid, dataBefore, dataAfter);
++
++        checkArgument(dataAfter.getWorkingMode() != null && dataAfter.getBasePacketLoss() <= 100,
++                      "VES Agent Working Mode need to be correctly configured.");
++
++        setVesAgentMode(iid, dataAfter);
++    }
++
++    @Override
++    public void deleteCurrentAttributes(@Nonnull final InstanceIdentifier<Mode> iid, @Nonnull final Mode dataBefore,
++                                        @Nonnull final WriteContext writeContext) throws WriteFailedException {
++        ModeBuilder modeBuilder = new ModeBuilder();
++        LOG.debug("Restoring VES Mode {} dataBefore={} to default.", iid, dataBefore);
++
++        modeBuilder.setWorkingMode("Real")
++                   .setBasePacketLoss(0L);
++
++        setVesAgentMode(iid, modeBuilder.build());
++    }
++
++    private void setVesAgentMode(final InstanceIdentifier<Mode> id, final Mode mode)
++        throws WriteFailedException {
++        final VesAgentMode request = new VesAgentMode();
++
++        request.pktLossRate = mode.getBasePacketLoss().byteValue();
++        request.workMode = mode.getWorkingMode().getBytes();
++
++        LOG.debug("VES agent working mode change id={} request={}", id, request);
++        getReplyForWrite(jvppVes.vesAgentMode(request).toCompletableFuture(), id);
++    }
++}
+diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesWriterFactory.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesWriterFactory.java
+new file mode 100644
+index 00000000..581f0460
+--- /dev/null
++++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesWriterFactory.java
+@@ -0,0 +1,54 @@
++/*
++ * Copyright (c) 2017 Intel Corp and/or its affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at:
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package io.fd.hc2vpp.ves.write;
++
++import com.google.common.collect.ImmutableSet;
++import com.google.inject.Inject;
++import io.fd.honeycomb.translate.impl.write.GenericWriter;
++import io.fd.honeycomb.translate.write.WriterFactory;
++import io.fd.honeycomb.translate.write.registry.ModifiableWriterRegistryBuilder;
++import io.fd.vpp.jvpp.core.future.FutureJVppCore;
++import io.fd.vpp.jvpp.ves.future.FutureJVppVesFacade;
++import javax.annotation.Nonnull;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.Vesagent;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.Config;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.Mode;
++import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
++
++/**
++ * Factory producing writers for VES Agent plugin's data.
++ */
++public final class VesWriterFactory implements WriterFactory {
++
++    private static final InstanceIdentifier<Vesagent> VESAGENT_ID = InstanceIdentifier.create(Vesagent.class);
++
++    @Inject
++    private FutureJVppCore vppApi;
++
++    @Inject
++    protected FutureJVppVesFacade futureVesFacade;
++
++    @Override
++    public void init(@Nonnull final ModifiableWriterRegistryBuilder registry) {
++         registry.add(new GenericWriter<>(VESAGENT_ID,
++             new VesagentCustomizer(vppApi, futureVesFacade)));
++         registry.add(new GenericWriter<>(VESAGENT_ID.child(Config.class),
++             new VesConfigCustomizer(vppApi, futureVesFacade)));
++         registry.add(new GenericWriter<>(VESAGENT_ID.child(Mode.class),
++             new VesModeCustomizer(vppApi, futureVesFacade)));
++    }
++}
+diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesagentCustomizer.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesagentCustomizer.java
+new file mode 100644
+index 00000000..62e46cdb
+--- /dev/null
++++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesagentCustomizer.java
+@@ -0,0 +1,131 @@
++/*
++ * Copyright (c) 2017 Intel Corp and/or its affiliates.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at:
++ *
++ *     http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++package io.fd.hc2vpp.ves.write;
++
++import static com.google.common.base.Preconditions.checkArgument;
++
++import io.fd.hc2vpp.common.translate.util.ByteDataTranslator;
++import io.fd.hc2vpp.common.translate.util.FutureJVppCustomizer;
++import io.fd.hc2vpp.common.translate.util.Ipv4Translator;
++import io.fd.hc2vpp.common.translate.util.Ipv6Translator;
++import io.fd.hc2vpp.common.translate.util.JvppReplyConsumer;
++import io.fd.honeycomb.translate.spi.write.WriterCustomizer;
++import io.fd.honeycomb.translate.write.WriteContext;
++import io.fd.honeycomb.translate.write.WriteFailedException;
++import io.fd.vpp.jvpp.core.future.FutureJVppCore;
++//import io.fd.vpp.jvpp.ves.future.FutureJVppVes;
++import io.fd.vpp.jvpp.ves.dto.VesAgentConfig;
++import io.fd.vpp.jvpp.ves.future.FutureJVppVesFacade;
++import javax.annotation.Nonnull;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.Vesagent;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.Config;
++import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vpp.vesagent.rev170801.vesagent.attributes.ConfigBuilder;
++import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
++
++final class VesagentCustomizer extends FutureJVppCustomizer implements WriterCustomizer<Vesagent>,
++    JvppReplyConsumer, ByteDataTranslator, Ipv6Translator, Ipv4Translator {
++    private static final Logger LOG = LoggerFactory.getLogger(VesagentCustomizer.class);
++
++    private final FutureJVppVesFacade jvppVes;
++
++    VesagentCustomizer(final FutureJVppCore vppApi, final FutureJVppVesFacade jvppVes) {
++        super(vppApi);
++        this.jvppVes = jvppVes;
++    }
++
++    @Override
++    public void writeCurrentAttributes(@Nonnull final InstanceIdentifier<Vesagent> iid, @Nonnull final Vesagent dataAfter,
++                                       @Nonnull final WriteContext writeContext) throws WriteFailedException {
++        Config config = dataAfter.getConfig();
++        ConfigBuilder configBuilder = new ConfigBuilder();
++        InstanceIdentifier<Config> id = iid.child(Config.class);
++
++        LOG.debug("Writing VES Agent Config {} dataAfter={}", id, config);
++        checkArgument(config.getServerAddr() != null && config.getServerAddr().getValue() != null
++            && config.getServerPort() != 0, "VES Server Address and Port need to be configured");
++
++        configBuilder.setServerAddr(config.getServerAddr())
++                     .setServerPort(config.getServerPort())
++                     .setReadInterval(config.getReadInterval())
++                     .setIsAdd(1L);
++
++        setVesAgentConfig(id, configBuilder.build());
++    }
++
++    @Override
++    public void updateCurrentAttributes(@Nonnull final InstanceIdentifier<Vesagent> iid, @Nonnull final Vesagent dataBefore,
++                                        @Nonnull final Vesagent dataAfter, @Nonnull final WriteContext writeContext)
++        throws WriteFailedException {
++        Config configBefore = dataBefore.getConfig();
++        Config configAfter = dataAfter.getConfig();
++        ConfigBuilder configBuilder = new ConfigBuilder();
++        InstanceIdentifier<Config> id = iid.child(Config.class);
++
++        checkArgument(configBefore.getServerAddr() != null && configBefore.getServerAddr().getValue() != null
++            && configBefore.getServerPort() != 0, "VES Server Address and Port need to be configured");
++        checkArgument(configAfter.getServerAddr() != null && configAfter.getServerAddr().getValue() != null
++            && configAfter.getServerPort() != 0, "VES Server Address and Port need to be configured");
++
++        // remove old configuration:
++        configBuilder.setServerAddr(configBefore.getServerAddr())
++                     .setServerPort(configBefore.getServerPort())
++                     .setReadInterval(configBefore.getReadInterval())
++                     .setIsAdd(0L);
++        setVesAgentConfig(id, configBuilder.build());
++
++        // and add new one:
++        configBuilder.setServerAddr(configAfter.getServerAddr())
++                     .setServerPort(configAfter.getServerPort())
++                     .setReadInterval(configAfter.getReadInterval())
++                     .setIsAdd(1L);
++        setVesAgentConfig(id, configBuilder.build());
++    }
++
++    @Override
++    public void deleteCurrentAttributes(@Nonnull final InstanceIdentifier<Vesagent> iid, @Nonnull final Vesagent dataBefore,
++                                        @Nonnull final WriteContext writeContext) throws WriteFailedException {
++        Config config = dataBefore.getConfig();
++        InstanceIdentifier<Config> id = iid.child(Config.class);
++        LOG.debug("Removing VES Agent {} dataBefore={}", id, config);
++
++        checkArgument(config.getServerAddr() != null && config.getServerAddr().getValue() != null
++            && config.getServerPort() != 0, "VES Server Address and Port need to be configured");
++
++        ConfigBuilder configBuilder = new ConfigBuilder();
++        configBuilder.setServerAddr(config.getServerAddr())
++                     .setServerPort(config.getServerPort())
++                     .setReadInterval(config.getReadInterval())
++                     .setIsAdd(0L);
++
++        setVesAgentConfig(id, configBuilder.build());
++    }
++
++    private void setVesAgentConfig(final InstanceIdentifier<Config> id, final Config config)
++        throws WriteFailedException {
++        final VesAgentConfig request = new VesAgentConfig();
++
++        request.serverPort = config.getServerPort().byteValue();
++        request.readInterval = config.getReadInterval().byteValue();
++        request.isAdd = config.getIsAdd().byteValue();
++        request.serverAddr = ipv4AddressNoZoneToArray(config.getServerAddr().getValue());
++
++        LOG.debug("VES agent config change id={} request={}", id, request);
++        getReplyForWrite(jvppVes.vesAgentConfig(request).toCompletableFuture(), id);
++    }
++}
+diff --git a/vpp-integration/minimal-distribution/pom.xml b/vpp-integration/minimal-distribution/pom.xml
+index e126114a..ca0e5b24 100644
+--- a/vpp-integration/minimal-distribution/pom.xml
++++ b/vpp-integration/minimal-distribution/pom.xml
+@@ -40,6 +40,7 @@
+     <routing.version>1.17.04.1-SNAPSHOT</routing.version>
+     <acl.version>1.17.04.1-SNAPSHOT</acl.version>
+     <dhcp.version>1.17.04.1-SNAPSHOT</dhcp.version>
++    <vesagent.version>1.17.04.1-SNAPSHOT</vesagent.version>
+     <vpp.classifier.version>1.17.04.1-SNAPSHOT</vpp.classifier.version>
+     <l3-impl.version>1.17.04.1-SNAPSHOT</l3-impl.version>
+     <vpp-management-impl.version>1.17.04.1-SNAPSHOT</vpp-management-impl.version>
+@@ -63,6 +64,7 @@
+       io.fd.hc2vpp.routing.RoutingModule,
+       io.fd.hc2vpp.acl.AclModule,
+       io.fd.hc2vpp.dhcp.DhcpModule,
++      io.fd.hc2vpp.ves.VesModule,
+       io.fd.hc2vpp.policer.PolicerModule,
+       // io.fd.hc2vpp.vppnsh.impl.VppNshModule,
+       <!-- Nsh module by default disabled, because it needs vpp-nsh plugin, which is not part of vpp codebase.-->
+@@ -151,6 +153,11 @@
+       <version>${dhcp.version}</version>
+     </dependency>
+     <dependency>
++      <groupId>io.fd.hc2vpp.ves</groupId>
++      <artifactId>ves-impl</artifactId>
++      <version>${vesagent.version}</version>
++    </dependency>
++    <dependency>
+       <groupId>io.fd.hc2vpp.management</groupId>
+       <artifactId>vpp-management-impl</artifactId>
+       <version>${vpp-management-impl.version}</version>
+-- 
+2.12.2.windows.2
+

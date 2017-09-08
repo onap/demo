@@ -1,0 +1,8 @@
+set int state GigabitEthernet0/8/0 up
+set dhcp client intfc GigabitEthernet0/8/0 hostname brg-emulator
+
+tap connect lstack
+set int state tap-0 up
+
+set interface l2 bridge tap-0 10 0
+set bridge-domain arp term 10

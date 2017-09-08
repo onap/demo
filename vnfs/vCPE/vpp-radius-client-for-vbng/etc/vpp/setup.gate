@@ -1,0 +1,8 @@
+set int state GigabitEthernet0/8/0 up
+set interface ip address GigabitEthernet0/8/0 10.4.0.4/24
+
+set int state GigabitEthernet0/9/0 up
+set interface ip address GigabitEthernet0/9/0 10.4.0.3/24
+
+set vbng dhcp4 remote 10.4.0.1 local 10.4.0.3
+set vbng aaa config /etc/vpp/vbng-aaa.cfg nas-port 5060

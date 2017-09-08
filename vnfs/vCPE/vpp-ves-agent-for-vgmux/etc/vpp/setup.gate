@@ -1,0 +1,7 @@
+set int state GigabitEthernet0/8/0 up
+set int ip address GigabitEthernet0/8/0 10.1.0.20/24
+
+set int state GigabitEthernet0/9/0 up
+set int ip address GigabitEthernet0/9/0 10.5.0.20/24
+
+create vxlan tunnel src 10.5.0.20 dst 10.5.0.21 vni 100

@@ -1,0 +1,13 @@
+[Unit]
+Description=Honeycomb Agent for the VPP control plane
+Documentation=https://wiki.fd.io/view/Honeycomb
+Requires=vpp.service
+After=vpp.service
+
+[Service]
+ExecStart=/opt/honeycomb/honeycomb
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
