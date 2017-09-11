@@ -757,6 +757,7 @@ resources:
             __network_name__: { get_attr: [oam_onap, name] }
             __openstack_username__: { get_param: openstack_username }
             __openstack_api_key__: { get_param : openstack_api_key }
+            __openstack_tenant_id__: { get_param: openstack_tenant_id }
             __artifacts_version__: { get_param: artifacts_version }
             __openstack_region__: { get_param: openstack_region }
             __robot_ip_addr__: { get_param: robot_ip_addr }
@@ -793,6 +794,7 @@ resources:
             echo "__network_name__" > /opt/config/network.txt
             echo "__openstack_username__" > /opt/config/openstack_username.txt
             echo "__openstack_api_key__" > /opt/config/openstack_password.txt
+            echo "__openstack_tenant_id__" > /opt/config/openstack_tenant_id.txt
             echo "__openstack_region__" > /opt/config/region.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__robot_ip_addr__" > /opt/config/local_ip_addr.txt
