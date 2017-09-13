@@ -1,0 +1,31 @@
+From b57f1b0e1e5c28d7e5fbd4ddfd8212db25622a9c Mon Sep 17 00:00:00 2001
+From: Johnson Li <johnson.li@intel.com>
+Date: Fri, 8 Sep 2017 17:29:14 +0800
+Subject: [PATCH] Append Option 82 by default for vBRG
+
+Signed-off-by: Johnson Li <johnson.li@intel.com>
+
+diff --git a/src/vnet/dhcp/client.c b/src/vnet/dhcp/client.c
+index 7c3f7f6a..41bc2c7b 100644
+--- a/src/vnet/dhcp/client.c
++++ b/src/vnet/dhcp/client.c
+@@ -426,6 +426,16 @@ send_dhcp_pkt (dhcp_client_main_t * dcm, dhcp_client_t * c,
+   clib_memcpy (o->data, c->option_55_data, vec_len(c->option_55_data));
+   o = (dhcp_option_t *) (((uword) o) + (o->length + 2));
+ 
++  /*send option 82*/
++  u8 sub2_len = vec_len(hw->hw_address);
++  o->option = 82;
++  o->length = sub2_len + 2;
++  u8 sub_option = 2;
++  clib_memcpy (o->data, &sub_option, 1);
++  clib_memcpy (o->data + 1,&sub2_len, 1);
++  clib_memcpy (o->data + 2, hw->hw_address, vec_len(hw->hw_address));
++  o = (dhcp_option_t *) (((uword) o) + (o->length +2));
++
+   /* End of list */
+   o->option = 0xff;
+   o->length = 0;
+-- 
+2.12.2.windows.2
+

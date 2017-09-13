@@ -4,6 +4,10 @@ REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
+VPP_SOURCE_REPO_URL=$(cat /opt/config/vpp_source_repo_url.txt)
+VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/vpp_source_repo_branch.txt)
+HC2VPP_SOURCE_REPO_URL=$(cat /opt/config/hc2vpp_source_repo_url.txt)
+HC2VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/hc2vpp_source_repo_branch.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
 # Convert Network CIDR to Netmask
@@ -53,6 +57,308 @@ echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s)
 apt-get update
 apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
 sleep 1
+
+# Install the tools required for download codes
+apt-get install -y expect git
+
+#Download and build the VPP codes
+cd /opt
+git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
+
+cd vpp
+expect -c "
+        set timeout 60;
+        spawn make install-dep;
+        expect {
+                \"Do you want to continue?*\" {send \"Y\r\"; interact}
+        }
+"
+
+cd build-root
+./bootstrap.sh
+make V=0 PLATFORM=vpp TAG=vpp install-deb
+
+# Install the VPP package
+dpkg -i *.deb
+systemctl stop vpp
+
+# Auto-start configuration for the VPP
+cat > /etc/vpp/startup.conf << EOF
+
+unix {
+  nodaemon
+  log /tmp/vpp.log
+  full-coredump
+  cli-listen localhost:5002
+  startup-config /etc/vpp/setup.gate
+}
+
+api-trace {
+  on
+}
+
+api-segment {
+  gid vpp
+}
+
+cpu {
+	## In the VPP there is one main thread and optionally the user can create worker(s)
+	## The main thread and worker thread(s) can be pinned to CPU core(s) manually or automatically
+
+	## Manual pinning of thread(s) to CPU core(s)
+
+	## Set logical CPU core where main thread runs
+	# main-core 1
+
+	## Set logical CPU core(s) where worker threads are running
+	# corelist-workers 2-3,18-19
+
+	## Automatic pinning of thread(s) to CPU core(s)
+
+	## Sets number of CPU core(s) to be skipped (1 ... N-1)
+	## Skipped CPU core(s) are not used for pinning main thread and working thread(s).
+	## The main thread is automatically pinned to the first available CPU core and worker(s)
+	## are pinned to next free CPU core(s) after core assigned to main thread
+	# skip-cores 4
+
+	## Specify a number of workers to be created
+	## Workers are pinned to N consecutive CPU cores while skipping "skip-cores" CPU core(s)
+	## and main thread's CPU core
+	# workers 2
+
+	## Set scheduling policy and priority of main and worker threads
+
+	## Scheduling policy options are: other (SCHED_OTHER), batch (SCHED_BATCH)
+	## idle (SCHED_IDLE), fifo (SCHED_FIFO), rr (SCHED_RR)
+	# scheduler-policy fifo
+
+	## Scheduling priority is used only for "real-time policies (fifo and rr),
+	## and has to be in the range of priorities supported for a particular policy
+	# scheduler-priority 50
+}
+
+# dpdk {
+	## Change default settings for all intefaces
+	# dev default {
+		## Number of receive queues, enables RSS
+		## Default is 1
+		# num-rx-queues 3
+
+		## Number of transmit queues, Default is equal
+		## to number of worker threads or 1 if no workers treads
+		# num-tx-queues 3
+
+		## Number of descriptors in transmit and receive rings
+		## increasing or reducing number can impact performance
+		## Default is 1024 for both rx and tx
+		# num-rx-desc 512
+		# num-tx-desc 512
+
+		## VLAN strip offload mode for interface
+		## Default is off
+		# vlan-strip-offload on
+	# }
+
+	## Whitelist specific interface by specifying PCI address
+	# dev 0000:02:00.0
+
+	## Whitelist specific interface by specifying PCI address and in
+	## addition specify custom parameters for this interface
+	# dev 0000:02:00.1 {
+	#	num-rx-queues 2
+	# }
+
+	## Change UIO driver used by VPP, Options are: igb_uio, vfio-pci
+	## and uio_pci_generic (default)
+	# uio-driver vfio-pci
+
+	## Disable mutli-segment buffers, improves performance but
+	## disables Jumbo MTU support
+	# no-multi-seg
+
+	## Increase number of buffers allocated, needed only in scenarios with
+	## large number of interfaces and worker threads. Value is per CPU socket.
+	## Default is 16384
+	# num-mbufs 128000
+
+	## Change hugepages allocation per-socket, needed only if there is need for
+	## larger number of mbufs. Default is 256M on each detected CPU socket
+	# socket-mem 2048,2048
+# }
+
+EOF
+
+cat > /etc/vpp/setup.gate << EOF
+set int state GigabitEthernet0/8/0 up
+set int ip address GigabitEthernet0/8/0 10.5.0.21/24
+
+set int state GigabitEthernet0/9/0 up
+set dhcp client intfc GigabitEthernet0/9/0 hostname vg-1
+
+tap connect lstack address 192.168.1.1/24
+set int state tap-0 up
+
+create vxlan tunnel src 10.5.0.21 dst 10.5.0.20 vni 100
+
+set interface l2 bridge tap-0 10 0
+set interface l2 bridge vxlan_tunnel0 10 1
+set bridge-domain arp term 10
+
+set int ip address vxlan_tunnel0 192.168.1.254/24
+set interface snat in vxlan_tunnel0 out GigabitEthernet0/9/0
+EOF
+
+# Download and install HC2VPP from source
+cd /opt
+git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
+
+apt-get install -y maven
+cat > ~/.m2/settings.xml << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vi: set et smarttab sw=2 tabstop=2: -->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <profiles>
+    <profile>
+      <id>fd.io-release</id>
+      <repositories>
+        <repository>
+          <id>fd.io-mirror</id>
+          <name>fd.io-mirror</name>
+          <url>https://nexus.fd.io/content/groups/public/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>fd.io-mirror</id>
+          <name>fd.io-mirror</name>
+          <url>https://nexus.fd.io/content/repositories/public/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+
+    <profile>
+      <id>fd.io-snapshots</id>
+      <repositories>
+        <repository>
+          <id>fd.io-snapshot</id>
+          <name>fd.io-snapshot</name>
+          <url>https://nexus.fd.io/content/repositories/fd.io.snapshot/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>fd.io-snapshot</id>
+          <name>fd.io-snapshot</name>
+          <url>https://nexus.fd.io/content/repositories/fd.io.snapshot/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <profile>
+      <id>opendaylight-snapshots</id>
+      <repositories>
+        <repository>
+          <id>opendaylight-snapshot</id>
+          <name>opendaylight-snapshot</name>
+          <url>https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>opendaylight-shapshot</id>
+          <name>opendaylight-snapshot</name>
+          <url>https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+
+  <activeProfiles>
+    <activeProfile>fd.io-release</activeProfile>
+    <activeProfile>fd.io-snapshots</activeProfile>
+    <activeProfile>opendaylight-snapshots</activeProfile>
+  </activeProfiles>
+</settings>
+EOF
+
+cd hc2vpp
+mvn clean install
+l_version=$(cat pom.xml | grep "<version>" | head -1)
+l_version=$(echo "${l_version%<*}")
+l_version=$(echo "${l_version#*>}")
+mv vpp-integration/minimal-distribution/target/vpp-integration-distribution-${l_version}-hc/vpp-integration-distribution-${l_version} /opt/honeycomb
+sed -i 's/127.0.0.1/0.0.0.0/g' /opt/honeycomb/config/honeycomb.json
+
+# Create systemctl service for Honeycomb
+cat > /etc/systemd/system/honeycomb.service << EOF
+[Unit]
+Description=Honeycomb Agent for the VPP control plane
+Documentation=https://wiki.fd.io/view/Honeycomb
+Requires=vpp.service
+After=vpp.service
+
+[Service]
+ExecStart=/opt/honeycomb/honeycomb
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable /etc/systemd/system/honeycomb.service
+
+# Install the DHCP server and config
+apt-get install -y isc-dhcp-server
+cat >> /etc/dhcp/dhcpd.conf << EOF
+subnet 192.168.1.0 netmask 255.255.255.0 {
+  range 192.168.1.2 192.168.1.253;
+  option subnet-mask 255.255.255.0;
+  option routers 192.168.1.254;
+  option broadcast-address 192.168.1.255;
+  default-lease-time 600;
+  max-lease-time 7200;
+}
+EOF
 
 # Download DHCP config files
 cd /opt
