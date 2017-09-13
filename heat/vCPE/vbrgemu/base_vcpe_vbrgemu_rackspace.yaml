@@ -111,6 +111,26 @@ parameters:
     type: string
     label: Cloud environment
     description: Cloud environment (e.g., openstack, rackspace)
+  vpp_source_repo_url:
+    type: string
+    label: VPP Source Git Repo
+    description: URL for VPP source codes
+  vpp_source_repo_branch:
+    type: string
+    label: VPP Source Git Branch
+    description: Git Branch for the VPP source codes
+  hc2vpp_source_repo_url:
+    type: string
+    label: Honeycomb Source Git Repo
+    description: URL for Honeycomb source codes
+  hc2vpp_source_repo_branch:
+    type: string
+    label: Honeycomb Source Git Branch
+    description: Git Branch for the Honeycomb source codes
+  vpp_patch_url:
+    type: string
+    label: VPP Patch URL
+    description: URL for VPP patch for vBRG Emulator
 
 #############
 #           #
@@ -187,6 +207,11 @@ resources:
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
+            __vpp_source_repo_url__ : { get_param: vpp_source_repo_url }
+            __vpp_source_repo_branch__ : { get_param: vpp_source_repo_branch }
+            __hc2vpp_source_repo_url__ : { get_param: hc2vpp_source_repo_url }
+            __hc2vpp_source_repo_branch__ : { get_param: hc2vpp_source_repo_branch }
+            __vpp_patch_url__ : { get_param: vpp_patch_url }
           template: |
             #!/bin/bash
 
@@ -200,6 +225,12 @@ resources:
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__vpp_source_repo_url__" > /opt/config/vpp_source_repo_url.txt
+            echo "__vpp_source_repo_branch__" > /opt/config/vpp_source_repo_branch.txt
+            echo "__hc2vpp_source_repo_url__" > /opt/config/hc2vpp_source_repo_url.txt
+            echo "__hc2vpp_source_repo_branch__" > /opt/config/hc2vpp_source_repo_branch.txt
+            echo "__vpp_patch_url__" > /opt/config/vpp_patch_url.txt
+	    echo "__sdnc_ip__" > /opt/config/ip.txt
 
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_brgemu_install.sh -o /opt/v_brgemu_install.sh
