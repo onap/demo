@@ -1173,7 +1173,7 @@ resources:
             __docker_version__: { get_param: docker_version }
             __gerrit_branch__: { get_param: gerrit_branch }
             __cloud_env__: { get_param: cloud_env }
-            __mso_repo__: { get_param: clamp_repo }
+            __clamp_repo__: { get_param: clamp_repo }
           template: |
             #!/bin/bash
 
