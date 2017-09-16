@@ -119,7 +119,7 @@ collector.api.simpledemo.openecomp.org. IN      A   dcae_coll_ip_addr
 ;dbc.api.simpledemo.openecomp.org.	IN	CNAME  	vm1.mr.simpledemo.openecomp.org.
 ;drprov.api.simpledemo.openecomp.org.	IN	CNAME  	vm1.mr.simpledemo.openecomp.org.
 
-CLAMP
+;CLAMP
 clamp.api.simpledemo.openecomp.org.	IN	CNAME	vm1.clamp.simpledemo.openecomp.org.
 
 ;AAF
