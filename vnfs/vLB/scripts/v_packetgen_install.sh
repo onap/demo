@@ -59,8 +59,7 @@ wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/run_streams_d
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdnspacketgen_change_streams_ports.sh
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb_dns_streams/$DEMO_ARTIFACTS_VERSION/vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
 
-tar -zxvf vpp.tar.gz
-tar -zxvf vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+tar -zmxvf vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv vlb_dns_streams-$DEMO_ARTIFACTS_VERSION dns_streams
 rm *.tar.gz
 chmod +x v_packetgen_init.sh

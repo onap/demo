@@ -64,8 +64,8 @@ wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/run_traffic_f
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vfw/vfw_pg_streams/$DEMO_ARTIFACTS_VERSION/vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
 
-tar -zxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-tar -zxvf vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+tar -zmxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+tar -zmxvf vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv vfw_pg_streams-$DEMO_ARTIFACTS_VERSION pg_streams
 mv sample-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
 sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/sample-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json

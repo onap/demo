@@ -73,9 +73,9 @@ wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/dns-manager/$DEMO_ARTIFACTS_VERSI
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves/ves_vlb_reporting/$DEMO_ARTIFACTS_VERSION/ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 
-tar -zxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+tar -zmxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves-$DEMO_ARTIFACTS_VERSION VES
-tar -zxvf ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+tar -zmxvf ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION VESreporting_vLB
 
 mv VESreporting_vLB /opt/VES/code/evel_training/VESreporting
