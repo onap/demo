@@ -10,7 +10,7 @@
 ### END INIT INFO
 
 dir="/opt"
-cmd="./msb_vm_init.sh;sleep 2;./vnfsdk_vm_init.sh;sleep 2;./mvim_vm_init.sh;sleep 2;./vfc_vm_init.sh;sleep 2;./uui_vm_init.sh"
+cmd="./openo_all_serv.sh"
 user="root"
 
 name=`basename $0`

@@ -59,18 +59,20 @@ curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/msb_vm_init.sh -o /opt
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mvim_vm_init.sh -o /opt/mvim_vm_init.sh
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/vfc_vm_init.sh -o /opt/vfc_vm_init.sh
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/uui_vm_init.sh -o /opt/uui_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/openo_all_serv.sh -o /opt/openo_all_serv.sh
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/openo_serv.sh -o /opt/openo_serv.sh
 chmod +x /opt/vnfsdk_vm_init.sh
 chmod +x /opt/msb_vm_init.sh
 chmod +x /opt/mvim_vm_init.sh
 chmod +x /opt/vfc_vm_init.sh
 chmod +x /opt/uui_vm_init.sh
+chmod +x /opt/openo_all_serv.sh
 chmod +x /opt/openo_serv.sh
 mv /opt/openo_serv.sh /etc/init.d
 update-rc.d openo_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
-echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
+echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
 apt-get update
 apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
 apt-get install -y --allow-unauthenticated docker-engine
@@ -115,12 +117,4 @@ then
 	reboot
 fi
 
-./msb_vm_init.sh
-sleep 2
-./vnfsdk_vm_init.sh
-sleep 2
-./mvim_vm_init.sh
-sleep 2
-./vfc_vm_init.sh
-sleep 2
-./uui_vm_init.sh
+./openo_all_serv.sh
