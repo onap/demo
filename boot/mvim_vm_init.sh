@@ -10,8 +10,8 @@ source /opt/config/onap_ips.txt
 
 # Refresh images
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
-docker pull $NEXUS_DOCKER_REPO/onap/multicloud/framework:latest
-docker pull $NEXUS_DOCKER_REPO/onap/multicloud/vio:latest
+docker pull $NEXUS_DOCKER_REPO/onap/multicloud/framework:$DOCKER_IMAGE_VERSION
+docker pull $NEXUS_DOCKER_REPO/onap/multicloud/vio:$DOCKER_IMAGE_VERSION
 
 docker rm -f multicloud-broker
 docker rm -f multicloud-vio
