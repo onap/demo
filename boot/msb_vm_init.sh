@@ -1,11 +1,11 @@
 #!/bin/bash
 
-NEXUS_USERNAME=onap
-NEXUS_PASSWD=onap
-NEXUS_DOCKER_REPO=nexus3.onap.org:10001
-# DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
-DOCKER_IMAGE_VERSION=latest
+NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
+NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
+NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
+DOCKER_IMAGE_VERSION=$(cat /opt/config/msb_docker.txt)
 
+source /opt/config/onap_ips.txt
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/onap/msb/msb_discovery:$DOCKER_IMAGE_VERSION

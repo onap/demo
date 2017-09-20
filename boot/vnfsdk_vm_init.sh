@@ -9,7 +9,7 @@ set -x
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
-DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
+#DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt) --> don't needed at the moment
 
 # Refresh configuration and scripts
 cd /opt/refrepo
@@ -19,12 +19,10 @@ cd vnfmarket-be/deployment/install
 # Get image names used below from docker-compose environment file
 source .env
 
-
 # Refresh images
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/onap/refrepo:${REFREPO_TAG}
 docker pull $NEXUS_DOCKER_REPO/onap/refrepo:${POSTGRES_TAG}
-
 
 # docker-compose is not in /usr/bin
 /opt/docker/docker-compose down

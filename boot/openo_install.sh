@@ -5,7 +5,7 @@ NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
-GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
+VNFSDK_BRANCH=$(cat /opt/config/vnfsdk_branch.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 CODE_REPO=$(cat /opt/config/remote_repo.txt)
 
@@ -55,11 +55,19 @@ apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates w
 
 # Download scripts from Nexus
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/vnfsdk_vm_init.sh -o /opt/vnfsdk_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/vnfsdk_serv.sh -o /opt/vnfsdk_serv.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/msb_vm_init.sh -o /opt/msb_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mvim_vm_init.sh -o /opt/mvim_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/vfc_vm_init.sh -o /opt/vfc_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/uui_vm_init.sh -o /opt/uui_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/openo_serv.sh -o /opt/openo_serv.sh
 chmod +x /opt/vnfsdk_vm_init.sh
-chmod +x /opt/vnfsdk_serv.sh
-mv /opt/vnfsdk_serv.sh /etc/init.d
-update-rc.d vnfsdk_serv.sh defaults
+chmod +x /opt/msb_vm_init.sh
+chmod +x /opt/mvim_vm_init.sh
+chmod +x /opt/vfc_vm_init.sh
+chmod +x /opt/uui_vm_init.sh
+chmod +x /opt/openo_serv.sh
+mv /opt/openo_serv.sh /etc/init.d
+update-rc.d openo_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
 echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
@@ -92,8 +100,15 @@ echo "nameserver "$DNS_IP_ADDR >> /etc/resolvconf/resolv.conf.d/head
 resolvconf -u
 
 # Clone Gerrit repository and run docker containers
-mkdir -p /PROJECT/OpenSource/UbuntuEP/logs
 cd /opt
-git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO
+git clone -b $VNFSDK_BRANCH --single-branch $CODE_REPO
 
+./msb_vm_init.sh
+sleep 2
 ./vnfsdk_vm_init.sh
+sleep 2
+./mvim_vm_init.sh
+sleep 2
+./vfc_vm_init.sh
+sleep 2
+./uui_vm_init.sh
