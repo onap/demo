@@ -131,6 +131,10 @@ parameters:
     type: string
     label: VPP Patch URL
     description: URL for VPP patch for vBRG Emulator
+  sdnc_ip:
+    type: string
+    label: SDNC ip address
+    description: SDNC ip address uesd to set NAT
 
 #############
 #           #
@@ -212,6 +216,7 @@ resources:
             __hc2vpp_source_repo_url__ : { get_param: hc2vpp_source_repo_url }
             __hc2vpp_source_repo_branch__ : { get_param: hc2vpp_source_repo_branch }
             __vpp_patch_url__ : { get_param: vpp_patch_url }
+	    __sdnc_ip__ : { get param: sdnc_ip }
           template: |
             #!/bin/bash
 
