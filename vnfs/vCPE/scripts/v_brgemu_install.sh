@@ -193,8 +193,60 @@ set bridge-domain arp term 10
 EOF
 
 cat >> /opt/config/ip.txt << EOF
-hcip: 192.168.1.20
+hcip: 192.168.4.20
 EOF
+
+cat > /opt/bind_nic.sh << EOF
+while :
+do
+	if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]]; then
+		#echo "vpp not running"
+	else
+		break
+	fi
+done
+nic_name=$(lshw -C network | grep "logical name:")
+nic_name=${nic_name#*:}
+ifconfig $nic_name down
+service vpp restart
+while read -r line
+do
+	re=${line#*/[0-9]/[0-9]}
+	if [ "$line" != "$re" ]; then
+		nic=${line%(*}
+		vppctl set dhcp client intfc $nic
+		vppctl set int state $nic up
+		break
+	fi
+doen < <(vppctl show int addr)
+while read -r sdnc_ip
+do
+	if [[ $sdnc_ip = sdnc_ip* ]]; then
+        	sdnc_ip=${sdnc_ip#*" "}
+		break
+        fi
+done < /opt/config/ip.txt
+
+vppctl tap connect tap0
+vppctl set int state tap-0 up
+vppctl set int ip addr tap-0 20.0.0.40/24
+ifconfig tap0 192.168.4.20/24
+route add -host $sdnc_ip tap0
+route add -host 20.0.0.40 tap0
+vppctl ip route add 192.168.4.0/24 via tap-0
+vppctl set interface snat in tap-0 out $nic
+while read -r hw
+do
+	if [[ "$hw" = tap-0* ]]; then
+		read -r hw
+		hw_addr=${hw#" "}
+		hw_addr=${hw_addr#" "}
+		break
+	fi
+done < <(vppctl show hardware)
+arp -s $sdnc_ip $hw_addr
+EOF
+chmod +x /opt/bind_nic.sh
 
 #set nat rule
 cat > /opt/set_nat.sh << EOF
@@ -206,6 +258,7 @@ do
                 #echo "vpp not running"
                 continue
         fi
+		
         flag=0
         while read -r line
         do
@@ -245,6 +298,8 @@ do
 	sleep 1
 done
 EOF
+chmod +x /opt/set_nat.sh
+
 # Download and install HC2VPP from source
 cd /opt
 git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
