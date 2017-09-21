@@ -1,0 +1,383 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - aria-1.0
+  - https://gerrit.onap.org/r/gitweb?p=so.git;a=blob_plain;f=aria/multivim-plugin/src/main/python/multivim-plugin/plugin.yaml
+
+topology_template:
+  description: TOSCA template to deploy vCPE Infrastructue emlements (vAAA, vDHCP, vDNS_DHCP, webServer_sink) for ONAP
+
+  inputs:
+    multivim_config:
+      type: onap.multivim.datatypes.Config
+      description: MultiVIM connection configuration
+    vcpe_image_name:
+      type: string
+      description: Image to be used for compute instance
+    vcpe_flavor_name:
+      type: string
+      description: Type of instance (flavor) to be used
+    public_net_id:
+      type: string
+      description: Public network that enables remote connection to VNF
+    onap_private_net_id:
+      type: string
+      description: Private network that connects ONAP components and the VNF
+    onap_private_subnet_id:
+      type: string
+      description: Private sub-network that connects ONAP components and the VNF
+    onap_private_net_cidr:
+      type: string
+      description: The CIDR of the protected private network
+    cpe_signal_net_id:
+      type: string
+      description: Private network that connects vAAA with vDNSs
+    cpe_signal_net_cidr:
+      type: string
+      description: The CIDR of the vAAA private network
+    cpe_public_net_id:
+      type: string
+      description: Private network that connects vGW to emulated internet
+    cpe_public_net_cidr:
+      type: string
+      description: The CIDR of the vCPE public
+    vaaa_private_ip_0:
+      type: string
+      description: Private IP address that is assigned to the vAAA to communicate with the vCPE components 
+    vaaa_private_ip_1:
+      type: string
+      description: Private IP address that is assigned to the vAAA to communicate with ONAP components
+    vdns_private_ip_0:
+      type: string
+      description: Private IP address that is assigned to the vDNS to communicate with the vCPE components
+    vdns_private_ip_1:
+      type: string
+      description: Private IP address that is assigned to the vDNS to communicate with ONAP components
+    vdhcp_private_ip_0:
+      type: string
+      description: Private IP address that is assigned to the vDHCP to communicate with the vCPE components
+    vdhcp_private_ip_1:
+      type: string
+      description: Private IP address that is assigned to the vDHCP to communicate with ONAP components
+    vweb_private_ip_0:
+      type: string
+      description: Private IP address that is assigned to the vWEB to communicate with the vGWs 
+    vweb_private_ip_1:
+      type: string
+      description: Private IP address that is assigned to the vWEB to communicate with ONAP components
+    vaaa_name_0:
+      type: string
+      description: Name of the vAAA
+    vdns_name_0:
+      type: string
+      description: Name of the vDNS
+    vdhcp_name_0:
+      type: string
+      description: Name of the vDHCP
+    vweb_name_0:
+      type: string
+      description: Name of the vWEB 
+    vnf_id:
+      type: string
+      description: The VNF ID is provided by ONAP
+    vf_module_id:
+      type: string
+      description: The vAAA Module ID is provided by ONAP
+    dcae_collector_ip:
+      type: string
+      description: IP address of the DCAE collector
+    dcae_collector_port:
+      type: string
+      description: Port of the DCAE collector
+    key_name:
+      type: string
+      description: Public/Private key pair name
+    pub_key:
+      type: string
+      description: Public key to be installed on the compute instance
+    repo_url_blob:
+      type: string
+      description: URL of the repository that hosts the demo packages
+    repo_url_artifacts:
+      type: string
+      description: URL of the repository that hosts the demo packages
+    install_script_version:
+      type: string
+      description: Version number of the scripts that install the vFW demo app
+    demo_artifacts_version:
+      type: string
+      description: Artifacts (jar, tar.gz) version used in demo vnfs
+    cloud_env:
+      type: string
+
+  
+##################
+#                #
+# NODE TEMPLATES #
+#                #
+##################
+
+  node_templates:
+
+    my_keypair:
+      type: onap.multivim.nodes.KeyPair
+      properties:
+        resource_id: vcpe_kp
+        multivim_config:
+          custom_configuration:
+            public_key: { get_input: pub_key }
+        multivim_config: { get_input: multivim_config }
+
+    onap_private_network:
+      type: onap.multivim.nodes.Network
+      properties:
+        use_external_resource: true
+        resource_id: { get_input: onap_private_net_id }
+        multivim_config: { get_input: multivim_config }
+  
+    onap_private_subnet:
+      type: onap.multivim.nodes.Subnet
+      properties:
+        use_external_resource: true
+        resource_id: { get_input: onap_private_subnet_id }
+        multivim_config: { get_input: multivim_config }
+
+    cpe_signal_network:
+      type: onap.multivim.nodes.Network
+      properties:
+        resource_id: { get_input: cpe_signal_net_id }
+        multivim_config: { get_input: multivim_config }
+
+    cpe_signal_subnet:
+      type: onap.multivim.nodes.Subnet
+      properties:
+        resource_id: { get_input: cpe_signal_net_id }
+        subnet:
+          cidr: { get_input: cpe_signal_net_cidr }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - network: cpe_signal_network
+
+    cpe_public_network:
+      type: onap.multivim.nodes.Network
+      properties:
+        resource_id: { get_input: cpe_public_net_id }
+        multivim_config: { get_input: multivim_config }
+
+    cpe_public_subnet:
+      type: onap.multivim.nodes.Subnet
+      properties:
+        resource_id: { get_input: cpe_public_net_id }
+        subnet:
+          cidr: { get_input: cpe_public_net_cidr }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - network: cpe_public_network
+
+    # Virtual AAA server Instantiation
+    vaaa_private_0_port:
+      type: onap.multivim.nodes.Port
+      properties:
+        fixed_ip: { get_input: vaaa_private_ip_0 }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - network: cpe_signal_network
+        - subnet: cpe_signal_subnet
+
+    vaaa_private_1_port:
+      type: onap.multivim.nodes.Port
+      properties:
+        fixed_ip: { get_input: vaaa_private_ip_1 }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - network: onap_private_network
+        - subnet: onap_private_subnet
+
+    # NOTE: may need management_network_name
+    vaaa_0:
+      type: onap.multivim.nodes.Server
+      properties:
+        image: { get_input: vcpe_image_name }
+        flavor: { get_input: vcpe_flavor_name }
+        resource_id: { get_input: vaaa_name_0 }
+        management_network_name: onap_private_network
+        multivim_config: { get_input: multivim_config }
+        server:
+          metadata: {vnf_id: { get_input: vnf_id }, vf_module_id: { get_input: vf_module_id }}
+          userdata: { concat: [
+                              "#!/bin/bash\n",
+                              "mkdir /opt/config\n",
+                              "echo ",{ get_input: dcae_collector_ip}," > /opt/config/dcae_collector_ip.txt\n",
+                              "echo ",{ get_input: dcae_collector_port}," > /opt/config/dcae_collector_port.txt\n",
+                              "echo ",{ get_input: vaaa_private_ip_0}," > /opt/config/cpe_signal_net_ipaddr.txt\n",
+                              "echo ",{ get_input: vaaa_private_ip_1}," > /opt/config/oam_ipaddr.txt\n",
+                              "echo ",{ get_input: onap_private_net_cidr}," > /opt/config/oam_cidr.txt\n",
+                              "echo ",{ get_input: cpe_signal_net_cidr}," > /opt/config/cpe_signal_net_cidr.txt\n",
+                              "echo ",{ get_input: repo_url_blob}," > /opt/config/repo_url_blob.txt\n",
+                              "echo ",{ get_input: repo_url_artifacts}," > /opt/config/repo_url_artifacts.txt\n",
+                              "echo ",{ get_input: demo_artifacts_version}," > /opt/config/demo_artifacts_version.txt\n",
+                              "echo ",{ get_input: install_script_version}," > /opt/config/install_script_version.txt\n",
+                              "echo ",{ get_input: cloud_env}," > /opt/config/cloud_env.txt\n",
+                              "curl -k ",{get_input: repo_url_blob},"/org.onap.demo/vnfs/vcpe/",{get_input: install_script_version},"/v_aaa_install.sh -o /opt/v_aaa_install.sh\n",
+                              "cd /opt\n",
+                              "chmod +x v_aaa_install.sh\n",
+                              "./v_aaa_install.sh\n"
+                            ] 
+                   }
+      requirements:
+        - key_pair: my_keypair
+        - port: vaaa_private_0_port
+        - port: vaaa_private_1_port
+
+    # Virtual DNS Instantiation
+    vdns_private_0_port:
+      type: onap.multivim.nodes.Port
+      properties:
+        fixed_ip: { get_input: vdns_private_ip_0 }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - network: cpe_public_network
+
+    vdns_private_1_port:
+      type: onap.multivim.nodes.Port
+      properties:
+        fixed_ip: { get_input: vdns_private_ip_1 }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - network: onap_private_network
+
+    vdns_0:
+      type: onap.multivim.nodes.Server
+      properties:
+        image: { get_input: vcpe_image_name }
+        flavor: { get_input: vcpe_flavor_name }
+        resource_id: { get_input: vdns_name_0 }
+        management_network_name: onap_private_network
+        multivim_config: { get_input: multivim_config }
+        server:
+          metadata: {vnf_id: { get_input: vnf_id }, vf_module_id: { get_input: vf_module_id }}
+          userdata: { concat: [
+                              "#!/bin/bash\n",
+                              "mkdir /opt/config\n",
+                              "echo ",{get_input: vdns_private_ip_1}," > /opt/config/oam_ipaddr.txt\n",
+                              "echo ",{get_input: vdns_private_ip_0}," > /opt/config/cpe_public_net_ipaddr.txt\n",
+                              "echo ",{get_input: onap_private_net_cidr}," > /opt/config/oam_cidr.txt\n",
+                              "echo ",{get_input: cpe_public_net_cidr}," > /opt/config/cpe_public_net_cidr.txt\n",
+                              "echo ",{get_input: repo_url_blob}," > /opt/config/repo_url_blob.txt\n",
+                              "echo ",{get_input: repo_url_artifacts}," > /opt/config/repo_url_artifacts.txt\n",
+                              "echo ",{get_input: demo_artifacts_version}," > /opt/config/demo_artifacts_version.txt\n",
+                              "echo ",{get_input: install_script_version}," > /opt/config/install_script_version.txt\n",
+                              "echo ",{get_input: cloud_env}," > /opt/config/cloud_env.txt\n",
+                              "curl -k ",{get_input: repo_url_blob},"/org.onap.demo/vnfs/vcpe/",{get_input: install_script_version},"/v_dns_install.sh -o /opt/v_dns_install.sh\n",
+                              "cd /opt\n",
+                              "chmod +x v_dns_install.sh\n",
+                              "./v_dns_install.sh\n"
+                            ]
+                   }
+      requirements:    
+        - port: vdns_private_0_port
+        - port: vdns_private_1_port
+
+  # Virtual DHCP Instantiation
+    vdhcp_private_0_port:
+      type: onap.multivim.nodes.Port
+      properties:
+        fixed_ip: { get_input: vdhcp_private_ip_0 }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - network: cpe_signal_network
+        - subnet: cpe_signal_subnet
+
+    vdhcp_private_1_port:
+      type: onap.multivim.nodes.Port
+      properties:
+        fixed_ip: { get_input: vdhcp_private_ip_1 }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - subnet: onap_private_subnet
+
+    vdhcp_0:
+      type: onap.multivim.nodes.Server
+      properties:
+        image: { get_input: vcpe_image_name }
+        flavor: { get_input: vcpe_flavor_name }
+        resource_id: { get_input: vdhcp_name_0 }
+        management_network_name: onap_private_network
+        multivim_config: { get_input: multivim_config }
+        server:
+          metadata: {vnf_id: { get_input: vnf_id }, vf_module_id: { get_input: vf_module_id }}
+          userdata: { concat: [
+                              "#!/bin/bash\n",
+                              "mkdir /opt/config\n",
+                              "echo ",{get_input: vdns_private_ip_1}," > /opt/config/oam_ipaddr.txt\n",
+                              "echo ",{get_input: vdhcp_private_ip_0}," > /opt/config/cpe_signal_ipaddr.txt\n",
+                              "echo ",{get_input: onap_private_net_cidr}," > /opt/config/oam_cidr.txt\n",
+                              "echo ",{get_input: cpe_signal_net_cidr}," > /opt/config/cpe_signal_net_cidr.txt\n",
+                              "echo ",{get_input: repo_url_blob}," > /opt/config/repo_url_blob.txt\n",
+                              "echo ",{get_input: repo_url_artifacts}," > /opt/config/repo_url_artifacts.txt\n",
+                              "echo ",{get_input: demo_artifacts_version}," > /opt/config/demo_artifacts_version.txt\n",
+                              "echo ",{get_input: install_script_version}," > /opt/config/install_script_version.txt\n",
+                              "echo ",{get_input: cloud_env}," > /opt/config/cloud_env.txt\n",
+                              "curl -k ",{get_input: repo_url_blob},"/org.onap.demo/vnfs/vcpe/",{get_input: install_script_version},"/v_dhcp_install.sh -o /opt/v_dhcp_install.sh\n",
+                              "cd /opt\n",
+                              "chmod +x v_dhcp_install.sh\n",
+                              "./v_dhcp_install.sh\n"
+                            ]
+                    }
+      requirements:
+        - key_pair: my_keypair
+        - port: vdhcp_private_0_port
+        - port: vdhcp_private_1_port
+
+    # vWEB instantiaion
+    vweb_private_0_port:
+      type: onap.multivim.nodes.Port
+      properties:
+        fixed_ip: { get_input: vweb_private_ip_0 }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - network: cpe_public_network
+        - subnet: cpe_public_subnet
+
+    vweb_private_1_port:
+      type: onap.multivim.nodes.Port
+      properties:
+        fixed_ip: { get_input: vweb_private_ip_1 }
+        multivim_config: { get_input: multivim_config }
+      requirements:
+        - network: onap_private_network
+        - subnet: onap_private_subnet
+
+    vweb_0:
+      type: onap.multivim.nodes.Server
+      properties:
+        image: { get_input: vcpe_image_name }
+        flavor: { get_input: vcpe_flavor_name }
+        resource_id: { get_input: vweb_name_0 }
+        management_network_name: onap_private_network
+        multivim_config: { get_input: multivim_config }
+        server:
+          metadata: {vnf_id: { get_input: vnf_id }, vf_module_id: { get_input: vf_module_id }}
+          userdata: { concat: [
+                               "#!/bin/bash\n",
+                               "mkdir /opt/config\n",
+                               "echo ",{get_input: vweb_private_ip_1}," > /opt/config/oam_ipaddr.txt\n",
+                               "echo ",{get_input: vweb_private_ip_0}," > /opt/config/cpe_public_ipaddr.txt\n",
+                               "echo ",{get_input: onap_private_net_cidr}," > /opt/config/oam_cidr.txt\n",
+                               "echo ",{get_input: cpe_public_net_cidr}," > /opt/config/cpe_public_net_cidr.txt\n",
+                               "echo ",{get_input: repo_url_blob}," > /opt/config/repo_url_blob.txt\n",
+                               "echo ",{get_input: repo_url_artifacts}," > /opt/config/repo_url_artifacts.txt\n",
+                               "echo ",{get_input: demo_artifacts_version}," > /opt/config/demo_artifacts_version.txt\n",
+                               "echo ",{get_input: install_script_version}," > /opt/config/install_script_version.txt\n",
+                               "echo ",{get_input: cloud_env}," > /opt/config/cloud_env.txt\n",
+                               "curl -k ",{get_input: repo_url_blob},"/org.onap.demo/vnfs/vcpe/",{get_input: install_script_version},"/v_web_install.sh -o /opt/v_web_install.sh\n",
+                               "cd /opt\n",
+                               "chmod +x v_web_install.sh\n",
+                               "./v_web_install.sh\n"
+                            ]
+                  }
+      requirements:
+        - key_pair: my_keypair
+        - port: vweb_private_0_port
+        - port: vweb_private_1_port
+        
