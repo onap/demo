@@ -22,13 +22,14 @@ cp demo.sh /opt
 #	sed -i "s/10.0.1.1/"$(cat /opt/config/aai1_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #	sed -i "s/10.0.2.1/"$(cat /opt/config/appc_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #	sed -i "s/10.0.4.1/"$(cat /opt/config/dcae_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
-#	sed -i "s/10.0.5.1/"$(cat /opt/config/mso_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
+#	sed -i "s/10.0.5.1/"$(cat /opt/config/so_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #	sed -i "s/10.0.11.1/"$(cat /opt/config/mr_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #	sed -i "s/10.0.6.1/"$(cat /opt/config/policy_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #	sed -i "s/10.0.9.1/"$(cat /opt/config/portal_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #	sed -i "s/10.0.3.1/"$(cat /opt/config/sdc_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #	sed -i "s/10.0.7.1/"$(cat /opt/config/sdnc_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #	sed -i "s/10.0.8.1/"$(cat /opt/config/vid_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
+#   sed -i "s/10.0.12.1/"$(cat /opt/config/clamp_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #	sed -i "s/https:\/\/identity.api.rackspacecloud.com/"$(cat /opt/config/keystone.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
 #fi
 

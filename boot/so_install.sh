@@ -55,12 +55,12 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mso_vm_init.sh -o /opt/mso_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mso_serv.sh -o /opt/mso_serv.sh
-chmod +x /opt/mso_vm_init.sh
-chmod +x /opt/mso_serv.sh
-mv /opt/mso_serv.sh /etc/init.d
-update-rc.d mso_serv.sh defaults
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/so_vm_init.sh -o /opt/so_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/so_serv.sh -o /opt/so_serv.sh
+chmod +x /opt/so_vm_init.sh
+chmod +x /opt/so_serv.sh
+mv /opt/so_serv.sh /etc/init.d
+update-rc.d so_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
 echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
@@ -95,8 +95,8 @@ resolvconf -u
 # Clone Gerrit repository
 cd /opt
 git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO test_lab
-MSO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
-echo -n "$OPENSTACK_API_KEY" | openssl aes-128-ecb -e -K $MSO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
+SO_ENCRYPTION_KEY=$(cat /opt/test_lab/encryption.key)
+echo -n "$OPENSTACK_API_KEY" | openssl aes-128-ecb -e -K $SO_ENCRYPTION_KEY -nosalt | xxd -c 256 -p > /opt/config/api_key.txt
 
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
@@ -111,4 +111,4 @@ then
 fi
 
 # Run docker containers. For openstack Ubuntu 16.04 images this will run as a service after the VM has restarted
-./mso_vm_init.sh
+./so_vm_init.sh

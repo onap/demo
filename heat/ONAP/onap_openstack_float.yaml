@@ -44,14 +44,6 @@ parameters:
     type: string
     description: Public network for floating IP address allocation
 
-  public_subnet_id:
-    type: string
-    description: Public network subnet id
-
-  router_gateway_ip:
-    type: string
-    description: Public network gateway IP address
-
   ubuntu_1404_image:
     type: string
     description: Name of the Ubuntu 14.04 image
@@ -75,6 +67,10 @@ parameters:
   flavor_xlarge:
     type: string
     description: Name of the Extra Large Flavor supported by the cloud provider
+
+  flavor_xxlarge:
+    type: string
+    description: Name of the Extra Extra Large Flavor supported by the cloud provider
 
   vm_base_name:
     type: string
@@ -108,15 +104,6 @@ parameters:
     type: string
     description: Artifacts version of ONAP components
 
-  docker_version:
-    type: string
-    label: Version number of ONAP docker images
-
-  gerrit_branch:
-    type: string
-    label: Gerrit code branch
-    description: Gerrit branch where to download the code from
-
   dmaap_topic:
     type: string
     description: DMaaP Topic name
@@ -135,7 +122,7 @@ parameters:
 
   openstack_api_key:
     type: string
-    description: Openstack API Key
+    description: Openstack password or API Key
 
   horizon_url:
     type: string
@@ -148,6 +135,7 @@ parameters:
   cloud_env:
     type: string
     description: Cloud Provider Name
+
 
   ######################
   #                    #
@@ -163,163 +151,94 @@ parameters:
     type: string
     description: First element of the dns_list for ONAP network
 
-  ### Floating IP addresses ###
-  aai1_float_ip:
-    type: string
-    description: AAI Instance 1 Floating IP Address
-
-  aai2_float_ip:
-    type: string
-    description: AAI Instance 2 Floating IP Address
-
-  appc_float_ip:
-    type: string
-    description: APP-C Floating IP Address
-
-  dcae_float_ip:
-    type: string
-    description: DCAE Floating IP Address
-
-  dcae_coll_float_ip:
-    type: string
-    description: DCAE Collector Floating IP Address
-
-  dcae_db_float_ip:
-    type: string
-    description: DCAE Collector Database Floating IP Address
-
-  dcae_hdp1_float_ip:
-    type: string
-    description: Hadoop VM1 Floating IP Address
-
-  dcae_hdp2_float_ip:
-    type: string
-    description: Hadoop VM2 Floating IP Address
-
-  dcae_hdp3_float_ip:
-    type: string
-    description: Hadoop VM3 Floating IP Address
-
-  dns_float_ip:
-    type: string
-    description: DNS Floating IP Address
-
-  mso_float_ip:
-    type: string
-    description: MSO Floating IP Address
-
-  mr_float_ip:
-    type: string
-    description: Message Router Floating IP Address
-
-  policy_float_ip:
-    type: string
-    description: Policy Engine Floating IP Address
-
-  portal_float_ip:
-    type: string
-    description: Portal Floating IP Address
-
-  robot_float_ip:
-    type: string
-    description: Robot Framework Floating IP Address
-
-  sdc_float_ip:
-    type: string
-    description: SDC Floating IP Address
-
-  sdnc_float_ip:
-    type: string
-    description: SDN-C Floating IP Address
-
-  vid_float_ip:
-    type: string
-    description: VID Floating IP Address
-
-  clamp_float_ip:
-    type: string
-    description: CLAMP Floating IP Address
-
-  ### Private IP addresses ###
   oam_network_cidr:
     type: string
     description: CIDR of the OAM ONAP network
 
+  ### Floating IP addresses ###
+  aai1_float_ip:
+    type: string
+  aai2_float_ip:
+    type: string
+  appc_float_ip:
+    type: string
+  dcae_float_ip:
+    type: string
+  dcae_coll_float_ip:
+    type: string
+  dcae_db_float_ip:
+    type: string
+  dcae_hdp1_float_ip:
+    type: string
+  dcae_hdp2_float_ip:
+    type: string
+  dcae_hdp3_float_ip:
+    type: string
+  dns_float_ip:
+    type: string
+  so_float_ip:
+    type: string
+  mr_float_ip:
+    type: string
+  policy_float_ip:
+    type: string
+  portal_float_ip:
+    type: string
+  robot_float_ip:
+    type: string
+  sdc_float_ip:
+    type: string
+  sdnc_float_ip:
+    type: string
+  vid_float_ip:
+    type: string
+  clamp_float_ip:
+    type: string
+  openo_float_ip:
+    type: string
+ 
+  ### Private IP addresses ###
+
   aai1_ip_addr:
     type: string
-    description: AAI Instance 1 IP Address
-
   aai2_ip_addr:
     type: string
-    description: AAI Instance 2 IP Address
-
   appc_ip_addr:
     type: string
-    description: APP-C IP Address
-
   dcae_ip_addr:
     type: string
-    description: DCAE IP Address
- 
   dcae_coll_ip_addr:
     type: string
-    description: DCAE Collector IP Address
-
   dcae_db_ip_addr:
     type: string
-    description: DCAE Database IP Address
-
   dcae_hdp1_ip_addr:
     type: string
-    description: Hadoop VM1 IP Address
-
   dcae_hdp2_ip_addr:
     type: string
-    description: Hadoop VM2 IP Address
-
   dcae_hdp3_ip_addr:
     type: string
-    description: Hadoop VM3 IP Address
-
   dns_ip_addr:
     type: string
-    description: DNS IP Address
-
-  mso_ip_addr:
+  so_ip_addr:
     type: string
-    description: MSO IP Address
-
   mr_ip_addr:
     type: string
-    description: Message Router IP Address
-
   policy_ip_addr:
     type: string
-    description: Policy Engine IP Address
-
   portal_ip_addr:
     type: string
-    description: Portal IP Address
-
   robot_ip_addr:
     type: string
-    description: Robot Framework IP Address
-
   sdc_ip_addr:
     type: string
-    description: SDC IP Address
-
   sdnc_ip_addr:
     type: string
-    description: SDN-C IP Address
-
   vid_ip_addr:
     type: string
-    description: VID IP Address
-
   clamp_ip_addr:
     type: string
-    description: CLAMP IP Address
+  openo_ip_addr:
+    type: string
 
 
   ###########################
@@ -368,51 +287,98 @@ parameters:
 
   aai_repo:
     type: string
-    description: AAI repository
-
   appc_repo:
     type: string
-    description: APPC repository
-
   dcae_repo:
     type: string
-    description: DCAE repository
-
   mr_repo:
     type: string
-    description: Message Router repository
-
-  mso_repo:
+  so_repo:
     type: string
-    description: MSO repository
-
   policy_repo:
     type: string
-    description: Policy repository
-
   portal_repo:
     type: string
-    description: Portal repository
-
   robot_repo:
     type: string
-    description: Robot repository
-
   sdc_repo:
     type: string
-    description: SDC repository
-
   sdnc_repo:
     type: string
-    description: SDNC repository
-
   vid_repo:
     type: string
-    description: VID repository
-
   clamp_repo:
     type: string
-    description: CLAMP repository
+  vnfsdk_repo:
+    type: string
+
+  ################################
+  #                              #
+  # Docker versions and branches #
+  #                              #
+  ################################
+
+  aai_docker:
+    type: string
+  appc_docker:
+    type: string
+  so_docker:
+    type: string
+  mr_docker:
+    type: string
+  dcae_docker:
+    type: string
+  policy_docker:
+    type: string
+  portal_docker:
+    type: string
+  robot_docker:
+    type: string
+  sdc_docker:
+    type: string
+  sdnc_docker:
+    type: string
+  vid_docker:
+    type: string
+  clamp_docker:
+    type: string
+  msb_docker:
+    type: string
+  mvim_docker:
+    type: string
+  vfc_docker:
+    type: string
+  uui_docker:
+    type: string
+  dgbuilder_docker:
+    type: string
+
+  aai_branch:
+    type: string
+  appc_branch:
+    type: string
+  so_branch:
+    type: string
+  mr_branch:
+    type: string
+  dcae_branch:
+    type: string
+  policy_branch:
+    type: string
+  portal_branch:
+    type: string
+  robot_branch:
+    type: string
+  sdc_branch:
+    type: string
+  sdnc_branch:
+    type: string
+  vid_branch:
+    type: string
+  clamp_branch:
+    type: string
+  vnfsdk_branch:
+    type: string
 
 
 #############
@@ -520,7 +486,7 @@ resources:
             __appc_ip_addr__: { get_param: appc_ip_addr }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
             __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
-            __mso_ip_addr__: { get_param: mso_ip_addr }
+            __so_ip_addr__: { get_param: so_ip_addr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __policy_ip_addr__: { get_param: policy_ip_addr }
             __portal_ip_addr__: { get_param: portal_ip_addr }
@@ -529,6 +495,7 @@ resources:
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
             __vid_ip_addr__: { get_param: vid_ip_addr }
             __clamp_ip_addr__: { get_param: clamp_ip_addr }
+            __openo_ip_addr__: { get_param: openo_ip_addr }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
           template: |
@@ -546,7 +513,7 @@ resources:
             echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
             echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
             echo "__dcae_coll_ip_addr__" > /opt/config/dcae_coll_ip_addr.txt
-            echo "__mso_ip_addr__" > /opt/config/mso_ip_addr.txt
+            echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
             echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
@@ -555,6 +522,7 @@ resources:
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
             echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
+            echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
@@ -603,9 +571,9 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: docker_version }
+            __docker_version__: { get_param: aai_docker }
             __cloud_env__: { get_param: cloud_env }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __gerrit_branch__: { get_param: aai_branch }
             __external_dns__: { get_param: external_dns }
             __aai_repo__: { get_param: aai_repo }
           template: |
@@ -671,9 +639,9 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: docker_version }
+            __docker_version__: { get_param: aai_docker }
             __cloud_env__: { get_param: cloud_env }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __gerrit_branch__: { get_param: aai_branch }
             __external_dns__: { get_param: external_dns }
             __aai_repo__: { get_param: aai_repo }
           template: |
@@ -702,33 +670,33 @@ resources:
             ./aai_install.sh
 
 
-  # MSO instantiation
-  mso_private_port:
+  # SO instantiation
+  so_private_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: oam_onap }
-      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: mso_ip_addr }}]
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: so_ip_addr }}]
 
-  mso_floating_ip:
+  so_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: mso_private_port }
-      floating_ip_address: { get_param: mso_float_ip }
+      port_id: { get_resource: so_private_port }
+      floating_ip_address: { get_param: so_float_ip }
 
-  mso_vm:
+  so_vm:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_large }
       name:
         str_replace:
-          template: base-mso
+          template: base-so
           params:
             base: { get_param: vm_base_name }      
       key_name: { get_resource: vm_key }
       networks:
-        - port: { get_resource: mso_private_port }
+        - port: { get_resource: so_private_port }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -745,11 +713,11 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: so_docker }
+            __gerrit_branch__: { get_param: so_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
-            __mso_repo__: { get_param: mso_repo }
+            __so_repo__: { get_param: so_repo }
           template: |
             #!/bin/bash
 
@@ -771,13 +739,13 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__mso_repo__" > /opt/config/remote_repo.txt
+            echo "__so_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/mso_install.sh -o /opt/mso_install.sh
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/so_install.sh -o /opt/so_install.sh
             cd /opt
-            chmod +x mso_install.sh
-            ./mso_install.sh
+            chmod +x so_install.sh
+            ./so_install.sh
 
 
   # Message Router instantiation
@@ -817,7 +785,7 @@ resources:
             __nexus_password__: { get_param: nexus_password }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __gerrit_branch__: { get_param: mr_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __mr_repo__: { get_param: mr_repo }
@@ -886,20 +854,22 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __openstack_region__: { get_param: openstack_region }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: robot_docker }
+            __gerrit_branch__: { get_param: robot_branch }
             __keystone_url__: { get_param: keystone_url }
             __aai1_ip_addr__: { get_param: aai1_ip_addr }
             __aai2_ip_addr__: { get_param: aai2_ip_addr }
             __appc_ip_addr__: { get_param: appc_ip_addr }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
-            __mso_ip_addr__: { get_param: mso_ip_addr }
+            __so_ip_addr__: { get_param: so_ip_addr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __policy_ip_addr__: { get_param: policy_ip_addr }
             __portal_ip_addr__: { get_param: portal_ip_addr }
             __sdc_ip_addr__: { get_param: sdc_ip_addr }
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
             __vid_ip_addr__: { get_param: vid_ip_addr }
+            __clamp_ip_addr__: { get_param: clamp_ip_addr }
+            __openo_ip_addr__: { get_param: openo_ip_addr }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __vm_image_name__: { get_param: ubuntu_1404_image }
@@ -928,13 +898,15 @@ resources:
             echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
             echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
             echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-            echo "__mso_ip_addr__" > /opt/config/mso_ip_addr.txt
+            echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
             echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
+            echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
+            echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__vm_image_name__" > /opt/config/vm_image_name.txt
@@ -985,8 +957,8 @@ resources:
             __nexus_password__: { get_param: nexus_password }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: vid_docker }
+            __gerrit_branch__: { get_param: vid_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __vid_repo__: { get_param: vid_repo }
@@ -1051,8 +1023,9 @@ resources:
             __nexus_password__: { get_param: nexus_password }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: sdnc_docker }
+            __gerrit_branch__: { get_param: sdnc_branch }
+            __dgbuilder_docker__: { get_param: dgbuilder_docker }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __sdnc_repo__: { get_param: sdnc_repo }
@@ -1069,6 +1042,7 @@ resources:
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__dgbuilder_docker__" > /opt/config/dgbuilder_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__sdnc_repo__" > /opt/config/remote_repo.txt
@@ -1129,8 +1103,8 @@ resources:
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __public_ip__: { get_attr: [sdc_floating_ip, floating_ip_address] }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: sdc_docker }
+            __gerrit_branch__: { get_param: sdc_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __sdc_repo__: { get_param: sdc_repo }
@@ -1199,8 +1173,8 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __public_ip__: { get_attr: [portal_floating_ip, floating_ip_address] }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: portal_docker }
+            __gerrit_branch__: { get_param: portal_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __portal_repo__: { get_param: portal_repo }
@@ -1282,8 +1256,8 @@ resources:
             __openstack_region__: { get_param: openstack_region }
             __horizon_url__: { get_param: horizon_url }
             __keystone_url__: { get_param: keystone_url }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: dcae_docker }
+            __gerrit_branch__: { get_param: dcae_branch }
             __dcae_code_version__: { get_param: dcae_code_version }
             __cloud_env__: { get_param: cloud_env }
             __public_net_id__: { get_param: public_net_id }
@@ -1409,8 +1383,8 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __public_ip__: { get_attr: [policy_floating_ip, floating_ip_address] }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: policy_docker }
+            __gerrit_branch__: { get_param: policy_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __policy_repo__: { get_param: policy_repo }
@@ -1477,8 +1451,9 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: appc_docker }
+            __gerrit_branch__: { get_param: appc_branch }
+            __dgbuilder_docker__: { get_param: dgbuilder_docker }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __appc_repo__: { get_param: appc_repo }
@@ -1496,6 +1471,7 @@ resources:
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__dgbuilder_docker__" > /opt/config/dgbuilder_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__appc_repo__" > /opt/config/remote_repo.txt
@@ -1550,8 +1526,8 @@ resources:
             __dmaap_topic__: { get_param: dmaap_topic }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: docker_version }
-            __gerrit_branch__: { get_param: gerrit_branch }
+            __docker_version__: { get_param: clamp_docker }
+            __gerrit_branch__: { get_param: clamp_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __clamp_repo__: { get_param: clamp_repo }
@@ -1583,3 +1559,109 @@ resources:
             cd /opt
             chmod +x clamp_install.sh
             ./clamp_install.sh
+
+
+  # OPEN-O VM instantiation
+  openo_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: openo_ip_addr }}]
+
+  openo_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: openo_private_port }
+      floating_ip_address: { get_param: onap_float_ip }
+
+  openo_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1604_image }
+      flavor: { get_param: flavor_xxlarge }
+      name:
+        str_replace:
+          template: base-openo-server
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: openo_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __oam_network_cidr__: { get_param: oam_network_cidr }
+            __aai1_ip_addr__: { get_param: aai1_ip_addr }
+            __aai2_ip_addr__: { get_param: aai2_ip_addr }
+            __appc_ip_addr__: { get_param: appc_ip_addr }
+            __dcae_ip_addr__: { get_param: dcae_ip_addr }
+            __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
+            __so_ip_addr__: { get_param: so_ip_addr }
+            __mr_ip_addr__: { get_param: mr_ip_addr }
+            __policy_ip_addr__: { get_param: policy_ip_addr }
+            __portal_ip_addr__: { get_param: portal_ip_addr }
+            __robot_ip_addr__: { get_param: robot_ip_addr }
+            __sdc_ip_addr__: { get_param: sdc_ip_addr }
+            __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
+            __vid_ip_addr__: { get_param: vid_ip_addr }
+            __clamp_ip_addr__: { get_param: clamp_ip_addr }
+            __openo_ip_addr__: { get_param: openo_ip_addr }
+            __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
+            __vnfsdk_branch__: { get_param: vnfsdk_branch }
+            __msb_docker__: { get_param: msb_docker }
+            __mvim_docker__: { get_param: mvim_docker }
+            __vfc_docker__: { get_param: vfc_docker }
+            __uui_docker__: { get_param: uui_docker }
+            __vnfsdk_repo__: { get_param: vnfsdk_repo }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__vnfsdk_branch__" > /opt/config/vnfsdk_branch.txt
+            echo "__msb_docker__" > /opt/config/msb_docker.txt
+            echo "__mvim_docker__" > /opt/config/mvim_docker.txt
+            echo "__vfc_docker__" > /opt/config/vfc_docker.txt
+            echo "__uui_docker__" > /opt/config/uui_docker.txt
+            echo "__vnfsdk_repo__" > /opt/config/vnfsdk_repo.txt
+
+            # Create env file with the IP address of all ONAP components
+            echo "export AAI_IP1=__aai1_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export AAI_IP2=__aai2_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export APPC_IP=__appc_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export DCAE_IP=__dcae_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export DCAE_COLL_IP=__dcae_coll_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export SO_IP=__so_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export MR_IP=__mr_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export POLICY_IP=__policy_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export PORTAL_IP=__portal_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export ROBOT_IP=__robot_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export SDC_IP=__sdc_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export SDNC_IP=__sdnc_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export VID_IP=__vid_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export CLAMP_IP=__clamp_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "export OPENO_IP=__openo_ip_addr__" >> /opt/config/onap_ips.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/openo_install.sh -o /opt/openo_install.sh
+            cd /opt
+            chmod +x openo_install.sh
+            ./openo_install.sh

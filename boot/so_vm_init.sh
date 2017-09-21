@@ -58,7 +58,7 @@ else
 EOF
 fi
 
-# Update the MSO configuration file.
+# Update the SO configuration file.
 read -d '' MSO_CONFIG_UPDATES <<-EOF
 {
 "default_attributes":
@@ -97,5 +97,5 @@ export MSO_CONFIG_UPDATES
 cd /opt/test_lab
 git pull
 chmod +x deploy.sh
-#This script takes in input 2 nexus repos (the first one for the MSO image, the second one for mariadb)
+#This script takes in input 2 nexus repos (the first one for the SO image, the second one for mariadb)
 ./deploy.sh $NEXUS_DOCKER_REPO $NEXUS_USERNAME $NEXUS_PASSWD $NEXUS_DOCKER_REPO $NEXUS_USERNAME $NEXUS_PASSWD

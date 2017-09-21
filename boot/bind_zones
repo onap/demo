@@ -41,9 +41,9 @@ c1.vm1.dcae.simpledemo.openecomp.org.        IN      A       dcae_ip_addr
 c2.vm1.dcae.simpledemo.openecomp.org.        IN      A       dcae_ip_addr
 c3.vm1.dcae.simpledemo.openecomp.org         IN      A       dcae_ip_addr
 
-vm1.mso.simpledemo.openecomp.org.       IN      A       mso_ip_addr
-c1.vm1.mso.simpledemo.openecomp.org.    IN      A       mso_ip_addr
-c1.vm1.mso.simpledemo.openecomp.org.    IN      A       mso_ip_addr
+vm1.mso.simpledemo.openecomp.org.       IN      A       so_ip_addr
+c1.vm1.mso.simpledemo.openecomp.org.    IN      A       so_ip_addr
+c1.vm1.mso.simpledemo.openecomp.org.    IN      A       so_ip_addr
 
 vm1.policy.simpledemo.openecomp.org.    IN      A       policy_ip_addr
 c1.vm1.policy.simpledemo.openecomp.org. IN      A       policy_ip_addr
@@ -77,6 +77,8 @@ c2.vm1.clamp.simpledemo.openecomp.org.        IN      A       clamp_ip_addr
 
 vm1.mr.simpledemo.openecomp.org.	IN	A	mr_ip_addr
 
+vm1.openo.simpledemo.openecomp.org. IN  A   openo_ip_addr
+
 
 ;CNAMES
 ;A&AI
@@ -96,7 +98,7 @@ sdc.api.simpledemo.openecomp.org.	IN	CNAME	vm1.sdc.simpledemo.openecomp.org.
 ;DCAE
 dcae.api.simpledemo.openecomp.org.	IN	CNAME	vm1.dcae.simpledemo.openecomp.org.
 
-;MSO
+;SO
 mso.api.simpledemo.openecomp.org.	IN	CNAME	vm1.mso.simpledemo.openecomp.org.
 
 ;Policy
@@ -124,3 +126,10 @@ clamp.api.simpledemo.openecomp.org.	IN	CNAME	vm1.clamp.simpledemo.openecomp.org.
 
 ;AAF
 ;aaf.api.simpledemo.openecomp.org.	IN	CNAME	vm1.aaf.simpledemo.openecomp.org.
+
+;OPEN-O
+msb.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+mvim.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+vnfsdk.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+vfc.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+uui.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.

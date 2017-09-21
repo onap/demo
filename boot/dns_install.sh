@@ -71,7 +71,7 @@ then
 	sed -i "s/appc_ip_addr/"$(cat /opt/config/appc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/dcae_ip_addr/"$(cat /opt/config/dcae_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/dns_ip_addr/"$(cat /opt/config/dns_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
-	sed -i "s/mso_ip_addr/"$(cat /opt/config/mso_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+	sed -i "s/so_ip_addr/"$(cat /opt/config/so_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/mr_ip_addr/"$(cat /opt/config/mr_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/policy_ip_addr/"$(cat /opt/config/policy_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/portal_ip_addr/"$(cat /opt/config/portal_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
@@ -81,6 +81,7 @@ then
 	sed -i "s/vid_ip_addr/"$(cat /opt/config/vid_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/dcae_coll_ip_addr/"$(cat /opt/config/dcae_coll_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/clamp_ip_addr/"$(cat /opt/config/clamp_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+	sed -i "s/openo_ip_addr/"$(cat /opt/config/openo_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 fi
 
 # Configure Bind
