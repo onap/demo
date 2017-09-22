@@ -20,6 +20,6 @@ docker pull $NEXUS_DOCKER_REPO/openecomp/appc-image:$DOCKER_IMAGE_VERSION
 docker tag $NEXUS_DOCKER_REPO/openecomp/appc-image:$DOCKER_IMAGE_VERSION openecomp/appc-image:latest
 
 docker pull $NEXUS_DOCKER_REPO/onap/ccsdk-dgbuilder-image:$DGBUILDER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/onap/ccsdk-dgbuilder-image/$DGBUILDER_IMAGE_VERSION onap/ccsdk-dgbuilder-image:latest
+docker tag $NEXUS_DOCKER_REPO/onap/ccsdk-dgbuilder-image:$DGBUILDER_IMAGE_VERSION onap/ccsdk-dgbuilder-image:latest
 
 /opt/docker/docker-compose up -d
