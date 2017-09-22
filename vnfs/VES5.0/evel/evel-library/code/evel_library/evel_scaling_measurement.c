@@ -1533,10 +1533,10 @@ void evel_measurement_fsys_use_add(EVENT_MEASUREMENT * measurement,
                                    char * filesystem_name,
                                    double block_configured,
                                    double block_used,
-                                   int block_iops,
+                                   double block_iops,
                                    double ephemeral_configured,
                                    double ephemeral_used,
-                                   int ephemeral_iops)
+                                   double ephemeral_iops)
 {
   MEASUREMENT_FSYS_USE * fsys_use = NULL;
   EVEL_ENTER();
@@ -1549,10 +1549,10 @@ void evel_measurement_fsys_use_add(EVENT_MEASUREMENT * measurement,
   assert(filesystem_name != NULL);
   assert(block_configured >= 0.0);
   assert(block_used >= 0.0);
-  assert(block_iops >= 0);
+  assert(block_iops >= 0.0);
   assert(ephemeral_configured >= 0.0);
   assert(ephemeral_used >= 0.0);
-  assert(ephemeral_iops >= 0);
+  assert(ephemeral_iops >= 0.0);
 
   /***************************************************************************/
   /* Allocate a container for the value and push onto the list.              */
@@ -1565,7 +1565,7 @@ void evel_measurement_fsys_use_add(EVENT_MEASUREMENT * measurement,
   fsys_use->block_configured = block_configured;
   fsys_use->block_used = block_used;
   fsys_use->block_iops = block_iops;
-  fsys_use->ephemeral_configured = block_configured;
+  fsys_use->ephemeral_configured = ephemeral_configured;
   fsys_use->ephemeral_used = ephemeral_used;
   fsys_use->ephemeral_iops = ephemeral_iops;
 
@@ -3203,15 +3203,15 @@ void evel_json_encode_measurement(EVEL_JSON_BUFFER * jbuf,
                                           fsys_use->filesystem_name))
       {
         evel_json_open_object(jbuf);
+        evel_enc_kv_string(jbuf, "filesystemName", fsys_use->filesystem_name);
         evel_enc_kv_double(
           jbuf, "blockConfigured", fsys_use->block_configured);
-        evel_enc_kv_int(jbuf, "blockIops", fsys_use->block_iops);
+        evel_enc_kv_double(jbuf, "blockIops", fsys_use->block_iops);
         evel_enc_kv_double(jbuf, "blockUsed", fsys_use->block_used);
         evel_enc_kv_double(
           jbuf, "ephemeralConfigured", fsys_use->ephemeral_configured);
-        evel_enc_kv_int(jbuf, "ephemeralIops", fsys_use->ephemeral_iops);
+        evel_enc_kv_double(jbuf, "ephemeralIops", fsys_use->ephemeral_iops);
         evel_enc_kv_double(jbuf, "ephemeralUsed", fsys_use->ephemeral_used);
-        evel_enc_kv_string(jbuf, "filesystemName", fsys_use->filesystem_name);
         evel_json_close_object(jbuf);
         item_added = true;
       }
@@ -3518,7 +3518,7 @@ void evel_json_encode_measurement(EVEL_JSON_BUFFER * jbuf,
       {
         evel_json_open_object(jbuf);
         evel_enc_kv_string(jbuf, "name", measurement_group->name);
-        evel_json_open_opt_named_list(jbuf, "measurements");
+        evel_json_open_opt_named_list(jbuf, "arrayOfFields");
 
         /*********************************************************************/
         /* Measurements list.                                                */

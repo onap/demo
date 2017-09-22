@@ -738,10 +738,10 @@ MEASUREMENT_DISK_USE * evel_measurement_new_disk_use_add(EVENT_MEASUREMENT * mea
 typedef struct measurement_fsys_use {
   char * filesystem_name;
   double block_configured;
-  int block_iops;
+  double block_iops;
   double block_used;
   double ephemeral_configured;
-  int ephemeral_iops;
+  double ephemeral_iops;
   double ephemeral_used;
 } MEASUREMENT_FSYS_USE;
 
@@ -1955,10 +1955,10 @@ void evel_measurement_fsys_use_add(EVENT_MEASUREMENT * measurement,
                                    char * filesystem_name,
                                    double block_configured,
                                    double block_used,
-                                   int block_iops,
+                                   double block_iops,
                                    double ephemeral_configured,
                                    double ephemeral_used,
-                                   int ephemeral_iops);
+                                   double ephemeral_iops);
 
 /**************************************************************************//**
  * Add a Feature usage value name/value pair to the Measurement.
