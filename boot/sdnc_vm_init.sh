@@ -14,11 +14,11 @@ git pull
 cd /opt/sdnc/installation/src/main/yaml
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
-docker pull $NEXUS_DOCKER_REPO/openecomp/sdnc-image:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/openecomp/sdnc-image:$DOCKER_IMAGE_VERSION openecomp/sdnc-image:latest
+docker pull $NEXUS_DOCKER_REPO/onap/sdnc-image:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/onap/sdnc-image:$DOCKER_IMAGE_VERSION openecomp/sdnc-image:latest
 
-docker pull $NEXUS_DOCKER_REPO/openecomp/admportal-sdnc-image:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/openecomp/admportal-sdnc-image:$DOCKER_IMAGE_VERSION openecomp/admportal-sdnc-image:latest
+docker pull $NEXUS_DOCKER_REPO/onap/admportal-sdnc-image:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/onap/admportal-sdnc-image:$DOCKER_IMAGE_VERSION openecomp/admportal-sdnc-image:latest
 
 docker pull $NEXUS_DOCKER_REPO/onap/ccsdk-dgbuilder-image:$DGBUILDER_IMAGE_VERSION
 docker tag $NEXUS_DOCKER_REPO/onap/ccsdk-dgbuilder-image:$DGBUILDER_IMAGE_VERSION onap/ccsdk-dgbuilder-image:latest

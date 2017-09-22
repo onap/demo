@@ -44,6 +44,14 @@ parameters:
     type: string
     description: Public network for floating IP address allocation
 
+  public_subnet_id:
+    type: string
+    description: Public subnet for floating IP address allocation
+
+  router_gateway_ip:
+    type: string
+    description: Router gateway IP address
+
   ubuntu_1404_image:
     type: string
     description: Name of the Ubuntu 14.04 image
@@ -1573,7 +1581,7 @@ resources:
     properties:
       floating_network_id: { get_param: public_net_id }
       port_id: { get_resource: openo_private_port }
-      floating_ip_address: { get_param: onap_float_ip }
+      floating_ip_address: { get_param: openo_float_ip }
 
   openo_vm:
     type: OS::Nova::Server
