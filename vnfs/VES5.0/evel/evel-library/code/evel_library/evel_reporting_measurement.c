@@ -329,7 +329,7 @@ void evel_json_encode_report(EVEL_JSON_BUFFER * jbuf,
       {
         evel_json_open_object(jbuf);
         evel_enc_kv_string(jbuf, "name", measurement_group->name);
-        evel_json_open_named_list(jbuf, "measurements");
+        evel_json_open_named_list(jbuf, "arrayOfFields");
 
         /*********************************************************************/
         /* Measurements list.                                                */
