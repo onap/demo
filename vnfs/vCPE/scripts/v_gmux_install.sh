@@ -71,7 +71,7 @@ apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-http
 sleep 1
 
 # Install the tools required for download codes
-apt-get install -y expect git patch
+apt-get install -y expect git patch make
 
 #Download and build the VPP codes
 cd /opt
@@ -81,28 +81,26 @@ wget -O Vpp-Add-VES-agent-for-vG-MUX.patch ${VPP_PATCH_URL}
 cd vpp
 patch -p1 < ../Vpp-Add-VES-agent-for-vG-MUX.patch
 expect -c "
-        set timeout 60;
         spawn make install-dep;
         expect {
                 \"Do you want to continue?*\" {send \"Y\r\"; interact}
         }
 "
 
-cd build-root
-./bootstrap.sh
-make V=0 PLATFORM=vpp TAG=vpp install-deb
-
 # Install the evel-library first since we need the lib
 cd /opt
 apt-get install -y libcurl4-openssl-dev
-git clone https://github.com/att/evel-library.git
-cd evel-library/bldjobs
+git clone http://gerrit.onap.org/r/demo
+cd demo/vnfs/VES5.0/evel/evel-library/bldjobs 
 make
-cp /opt/evel-library/libs/libevel.so /usr/lib
+cp ../libs/x86_64/libevel.so /usr/lib
 ldconfig
 
-# Install the VPP package
 cd /opt/vpp/build-root
+./bootstrap.sh
+make V=0 PLATFORM=vpp TAG=vpp install-deb
+
+# Install the VPP package
 dpkg -i *.deb
 systemctl stop vpp
 
