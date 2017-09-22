@@ -10,7 +10,7 @@ NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 export MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
-#DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt) --> don't needed at the moment
+#DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt) --> not needed at the moment
 
 # Refresh configuration and scripts
 cd /opt/refrepo
