@@ -198,12 +198,12 @@ evel_unit_clean:
 # Build the VNF VES Reporting code                                            *
 #******************************************************************************
 vnf_reporting:
-        @echo   Making VNF Reporting
-        @$(MAKE) -s -C $(EVELTRAINING_ROOT)/VESreporting
+	@echo   Making VNF Reporting
+	@$(MAKE) -s -C $(EVELTRAINING_ROOT)/VESreporting
 
 vnf_reporting_clean:
-        @echo   Cleaning VNF Reporting
-        @$(RM) $(EVELTRAINING_ROOT)/VESreporting/vpp_measurement_reporter
+	@echo   Cleaning VNF Reporting
+	@$(RM) $(EVELTRAINING_ROOT)/VESreporting/vpp_measurement_reporter
 
 #******************************************************************************
 # Copy the EVEL demo onto the CentOS testbed as a package and build it.       *
