@@ -14,7 +14,7 @@ vppctl lb as $IP_TO_PKTGEN_NET"/32" $DNS_IPADDR del
 vppctl create gre tunnel src $IP_TO_DNS_NET dst $DNS_IPADDR del
 
 # Update the number of vDNSs currently active
-FD="/opt/VES/code/evel_training/VESreporting/active_dns.txt"
+FD="/opt/VES/evel/evel-library/code/VESreporting/active_dns.txt"
 CURR_DNS=$(cat $FD)
 let CURR_DNS=$CURR_DNS-1
 if [[ $CURR_DNS -lt 0 ]]

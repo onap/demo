@@ -17,7 +17,7 @@ vppctl set int ip address $GRE $GRE_IPADDR"/32"
 vppctl set int state $GRE up
 
 # Update the number of vDNSs currently active
-FD="/opt/VES/code/evel_training/VESreporting/active_dns.txt"
+FD="/opt/VES/evel/evel-library/code/VESreporting/active_dns.txt"
 CURR_DNS=$(cat $FD)
 let CURR_DNS=$CURR_DNS+1
 echo $CURR_DNS > $FD

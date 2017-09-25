@@ -82,7 +82,7 @@ DOCS_SERVER_PATH=/var/www/html/evel
 
 #******************************************************************************
 # Implicit rule to make dependency files.  Recipe copied from Gnu docs at:    *
-# https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html                                      *
+# https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html*
 #******************************************************************************
 %.d: %.c
 	@echo Making dependency file $(notdir $@) for $(notdir $<)

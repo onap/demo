@@ -71,20 +71,23 @@ cd /opt
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_firewall_init.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vfirewall.sh
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves/ves_vfw_reporting/$DEMO_ARTIFACTS_VERSION/ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves_vfw_reporting/$DEMO_ARTIFACTS_VERSION/ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 
 tar -zmxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves-$DEMO_ARTIFACTS_VERSION VES
 tar -zmxvf ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION VESreporting_vFW
 tar -zmxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+
 mv sample-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
 sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/sample-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
-mv VESreporting_vFW /opt/VES/code/evel_training/VESreporting
+mv VESreporting_vFW /opt/VES/evel/evel-library/code/VESreporting
 rm *.tar.gz
+
 chmod +x v_firewall_init.sh
 chmod +x vfirewall.sh
+chmod +x /opt/VES/evel/evel-library/code/VESreporting/go-client.sh
 
 # Install VPP
 export UBUNTU="trusty"
@@ -96,7 +99,7 @@ apt-get install -y vpp vpp-dpdk-dkms vpp-lib vpp-dbg vpp-plugins vpp-dev
 sleep 1
 
 # Install VES
-cd /opt/VES/bldjobs/
+cd /opt/VES/evel/evel-library/bldjobs/
 make clean
 make
 sleep 1

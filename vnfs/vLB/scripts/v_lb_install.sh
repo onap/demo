@@ -70,15 +70,15 @@ wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/dnsmembership
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/add_dns.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/remove_dns.sh
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/dns-manager/$DEMO_ARTIFACTS_VERSION/dns-manager-$DEMO_ARTIFACTS_VERSION.jar
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves/ves_vlb_reporting/$DEMO_ARTIFACTS_VERSION/ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves_vlb_reporting/$DEMO_ARTIFACTS_VERSION/ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 
 tar -zmxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves-$DEMO_ARTIFACTS_VERSION VES
 tar -zmxvf ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION VESreporting_vLB
 
-mv VESreporting_vLB /opt/VES/code/evel_training/VESreporting
+mv VESreporting_vLB /opt/VES/evel/evel-library/code/VESreporting
 mv dns-manager-$DEMO_ARTIFACTS_VERSION.jar /opt/FDserver/dns-manager-$DEMO_ARTIFACTS_VERSION.jar
 mv dnsmembership.sh /opt/FDserver/dnsmembership.sh
 mv add_dns.sh /opt/FDserver/add_dns.sh
@@ -87,7 +87,7 @@ rm *.tar.gz
 
 chmod +x v_lb_init.sh
 chmod +x vlb.sh
-chmod +x /opt/VES/code/evel_training/VESreporting/go-client.sh
+chmod +x /opt/VES/evel/evel-library/code/VESreporting/go-client.sh
 chmod +x /opt/FDserver/dnsmembership.sh
 chmod +x /opt/FDserver/add_dns.sh
 chmod +x /opt/FDserver/remove_dns.sh
@@ -102,7 +102,7 @@ apt-get install -y vpp vpp-dpdk-dkms vpp-lib vpp-dbg vpp-plugins vpp-dev
 sleep 1
 
 # Install VES
-cd /opt/VES/bldjobs/
+cd /opt/VES/evel/evel-library/bldjobs/
 make clean
 make
 sleep 1

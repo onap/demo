@@ -79,6 +79,6 @@ cd /opt/FDserver
 ./dnsmembership.sh &>/dev/null &disown
 
 # Start VES client
-cd /opt/VES/code/evel_training/VESreporting/
+cd /opt/VES/evel/evel-library/code/VESreporting/
 echo 0 > active_dns.txt
 ./go-client.sh &>/dev/null &disown

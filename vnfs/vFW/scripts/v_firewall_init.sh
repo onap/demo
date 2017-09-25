@@ -70,5 +70,5 @@ echo "" > /var/lib/honeycomb/persist/config/data.json
 sleep 1
 
 # Start VES client
-cd /opt/VES/code/evel_training/VESreporting/
+cd /opt/VES/evel/evel-library/code/VESreporting/
 ./go-client.sh &>/dev/null &disown 
