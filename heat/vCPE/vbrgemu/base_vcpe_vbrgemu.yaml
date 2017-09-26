@@ -220,7 +220,7 @@ resources:
             __hc2vpp_source_repo_url__ : { get_param: hc2vpp_source_repo_url }
             __hc2vpp_source_repo_branch__ : { get_param: hc2vpp_source_repo_branch }
             __vpp_patch_url__ : { get_param: vpp_patch_url }
-            __sdnc_ip__ : { get param: sdnc_ip }
+            __sdnc_ip__ : { get_param: sdnc_ip }
           template: |
             #!/bin/bash
 
@@ -239,7 +239,7 @@ resources:
             echo "__hc2vpp_source_repo_url__" > /opt/config/hc2vpp_source_repo_url.txt
             echo "__hc2vpp_source_repo_branch__" > /opt/config/hc2vpp_source_repo_branch.txt
             echo "__vpp_patch_url__" > /opt/config/vpp_patch_url.txt
-            echo "__sdnc_ip__" > /opt/config/ip.txt
+            echo "__sdnc_ip__" > /opt/config/sdnc_ip.txt
 
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_brgemu_install.sh -o /opt/v_brgemu_install.sh
