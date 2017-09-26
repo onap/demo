@@ -24,7 +24,7 @@
 
 heat_template_version: 2013-05-23
 
-description: Heat template to deploy vCPE Infrastructue emlements (vAAA, vDHCP, vDNS_DHCP, webServer_sink) for ONAP
+description: Heat template to deploy vCPE Infrastructue emlements (vAAA, vDHCP, vDNS_DHCP, webServer)
 
 ##############
 #            #
@@ -61,6 +61,10 @@ parameters:
     type: string
     label: vAAA private network name or ID
     description: Private network that connects vAAA with vDNSs
+  cpe_signal_subnet_id:
+    type: string
+    label: CPE Signal subnet
+    description: CPE Signal subnet
   cpe_signal_net_cidr:
     type: string
     label: vAAA private network CIDR
@@ -69,6 +73,10 @@ parameters:
     type: string
     label: vCPE Public network (emulates internet) name or ID
     description: Private network that connects vGW to emulated internet
+  cpe_public_subnet_id:
+    type: string
+    label: CPE Public subnet
+    description: CPE Public subnet
   cpe_public_net_cidr:
     type: string
     label: vCPE public network CIDR
@@ -195,37 +203,13 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  cpe_signal_network:
-    type: OS::Neutron::Net
-    properties:
-      name: { get_param: cpe_signal_net_id }
-
-  cpe_signal_subnet:
-    type: OS::Neutron::Subnet
-    properties:
-      name: { get_param: cpe_signal_net_id }
-      network_id: { get_resource: cpe_signal_network }
-      cidr: { get_param: cpe_signal_net_cidr }
-
-  cpe_public_network:
-    type: OS::Neutron::Net
-    properties:
-      name: { get_param: cpe_public_net_id }
-
-  cpe_public_subnet:
-    type: OS::Neutron::Subnet
-    properties:
-      name: { get_param: cpe_public_net_id }
-      network_id: { get_resource: cpe_public_network }
-      cidr: { get_param: cpe_public_net_cidr }
-
 
   # Virtual AAA server Instantiation
   vaaa_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: cpe_signal_network }
-      fixed_ips: [{"subnet": { get_resource: cpe_signal_subnet }, "ip_address": { get_param: vaaa_private_ip_0 }}]
+      network: { get_param: cpe_signal_net_id }
+      fixed_ips: [{"subnet": { get_param: cpe_signal_subnet_id }, "ip_address": { get_param: vaaa_private_ip_0 }}]
 
   vaaa_private_1_port:
     type: OS::Neutron::Port
@@ -288,8 +272,8 @@ resources:
   vdns_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: cpe_public_network }
-      fixed_ips: [{"subnet": { get_resource: cpe_public_subnet }, "ip_address": { get_param: vdns_private_ip_0 }}]
+      network: { get_param: cpe_public_net_id }
+      fixed_ips: [{"subnet": { get_param: cpe_public_subnet_id }, "ip_address": { get_param: vdns_private_ip_0 }}]
 
   vdns_private_1_port:
     type: OS::Neutron::Port
@@ -348,8 +332,8 @@ resources:
   vdhcp_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: cpe_signal_network }
-      fixed_ips: [{"subnet": { get_resource: cpe_signal_subnet }, "ip_address": { get_param: vdhcp_private_ip_0 }}]
+      network: { get_param: cpe_signal_net_id }
+      fixed_ips: [{"subnet": { get_param: cpe_signal_subnet_id }, "ip_address": { get_param: vdhcp_private_ip_0 }}]
 
   vdhcp_private_1_port:
     type: OS::Neutron::Port
@@ -409,8 +393,8 @@ resources:
   vweb_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: cpe_public_network }
-      fixed_ips: [{"subnet": { get_resource: cpe_public_subnet }, "ip_address": { get_param: vweb_private_ip_0 }}]
+      network: { get_param: cpe_public_net_id }
+      fixed_ips: [{"subnet": { get_param: cpe_public_subnet_id }, "ip_address": { get_param: vweb_private_ip_0 }}]
 
   vweb_private_1_port:
     type: OS::Neutron::Port

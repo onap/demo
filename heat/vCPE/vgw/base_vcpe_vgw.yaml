@@ -24,7 +24,7 @@
 
 heat_template_version: 2013-05-23
 
-description: Heat template to deploy vCPE Infrastructue Metro vGMUX for ONAP
+description: Heat template to deploy vCPE vGateway (vG)
 
 ##############
 #            #
@@ -45,18 +45,14 @@ parameters:
     type: string
     label: Public network name or ID
     description: Public network that enables remote connection to VNF
-  bng_gmux_private_net_id:
-    type: string
-    label: vBNG vGMUX private network name or ID
-    description: Private network that connects vBNG to vGMUX
-  bng_gmux_private_net_cidr:
-    type: string
-    label: vBNG vGMUX private network CIDR
-    description: The CIDR of the vBNG-vGMUX private network
   mux_gw_private_net_id:
     type: string
-    label: vCPE Public network name or ID
+    label: vGMUX private network name or ID
     description: Private network that connects vGMUX to vGWs
+  mux_gw_private_subnet_id:
+    type: string
+    label: vGMUX private sub-network name or ID
+    description: vGMUX private sub-network name or ID
   mux_gw_private_net_cidr:
     type: string
     label: vGMUX private network CIDR
@@ -73,22 +69,34 @@ parameters:
     type: string
     label: ONAP private network CIDR
     description: The CIDR of the protected private network
-  vgmux_private_ip_0:
+  cpe_public_net_id:
     type: string
-    label: vGMUX private IP address towards the vBNG-vGMUX private network
-    description: Private IP address that is assigned to the vGMUX to communicate with the vBNG
-  vgmux_private_ip_1:
+    label: vCPE network that emulates internetmanagement name or ID
+    description: Private network that connects vGW to emulated internet
+  cpe_public_subnet_id:
     type: string
-    label: vGMUX private IP address towards the ONAP management network
-    description: Private IP address that is assigned to the vGMUX to communicate with ONAP components
-  vgmux_private_ip_2:
+    label: vCPE Public subnet
+    description: vCPE Public subnet
+  cpe_public_net_cidr:
     type: string
-    label: vGMUX private IP address towards the vGMUX-vGW private network
-    description: Private IP address that is assigned to the vGMUX to communicate with vGWs
-  vgmux_name_0:
+    label: vCPE public network CIDR
+    description: The CIDR of the vCPE public
+  vgw_private_ip_0:
     type: string
-    label: vGMUX name
-    description: Name of the vGMUX
+    label: vGW private IP address towards the vGMUX
+    description: Private IP address that is assigned to the vGW to communicate with vGMUX
+  vgw_private_ip_1:
+    type: string
+    label: vGW private IP address towards the ONAP management network
+    description: Private IP address that is assigned to the vGW to communicate with ONAP components
+  vgw_private_ip_2:
+    type: string
+    label: vGW private IP address towards the vCPE public network
+    description: Private IP address that is assigned to the vGW to communicate with vCPE public network
+  vgw_name_0:
+    type: string
+    label: vGW  name
+    description: Name of the vGW
   vnf_id:
     type: string
     label: VNF ID
@@ -149,14 +157,6 @@ parameters:
     type: string
     label: Honeycomb Source Git Branch
     description: Git Branch for the Honeycomb source codes
-  vpp_patch_url:
-    type: string
-    label: VPP Patch URL
-    description: URL for VPP patch for vG-MUX
-  hc2vpp_patch_url:
-    type: string
-    label: Honeycomb Patch URL
-    description: URL for Honeycomb patch for vG-MUX
 
 #############
 #           #
@@ -183,72 +183,47 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  mux_gw_private_network:
-    type: OS::Neutron::Net
-    properties:
-      name: { get_param: mux_gw_private_net_id }
-
-  mux_gw_private_subnet:
-    type: OS::Neutron::Subnet
-    properties:
-      name: { get_param: mux_gw_private_net_id }
-      network_id: { get_resource: mux_gw_private_network }
-      cidr: { get_param: mux_gw_private_net_cidr }
-      
-  bng_gmux_private_network:
-    type: OS::Neutron::Net
-    properties:
-      name: { get_param: bng_gmux_private_net_id }
-
-  bng_gmux_private_subnet:
-    type: OS::Neutron::Subnet
-    properties:
-      name: { get_param: bng_gmux_private_net_id }
-      network_id: { get_resource: bng_gmux_private_network }
-      cidr: { get_param: bng_gmux_private_net_cidr }
-
-  # Virtual GMUX Instantiation
-  vgmux_private_0_port:
+  # Virtual GW Instantiation
+  vgw_private_0_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: bng_gmux_private_network }
-      fixed_ips: [{"subnet": { get_resource: bng_gmux_private_subnet }, "ip_address": { get_param: vgmux_private_ip_0 }}]
+      network: { get_param: mux_gw_private_net_id }
+      fixed_ips: [{"subnet": { get_param: mux_gw_private_subnet_id }, "ip_address": { get_param: vgw_private_ip_0 }}]
 
-  vgmux_private_1_port:
+  vgw_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vgmux_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vgw_private_ip_1 }}]
 
-  vgmux_private_2_port:
+  vgw_private_2_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: mux_gw_private_network }
-      fixed_ips: [{"subnet": {  get_resource: mux_gw_private_subnet }, "ip_address": { get_param: vgmux_private_ip_2 }}]
+      network: { get_param: cpe_public_net_id}
+      fixed_ips: [{"subnet": { get_param: cpe_public_subnet_id }, "ip_address": { get_param: vgw_private_ip_2 }}]
 
-  vgmux_0:
+  vgw_0:
     type: OS::Nova::Server
     properties:
       image: { get_param: vcpe_image_name }
       flavor: { get_param: vcpe_flavor_name }
-      name: { get_param: vgmux_name_0 }
+      name: { get_param: vgw_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vgmux_private_0_port }
-        - port: { get_resource: vgmux_private_1_port }
-        - port: { get_resource: vgmux_private_2_port }
+        - port: { get_resource: vgw_private_0_port }
+        - port: { get_resource: vgw_private_1_port }
+        - port: { get_resource: vgw_private_2_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
         str_replace:
           params:
-            __bng_mux_net_ipaddr__ : { get_param: vgmux_private_ip_0 }
-            __oam_ipaddr__ : { get_param: vgmux_private_ip_1 }
-            __mux_gw_net_ipaddr__ : { get_param: vgmux_private_ip_2 }
-            __bng_mux_net_cidr__ : { get_param: bng_gmux_private_net_cidr }
+            __mux_gw_private_net_ipaddr__ : { get_param: vgw_private_ip_0 }
+            __oam_ipaddr__ : { get_param: vgw_private_ip_1 }
             __oam_cidr__ : { get_param: onap_private_net_cidr }
-            __mux_gw_net_cidr__ : { get_param: mux_gw_private_net_cidr }
+            __cpe_public_net_cidr__ : { get_param: cpe_public_net_cidr }
+            __mux_gw_private_net_cidr__ : { get_param: mux_gw_private_net_cidr }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
@@ -258,19 +233,16 @@ resources:
             __vpp_source_repo_branch__ : { get_param: vpp_source_repo_branch }
             __hc2vpp_source_repo_url__ : { get_param: hc2vpp_source_repo_url }
             __hc2vpp_source_repo_branch__ : { get_param: hc2vpp_source_repo_branch }
-            __vpp_patch_url__ : { get_param: vpp_patch_url }
-            __hc2vpp_patch_url__ : { get_param: hc2vpp_patch_url }
           template: |
             #!/bin/bash
 
             # Create configuration files
             mkdir /opt/config
-            echo "__bng_mux_net_ipaddr__" > /opt/config/bng_mux_net_ipaddr.txt
             echo "__oam_ipaddr__" > /opt/config/oam_ipaddr.txt
-            echo "__mux_gw_net_ipaddr__" > /opt/config/mux_gw_net_ipaddr.txt
-            echo "__bng_mux_net_cidr__" > /opt/config/bng_mux_net_cidr.txt
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
-            echo "__mux_gw_net_cidr__" > /opt/config/mux_gw_net_cidr.txt
+            echo "__cpe_public_net_cidr__" > /opt/config/cpe_public_net_cidr.txt
+            echo "__mux_gw_private_net_ipaddr__" > /opt/config/mux_gw_private_net_ipaddr.txt
+            echo "__mux_gw_private_net_cidr__" > /opt/config/mux_gw_private_net_cidr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
@@ -278,14 +250,12 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__vpp_source_repo_url__" > /opt/config/vpp_source_repo_url.txt
             echo "__vpp_source_repo_branch__" > /opt/config/vpp_source_repo_branch.txt
-            echo "__vpp_patch_url__" > /opt/config/vpp_patch_url.txt
             echo "__hc2vpp_source_repo_url__" > /opt/config/hc2vpp_source_repo_url.txt
             echo "__hc2vpp_source_repo_branch__" > /opt/config/hc2vpp_source_repo_branch.txt
-            echo "__hc2vpp_patch_url__" > /opt/config/hc2vpp_patch_url.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_gmux_install.sh -o /opt/v_gmux_install.sh
+            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_gw_install.sh -o /opt/v_gw_install.sh
             cd /opt
-            chmod +x v_gmux_install.sh
-            ./v_gmux_install.sh
+            chmod +x v_gw_install.sh
+            ./v_gw_install.sh
 

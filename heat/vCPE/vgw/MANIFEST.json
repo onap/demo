@@ -3,12 +3,12 @@
     "description": "", 
     "data": [
         {
-            "file": "base_vcpe_vgw_rackspace.yaml", 
+            "file": "base_vcpe_vgw.yaml", 
             "type": "HEAT", 
             "isBase": "true", 
             "data": [
                 {
-                    "file": "base_vcpe_vgw_rackspace.env", 
+                    "file": "base_vcpe_vgw.env", 
                     "type": "HEAT_ENV"
                 }
             ]
