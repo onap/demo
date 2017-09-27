@@ -61,6 +61,7 @@ curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/vfc_vm_init.sh -o /opt
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/uui_vm_init.sh -o /opt/uui_vm_init.sh
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/openo_all_serv.sh -o /opt/openo_all_serv.sh
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/openo_serv.sh -o /opt/openo_serv.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/cli_install.sh -o /opt/cli_install.sh
 chmod +x /opt/vnfsdk_vm_init.sh
 chmod +x /opt/msb_vm_init.sh
 chmod +x /opt/mvim_vm_init.sh
@@ -68,6 +69,7 @@ chmod +x /opt/vfc_vm_init.sh
 chmod +x /opt/uui_vm_init.sh
 chmod +x /opt/openo_all_serv.sh
 chmod +x /opt/openo_serv.sh
+chmod +x /opt/cli_install.sh
 mv /opt/openo_serv.sh /etc/init.d
 update-rc.d openo_serv.sh defaults
 
@@ -104,6 +106,7 @@ resolvconf -u
 # Clone Gerrit repository and run docker containers
 cd /opt
 git clone -b $VNFSDK_BRANCH --single-branch $VNFSDK_REPO
+./cli_install.sh
 
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
