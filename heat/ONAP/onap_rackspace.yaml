@@ -1012,7 +1012,7 @@ resources:
             echo "__nexus_repo_root__" > /opt/config/nexus_repo_root.txt
             echo "__openstack_region__" > /opt/config/openstack_region.txt
             echo "https://mycloud.rackspace.com/cloud" > /opt/config/horizon_url.txt
-            echo "https://identity.api.rackspacecloud.com/v2.0" > /opt/config/keystone_url.txt
+            echo "https://identity.api.rackspacecloud.com" > /opt/config/keystone_url.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__dcae_code_version__" > /opt/config/dcae_code_version.txt
             echo "__public_net_id__" > /opt/config/public_net_id.txt
