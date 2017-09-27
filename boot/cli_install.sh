@@ -39,7 +39,7 @@ apt-get install -y wget unzip
 java -version
 if [ $? == 127 ]
 then
-    apt-get install openjdk-8-jre
+    apt-get install -y openjdk-8-jre
 fi
 
 wget -O $CLI_ZIP $CLI_LATEST_BINARY

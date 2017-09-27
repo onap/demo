@@ -4,6 +4,8 @@ NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/msb_docker.txt)
+NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
+ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 
 source /opt/config/onap_ips.txt
 
@@ -28,87 +30,100 @@ docker run -d -p 80:80 -e CONSUL_IP=$CONSUL_IP -e SDCLIENT_IP=$DISCOVERY_IP -e "
 sleep 20
 
 # register ONAP services to MSB
+# Install onap
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/cli_install.sh -o /opt/cli_install.sh
+cd /opt
+chmod +x cli_install.sh
+source ./cli_install.sh
+
+export ONAP_HOST_URL=http://$OPENO_IP:80
+export CLI_PRODUCT_VERSION=onap-1.1
+onap -v
+
 #aai
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-cloudInfrastructure", "version": "v11", "url": "/aai/v11/cloud-infrastructure","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-cloudInfrastructure --service-version v11 --service-url /aai/v11/cloud-infrastructure $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-cloudInfrastructure-deprecated", "version": "v11", "url": "/aai/v11/cloud-infrastructure","path": "/aai/v11/cloud-infrastructure","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-cloudInfrastructure-deprecated --service-version v11 --service-url /aai/v11/cloud-infrastructure $AAI_IP1 8443 
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-business", "version": "v11", "url": "/aai/v11/business","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-business --service-version v11 --service-url /aai/v11/business $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-business-deprecated", "version": "v11", "url": "/aai/v11/business","path": "/aai/v11/business","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-business-deprecated --service-version v11 --service-url /aai/v11/business $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-search", "version": "v11", "url": "/aai/v11/search","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-search --service-version v11 --service-url /aai/v11/search $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-search-deprecated", "version": "v11", "url": "/aai/v11/search","path": "/aai/v11/search","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-search-deprecated --service-version v11 --service-url /aai/v11/search $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-actions", "version": "v11", "url": "/aai/v11/actions","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-actions --service-version v11 --service-url /aai/v11/actions $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-actions-deprecated", "version": "v11", "url": "/aai/v11/actions","path": "/aai/v11/actions","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-actions-deprecated --service-version v11 --service-url /aai/v11/actions $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-service-design-and-creation", "version": "v11", "url": "/aai/v11/service-design-and-creation","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-service-design-and-creation --service-version v11 --service-url /aai/v11/service-design-and-creation $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-service-design-and-creation-deprecated", "version": "v11", "url": "/aai/v11/service-design-and-creation","path": "/aai/v11/service-design-and-creation","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-service-design-and-creation-deprecated --service-version v11 --service-url /aai/v11/service-design-and-creation $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-network", "version": "v11", "url": "/aai/v11/network","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-network --service-version v11 --service-url /aai/v11/network $AAI_IP1 8443
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-network-deprecated", "version": "v11", "url": "/aai/v11/network","path": "/aai/v11/network","protocol": "REST",  "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name aai-network-deprecated --service-version v11 --service-url /aai/v11/network $AAI_IP1 8443
 
 #so
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "so", "version": "v1", "url": "/ecomp/mso/infra","protocol": "REST",  "nodes": [ {"ip": "'$SO_IP'","port": "8080"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name so --service-version v1 --service-url /ecomp/mso/infra $SO_IP 8080
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "so-deprecated", "version": "v1", "url": "/ecomp/mso/infra","path": "/ecomp/mso/infra","protocol": "REST",  "nodes": [ {"ip": "'$SO_IP'","port": "8080"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name so-deprecated --service-version v1 --service-url /ecomp/mso/infra $SO_IP 8080
 
 #Dmaap message router
-#curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "message-router", "version": "v1", "url": "/","protocol": "REST",  "nodes": [ {"ip": "'$DMAAP_IP'","port": "3904"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+#curl -X POST -H "Content-Type: application/json" '{"serviceName": "message-router", "version": "v1", "url": "/","protocol": "REST",  "nodes": [ {"ip": "'$DMAAP_IP'","port": "3904"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 #policy
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "policy-pdp", "version": "v1", "url": "/pdp","protocol": "REST",  "nodes": [ {"ip": "'$POLICY_IP'","port": "8081"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name policy-pdp --service-version v1 --service-url /ecomp/mso/infra $POLICY_IP 8081
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "policy-pdp-deprecated", "version": "v1", "url": "/pdp","path": "/pdp","protocol": "REST",  "nodes": [ {"ip": "'$POLICY_IP'","port": "8081"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name policy-pdp-deprecated --service-version v1 --service-url /ecomp/mso/infra $POLICY_IP 8081
 
 #portal
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "portal", "version": "v2", "url": "/","protocol": "REST",  "nodes": [ {"ip": "'$PORTAL_IP'","port": "8989"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name portal --service-version v2 --service-url / $PORTAL_IP 8989
 
 #sdc
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdc", "version": "v1", "url": "/sdc/v1","protocol": "REST",  "nodes": [ {"ip": "'$SDC_IP'","port": "8080"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name sdc --service-version v1 --service-url /sdc/v1 $SDC_IP 8080
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdc-deprecated", "version": "v1", "url": "/sdc/v1","path": "/sdc/v1","protocol": "REST",  "nodes": [ {"ip": "'$SDC_IP'","port": "8080"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name sdc-deprecated --service-version v1 --service-url /sdc/v1 $SDC_IP 8080
 
 #sdnc
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdnc", "version": "v1", "url": "/","protocol": "REST",  "nodes": [ {"ip": "'$SDNC_IP'","port": "8282"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name sdnc --service-version v1 --service-url /sdc/v1 $SDNC_IP 8282
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdnc", "version": "v1", "url": "/restconf","path": "/restconf","protocol": "REST",  "nodes": [ {"ip": "'$SDNC_IP'","port": "8282"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name sdnc-deprecated --service-version v1 --service-url /restconf $SDNC_IP 8282
 
 #multi-vim
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud-titanium_cloud", "version": "v0", "url": "/api/multicloud-titanium_cloud/v0","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "9005"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name multicloud-titanium_cloud --service-version v0 --service-url /api/multicloud-titanium_cloud/v0 $OPENO_IP 9005
 
 #VF-C
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "nslcm", "version": "v1", "url": "/api/nslcm/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8403"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name nslcm --service-version v1 --service-url /api/nslcm/v1 $OPENO_IP 8403
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "ztevmanagerdriver", "version": "v1", "url": "/api/ztevmanagerdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8410"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name ztevmanagerdriver --service-version v1 --service-url /api/ztevmanagerdriver/v1 $OPENO_IP 8410
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "ztesdncdriver", "version": "v1", "url": "/api/ztesdncdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8411"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name ztesdncdriver --service-version v1 --service-url /api/ztesdncdriver/v1 $OPENO_IP 8411
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "resmgr", "version": "v1", "url": "/api/resmgr/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8480"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name resmgr --service-version v1 --service-url /api/resmgr/v1 $OPENO_IP 8480
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "gvnfmdriver", "version": "v1", "url": "/api/gvnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8484"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name gvnfmdriver --service-version v1 --service-url /api/gvnfmdriver/v1 $OPENO_IP 8484
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "huaweivnfmdriver", "version": "v1", "url": "/api/huaweivnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8482"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name huaweivnfmdriver --service-version v1 --service-url /api/huaweivnfmdriver/v1 $OPENO_IP 8482
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "nokiavnfmdriver", "version": "v1", "url": "/api/nokiavnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8485"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name nokiavnfmdriver --service-version v1 --service-url /api/nokiavnfmdriver/v1 $OPENO_IP 8485
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "jujuvnfmdriver", "version": "v1", "url": "/api/jujuvnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8483"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name jujuvnfmdriver --service-version v1 --service-url /api/jujuvnfmdriver/v1 $OPENO_IP 8483
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnflcm", "version": "v1", "url": "/api/vnflcm/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8801"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name vnflcm --service-version v1 --service-url /api/vnflcm/v1 $OPENO_IP 8801
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnfres", "version": "v1", "url": "/api/vnfres/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8802"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name vnfres --service-version v1 --service-url /api/vnfres/v1 $OPENO_IP 8802
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnfmgr", "version": "v1", "url": "/api/vnfmgr/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8803"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name vnfmgr --service-version v1 --service-url /api/vnfmgr/v1 $OPENO_IP 8803
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "activiti", "version": "v1", "url": "/api/activiti/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8804"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name activiti --service-version v1 --service-url /api/activiti/v1 $OPENO_IP 8804
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "workflow", "version": "v1", "url": "/api/workflow/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8805"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name activiti --service-version v1 --service-url /api/workflow/v1 $OPENO_IP 8805
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "catalog", "version": "v1", "url": "/api/catalog/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8806"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name catalog --service-version v1 --service-url /api/catalog/v1 $OPENO_IP 8806
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "emsdriver", "version": "v1", "url": "/api/emsdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8206"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+onap microservice-create --service-name emsdriver --service-version v1 --service-url /api/emsdriver/v1 $OPENO_IP 8206
+
+#Print the registered services
+onap microservice-list --long
