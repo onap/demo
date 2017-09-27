@@ -81,3 +81,34 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdnc", "ve
 
 #multi-vim
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud-titanium_cloud", "version": "v0", "url": "/api/multicloud-titanium_cloud/v0","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "9005"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+#VF-C
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "nslcm", "version": "v1", "url": "/api/nslcm/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8403"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "ztevmanagerdriver", "version": "v1", "url": "/api/ztevmanagerdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8410"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "ztesdncdriver", "version": "v1", "url": "/api/ztesdncdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8411"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "resmgr", "version": "v1", "url": "/api/resmgr/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8480"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "gvnfmdriver", "version": "v1", "url": "/api/gvnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8484"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "huaweivnfmdriver", "version": "v1", "url": "/api/huaweivnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8482"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "nokiavnfmdriver", "version": "v1", "url": "/api/nokiavnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8485"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "jujuvnfmdriver", "version": "v1", "url": "/api/jujuvnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8483"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnflcm", "version": "v1", "url": "/api/vnflcm/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8801"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnfres", "version": "v1", "url": "/api/vnfres/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8802"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnfmgr", "version": "v1", "url": "/api/vnfmgr/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8803"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "activiti", "version": "v1", "url": "/api/activiti/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8804"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "workflow", "version": "v1", "url": "/api/workflow/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8805"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "catalog", "version": "v1", "url": "/api/catalog/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8806"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "emsdriver", "version": "v1", "url": "/api/emsdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8206"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
