@@ -52,6 +52,10 @@ parameters:
     type: string
     description: Name of the Ubuntu 16.04 image
 
+  centos_7_image:
+    type: string
+    description: Name of the CentOS 7 image
+
   flavor_small:
     type: string
     description: Name of the Small Flavor supported by the cloud provider
@@ -72,6 +76,10 @@ parameters:
     type: string
     description: Name of the Extra Extra Large Flavor supported by the cloud provider
 
+  security_group:
+    type: string
+    description: Security group used by DCAE GEN 2
+
   vm_base_name:
     type: string
     description: Base name of ONAP VMs
@@ -80,9 +88,17 @@ parameters:
     type: string
     description: Public/Private key pair name
 
+  dcae_key_name:
+    type: string
+    description: Public/Private key pair name for DCAE GEN 2
+
   pub_key:
     type: string
     description: Public key to be installed on the compute instance
+
+  dcae_pub_key:
+    type: string
+    description: Public key to be installed on the DCAE GEN 2 compute instance
 
   nexus_repo:
     type: string
@@ -372,6 +388,18 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
+  # Public key used to access DCAE GEN 2
+  dcae_vm_key:
+    type: OS::Nova::KeyPair
+    properties:
+      name:
+        str_replace:
+          template: base_rand
+          params:
+            base: { get_param: dcae_key_name }
+            rand: { get_resource: random-str }
+      public_key: { get_param: dcae_pub_key }
+      save_private_key: true
 
   # ONAP management private network
   oam_onap:
@@ -1612,3 +1640,107 @@ resources:
             cd /opt
             chmod +x openo_install.sh
             ./openo_install.sh
+
+
+  # DCAE GEN 2 Controller instantiation
+  dcae_c_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
+
+  dcae_c_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: dcae_c_private_port }
+
+  dcae_c_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1604_image }
+      flavor: { get_param: flavor_medium }
+      name:
+        str_replace: 
+          template: base-dcae-controller
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: dcae_vm_key }
+      networks:
+        - port: { get_resource: dcae_c_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __dcae_zone__: { get_param: dcae_zone }
+            __artifacts_version__: { get_param: artifacts_version }
+            __tenant_id__: { get_param: openstack_tenant_id }
+            __openstack_private_network_name__: { get_attr: [oam_onap, name] }
+            __openstack_user__: { get_param: openstack_username }
+            __openstack_password__: { get_param: openstack_api_key }
+            __key_name__: { get_param: dcae_key_name }
+            __pub_key__: { get_param: dcae_pub_key }
+            __private_key__: { get_attr: [ dcae_vm_key, private_key ] }
+            __openstack_region__: { get_param: openstack_region }
+            __keystone_url__: { get_param: keystone_url }
+            __docker_version__: { get_param: dcae_docker }
+            __dcae_repo__: { get_param: dcae_repo }
+            __gerrit_branch__: { get_param: dcae_branch }
+            __cloud_env__: { get_param: cloud_env }
+            __public_net_id__: { get_param: public_net_id }
+            __dcae_ip_addr__: { get_param: dcae_ip_addr }
+            __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
+            __external_dns__: { get_param: external_dns }
+            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
+            __centos_7_image__: { get_param: centos_7_image }
+            __security_group__ : { get_param: security_group }
+            __flavor_medium__: { get_param: flavor_medium }
+            __mac_addr__: { get_attr: [dcae_c_private_port, mac_address] }
+            __rand_str__: { get_resource: random-str }
+
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__dcae_zone__" > /opt/config/dcae_zone.txt
+            echo "__tenant_id__" > /opt/config/tenant_id.txt
+            echo "__openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
+            echo "__openstack_user__" > /opt/config/openstack_user.txt
+            echo "__openstack_password__" > /opt/config/openstack_password.txt
+            echo "__key_name__" > /opt/config/key_name.txt
+            echo "__pub_key__" > /opt/config/pub_key.txt
+            echo "__private_key__" > /opt/config/priv_key
+            echo "__openstack_region__" > /opt/config/openstack_region.txt
+            echo "__keystone_url__" > /opt/config/keystone_url.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__public_net_id__" > /opt/config/public_net_id.txt
+            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
+            echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
+            echo "__centos_7_image__" > /opt/config/centos_7_image.txt
+            echo "__security_group__" > /opt/config/security_group.txt
+            echo "__flavor_medium__" > /opt/config/flavor_medium.txt
+            echo "__dcae_repo__" > /opt/config/remote_repo.txt
+            echo "__mac_addr__" > /opt/config/mac_addr.txt
+            echo "__rand_str__" > /opt/config/rand_str.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae2_install.sh -o /opt/dcae2_install.sh
+            cd /opt
+            chmod +x dcae2_install.sh
+            ./dcae2_install.sh
