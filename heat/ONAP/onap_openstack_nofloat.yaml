@@ -773,7 +773,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
-      flavor: { get_param: flavor_small }
+      flavor: { get_param: flavor_medium }
       name:
         str_replace: 
           template: base-robot
@@ -1140,129 +1140,129 @@ resources:
 
 
   # DCAE Controller instantiation
-  dcae_c_private_port:
-    type: OS::Neutron::Port
-    properties:
-      network: { get_resource: oam_onap }
-      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
+#  dcae_c_private_port:
+#    type: OS::Neutron::Port
+#    properties:
+#      network: { get_resource: oam_onap }
+#      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
 
-  dcae_c_vm:
-    type: OS::Nova::Server
-    properties:
-      image: { get_param: ubuntu_1404_image }
-      flavor: { get_param: flavor_medium }
-      name:
-        str_replace: 
-          template: base-dcae-controller
-          params:
-            base: { get_param: vm_base_name }
-      key_name: { get_resource: vm_key }
-      networks:
-        - network: { get_param: public_net_id }
-        - port: { get_resource: dcae_c_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __nexus_repo__: { get_param: nexus_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __nexus_url_snapshots__: { get_param: nexus_url_snapshot }
-            __gitlab_branch__: { get_param: gitlab_branch }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __oam_network_cidr__: { get_param: oam_network_cidr }
-            __dcae_zone__: { get_param: dcae_zone }
-            __dcae_state__: { get_param: dcae_state }
-            __artifacts_version__: { get_param: artifacts_version }
-            __tenant_id__: { get_param: openstack_tenant_id }
-            __openstack_private_network_name__: { get_attr: [oam_onap, name] }
-            __openstack_user__: { get_param: openstack_username }
-            __openstack_password__: { get_param: openstack_api_key }
-            __openstack_auth_method__: { get_param: openstack_auth_method }
-            __key_name__: { get_param: key_name }
-            __rand_str__: { get_resource: random-str }
-            __pub_key__: { get_param: pub_key }
-            __nexus_repo_root__: { get_param: nexus_repo_root }
-            __openstack_region__: { get_param: openstack_region }
-            __horizon_url__: { get_param: horizon_url }
-            __keystone_url__: { get_param: keystone_url }
-            __docker_version__: { get_param: dcae_docker }
-            __gerrit_branch__: { get_param: dcae_branch }
-            __dcae_code_version__: { get_param: dcae_code_version }
-            __cloud_env__: { get_param: cloud_env }
-            __public_net_id__: { get_param: public_net_id }
-            __dcae_base_environment__: { get_param: dcae_base_environment }
-            __dcae_ip_addr__: { get_param: dcae_ip_addr }
-            __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
-            __dcae_db_ip_addr__: { get_param: dcae_db_ip_addr }
-            __dcae_hdp1_ip_addr__: { get_param: dcae_hdp1_ip_addr }
-            __dcae_hdp2_ip_addr__: { get_param: dcae_hdp2_ip_addr }
-            __dcae_hdp3_ip_addr__: { get_param: dcae_hdp3_ip_addr }
-            __external_dns__: { get_param: external_dns }
-            __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
-            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
-            __flavor_small__: { get_param: flavor_small }
-            __flavor_medium__: { get_param: flavor_medium }
-            __flavor_large__: { get_param: flavor_large }
-            __flavor_xlarge__: { get_param: flavor_xlarge }
-            __dcae_repo__: { get_param: dcae_repo }
-            __mr_repo__: { get_param: mr_repo }
-          template: |
+#  dcae_c_vm:
+#    type: OS::Nova::Server
+#    properties:
+#      image: { get_param: ubuntu_1404_image }
+#      flavor: { get_param: flavor_medium }
+#      name:
+#        str_replace: 
+#          template: base-dcae-controller
+#          params:
+#            base: { get_param: vm_base_name }
+#      key_name: { get_resource: vm_key }
+#      networks:
+#        - network: { get_param: public_net_id }
+#        - port: { get_resource: dcae_c_private_port }
+#      user_data_format: RAW
+#      user_data:
+#        str_replace:
+#          params:
+#            __nexus_repo__: { get_param: nexus_repo }
+#            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+#            __nexus_username__: { get_param: nexus_username }
+#            __nexus_password__: { get_param: nexus_password }
+#            __nexus_url_snapshots__: { get_param: nexus_url_snapshot }
+#            __gitlab_branch__: { get_param: gitlab_branch }
+#            __dns_ip_addr__: { get_param: dns_ip_addr }
+#            __oam_network_cidr__: { get_param: oam_network_cidr }
+#            __dcae_zone__: { get_param: dcae_zone }
+#            __dcae_state__: { get_param: dcae_state }
+#            __artifacts_version__: { get_param: artifacts_version }
+#            __tenant_id__: { get_param: openstack_tenant_id }
+#            __openstack_private_network_name__: { get_attr: [oam_onap, name] }
+#            __openstack_user__: { get_param: openstack_username }
+#            __openstack_password__: { get_param: openstack_api_key }
+#            __openstack_auth_method__: { get_param: openstack_auth_method }
+#            __key_name__: { get_param: key_name }
+#            __rand_str__: { get_resource: random-str }
+#            __pub_key__: { get_param: pub_key }
+#            __nexus_repo_root__: { get_param: nexus_repo_root }
+#            __openstack_region__: { get_param: openstack_region }
+#            __horizon_url__: { get_param: horizon_url }
+#            __keystone_url__: { get_param: keystone_url }
+#            __docker_version__: { get_param: dcae_docker }
+#            __gerrit_branch__: { get_param: dcae_branch }
+#            __dcae_code_version__: { get_param: dcae_code_version }
+#            __cloud_env__: { get_param: cloud_env }
+#            __public_net_id__: { get_param: public_net_id }
+#            __dcae_base_environment__: { get_param: dcae_base_environment }
+#            __dcae_ip_addr__: { get_param: dcae_ip_addr }
+#            __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
+#            __dcae_db_ip_addr__: { get_param: dcae_db_ip_addr }
+#            __dcae_hdp1_ip_addr__: { get_param: dcae_hdp1_ip_addr }
+#            __dcae_hdp2_ip_addr__: { get_param: dcae_hdp2_ip_addr }
+#            __dcae_hdp3_ip_addr__: { get_param: dcae_hdp3_ip_addr }
+#            __external_dns__: { get_param: external_dns }
+#            __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
+#            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
+#            __flavor_small__: { get_param: flavor_small }
+#            __flavor_medium__: { get_param: flavor_medium }
+#            __flavor_large__: { get_param: flavor_large }
+#            __flavor_xlarge__: { get_param: flavor_xlarge }
+#            __dcae_repo__: { get_param: dcae_repo }
+#            __mr_repo__: { get_param: mr_repo }
+#          template: |
             #!/bin/bash
 
             # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__nexus_url_snapshots__" > /opt/config/nexus_url_snapshots.txt
-            echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__dcae_zone__" > /opt/config/dcae_zone.txt
-            echo "__dcae_state__" > /opt/config/dcae_state.txt
-            echo "__tenant_id__" > /opt/config/tenant_id.txt
-            echo "__openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
-            echo "__openstack_user__" > /opt/config/openstack_user.txt
-            echo "__openstack_password__" > /opt/config/openstack_password.txt
-            echo "__openstack_auth_method__" > /opt/config/openstack_auth_method.txt
-            echo "__key_name__" > /opt/config/key_name.txt
-            echo "__rand_str__" > /opt/config/rand_str.txt
-            echo "__pub_key__" > /opt/config/pub_key.txt
-            echo "__nexus_repo_root__" > /opt/config/nexus_repo_root.txt
-            echo "__openstack_region__" > /opt/config/openstack_region.txt
-            echo "__horizon_url__" > /opt/config/horizon_url.txt
-            echo "__keystone_url__" > /opt/config/keystone_url.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
-            echo "__public_net_id__" > /opt/config/public_net_id.txt
-            echo "__dcae_base_environment__" > /opt/config/dcae_base_environment.txt
-            echo "__dcae_code_version__" > /opt/config/dcae_code_version.txt
-            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-            echo "__dcae_coll_ip_addr__" > /opt/config/dcae_coll_ip_addr.txt
-            echo "__dcae_db_ip_addr__" > /opt/config/dcae_db_ip_addr.txt
-            echo "__dcae_hdp1_ip_addr__" > /opt/config/dcae_hdp1_ip_addr.txt
-            echo "__dcae_hdp2_ip_addr__" > /opt/config/dcae_hdp2_ip_addr.txt
-            echo "__dcae_hdp3_ip_addr__" > /opt/config/dcae_hdp3_ip_addr.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
-            echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
-            echo "__flavor_small__" > /opt/config/flavor_small.txt
-            echo "__flavor_medium__" > /opt/config/flavor_medium.txt
-            echo "__flavor_large__" > /opt/config/flavor_large.txt
-            echo "__flavor_xlarge__" > /opt/config/flavor_xlarge.txt
-            echo "__dcae_repo__" > /opt/config/remote_repo.txt
-            echo "__mr_repo__" > /opt/config/mr_repo.txt
+#            mkdir -p /opt/config
+#            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+#            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+#            echo "__nexus_username__" > /opt/config/nexus_username.txt
+#            echo "__nexus_password__" > /opt/config/nexus_password.txt
+#            echo "__nexus_url_snapshots__" > /opt/config/nexus_url_snapshots.txt
+#            echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
+#            echo "__docker_version__" > /opt/config/docker_version.txt
+#            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+#            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+#            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+#            echo "__dcae_zone__" > /opt/config/dcae_zone.txt
+#            echo "__dcae_state__" > /opt/config/dcae_state.txt
+#            echo "__tenant_id__" > /opt/config/tenant_id.txt
+#            echo "__openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
+#            echo "__openstack_user__" > /opt/config/openstack_user.txt
+#            echo "__openstack_password__" > /opt/config/openstack_password.txt
+#            echo "__openstack_auth_method__" > /opt/config/openstack_auth_method.txt
+#            echo "__key_name__" > /opt/config/key_name.txt
+#            echo "__rand_str__" > /opt/config/rand_str.txt
+#            echo "__pub_key__" > /opt/config/pub_key.txt
+#            echo "__nexus_repo_root__" > /opt/config/nexus_repo_root.txt
+#            echo "__openstack_region__" > /opt/config/openstack_region.txt
+#            echo "__horizon_url__" > /opt/config/horizon_url.txt
+#            echo "__keystone_url__" > /opt/config/keystone_url.txt
+#            echo "__cloud_env__" > /opt/config/cloud_env.txt
+#            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
+#            echo "__public_net_id__" > /opt/config/public_net_id.txt
+#            echo "__dcae_base_environment__" > /opt/config/dcae_base_environment.txt
+#            echo "__dcae_code_version__" > /opt/config/dcae_code_version.txt
+#            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
+#            echo "__dcae_coll_ip_addr__" > /opt/config/dcae_coll_ip_addr.txt
+#            echo "__dcae_db_ip_addr__" > /opt/config/dcae_db_ip_addr.txt
+#            echo "__dcae_hdp1_ip_addr__" > /opt/config/dcae_hdp1_ip_addr.txt
+#            echo "__dcae_hdp2_ip_addr__" > /opt/config/dcae_hdp2_ip_addr.txt
+#            echo "__dcae_hdp3_ip_addr__" > /opt/config/dcae_hdp3_ip_addr.txt
+#            echo "__external_dns__" > /opt/config/external_dns.txt
+#            echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
+#            echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
+#            echo "__flavor_small__" > /opt/config/flavor_small.txt
+#            echo "__flavor_medium__" > /opt/config/flavor_medium.txt
+#            echo "__flavor_large__" > /opt/config/flavor_large.txt
+#            echo "__flavor_xlarge__" > /opt/config/flavor_xlarge.txt
+#            echo "__dcae_repo__" > /opt/config/remote_repo.txt
+#            echo "__mr_repo__" > /opt/config/mr_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh
-            cd /opt
-            chmod +x dcae_install.sh
-            ./dcae_install.sh
+#            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh
+#            cd /opt
+#            chmod +x dcae_install.sh
+#            ./dcae_install.sh
 
 
   # Policy Engine instantiation
