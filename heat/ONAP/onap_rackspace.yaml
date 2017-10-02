@@ -203,6 +203,8 @@ parameters:
     type: string
   dgbuilder_docker:
     type: string
+  cli_docker:
+    type: string
 
   aai_branch:
     type: string
@@ -903,6 +905,7 @@ resources:
             __docker_version__: { get_param: portal_docker }
             __gerrit_branch__: { get_param: portal_branch }
             __cloud_env__: { get_param: cloud_env }
+            __cli_docker__: { get_param: cli_docker }
             __portal_repo__: { get_param: portal_repo }
           template: |
             #!/bin/bash
@@ -917,6 +920,7 @@ resources:
             echo "10.0.0.1" > /opt/config/dns_ip_addr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__cli_docker__" > /opt/config/cli_docker_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__portal_repo__" > /opt/config/remote_repo.txt
 

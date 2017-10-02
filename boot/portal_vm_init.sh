@@ -10,6 +10,7 @@ NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
+CLI_DOCKER_VERSION=$(cat /opt/config/cli_docker_version.txt)
 
 # Refresh configuration and scripts
 cd /opt/portal
@@ -30,14 +31,14 @@ docker pull $NEXUS_DOCKER_REPO/openecomp/${DB_IMG_NAME}:$DOCKER_IMAGE_VERSION
 docker pull $NEXUS_DOCKER_REPO/openecomp/${EP_IMG_NAME}:$DOCKER_IMAGE_VERSION
 docker pull $NEXUS_DOCKER_REPO/openecomp/${WMS_IMG_NAME}:$DOCKER_IMAGE_VERSION
 # Add CLI docker image
-docker pull $NEXUS_DOCKER_REPO/onap/cli:$DOCKER_IMAGE_VERSION
+docker pull $NEXUS_DOCKER_REPO/onap/cli:$CLI_DOCKER_VERSION
 
 # Tag them as expected by docker-compose file
 docker tag $NEXUS_DOCKER_REPO/openecomp/${DB_IMG_NAME}:$DOCKER_IMAGE_VERSION $DB_IMG_NAME:$PORTAL_TAG
 docker tag $NEXUS_DOCKER_REPO/openecomp/${EP_IMG_NAME}:$DOCKER_IMAGE_VERSION $EP_IMG_NAME:$PORTAL_TAG
 docker tag $NEXUS_DOCKER_REPO/openecomp/${WMS_IMG_NAME}:$DOCKER_IMAGE_VERSION $WMS_IMG_NAME:$PORTAL_TAG
 # Add tagging for CLI docker image as expected by docker-compose file
-docker tag $NEXUS_DOCKER_REPO/onap/cli:$DOCKER_IMAGE_VERSION onap/cli:$PORTAL_TAG
+docker tag $NEXUS_DOCKER_REPO/onap/cli:$CLI_DOCKER_VERSION onap/cli:$PORTAL_TAG
 
 # docker-compose is not in /usr/bin
 /opt/docker/docker-compose down
