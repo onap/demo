@@ -9,6 +9,9 @@ GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 CODE_REPO=$(cat /opt/config/remote_repo.txt)
 
+# Short-term fix to get around MSO to SO name change
+cp /opt/config/so_ip_addr.txt /opt/config/mso_ip_addr.txt
+
 # Add host name to /etc/host to avoid warnings in openstack images
 if [[ $CLOUD_ENV != "rackspace" ]]
 then
