@@ -41,4 +41,9 @@ chmod +x /opt/demo.sh
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/openecomp/testsuite:$DOCKER_IMAGE_VERSION
 docker rm -f openecompete_container
+
+docker pull $NEXUS_DOCKER_REPO/onap/sniroemulator:latest
+docker rm -f sniroemulator
+
 docker run -d --name openecompete_container -v /opt/eteshare:/share -p 88:88 $NEXUS_DOCKER_REPO/openecomp/testsuite:$DOCKER_IMAGE_VERSION
+docker run -d --name sniroemulator -p 8080:9999 $NEXUS_DOCKER_REPO/onap/sniroemulator:latest
