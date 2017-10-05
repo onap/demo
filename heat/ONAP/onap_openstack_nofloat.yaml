@@ -1584,12 +1584,6 @@ resources:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
 
-  dcae_c_floating_ip:
-    type: OS::Neutron::FloatingIP
-    properties:
-      floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: dcae_c_private_port }
-
   dcae_c_vm:
     type: OS::Nova::Server
     properties:
@@ -1602,6 +1596,7 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: dcae_vm_key }
       networks:
+        - network: { get_param: public_net_id }
         - port: { get_resource: dcae_c_private_port }
       user_data_format: RAW
       user_data:
