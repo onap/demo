@@ -69,6 +69,10 @@ vm1.portal.simpledemo.openecomp.org.           IN      A       portal_ip_addr
 c1.vm1.portal.simpledemo.openecomp.org.        IN      A       portal_ip_addr
 c2.vm1.portal.simpledemo.openecomp.org.        IN      A       portal_ip_addr
 
+vm1.robot.simpledemo.openecomp.org.           IN      A       robot_ip_addr
+c1.vm1.robot.simpledemo.openecomp.org.        IN      A       robot_ip_addr
+c2.vm1.robot.simpledemo.openecomp.org.        IN      A       robot_ip_addr
+
 vm1.clamp.simpledemo.openecomp.org.           IN      A       clamp_ip_addr
 c1.vm1.clamp.simpledemo.openecomp.org.        IN      A       clamp_ip_addr
 c2.vm1.clamp.simpledemo.openecomp.org.        IN      A       clamp_ip_addr
@@ -123,6 +127,10 @@ collector.api.simpledemo.openecomp.org. IN      A   dcae_coll_ip_addr
 
 ;CLAMP
 clamp.api.simpledemo.openecomp.org.	IN	CNAME	vm1.clamp.simpledemo.openecomp.org.
+
+;ROBOT/SNIRO
+robot.api.simpledemo.openecomp.org.	IN	CNAME	vm1.robot.simpledemo.openecomp.org.
+sniro.api.simpledemo.openecomp.org.	IN	CNAME	vm1.robot.simpledemo.openecomp.org.
 
 ;AAF
 ;aaf.api.simpledemo.openecomp.org.	IN	CNAME	vm1.aaf.simpledemo.openecomp.org.
