@@ -16,9 +16,11 @@ then
 
 	# Set the Bind configuration file name based on the deployment environment
 	ZONE_FILE="bind_zones"
+	ZONE_ONAP="bind_zones_onap"
 	OPTIONS_FILE="bind_options"
 else
 	ZONE_FILE="db_simpledemo_openecomp_org"
+	ZONE_ONAP="db_simpledemo_onap_org"
 	OPTIONS_FILE="named.conf.options"
 fi
 
@@ -58,6 +60,7 @@ apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates w
 # Download script
 mkdir /etc/bind/zones
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$ZONE_FILE -o /etc/bind/zones/db.simpledemo.openecomp.org
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$ZONE_ONAP -o /etc/bind/zones/db.simpledemo.onap.org
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$OPTIONS_FILE -o /etc/bind/named.conf.options
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/named.conf.local -o /etc/bind/named.conf.local
 
