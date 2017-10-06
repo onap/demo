@@ -10,3 +10,8 @@ zone "simpledemo.openecomp.org" {
     type master;
     file "/etc/bind/zones/db.simpledemo.openecomp.org"; # zone file path
 };
+
+zone "simpledemo.onap.org" {
+    type master;
+    file "/etc/bind/zones/db.simpledemo.onap.org"; # zone file path
+};

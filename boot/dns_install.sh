@@ -9,16 +9,18 @@ if [[ $CLOUD_ENV != "rackspace" ]]
 then
 	# Add host name to /etc/host to avoid warnings in openstack images
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
-	
+
 	# Allow remote login as root
 	mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
 	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
 
 	# Set the Bind configuration file name based on the deployment environment
 	ZONE_FILE="bind_zones"
+	ZONE_ONAP="bind_zones_onap"
 	OPTIONS_FILE="bind_options"
 else
 	ZONE_FILE="db_simpledemo_openecomp_org"
+	ZONE_ONAP="db_simpledemo_onap_org"
 	OPTIONS_FILE="named.conf.options"
 fi
 
@@ -58,6 +60,7 @@ apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates w
 # Download script
 mkdir /etc/bind/zones
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$ZONE_FILE -o /etc/bind/zones/db.simpledemo.openecomp.org
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$ZONE_ONAP -o /etc/bind/zones/db.simpledemo.onap.org
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$OPTIONS_FILE -o /etc/bind/named.conf.options
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/named.conf.local -o /etc/bind/named.conf.local
 
@@ -82,6 +85,23 @@ then
 	sed -i "s/dcae_coll_ip_addr/"$(cat /opt/config/dcae_coll_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/clamp_ip_addr/"$(cat /opt/config/clamp_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/openo_ip_addr/"$(cat /opt/config/openo_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+
+        sed -i "s/aai1_ip_addr/"$(cat /opt/config/aai1_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/aai2_ip_addr/"$(cat /opt/config/aai2_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/appc_ip_addr/"$(cat /opt/config/appc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/dcae_ip_addr/"$(cat /opt/config/dcae_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/dns_ip_addr/"$(cat /opt/config/dns_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/so_ip_addr/"$(cat /opt/config/so_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/mr_ip_addr/"$(cat /opt/config/mr_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/policy_ip_addr/"$(cat /opt/config/policy_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/portal_ip_addr/"$(cat /opt/config/portal_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/robot_ip_addr/"$(cat /opt/config/robot_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/sdc_ip_addr/"$(cat /opt/config/sdc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/sdnc_ip_addr/"$(cat /opt/config/sdnc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/vid_ip_addr/"$(cat /opt/config/vid_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/dcae_coll_ip_addr/"$(cat /opt/config/dcae_coll_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/clamp_ip_addr/"$(cat /opt/config/clamp_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/openo_ip_addr/"$(cat /opt/config/openo_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 fi
 
 # Configure Bind

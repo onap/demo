@@ -1,0 +1,134 @@
+;
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     simpledemo.onap.org. admin.simpledemo.onap.org. (
+                        20170221        ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+; name servers - NS records
+    IN      NS      simpledemo.onap.org.
+
+; name servers - A records
+simpledemo.onap.org.          IN      A       10.0.0.1
+
+;
+vm1.aai.simpledemo.onap.org.       IN      A       10.0.1.1
+c1.vm1.aai.simpledemo.onap.org.    IN      A       10.0.1.1
+c2.vm1.aai.simpledemo.onap.org.    IN      A       10.0.1.1
+c3.vm1.aai.simpledemo.onap.org.    IN      A       10.0.1.1
+
+vm2.aai.simpledemo.onap.org.       IN      A       10.0.1.2
+c1.vm2.aai.simpledemo.onap.org.    IN      A       10.0.1.2
+c2.vm2.aai.simpledemo.onap.org.    IN      A       10.0.1.2
+c3.vm2.aai.simpledemo.onap.org.    IN      A       10.0.1.2
+
+vm1.appc.simpledemo.onap.org.      IN      A       10.0.2.1
+c1.vm1.appc.simpledemo.onap.org.   IN      A       10.0.2.1
+c2.vm1.appc.simpledemo.onap.org.   IN      A       10.0.2.1
+
+vm1.sdc.simpledemo.onap.org.      IN      A       10.0.3.1
+c1.vm1.sdc.simpledemo.onap.org.   IN      A       10.0.3.1
+c2.vm1.sdc.simpledemo.onap.org.   IN      A       10.0.3.1
+c3.vm1.sdc.simpledemo.onap.org.   IN      A       10.0.3.1
+c4.vm1.sdc.simpledemo.onap.org.   IN      A       10.0.3.1
+
+vm1.dcae.simpledemo.onap.org.           IN      A       10.0.4.1
+c1.vm1.dcae.simpledemo.onap.org.        IN      A       10.0.4.1
+c2.vm1.dcae.simpledemo.onap.org.        IN      A       10.0.4.1
+c3.vm1.dcae.simpledemo.onap.org         IN      A       10.0.4.1
+
+vm1.mso.simpledemo.onap.org.       IN      A       10.0.5.1
+c1.vm1.mso.simpledemo.onap.org.    IN      A       10.0.5.1
+c1.vm1.mso.simpledemo.onap.org.    IN      A       10.0.5.1
+
+vm1.policy.simpledemo.onap.org.    IN      A       10.0.6.1
+c1.vm1.policy.simpledemo.onap.org. IN      A       10.0.6.1
+c2.vm1.policy.simpledemo.onap.org. IN      A       10.0.6.1
+c3.vm1.policy.simpledemo.onap.org. IN      A       10.0.6.1
+c4.vm1.policy.simpledemo.onap.org. IN      A       10.0.6.1
+c5.vm1.policy.simpledemo.onap.org. IN      A       10.0.6.1
+c6.vm1.policy.simpledemo.onap.org. IN      A       10.0.6.1
+c7.vm1.policy.simpledemo.onap.org. IN      A       10.0.6.1
+c8.vm1.policy.simpledemo.onap.org. IN      A       10.0.6.1
+
+vm1.sdnc.simpledemo.onap.org.      IN      A       10.0.7.1
+c1.vm1.sdnc.simpledemo.onap.org.   IN      A       10.0.7.1
+c2.vm1.sdnc.simpledemo.onap.org.   IN      A       10.0.7.1
+c3.vm1.sdnc.simpledemo.onap.org.   IN      A       10.0.7.1
+c4.vm1.sdnc.simpledemo.onap.org.   IN      A       10.0.7.1
+
+vm1.vid.simpledemo.onap.org.       IN      A       10.0.8.1
+c1.vm1.vid.simpledemo.onap.org.    IN      A       10.0.8.1
+c2.vm1.vid.simpledemo.onap.org.    IN      A       10.0.8.1
+
+vm1.portal.simpledemo.onap.org.           IN      A       10.0.9.1
+c1.vm1.portal.simpledemo.onap.org.        IN      A       10.0.9.1
+c2.vm1.portal.simpledemo.onap.org.        IN      A       10.0.9.1
+
+vm1.robot.simpledemo.onap.org.           IN      A       10.0.10.1
+c1.vm1.robot.simpledemo.onap.org.        IN      A       10.0.10.1
+c2.vm1.robot.simpledemo.onap.org.        IN      A       10.0.10.1
+
+vm1.aaf.simpledemo.onap.org.	IN	A	10.0.13.1
+
+vm1.mr.simpledemo.onap.org.	IN	A	10.0.11.1
+
+vm1.clamp.simpledemo.onap.org.           IN      A       10.0.12.1
+c1.vm1.clamp.simpledemo.onap.org.        IN      A       10.0.12.1
+c2.vm1.clamp.simpledemo.onap.org.        IN      A       10.0.12.1
+
+
+;CNAMES
+;A&AI
+aai.api.simpledemo.onap.org.	IN 	CNAME 	vm1.aai.simpledemo.onap.org.
+aai.ui.simpledemo.onap.org.    IN  CNAME   vm1.aai.simpledemo.onap.org.
+aai.searchservice.simpledemo.onap.org.     IN      CNAME   vm1.aai.simpledemo.onap.org.
+aai.hbase.simpledemo.onap.org.	IN 	CNAME	vm2.aai.simpledemo.onap.org.
+aai.gremlinserver.simpledemo.onap.org.	IN 	CNAME 	vm2.aai.simpledemo.onap.org.
+aai.elasticsearch.simpledemo.onap.org.	IN 	CNAME 	vm2.aai.simpledemo.onap.org.
+
+;APPC
+appc.api.simpledemo.onap.org.	IN	CNAME	vm1.appc.simpledemo.onap.org.
+
+;ASDC
+sdc.api.simpledemo.onap.org.	IN	CNAME	vm1.sdc.simpledemo.onap.org.	
+
+;DCAE
+dcae.api.simpledemo.onap.org.	IN	CNAME	vm1.dcae.simpledemo.onap.org.
+
+;MSO
+mso.api.simpledemo.onap.org.	IN	CNAME	vm1.mso.simpledemo.onap.org.
+
+;Policy
+policy.api.simpledemo.onap.org. 	IN	CNAME	vm1.policy.simpledemo.onap.org.
+
+;SDNC
+sdnc.api.simpledemo.onap.org. 	IN	CNAME    vm1.sdnc.simpledemo.onap.org.
+
+;VID
+vid.api.simpledemo.onap.org.	IN	CNAME	vm1.vid.simpledemo.onap.org.	
+
+;PORTAL
+portal.api.simpledemo.onap.org.	IN	CNAME	vm1.portal.simpledemo.onap.org.
+
+;Message Router
+;mr.api.simpledemo.onap.org.	IN	CNAME	vm1.mr.simpledemo.onap.org.	
+ueb.api.simpledemo.onap.org.	IN	CNAME	vm1.mr.simpledemo.onap.org.
+mr.api.simpledemo.onap.org.        IN      A   10.0.4.102
+collector.api.simpledemo.onap.org. IN      A   10.0.4.102
+;dbc.api.simpledemo.onap.org.	IN	CNAME  	vm1.mr.simpledemo.onap.org.
+;drprov.api.simpledemo.onap.org.	IN	CNAME  	vm1.mr.simpledemo.onap.org.
+
+;ROBOT/SNIRO
+robot.api.simpledemo.onap.org.	IN	CNAME	vm1.robot.simpledemo.onap.org.
+sniro.api.simpledemo.onap.org.	IN	CNAME	vm1.robot.simpledemo.onap.org.
+
+;CLAMP
+clamp.api.simpledemo.onap.org.	IN	CNAME	vm1.clamp.simpledemo.onap.org.
+
+;AAF
+aaf.api.simpledemo.onap.org.	IN	CNAME	vm1.aaf.simpledemo.onap.org.
