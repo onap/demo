@@ -205,6 +205,8 @@ parameters:
     type: string
   cli_docker:
     type: string
+  esr_docker:
+    type: string
 
   aai_branch:
     type: string

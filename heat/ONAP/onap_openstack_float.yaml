@@ -374,6 +374,8 @@ parameters:
     type: string
   uui_docker:
     type: string
+  esr_docker:
+    type: string
   dgbuilder_docker:
     type: string
   cli_docker:
