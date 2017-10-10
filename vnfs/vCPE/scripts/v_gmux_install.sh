@@ -227,6 +227,7 @@ git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
 wget -O Hc2vpp-Add-VES-agent-for-vG-MUX.patch ${HC2VPP_PATCH_URL}
 
 apt-get install -y maven
+mkdir -p ~/.m2
 cat > ~/.m2/settings.xml << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- vi: set et smarttab sw=2 tabstop=2: -->
