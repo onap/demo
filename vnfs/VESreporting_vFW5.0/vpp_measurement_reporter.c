@@ -245,7 +245,7 @@ int main(int argc, char** argv)
       packets_out_this_round = 0;
     }
 
-    vpp_m = evel_new_measurement(READ_INTERVAL,"Measurement_vVNF","TrafficStats_1.2.3.4");
+    vpp_m = evel_new_measurement(READ_INTERVAL,"vFirewallBroadcastPackets","TrafficStats_1.2.3.4");
     vnic_performance = (MEASUREMENT_VNIC_PERFORMANCE *)evel_measurement_new_vnic_performance("eth0", "true");
     evel_meas_vnic_performance_add(vpp_m, vnic_performance);
 
