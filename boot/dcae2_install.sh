@@ -24,25 +24,26 @@ fi
 # Some VM images don't add the private interface automatically, we have to do it during the component installation
 if [[ $CLOUD_ENV == "openstack_nofloat" ]]
 then
-	CIDR=$(cat /opt/config/oam_network_cidr.txt)
-	BITMASK=$(echo $CIDR | cut -d"/" -f2)
+	#CIDR=$(cat /opt/config/oam_network_cidr.txt)
+	#BITMASK=$(echo $CIDR | cut -d"/" -f2)
 
 	# Compute the netmask based on the network cidr
-	if [[ $BITMASK == "8" ]]
-	then
-		NETMASK=255.0.0.0
-	elif [[ $BITMASK == "16" ]]
-	then
-		NETMASK=255.255.0.0
-	elif [[ $BITMASK == "24" ]]
-	then
-		NETMASK=255.255.255.0
-	fi
+	#if [[ $BITMASK == "8" ]]
+	#then
+	#	NETMASK=255.0.0.0
+	#elif [[ $BITMASK == "16" ]]
+	#then
+	#	NETMASK=255.255.0.0
+	#elif [[ $BITMASK == "24" ]]
+	#then
+	#	NETMASK=255.255.255.0
+	#fi
 
 	echo "auto eth1" >> /etc/network/interfaces
-	echo "iface eth1 inet static" >> /etc/network/interfaces
-	echo "    address $DCAE_IP_ADDR" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
+	#echo "iface eth1 inet static" >> /etc/network/interfaces
+	#echo "    address $DCAE_IP_ADDR" >> /etc/network/interfaces
+	#echo "    netmask $NETMASK" >> /etc/network/interfaces
+	echo "iface eth1 inet dhcp" >> /etc/network/interfaces
 	echo "    mtu $MTU" >> /etc/network/interfaces
 	ifup eth1
 fi
@@ -59,7 +60,7 @@ curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dcae2_serv.sh -o /opt/
 chmod +x /opt/dcae2_vm_init.sh
 chmod +x /opt/dcae2_serv.sh
 mv /opt/dcae2_serv.sh /etc/init.d
-update-rc.d dcae_serv.sh defaults
+update-rc.d dcae2_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
 echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
@@ -125,7 +126,7 @@ openstack:
 keypair: '$OPENSTACK_KEYNAME'
 key_filename: '/opt/dcae/key'
 location_prefix: '$ZONE'
-location_domain: 'onapdevlab.onap.org'
+location_domain: 'dcae.onapdevlab.onap.org'
 codesource_url: 'https://nexus.onap.org/service/local/repositories/raw/content'
 codesource_version: 'org.onap.dcaegen2.deployments/releases/scripts'
 EOF_CONFIG
