@@ -331,6 +331,8 @@ parameters:
     type: string
   uui_docker:
     type: string
+  esr_docker:
+    type: string
   dgbuilder_docker:
     type: string
   cli_docker:
@@ -1600,6 +1602,7 @@ resources:
             __mvim_docker__: { get_param: mvim_docker }
             __vfc_docker__: { get_param: vfc_docker }
             __uui_docker__: { get_param: uui_docker }
+            __esr_docker__: { get_param: esr_docker }
             __vnfsdk_repo__: { get_param: vnfsdk_repo }
           template: |
             #!/bin/bash
@@ -1620,6 +1623,7 @@ resources:
             echo "__mvim_docker__" > /opt/config/mvim_docker.txt
             echo "__vfc_docker__" > /opt/config/vfc_docker.txt
             echo "__uui_docker__" > /opt/config/uui_docker.txt
+            echo "__esr_docker__" > /opt/config/esr_docker.txt
             echo "__vnfsdk_repo__" > /opt/config/vnfsdk_repo.txt
 
             # Create env file with the IP address of all ONAP components

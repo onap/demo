@@ -62,6 +62,7 @@ curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/uui_vm_init.sh -o /opt
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/openo_all_serv.sh -o /opt/openo_all_serv.sh
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/openo_serv.sh -o /opt/openo_serv.sh
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/cli_install.sh -o /opt/cli_install.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/esr_vm_init.sh -o /opt/esr_vm_init.sh
 chmod +x /opt/vnfsdk_vm_init.sh
 chmod +x /opt/msb_vm_init.sh
 chmod +x /opt/mvim_vm_init.sh
@@ -70,6 +71,7 @@ chmod +x /opt/uui_vm_init.sh
 chmod +x /opt/openo_all_serv.sh
 chmod +x /opt/openo_serv.sh
 chmod +x /opt/cli_install.sh
+chmod +x /opt/esr_vm_init.sh
 mv /opt/openo_serv.sh /etc/init.d
 update-rc.d openo_serv.sh defaults
 
