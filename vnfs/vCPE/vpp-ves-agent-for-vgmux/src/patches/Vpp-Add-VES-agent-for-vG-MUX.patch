@@ -6600,7 +6600,7 @@ index 00000000..7540dd16
 +	  				    0);		/* Unicast packets transmitted     */
 +#endif
 +
-+	 sprintf(str_pkt_loss, "%.1f %%", (double) vam->config.base_pkt_loss);
++	 sprintf(str_pkt_loss, "%.1f", (double) vam->config.base_pkt_loss);
 +         evel_measurement_custom_measurement_add(vpp_m,          /* Pointer to the measurement      */
 +                                           "ONAP-DCAE",          /* measurement group's name        */
 +                                    "Packet-Loss-Rate",          /* the measurement's name          */
