@@ -16,9 +16,9 @@ wget https://cloud-images.ubuntu.com/releases/16.04/release/ubuntu-16.04-server-
 openstack image create ubuntu1404 --file ubuntu-14.04-server-cloudimg-amd64-disk1.img --disk-format qcow2
 openstack image create ubuntu1604 --file ubuntu-16.04-server-cloudimg-amd64-disk1.img --disk-format qcow2
 
-openstack quota set admin --instances 30
-openstack quota set admin --cores 45
-openstack quota set admin --ram 61440
+openstack quota set admin --instances 32
+openstack quota set admin --cores 128
+openstack quota set admin --ram 102400
 
 openstack flavor delete m1.large
 openstack flavor create --public m1.large --id auto --ram 6144 --vcpus 3 --disk 80

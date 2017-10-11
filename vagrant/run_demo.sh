@@ -10,8 +10,3 @@ fi
 
 vagrant destroy -f
 vagrant up
-vagrant ssh control -c "/vagrant/create_onap.sh"
-sudo sed -i "/.*simpledemo.openecomp.org.*/d" /etc/hosts
-cat hosts | sudo tee -a /etc/hosts
-sleep 300
-ssh -o StrictHostKeyChecking=no ubuntu@portal.api.simpledemo.openecomp.org -i onap "curl sina.com.cn"
