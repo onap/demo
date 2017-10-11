@@ -21,6 +21,7 @@ CLI_INSTALL_DIR=/opt/onap/cli
 CLI_ZIP=cli.zip
 CLI_BIN=/usr/bin/onap
 export ONAP_CLI_HOME=$CLI_INSTALL_DIR
+export CLI_PRODUCT_VERSION=onap-1.1
 
 #create install dir
 if [ -d $CLI_INSTALL_DIR ]
