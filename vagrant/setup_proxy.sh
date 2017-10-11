@@ -3,7 +3,7 @@ set -ex
 
 SOCKS5_IP=${SOCKS5_IP:-127.0.0.1}
 SOCKS5_PORT=${SOCKS5:-1080}
-DNS_SERVER=${DNS_SERVER:-10.248.2.5}
+DNS_SERVER=${DNS_SERVER:-10.248.2.1}
 
 sudo apt-get install -y redsocks iptables
 
