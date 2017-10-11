@@ -53,6 +53,14 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-networ
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-network-deprecated", "version": "v11", "url": "/aai/v11/network","path": "/aai/v11/network","protocol": "REST",  "enable_ssl":"true", "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-externalSystem", "version": "v11", "url": "/aai/v11/external-system","protocol": "REST", "enable_ssl":"true", "visualRange":"1", "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-externalSystem-deprecated", "version": "v11", "url": "/aai/v11/external-system","path": "/aai/v11/external-system","protocol": "REST",  "enable_ssl":"true", "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-esr-server", "version": "v1", "url": "/api/aai-esr-server/v1","protocol": "REST", "visualRange":"1", "nodes": [ {"ip": "'$OPENO_IP'","port": "9518"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-esr-gui", "version": "v1", "url": "/esr-gui","path": "/iui/aai-esr-gui","protocol": "UI",  "nodes": [ {"ip": "'$OPENO_IP'","port": "9519"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
 #so
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "so", "version": "v1", "url": "/ecomp/mso/infra","protocol": "REST",  "nodes": [ {"ip": "'$SO_IP'","port": "8080"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
@@ -80,6 +88,12 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdnc", "ve
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdnc", "version": "v1", "url": "/restconf","path": "/restconf","protocol": "REST",  "nodes": [ {"ip": "'$SDNC_IP'","port": "8282"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 #multi-vim
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud", "version": "v0", "url": "/api/multicloud/v0","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "9001"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud-vio", "version": "v0", "url": "/api/multicloud-vio/v0","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "9004"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud-ocata", "version": "v0", "url": "/api/multicloud-ocata/v0","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "9006"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud-titanium_cloud", "version": "v0", "url": "/api/multicloud-titanium_cloud/v0","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "9005"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 #VF-C
