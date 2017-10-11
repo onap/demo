@@ -40,9 +40,9 @@ docker tag $NEXUS_DOCKER_REPO/$CLI_IMG_NAME:$CLI_DOCKER_VERSION $CLI_IMG_NAME:$P
 export LOGS_DIR=./logs
 mkdir -p $LOGS_DIR
 
-# Export variable for subdirectory with host-specific property files
+# Export variable for subdirectory with appropriate property files
 # The leading "./" is required for docker-compose
-export PROPS_DIR=./properties_rackspace
+export PROPS_DIR=./properties_simpledemo
 
 # docker-compose is not in /usr/bin
 /opt/docker/docker-compose down
