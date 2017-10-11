@@ -141,3 +141,4 @@ mvim.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
 vnfsdk.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
 vfc.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
 uui.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
+esr.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.

@@ -141,3 +141,4 @@ mvim.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.or
 vnfsdk.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
 vfc.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
 uui.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+esr.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
