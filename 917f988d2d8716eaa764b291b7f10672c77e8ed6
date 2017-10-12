@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_3db0cd8a",
+        "filename": "vagrant/create_onap.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 947
+      },
+      "writtenOn": "2017-10-12T15:21:52Z",
+      "side": 1,
+      "message": "Shouldn\u0027t be better to install these from pip?",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 64
+      },
+      "revId": "917f988d2d8716eaa764b291b7f10672c77e8ed6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
