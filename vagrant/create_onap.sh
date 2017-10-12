@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -ex
 
+sudo apt-get install -y python-openstackclient python-heatclient
+
 source /vagrant/openrc
 cp /demo/heat/ONAP/* .
 
@@ -29,13 +31,15 @@ sed -i  "s,keystone_url:.*,keystone_url: http://192.168.0.10/identity/,"  onap_o
 sed -i  "s/dns_list:.*/dns_list: 8.8.8.8/" onap_openstack.env
 sed -i  "s/external_dns:.*/external_dns: 8.8.8.8/" onap_openstack.env
 
+openstack stack delete --yes --wait ONAP || true
 openstack stack create -t onap_openstack.yaml -e onap_openstack.env ONAP
 
-sleep 180
+sleep 300
+sudo sed -i "/.*simpledemo.openecomp.org.*/d" /etc/hosts
 vms=$(grep "_vm:" onap_openstack.yaml | cut -f1 -d"_")
-sudo rm -rf /vagrant/hosts
 for vm in $vms
 do
     ip=$(openstack server list --name $vm -f yaml | grep Networks | cut -f2 -d",")
-    echo "$ip $vm.api.simpledemo.openecomp.org" >> /vagrant/hosts
+    echo "$ip $vm.api.simpledemo.openecomp.org" | sudo tee -a /etc/hosts
 done
+ssh -o StrictHostKeyChecking=no ubuntu@portal.api.simpledemo.openecomp.org -i onap "curl sina.com.cn"
