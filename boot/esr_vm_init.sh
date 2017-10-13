@@ -16,4 +16,4 @@ docker rm -f esr_server
 docker rm -f esr_gui
 
 docker run -i -t -d -p 9518:9518 -e MSB_ADDR=$OPENO_IP:80 --name esr_server $NEXUS_DOCKER_REPO/onap/aai/esr-server:$DOCKER_IMAGE_VERSION
-docker run -i -t -d -p 8080:9519 -e MSB_ADDR=$OPENO_IP:80 --name esr_gui $NEXUS_DOCKER_REPO/onap/aai/esr-gui:$DOCKER_IMAGE_VERSION
+docker run -i -t -d -p 9519:8080 -e MSB_ADDR=$OPENO_IP:80 --name esr_gui $NEXUS_DOCKER_REPO/onap/aai/esr-gui:$DOCKER_IMAGE_VERSION
