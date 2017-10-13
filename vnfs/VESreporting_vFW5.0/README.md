@@ -1,8 +1,6 @@
 
 PROJECT DESCRIPTION
 
-“The content of this directory is currently under development and, at this stage, is not intended for demonstration and/or testing.”
-
 ---
 This project contains the source code and scripts for the periodic generation of network measurement reports. The folder contains:
 
