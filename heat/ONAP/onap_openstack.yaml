@@ -1710,6 +1710,12 @@ resources:
             __flavor_medium__: { get_param: flavor_medium }
             __mac_addr__: { get_attr: [dcae_c_private_port, mac_address] }
             __rand_str__: { get_resource: random-str }
+            __mr_ip_addr__: { get_param: mr_ip_addr }
+            #__mr_float_ip__: { get_attr: [mr_floating_ip, floating_ip_address] }
+            __policy_ip_addr__: { get_param: policy_ip_addr }
+            #__policy_float_ip__: { get_attr: [policy_floating_ip, floating_ip_address] }
+            __sdc_ip_addr__: { get_param: sdc_ip_addr }
+            #__sdc_float_ip__: { get_attr: [sdc_floating_ip, floating_ip_address] }
 
           template: |
             #!/bin/bash
@@ -1726,6 +1732,7 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__dcae_zone__" > /opt/config/dcae_zone.txt
             echo "__tenant_id__" > /opt/config/tenant_id.txt
+            echo "__tenant_id__" > /opt/config/tenant_name.txt
             echo "__openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
             echo "__openstack_user__" > /opt/config/openstack_user.txt
             echo "__openstack_password__" > /opt/config/openstack_password.txt
@@ -1742,10 +1749,17 @@ resources:
             echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
             echo "__centos_7_image__" > /opt/config/centos_7_image.txt
             echo "__security_group__" > /opt/config/security_group.txt
-            echo "__flavor_medium__" > /opt/config/flavor_medium.txt
+            echo "__flavor_medium__" > /opt/config/flavor_id.txt
             echo "__dcae_repo__" > /opt/config/remote_repo.txt
             echo "__mac_addr__" > /opt/config/mac_addr.txt
             echo "__rand_str__" > /opt/config/rand_str.txt
+            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
+            echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
+            echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
+            #echo "__mr_floating_ip_addr__" > /opt/config/mr_floating_ip_addr.txt
+            #echo "__policy_floating_ip_addr__" > /opt/config/policy_floating_ip_addr.txt 
+            #echo "__sdc_floating_ip_addr__" > /opt/config/sdc_floating_ip_addr.txt
+
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae2_install.sh -o /opt/dcae2_install.sh
