@@ -41,7 +41,8 @@ get_pid() {
 }
 
 is_running() {
-    [ -f "$pid_file" ] && ps `get_pid` > /dev/null 2>&1
+    #[ -f "$pid_file" ] && ps `get_pid` > /dev/null 2>&1
+    [ ! -z $(docker ps | grep 'org.onap.dcaegen2.deployments.bootstrap') ]
 }
 
 case "$1" in
@@ -67,6 +68,9 @@ case "$1" in
     if is_running; then
         echo -n "Stopping $name.."
         kill `get_pid`
+        CID=$(docker ps | grep 'org.onap.dcaegen2.deployments.bootstrap' | awk '{ print $1 }')
+        docker exec -it $CID ./teardown.sh
+        
         for i in {1..10}
         do
             if ! is_running; then
