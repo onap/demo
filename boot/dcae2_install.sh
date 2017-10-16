@@ -92,44 +92,29 @@ service docker restart
 echo "nameserver "$DNS_IP_ADDR >> /etc/resolvconf/resolv.conf.d/head
 resolvconf -u
 
-# Build a configuration file for the DCAE Controller.
-chmod 777 /opt/config/priv_key
-mkdir /opt/app
+# prepare the configurations needed by DCAEGEN2 installer
+rm -rf /opt/app/config
+mkdir -p /opt/app/config
 
-UBUNTU_1604_IMAGE=$(cat /opt/config/ubuntu_1604_image.txt)
-CENTOS_7_IMAGE=$(cat /opt/config/centos_7_image.txt)
-FLAVOR_MEDIUM=$(cat /opt/config/flavor_medium.txt)
-SECURITY_GROUP=$(cat /opt/config/security_group.txt)
-PUBLIC_NET_ID=$(cat /opt/config/public_net_id.txt)
-OPENSTACK_PRIVATE_NETWORK=$(cat /opt/config/openstack_private_network_name.txt)
-OPENSTACK_USER=$(cat /opt/config/openstack_user.txt)
-OPENSTACK_PASSWORD=$(cat /opt/config/openstack_password.txt)
-OPENSTACK_TENANT_ID=$(cat /opt/config/tenant_id.txt)
-KEYSTONE_URL=$(cat /opt/config/keystone_url.txt)"/v2.0"
-OPENSTACK_REGION=$(cat /opt/config/openstack_region.txt)
-OPENSTACK_KEYNAME=$(cat /opt/config/key_name.txt)"_"$(cat /opt/config/rand_str.txt)
-ZONE=$(cat /opt/config/dcae_zone.txt)
+# private key
+cp /opt/config/priv_key /opt/app/config/key
+chmod 777 /opt/app/config/key
 
-cat > /opt/app/inputs.yaml << EOF_CONFIG
-centos7image_id: '$CENTOS_7_IMAGE'
-ubuntu1604image_id: '$UBUNTU_1604_IMAGE'
-flavor_id: '$FLAVOR_MEDIUM'
-security_group: '$SECURITY_GROUP'
-public_net: '$PUBLIC_NET_ID'
-private_net: '$OPENSTACK_PRIVATE_NETWORK'
-openstack:
- username: '$OPENSTACK_USER'
- password: '$OPENSTACK_PASSWORD'
- tenant_name: '$OPENSTACK_TENANT_ID'
- auth_url: '$KEYSTONE_URL'
- region: '$OPENSTACK_REGION'
-keypair: '$OPENSTACK_KEYNAME'
-key_filename: '/opt/dcae/key'
-location_prefix: '$ZONE'
-location_domain: 'dcae.onapdevlab.onap.org'
-codesource_url: 'https://nexus.onap.org/service/local/repositories/raw/content'
-codesource_version: 'org.onap.dcaegen2.deployments/releases/scripts'
-EOF_CONFIG
+
+# download blueprint input template files
+rm -rf /opt/app/inputs-templates
+mkdir -p /opt/app/inputs-templates
+#wget --no-parent -nH -r -l2 -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/
+wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/inputs.yaml
+wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/phinputs.yaml
+wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/dhinputs.yaml
+wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/invinputs.yaml
+
+
+# generate blueprint input files
+pip install jinja2
+wget https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.deployments/releases/scripts/detemplate-bpinputs.py && (python detemplate-bpinputs.py /opt/config /opt/app/inputs-templates /opt/app/config; rm detemplate-bpinputs.py)
+
 
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
