@@ -1,0 +1,120 @@
+diff --git a/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_event.c b/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_event.c
+index ced29b2..892e4b6 100644
+--- a/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_event.c
++++ b/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_event.c
+@@ -166,7 +166,8 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
+   header->last_epoch_microsec = tv.tv_usec + 1000000 * tv.tv_sec;
+   header->priority = EVEL_PRIORITY_NORMAL;
+   header->reporting_entity_name = strdup(openstack_vm_name());
+-  header->source_name = strdup(openstack_vm_name());
++  /* header->source_name = strdup(openstack_vm_name()); */
++  header->source_name = strdup(openstack_vnf_id()); /* vCPE quick hack */
+   header->sequence = event_sequence;
+   header->start_epoch_microsec = header->last_epoch_microsec;
+   header->major_version = EVEL_HEADER_MAJOR_VERSION;
+@@ -180,7 +181,8 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
+   evel_init_option_string(&header->nfcnaming_code);
+   evel_init_option_string(&header->nfnaming_code);
+   evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
+-  evel_force_option_string(&header->source_id, openstack_vm_uuid());
++  /* evel_force_option_string(&header->source_id, openstack_vm_uuid()); */
++  evel_force_option_string(&header->source_id, openstack_vnf_id()); /* vCPE quick hack */
+   evel_init_option_intheader(&header->internal_field);
+ 
+   EVEL_EXIT();
+@@ -215,7 +217,8 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
+   header->last_epoch_microsec = tv.tv_usec + 1000000 * tv.tv_sec;
+   header->priority = EVEL_PRIORITY_NORMAL;
+   header->reporting_entity_name = strdup(openstack_vm_name());
+-  header->source_name = strdup(openstack_vm_name());
++  /* header->source_name = strdup(openstack_vm_name()); */
++  header->source_name = strdup(openstack_vnf_id()); /* vCPE quick hack */
+   header->sequence = event_sequence;
+   header->start_epoch_microsec = header->last_epoch_microsec;
+   header->major_version = EVEL_HEADER_MAJOR_VERSION;
+@@ -229,7 +232,8 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
+   evel_init_option_string(&header->nfcnaming_code);
+   evel_init_option_string(&header->nfnaming_code);
+   evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
+-  evel_force_option_string(&header->source_id, openstack_vm_uuid());
++  /* evel_force_option_string(&header->source_id, openstack_vm_uuid()); */
++  evel_force_option_string(&header->source_id, openstack_vnf_id()); /* vCPE quick hack */
+   evel_init_option_intheader(&header->internal_field);
+ 
+   EVEL_EXIT();
+diff --git a/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.c b/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.c
+index 11fef1b..d82f282 100644
+--- a/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.c
++++ b/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.c
+@@ -59,6 +59,11 @@ static char vm_uuid[MAX_METADATA_STRING+1] = {0};
+ static char vm_name[MAX_METADATA_STRING+1] = {0};
+ 
+ /**************************************************************************//**
++ * ID of the VNF extracted from the OpenStack metadata service.
++ *****************************************************************************/
++static char vnf_id[MAX_METADATA_STRING+1] = {0};
++
++/**************************************************************************//**
+  * How many metadata elements we allow for in the retrieved JSON.
+  *****************************************************************************/
+ static const int MAX_METADATA_TOKENS = 128;
+@@ -289,6 +294,19 @@ EVEL_ERR_CODES openstack_metadata(int verbosity)
+     {
+       EVEL_DEBUG("VM Name: %s", vm_name);
+     }
++    if (json_get_string(rx_chunk.memory,
++                                  tokens,
++                                  json_token_count,
++                                  "vnf_id",
++                                  vnf_id) != EVEL_SUCCESS)
++    {
++      rc = EVEL_BAD_METADATA;
++      EVEL_ERROR("Failed to extract VNF ID from OpenStack metadata");
++    }
++    else
++    {
++      EVEL_DEBUG("VNF Id: %s", vnf_id);
++    }
+   }
+ 
+ exit_label:
+@@ -318,6 +336,9 @@ void openstack_metadata_initialize()
+   strncpy(vm_name,
+           "Dummy VM name - No Metadata available",
+           MAX_METADATA_STRING);
++  strncpy(vnf_id,
++          "Dummy VNF ID - No Metadata available",
++          MAX_METADATA_STRING);
+ }
+ 
+ /**************************************************************************//**
+@@ -590,3 +611,13 @@ const char *openstack_vm_uuid()
+ {
+   return vm_uuid;
+ }
++
++/**************************************************************************//**
++ * Get the VM UUID provided by the metadata service.
++ *
++ * @returns VM UUID
++ *****************************************************************************/
++const char *openstack_vnf_id()
++{
++  return vnf_id;
++}
+diff --git a/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.h b/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.h
+index 1ee4409..b9ed21c 100644
+--- a/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.h
++++ b/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.h
+@@ -55,4 +55,11 @@ const char *openstack_vm_name();
+  *****************************************************************************/
+ const char *openstack_vm_uuid();
+ 
++/**************************************************************************//**
++ * Get the VNF ID provided by the metadata service.
++ *
++ * @returns VNF ID
++ *****************************************************************************/
++const char *openstack_vnf_id();
++
+ #endif

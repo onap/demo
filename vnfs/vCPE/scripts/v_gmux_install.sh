@@ -10,6 +10,7 @@ VPP_PATCH_URL=$(cat /opt/config/vpp_patch_url.txt)
 HC2VPP_SOURCE_REPO_URL=$(cat /opt/config/hc2vpp_source_repo_url.txt)
 HC2VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/hc2vpp_source_repo_branch.txt)
 HC2VPP_PATCH_URL=$(cat /opt/config/hc2vpp_patch_url.txt)
+LIBEVEL_PATCH_URL=$(cat /opt/config/libevel_patch_url.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
 # Convert Network CIDR to Netmask
@@ -31,15 +32,6 @@ then
 
 	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
-	IP=$(cat /opt/config/bng_mux_net_ipaddr.txt)
-	BITS=$(cat /opt/config/bng_mux_net_cidr.txt | cut -d"/" -f2)
-	NETMASK=$(cdr2mask $BITS)
-	echo "auto eth1" >> /etc/network/interfaces
-	echo "iface eth1 inet static" >> /etc/network/interfaces
-	echo "    address $IP" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
-	echo "    mtu $MTU" >> /etc/network/interfaces
-
 	IP=$(cat /opt/config/oam_ipaddr.txt)
 	BITS=$(cat /opt/config/oam_cidr.txt | cut -d"/" -f2)
 	NETMASK=$(cdr2mask $BITS)
@@ -49,18 +41,7 @@ then
 	echo "    netmask $NETMASK" >> /etc/network/interfaces
 	echo "    mtu $MTU" >> /etc/network/interfaces
 
-	IP=$(cat /opt/config/mux_gw_net_ipaddr.txt)
-	BITS=$(cat /opt/config/mux_gw_net_cidr.txt | cut -d"/" -f2)
-	NETMASK=$(cdr2mask $BITS)
-	echo "auto eth3" >> /etc/network/interfaces
-	echo "iface eth3 inet static" >> /etc/network/interfaces
-	echo "    address $IP" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
-	echo "    mtu $MTU" >> /etc/network/interfaces
-
-	ifup eth1
 	ifup eth2
-	ifup eth3
 fi
 
 # Download required dependencies
@@ -71,7 +52,7 @@ apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-http
 sleep 1
 
 # Install the tools required for download codes
-apt-get install -y expect git patch make
+apt-get install -y expect git patch make linux-image-extra-`uname -r`
 
 #Download and build the VPP codes
 cd /opt
@@ -91,7 +72,10 @@ expect -c "
 cd /opt
 apt-get install -y libcurl4-openssl-dev
 git clone http://gerrit.onap.org/r/demo
-cd demo/vnfs/VES5.0/evel/evel-library/bldjobs 
+wget -O vCPE-vG-MUX-libevel-fixup.patch ${LIBEVEL_PATCH_URL} 
+cd demo
+patch -p1 < ../vCPE-vG-MUX-libevel-fixup.patch
+cd vnfs/VES5.0/evel/evel-library/bldjobs 
 make
 cp ../libs/x86_64/libevel.so /usr/lib
 ldconfig
@@ -212,11 +196,11 @@ cpu {
 EOF
 
 cat > /etc/vpp/setup.gate << EOF
-set int state GigabitEthernet0/8/0 up
-set int ip address GigabitEthernet0/8/0 10.1.0.20/24
+set int state GigabitEthernet0/4/0 up
+set int ip address GigabitEthernet0/4/0 10.1.0.20/24
 
-set int state GigabitEthernet0/9/0 up
-set int ip address GigabitEthernet0/9/0 10.5.0.20/24
+set int state GigabitEthernet0/6/0 up
+set int ip address GigabitEthernet0/6/0 10.5.0.20/24
 
 create vxlan tunnel src 10.5.0.20 dst 10.5.0.21 vni 100
 EOF
@@ -338,7 +322,13 @@ EOF
 
 cd hc2vpp
 patch -p1 < ../Hc2vpp-Add-VES-agent-for-vG-MUX.patch
-mvn clean install
+p_version_snap=$(cat ves/ves-impl/pom.xml | grep -A 1 "jvpp-ves" | tail -1)
+p_version_snap=$(echo "${p_version%<*}")
+p_version_snap=$(echo "${p_version#*>}")
+p_version=$(echo "${p_version_snap%-*}")
+mkdir -p  ~/.m2/repository/io/fd/vpp/jvpp-ves/${p_version_snap}
+mvn install:install-file -Dfile=/usr/share/java/jvpp-ves-${p_version}.jar -DgroupId=io.fd.vpp -DartifactId=jvpp-ves -Dversion=${p_version_snap} -Dpackaging=jar
+mvn clean install -nsu -DskipTests=true
 l_version=$(cat pom.xml | grep "<version>" | head -1)
 l_version=$(echo "${l_version%<*}")
 l_version=$(echo "${l_version#*>}")
@@ -398,37 +388,37 @@ VPP_SETUP_GATE=/etc/vpp/setup.gate
 #
 write_startup_scripts()
 {
-	local cmd=${2}
-	local is_add=${1}
+	local cmd=\${2}
+	local is_add=\${1}
 
-	if [[ ${is_add} == add ]] ;then
+	if [[ \${is_add} == add ]] ;then
 		while read -r line
 		do
-			if [[ ${line} == ${cmd} ]] ;then
+			if [[ \${line} == \${cmd} ]] ;then
 				return 0
 			fi
-		done < ${VPP_SETUP_GATE}
+		done < \${VPP_SETUP_GATE}
 
-		echo "${cmd}" >> ${VPP_SETUP_GATE}
+		echo "\${cmd}" >> \${VPP_SETUP_GATE}
 	else
 		while read -r line
 		do
-			if [[ ${line} == ${cmd} ]] ;then
-				sed -i "/${line}/d" ${VPP_SETUP_GATE}
+			if [[ \${line} == \${cmd} ]] ;then
+				sed -i "/\${line}/d" \${VPP_SETUP_GATE}
 				return 0
 			fi
-		done < ${VPP_SETUP_GATE}
+		done < \${VPP_SETUP_GATE}
 	fi
 }
 
 # Saves the VES agent configuration to the startup script.
 #
 # Get the current VES agent configuration from the bash command:
-# $vppctl show ves agent
+# \$vppctl show ves agent
 #    Server Addr    Server Port Interval Enabled
 #    127.0.0.1        8080         10    True
 # Set the VES agent configuration with the bash command:
-# $vppctl set ves agent server 127.0.0.1 port 8080 intval 10
+# \$vppctl set ves agent server 127.0.0.1 port 8080 intval 10
 #
 save_ves_config()
 {
@@ -436,23 +426,23 @@ save_ves_config()
 	local port=""
 	local intval=""
 
-	local ves_config=`vppctl show ves agent | head -2 | tail -1`
-	if [ "${ves_config}" != "" ] ;then
-		server=`echo ${ves_config} | awk '{ print $1 }'`
-		port=`echo ${ves_config} | awk '{ print $2 }'`
-		intval=`echo ${ves_config} | awk '{ print $3 }'`
-		write_startup_scripts add "set ves agent server ${server} port ${port} intval ${intval}"
+	local ves_config=\`vppctl show ves agent | head -2 | tail -1\`
+	if [ "\${ves_config}" != "" ] ;then
+		server=\`echo \${ves_config} | awk '{ print \$1 }'\`
+		port=\`echo \${ves_config} | awk '{ print \$2 }'\`
+		intval=\`echo \${ves_config} | awk '{ print \$3 }'\`
+		write_startup_scripts add "set ves agent server \${server} port \${port} intval \${intval}"
 	fi
 }
 
 # Save the VxLAN Tunnel Configuration to the startup script.
 #
 # Get the current VxLAN tunnel configuration with bash command:
-# $vppctl show vxlan tunnel
+# \$vppctl show vxlan tunnel
 #  [0] src 10.3.0.2 dst 10.1.0.20 vni 100 sw_if_index 1 encap_fib_index 0 fib_entry_index 7 decap_next l2
 #  [1] src 10.5.0.20 dst 10.5.0.21 vni 100 sw_if_index 2 encap_fib_index 0 fib_entry_index 8 decap_next l2
 # Set the VxLAN Tunnel with the bash command:
-# $vppctl create vxlan tunnel src 10.3.0.2 dst 10.1.0.20 vni 100
+# \$vppctl create vxlan tunnel src 10.3.0.2 dst 10.1.0.20 vni 100
 # vxlan_tunnel0
 save_vxlan_tunnel()
 {
@@ -462,12 +452,12 @@ save_vxlan_tunnel()
 
 	vppctl show vxlan tunnel | while read line
 	do
-		if [ "${line}" != "" ] ;then
-			src=`echo ${line} | awk '{ print $3 }'`
-			dst=`echo ${line} | awk '{ print $5 }'`
-			vni=`echo ${line} | awk '{ print $7 }'`
+		if [ "\${line}" != "" ] ;then
+			src=\`echo \${line} | awk '{ print \$3 }'\`
+			dst=\`echo \${line} | awk '{ print \$5 }'\`
+			vni=\`echo \${line} | awk '{ print \$7 }'\`
 
-			write_startup_scripts add "create vxlan tunnel src ${src} dst ${dst} vni ${vni}"
+			write_startup_scripts add "create vxlan tunnel src \${src} dst \${dst} vni \${vni}"
 		fi
 	done
 }
@@ -475,14 +465,14 @@ save_vxlan_tunnel()
 # Save the VxLAN tunnel L2 xconnect configuration to the startup script.
 #
 # Get the Current L2 Address configuration with bash command:
-# $vppctl show int addr
+# \$vppctl show int addr
 # local0 (dn):
 # vxlan_tunnel0 (up):
 #   l2 xconnect vxlan_tunnel1
 # vxlan_tunnel1 (up):
 #   l2 xconnect vxlan_tunnel0
 # Save the VxLAN tunnel L2 xconnect configuration with bash command:
-# $vppctl set interface l2 xconnect vxlan_tunnel0 vxlan_tunnel1
+# \$vppctl set interface l2 xconnect vxlan_tunnel0 vxlan_tunnel1
 #
 save_vxlan_xconnect()
 {
@@ -491,17 +481,17 @@ save_vxlan_xconnect()
 
 	vppctl show int addr | while read line
 	do
-		if [[ ${line} == vxlan_tunnel* ]] ;then
+		if [[ \${line} == vxlan_tunnel* ]] ;then
 			read next
-			while [[ ${next} != l2* ]] || [[ ${next} == "" ]]
+			while [[ \${next} != l2* ]] || [[ \${next} == "" ]]
 			do
-				line=`echo ${next}`
+				line=\`echo \${next}\`
 				read next
 			done
-			if [[ ${next} == l2* ]] ;then
-				ingress=`echo ${line} | awk '{ print $1 }'`
-				egress=`echo ${next} | awk '{ print $3 }'`
-				write_startup_scripts add "set interface l2 xconnect ${ingress} ${egress}"
+			if [[ \${next} == l2* ]] ;then
+				ingress=\`echo \${line} | awk '{ print \$1 }'\`
+				egress=\`echo \${next} | awk '{ print \$3 }'\`
+				write_startup_scripts add "set interface l2 xconnect \${ingress} \${egress}"
 			fi
 		fi
 	done

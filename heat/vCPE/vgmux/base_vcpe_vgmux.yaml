@@ -165,6 +165,10 @@ parameters:
     type: string
     label: Honeycomb Patch URL
     description: URL for Honeycomb patch for vG-MUX
+  libevel_patch_url:
+    type: string
+    label: libevel Patch URL
+    description: URL for libevel patch for vG-MUX
 
 #############
 #           #
@@ -245,6 +249,7 @@ resources:
             __hc2vpp_source_repo_branch__ : { get_param: hc2vpp_source_repo_branch }
             __vpp_patch_url__ : { get_param: vpp_patch_url }
             __hc2vpp_patch_url__ : { get_param: hc2vpp_patch_url }
+            __libevel_patch_url__ : { get_param: libevel_patch_url }
           template: |
             #!/bin/bash
 
@@ -267,6 +272,7 @@ resources:
             echo "__hc2vpp_source_repo_url__" > /opt/config/hc2vpp_source_repo_url.txt
             echo "__hc2vpp_source_repo_branch__" > /opt/config/hc2vpp_source_repo_branch.txt
             echo "__hc2vpp_patch_url__" > /opt/config/hc2vpp_patch_url.txt
+            echo "__libevel_patch_url__" > /opt/config/libevel_patch_url.txt
 
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_gmux_install.sh -o /opt/v_gmux_install.sh
