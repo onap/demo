@@ -16,7 +16,7 @@ docker rm -f msb_consul
 docker rm -f msb_discovery
 docker rm -f msb_apigateway
 
-docker run -d -p 8500:8500  --name msb_consul consul
+docker run -d -p 8500:8500  --name msb_consul consul:0.9.3
 CONSUL_IP=`sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' msb_consul`
 
 docker run -d  -p 10081:10081  -e CONSUL_IP=$CONSUL_IP --name msb_discovery $NEXUS_DOCKER_REPO/onap/msb/msb_discovery:$DOCKER_IMAGE_VERSION
