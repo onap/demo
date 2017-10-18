@@ -147,19 +147,19 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  vdns_private_0_port:
+  vdns_2_private_0_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: vlb_private_net_id }
       fixed_ips: [{"subnet": { get_param: vlb_private_net_id }, "ip_address": { get_param: vdns_private_ip_0 }}]
 
-  vdns_private_1_port:
+  vdns_2_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vdns_private_ip_1 }}]
 
-  vdns_0:
+  vdns_2:
     type: OS::Nova::Server
     properties:
       image: { get_param: vlb_image_name }
@@ -168,8 +168,8 @@ resources:
       key_name: { get_resource: my_keypair }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vdns_private_0_port }
-        - port: { get_resource: vdns_private_1_port }
+        - port: { get_resource: vdns_2_private_0_port }
+        - port: { get_resource: vdns_2_private_1_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
