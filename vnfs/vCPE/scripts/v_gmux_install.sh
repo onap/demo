@@ -323,8 +323,8 @@ EOF
 cd hc2vpp
 patch -p1 < ../Hc2vpp-Add-VES-agent-for-vG-MUX.patch
 p_version_snap=$(cat ves/ves-impl/pom.xml | grep -A 1 "jvpp-ves" | tail -1)
-p_version_snap=$(echo "${p_version%<*}")
-p_version_snap=$(echo "${p_version#*>}")
+p_version_snap=$(echo "${p_version_snap%<*}")
+p_version_snap=$(echo "${p_version_snap#*>}")
 p_version=$(echo "${p_version_snap%-*}")
 mkdir -p  ~/.m2/repository/io/fd/vpp/jvpp-ves/${p_version_snap}
 mvn install:install-file -Dfile=/usr/share/java/jvpp-ves-${p_version}.jar -DgroupId=io.fd.vpp -DartifactId=jvpp-ves -Dversion=${p_version_snap} -Dpackaging=jar
