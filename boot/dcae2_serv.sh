@@ -1,4 +1,4 @@
-
+#!/bin/sh
 #############################################################################
 #
 # Copyright © 2017 AT&T Intellectual Property. All rights reserved.
@@ -16,7 +16,6 @@
 #
 #############################################################################
 
-#!/bin/sh
 ### BEGIN INIT INFO
 # Provides:
 # Required-Start:    $remote_fs $syslog
@@ -31,7 +30,7 @@ dir="/opt"
 cmd="./dcae2_vm_init.sh"
 user="root"
 
-name=`basename $0`
+name=$(basename "$0")
 pid_file="/var/run/$name.pid"
 stdout_log="/var/log/$name.log"
 stderr_log="/var/log/$name.err"
@@ -41,8 +40,8 @@ get_pid() {
 }
 
 is_running() {
-    #[ -f "$pid_file" ] && ps `get_pid` > /dev/null 2>&1
-    [ ! -z $(docker ps | grep 'org.onap.dcaegen2.deployments.bootstrap') ]
+    CID="$(docker ps | grep 'org.onap.dcaegen2.deployments.bootstrap')"
+    [ ! -z "$CID" ]
 }
 
 case "$1" in
@@ -67,9 +66,12 @@ case "$1" in
     stop)
     if is_running; then
         echo -n "Stopping $name.."
-        kill `get_pid`
+        kill "$(get_pid)"
+        CID=$(docker ps | grep 'nginx' | awk '{ print $1 }')
+        sudo docker stop "$CID"
+
         CID=$(docker ps | grep 'org.onap.dcaegen2.deployments.bootstrap' | awk '{ print $1 }')
-        docker exec -it $CID ./teardown.sh
+        docker exec -it "$CID" ./teardown.sh
         for i in {1..10}
         do
             if ! is_running; then
