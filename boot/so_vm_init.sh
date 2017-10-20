@@ -76,7 +76,7 @@ read -d '' MSO_CONFIG_UPDATES <<-EOF
 	    "identity_services": 
 	        [
 	            {"dcp_clli": "$DCP_CLLI", 
-	             "identity_url": "$KEYSTONE_URL",
+	            "identity_url": "$KEYSTONE_URL/v2.0",
 	             "mso_id": "$OPENSTACK_USERNAME", 
 	             "mso_pass": "$OPENSTACK_APIKEY", 
 	             "admin_tenant": "service", 

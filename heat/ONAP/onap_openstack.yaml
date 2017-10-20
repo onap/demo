@@ -3,7 +3,7 @@
 #==================LICENSE_START==========================================
 # 
 #
-# Copyright © 2017 AT&T Intellectual Property. All rights reserved.
+# Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -862,6 +862,8 @@ resources:
             __external_dns__: { get_param: external_dns }
             __vm_image_name__: { get_param: ubuntu_1404_image }
             __vm_flavor__: { get_param: flavor_medium }
+            __public_net_id__: { get_param: public_net_id }
+            __script_version__: { get_param: artifact_version }
             __robot_repo__: { get_param: robot_repo }
           template: |
             #!/bin/bash
@@ -899,6 +901,8 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__vm_image_name__" > /opt/config/vm_image_name.txt
             echo "__vm_flavor__" > /opt/config/vm_flavor.txt
+            echo "__script_version__" > /opt/config/script_version.txt
+            echo "__public_net_id__" > /opt/config/public_net_id.txt
             echo "__robot_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
@@ -1563,7 +1567,7 @@ resources:
       flavor: { get_param: flavor_xxlarge }
       name:
         str_replace:
-          template: base-openo-server
+          template: base-multi-service
           params:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
@@ -1670,7 +1674,7 @@ resources:
       flavor: { get_param: flavor_medium }
       name:
         str_replace: 
-          template: base-dcae-controller
+          template: base-dcae-bootstrap
           params:
             base: { get_param: vm_base_name }
       key_name: { get_resource: dcae_vm_key }
