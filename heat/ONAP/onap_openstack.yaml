@@ -863,7 +863,7 @@ resources:
             __vm_image_name__: { get_param: ubuntu_1404_image }
             __vm_flavor__: { get_param: flavor_medium }
             __public_net_id__: { get_param: public_net_id }
-            __script_version__: { get_param: artifact_version }
+            __script_version__: { get_param: artifacts_version }
             __robot_repo__: { get_param: robot_repo }
           template: |
             #!/bin/bash
