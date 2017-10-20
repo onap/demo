@@ -228,9 +228,71 @@ parameters:
   #                         #
   ###########################
 
+  dcaeos_cloud_env:
+    type: string
+    description: the cloud flavor of the OpenStack instance where DCAE is deployed
+
+  dcaeos_keystone_url:
+    type: string
+    description: the keystone URL of the OpenStack instance where DACE is deployed
+
+  dcaeos_openstack_region:
+    type: string
+    description: the region of the OpenStack instance where DACE is deployed
+
+  dcaeos_openstack_tenant_id:
+    type: string
+    description: the keystone URL of the OpenStack instance where DACE is deployed
+
+  dcaeos_openstack_username:
+    type: string
+    description: the username of the identity API of the OpenStack instance where DACE is deployed
+
+  dcaeos_openstack_password:
+    type: string
+    description: the password of the identity API of the OpenStack instance where DACE is deployed
+
+  dcaeos_dcae_key_name:
+    type: string
+    description: the key-pair name uploaded to the OpenStack instance where DACE is deployed
+
+  dcaeos_dcae_pub_key:
+    type: string
+    description: the public key of the key-pair uploaded to the OpenStack instance where DACE is deployed
+
+  dcaeos_private_key:
+    type: string
+    description: the private key of the key-pair uploaded to the OpenStack instance where DACE is deployed
+
+  dcaeos_openstack_private_network_name:
+    type: string
+    description: the name/id of the network used as DCAE internal network in the OpenStack instance where DACE is deployed
+
+  dcaeos_public_net_id:
+    type: string
+    description: the name/id of the network where DCAE gets floating IPs from in the OpenStack instance where DACE is deployed
+
+  dcaeos_ubuntu_1604_image:
+    type: string
+    description: the name/id of the Ubuntu1604 VM image in the OpenStack instance where DACE is deployed
+
+  dcaeos_centos_7_image:
+    type: string
+    description: the name/id of the CentOS7 VM image in the OpenStack instance where DACE is deployed
+
+  dcaeos_security_group:
+    type: string
+    description: the name/id of the security group to be used by DACE VMs in the OpenStack instance where DACE is deployed
+
+  dcaeos_flavor_id:
+    type: string
+    description: the name/id of the VM flavor to be used by DACE VMs in the OpenStack instance where DACE is deployed
+
   dcae_base_environment:
     type: string
     description: DCAE Base Environment configuration (RACKSPACE/2-NIC/1-NIC-FLOATING-IPS)
+
+
 
   dcae_zone:
     type: string
@@ -1684,86 +1746,119 @@ resources:
       user_data:
         str_replace:
           params:
+            __dcae_zone__: { get_param: dcae_zone }
+            __rand_str__: { get_resource: random-str }
+            # repo related
+            __artifacts_version__: { get_param: artifacts_version }
+            __docker_version__: { get_param: dcae_docker }
             __nexus_repo__: { get_param: nexus_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __dcae_zone__: { get_param: dcae_zone }
-            __artifacts_version__: { get_param: artifacts_version }
-            __tenant_id__: { get_param: openstack_tenant_id }
-            __openstack_private_network_name__: { get_attr: [oam_onap, name] }
-            __openstack_user__: { get_param: openstack_username }
-            __openstack_password__: { get_param: openstack_api_key }
-            __key_name__: { get_param: dcae_key_name }
-            __pub_key__: { get_param: dcae_pub_key }
-            __private_key__: { get_attr: [ dcae_vm_key, private_key ] }
-            __openstack_region__: { get_param: openstack_region }
-            __keystone_url__: { get_param: keystone_url }
-            __docker_version__: { get_param: dcae_docker }
             __dcae_repo__: { get_param: dcae_repo }
             __gerrit_branch__: { get_param: dcae_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __public_net_id__: { get_param: public_net_id }
+            # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
+            __mac_addr__: { get_attr: [dcae_c_private_port, mac_address] }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
             __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
             __external_dns__: { get_param: external_dns }
-            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
-            __centos_7_image__: { get_param: centos_7_image }
-            __security_group__ : { get_param: security_group }
-            __flavor_medium__: { get_param: flavor_medium }
-            __mac_addr__: { get_attr: [dcae_c_private_port, mac_address] }
-            __rand_str__: { get_resource: random-str }
+            # conf for the OpensStack env where DCAE is deployed
+            __dcaeos_cloud_env__: { get_param: dcaeos_cloud_env }
+            __dcaeos_keystone_url__: { get_param: dcaeos_keystone_url }
+            __dcaeos_openstack_region__: { get_param: dcaeos_openstack_region }
+            __dcaeos_tenant_id__: { get_param: dcaeos_openstack_tenant_id }
+            __dcaeos_openstack_user__: { get_param: dcaeos_openstack_username }
+            __dcaeos_openstack_password__: { get_param: dcaeos_openstack_password }
+            __dcaeos_key_name__: { get_param: dcaeos_dcae_key_name }
+            __dcaeos_pub_key__: { get_param: dcaeos_dcae_pub_key }
+            __dcaeos_private_key__: { get_param: dcaeos_private_key }
+            __dcaeos_openstack_private_network_name__: { get_param: dcaeos_openstack_private_network_name }
+            __dcaeos_public_net_id__: { get_param: dcaeos_public_net_id }
+            __dcaeos_ubuntu_1604_image__: { get_param: dcaeos_ubuntu_1604_image }
+            __dcaeos_centos_7_image__: { get_param: dcaeos_centos_7_image }
+            __dcaeos_security_group__ : { get_param: dcaeos_security_group }
+            __dcaeos_flavor_id__: { get_param: dcaeos_flavor_id }
+            # fixed private IPs
             __mr_ip_addr__: { get_param: mr_ip_addr }
-            #__mr_float_ip__: { get_attr: [mr_floating_ip, floating_ip_address] }
             __policy_ip_addr__: { get_param: policy_ip_addr }
-            #__policy_float_ip__: { get_attr: [policy_floating_ip, floating_ip_address] }
             __sdc_ip_addr__: { get_param: sdc_ip_addr }
-            #__sdc_float_ip__: { get_attr: [sdc_floating_ip, floating_ip_address] }
+            # floating IPs
+            __dns_floating_ip_addr__: { get_attr: [dns_floating_ip, floating_ip_address] }
+            __aai1_floating_ip_addr___: { get_attr: [aai1_floating_ip, floating_ip_address] }
+            __aai2_floating_ip_addr___: { get_attr: [aai2_floating_ip, floating_ip_address] }
+            __so_floating_ip_addr___: { get_attr: [so_floating_ip, floating_ip_address] }
+            __mrouter_floating_ip_addr___: { get_attr: [mrouter_floating_ip, floating_ip_address] }
+            __robot_floating_ip_addr___: { get_attr: [robot_floating_ip, floating_ip_address] }
+            __vid_floating_ip_addr___: { get_attr: [vid_floating_ip, floating_ip_address] }
+            __sdnc_floating_ip_addr___: { get_attr: [sdnc_floating_ip, floating_ip_address] }
+            __sdc_floating_ip_addr___: { get_attr: [sdc_floating_ip, floating_ip_address] }
+            __portal_floating_ip_addr___: { get_attr: [portal_floating_ip, floating_ip_address] }
+            __policy_floating_ip_addr___: { get_attr: [policy_floating_ip, floating_ip_address] }
+            __appc_floating_ip_addr___: { get_attr: [appc_floating_ip, floating_ip_address] }
+            __clamp_floating_ip_addr___: { get_attr: [clamp_floating_ip, floating_ip_address] }
+            __openo_floating_ip_addr___: { get_attr: [openo_floating_ip, floating_ip_address] }
+            __dcae_c_floating_ip_addr___: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
 
           template: |
             #!/bin/bash
 
             # Create configuration files
             mkdir -p /opt/config
+            echo "__dcae_zone__" > /opt/config/dcae_zone.txt
+            echo "__rand_str__" > /opt/config/rand_str.txt
+            # repo related
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__nexus_repo__" > /opt/config/nexus_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__dcae_repo__" > /opt/config/remote_repo.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__dcae_zone__" > /opt/config/dcae_zone.txt
-            echo "__tenant_id__" > /opt/config/tenant_id.txt
-            echo "__tenant_id__" > /opt/config/tenant_name.txt
-            echo "__openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
-            echo "__openstack_user__" > /opt/config/openstack_user.txt
-            echo "__openstack_password__" > /opt/config/openstack_password.txt
-            echo "__key_name__" > /opt/config/key_name.txt
-            echo "__pub_key__" > /opt/config/pub_key.txt
-            echo "__private_key__" > /opt/config/priv_key
-            echo "__openstack_region__" > /opt/config/openstack_region.txt
-            echo "__keystone_url__" > /opt/config/keystone_url.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__public_net_id__" > /opt/config/public_net_id.txt
+            # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
+            echo "__mac_addr__" > /opt/config/mac_addr.txt
             echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
             echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
-            echo "__centos_7_image__" > /opt/config/centos_7_image.txt
-            echo "__security_group__" > /opt/config/security_group.txt
-            echo "__flavor_medium__" > /opt/config/flavor_id.txt
-            echo "__dcae_repo__" > /opt/config/remote_repo.txt
-            echo "__mac_addr__" > /opt/config/mac_addr.txt
-            echo "__rand_str__" > /opt/config/rand_str.txt
+            # conf for the OpensStack env where DCAE is deployed
+            echo "__dcaeos_cloud_env__" > /opt/config/cloud_env.txt
+            echo "__dcaeos_keystone_url__" > /opt/config/keystone_url.txt
+            echo "__dcaeos_openstack_region__" > /opt/config/openstack_region.txt
+            echo "__dcaeos_tenant_id__" > /opt/config/tenant_id.txt
+            echo "__dcaeos_tenant_id__" > /opt/config/tenant_name.txt
+            echo "__dcaeos_openstack_user__" > /opt/config/openstack_user.txt
+            echo "__dcaeos_openstack_password__" > /opt/config/openstack_password.txt
+            echo "__dcaeos_key_name__" > /opt/config/key_name.txt
+            echo "__dcaeos_pub_key__" > /opt/config/pub_key.txt
+            echo "__dcaeos_private_key__" > /opt/config/priv_key
+            echo "__dcaeos_openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
+            echo "__dcaeos_public_net_id__" > /opt/config/public_net_id.txt
+            echo "__dcaeos_ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
+            echo "__dcaeos_centos_7_image__" > /opt/config/centos_7_image.txt
+            echo "__dcaeos_security_group__" > /opt/config/security_group.txt
+            echo "__dcaeos_flavor_id__" > /opt/config/flavor_id.txt
+            # fixed private IP addresses of other ONAP components
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
-            #echo "__mr_floating_ip_addr__" > /opt/config/mr_floating_ip_addr.txt
-            #echo "__policy_floating_ip_addr__" > /opt/config/policy_floating_ip_addr.txt 
-            #echo "__sdc_floating_ip_addr__" > /opt/config/sdc_floating_ip_addr.txt
-
+            # floating IPs
+            echo "__dns_floating_ip_addr__" > /opt/config/dns_floating_ip_addr.txt
+            echo "__aai1_floating_ip_addr__" > /opt/config/aai1_floating_ip_addr.txt
+            echo "__aai2_floating_ip_addr__" > /opt/config/aai2_floating_ip_addr.txt
+            echo "__so_floating_ip_addr__" > /opt/config/so_floating_ip_addr.txt
+            echo "__mrouter_floating_ip_addr__" > /opt/config/mrouter_floating_ip_addr.txt
+            echo "__robot_floating_ip_addr__" > /opt/config/robot_floating_ip_addr.txt
+            echo "__vid_floating_ip_addr__" > /opt/config/vid_floating_ip_addr.txt
+            echo "__sdnc_floating_ip_addr__" > /opt/config/sdnc_floating_ip_addr.txt
+            echo "__sdc_floating_ip_addr__" > /opt/config/sdc_floating_ip_addr.txt
+            echo "__portal_floating_ip_addr__" > /opt/config/portal_floating_ip_addr.txt
+            echo "__policy_floating_ip_addr__" > /opt/config/policy_floating_ip_addr.txt
+            echo "__appc_floating_ip_addr__" > /opt/config/appc_floating_ip_addr.txt
+            echo "__clamp_floating_ip_addr__" > /opt/config/clamp_floating_ip_addr.txt
+            echo "__openo_floating_ip_addr__" > /opt/config/opoeno_floating_ip_addr.txt
+            echo "__dcae_c_floating_ip_addr__" > /opt/config/dcae_c_floating_ip_addr.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae2_install.sh -o /opt/dcae2_install.sh
