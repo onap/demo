@@ -9,6 +9,8 @@ OPENSTACK_APIKEY=$(cat /opt/config/api_key.txt)
 export MSO_DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 export MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
+source /opt/config/onap_ips.txt
+
 # Deployments in OpenStack require a keystone file
 if [ -e /opt/config/keystone.txt ]
 then
