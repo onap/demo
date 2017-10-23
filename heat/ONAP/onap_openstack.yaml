@@ -52,10 +52,6 @@ parameters:
     type: string
     description: Name of the Ubuntu 16.04 image
 
-  centos_7_image:
-    type: string
-    description: Name of the CentOS 7 image
-
   flavor_small:
     type: string
     description: Name of the Small Flavor supported by the cloud provider
@@ -76,10 +72,6 @@ parameters:
     type: string
     description: Name of the Extra Extra Large Flavor supported by the cloud provider
 
-  security_group:
-    type: string
-    description: Security group used by DCAE GEN 2
-
   vm_base_name:
     type: string
     description: Base name of ONAP VMs
@@ -88,17 +80,9 @@ parameters:
     type: string
     description: Public/Private key pair name
 
-  dcae_key_name:
-    type: string
-    description: Public/Private key pair name for DCAE GEN 2
-
   pub_key:
     type: string
     description: Public key to be installed on the compute instance
-
-  dcae_pub_key:
-    type: string
-    description: Public key to be installed on the DCAE GEN 2 compute instance
 
   nexus_repo:
     type: string
@@ -151,6 +135,10 @@ parameters:
   cloud_env:
     type: string
     description: Cloud Provider Name
+
+  openstack_region:
+    type: string
+    description: Region where the DCAE controller will spin the VMs
 
   ######################
   #                    #
@@ -211,16 +199,16 @@ parameters:
     type: string
   openo_ip_addr:
     type: string
-  dcae_coll_float_ip:
-    type: string
-  dcae_db_float_ip:
-    type: string
-  dcae_hdp1_float_ip:
-    type: string
-  dcae_hdp2_float_ip:
-    type: string
-  dcae_hdp3_float_ip:
-    type: string
+#  dcae_coll_float_ip:
+#    type: string
+#  dcae_db_float_ip:
+#    type: string
+#  dcae_hdp1_float_ip:
+#    type: string
+#  dcae_hdp2_float_ip:
+#    type: string
+#  dcae_hdp3_float_ip:
+#    type: string
 
   ###########################
   #                         #
@@ -288,39 +276,33 @@ parameters:
     type: string
     description: the name/id of the VM flavor to be used by DACE VMs in the OpenStack instance where DACE is deployed
 
-  dcae_base_environment:
-    type: string
-    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/1-NIC-FLOATING-IPS)
-
-
+#  dcae_base_environment:
+#    type: string
+#    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/1-NIC-FLOATING-IPS)
 
   dcae_zone:
     type: string
     description: DCAE Zone to use in VM names created by DCAE controller
 
-  dcae_state:
-    type: string
-    description: DCAE State to use in VM names created by DCAE controller
+#  dcae_state:
+#    type: string
+#    description: DCAE State to use in VM names created by DCAE controller
 
-  nexus_repo_root:
-    type: string
-    description: Root URL of Nexus repository
+#  nexus_repo_root:
+#    type: string
+#    description: Root URL of Nexus repository
 
-  nexus_url_snapshot:
-    type: string
-    description: Snapshot of Maven repository for DCAE deployment
+#  nexus_url_snapshot:
+#    type: string
+#    description: Snapshot of Maven repository for DCAE deployment
 
-  openstack_region:
-    type: string
-    description: Region where the DCAE controller will spin the VMs
-
-  gitlab_branch:
-    type: string
-    description: Branch of the Gitlab repository
+#  gitlab_branch:
+#    type: string
+#    description: Branch of the Gitlab repository
     
-  dcae_code_version:
-    type: string
-    description: DCAE Code Version Number
+#  dcae_code_version:
+#    type: string
+#    description: DCAE Code Version Number
 
   #####################
   #                   #
@@ -453,19 +435,6 @@ resources:
             rand: { get_resource: random-str }
       public_key: { get_param: pub_key }
       save_private_key: false
-
-  # Public key used to access DCAE GEN 2
-  dcae_vm_key:
-    type: OS::Nova::KeyPair
-    properties:
-      name:
-        str_replace:
-          template: base_rand
-          params:
-            base: { get_param: dcae_key_name }
-            rand: { get_resource: random-str }
-      public_key: { get_param: dcae_pub_key }
-      save_private_key: true
 
   # ONAP management private network
   oam_onap:
