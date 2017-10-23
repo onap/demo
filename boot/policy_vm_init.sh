@@ -1,5 +1,33 @@
 #!/bin/bash
 
+# destroy running instances if any
+
+for container in $(docker ps -q)
+do
+	echo "stopping container ${container}"
+	docker stop "${container}"
+done
+
+for container in $(docker ps -a -q)
+do
+	echo "removing container ${container}"
+	docker rm -v "${container}"
+done
+
+# remove dangling resources
+
+for volume in $(docker volume ls -qf dangling=true)
+do
+	echo "removing volume ${volume}"
+	docker volume rm "${volume}"
+done
+
+for image in $(docker images -f dangling=true -q)
+do
+	echo "removing image ${image}"
+	docker rmi "${image}"
+done
+
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
