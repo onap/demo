@@ -79,6 +79,8 @@ mkdir -p /opt/app/config
 cp /opt/config/priv_key /opt/app/config/key
 chmod 777 /opt/app/config/key
 
+# move keystone url file
+cp config/keystone_url.txt /opt/app/config/keystone_url.txt
 
 # download blueprint input template files
 rm -rf /opt/app/inputs-templates
