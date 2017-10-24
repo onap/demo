@@ -12,6 +12,20 @@ HC2VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/hc2vpp_source_repo_branch.txt)
 HC2VPP_PATCH_URL=$(cat /opt/config/hc2vpp_patch_url.txt)
 LIBEVEL_PATCH_URL=$(cat /opt/config/libevel_patch_url.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
+MUX_GW_IP=$(cat /opt/config/mux_gw_net_ipaddr.txt)
+MUX_GW_CIDR=$(cat /opt/config/mux_gw_net_cidr.txt)
+BNG_MUX_IP=$(cat /opt/config/bng_mux_net_ipaddr.txt)
+BNG_MUX_CIDR=$(cat /opt/config/bng_mux_net_cidr.txt)
+
+# Build states are:
+# 'build' - just build the code
+# 'done' - code is build, install and setup
+# 'auto' - bulid, install and setup
+BUILD_STATE="auto"
+if [[ -f /opt/config/compile_state.txt ]]
+then
+    BUILD_STATE=$(cat /opt/config/compile_state.txt)
+fi
 
 # Convert Network CIDR to Netmask
 cdr2mask () {
@@ -22,75 +36,83 @@ cdr2mask () {
 }
 
 # OpenStack network configuration
-if [[ $CLOUD_ENV == "openstack" ]]
+if [[ $BUILD_STATE != "build" ]]
 then
-	echo 127.0.0.1 $(hostname) >> /etc/hosts
+    if [[ $CLOUD_ENV == "openstack" ]]
+    then
+        echo 127.0.0.1 $(hostname) >> /etc/hosts
 
-	# Allow remote login as root
-	mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
-	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
+        # Allow remote login as root
+        mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
+        cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
 
-	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+        MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
-	IP=$(cat /opt/config/oam_ipaddr.txt)
-	BITS=$(cat /opt/config/oam_cidr.txt | cut -d"/" -f2)
-	NETMASK=$(cdr2mask $BITS)
-	echo "auto eth2" >> /etc/network/interfaces
-	echo "iface eth2 inet static" >> /etc/network/interfaces
-	echo "    address $IP" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
-	echo "    mtu $MTU" >> /etc/network/interfaces
+        IP=$(cat /opt/config/oam_ipaddr.txt)
+        BITS=$(cat /opt/config/oam_cidr.txt | cut -d"/" -f2)
+        NETMASK=$(cdr2mask $BITS)
+        echo "auto eth2" >> /etc/network/interfaces
+        echo "iface eth2 inet static" >> /etc/network/interfaces
+        echo "    address $IP" >> /etc/network/interfaces
+        echo "    netmask $NETMASK" >> /etc/network/interfaces
+        echo "    mtu $MTU" >> /etc/network/interfaces
 
-	ifup eth2
-fi
+        ifup eth2
+    fi
+fi  # endif BUILD_STATE != "build"
 
-# Download required dependencies
-echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-apt-get update
-apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
-sleep 1
+if [[ $BUILD_STATE != "done" ]]
+then
+    # Download required dependencies
+    echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+    echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+    apt-get update
+    apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
+    sleep 1
 
-# Install the tools required for download codes
-apt-get install -y expect git patch make linux-image-extra-`uname -r`
+    # Install the tools required for download codes
+    apt-get install -y expect git patch make linux-image-extra-`uname -r`
 
-#Download and build the VPP codes
-cd /opt
-git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
-wget -O Vpp-Add-VES-agent-for-vG-MUX.patch ${VPP_PATCH_URL} 
+    #Download and build the VPP codes
+    cd /opt
+    git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
+    wget -O Vpp-Add-VES-agent-for-vG-MUX.patch ${VPP_PATCH_URL} 
 
-cd vpp
-patch -p1 < ../Vpp-Add-VES-agent-for-vG-MUX.patch
-expect -c "
-        spawn make install-dep;
-        expect {
-                \"Do you want to continue?*\" {send \"Y\r\"; interact}
-        }
-"
+    cd vpp
+    patch -p1 < ../Vpp-Add-VES-agent-for-vG-MUX.patch
+    expect -c "
+            spawn make install-dep;
+            expect {
+                    \"Do you want to continue?*\" {send \"Y\r\"; interact}
+            }
+    "
 
-# Install the evel-library first since we need the lib
-cd /opt
-apt-get install -y libcurl4-openssl-dev
-git clone http://gerrit.onap.org/r/demo
-wget -O vCPE-vG-MUX-libevel-fixup.patch ${LIBEVEL_PATCH_URL} 
-cd demo
-patch -p1 < ../vCPE-vG-MUX-libevel-fixup.patch
-cd vnfs/VES5.0/evel/evel-library/bldjobs 
-make
-cp ../libs/x86_64/libevel.so /usr/lib
-ldconfig
+    # Install the evel-library first since we need the lib
+    cd /opt
+    apt-get install -y libcurl4-openssl-dev
+    git clone http://gerrit.onap.org/r/demo
+    wget -O vCPE-vG-MUX-libevel-fixup.patch ${LIBEVEL_PATCH_URL} 
+    cd demo
+    patch -p1 < ../vCPE-vG-MUX-libevel-fixup.patch
+    cd vnfs/VES5.0/evel/evel-library/bldjobs 
+    make
+    cp ../libs/x86_64/libevel.so /usr/lib
+    ldconfig
 
-cd /opt/vpp/build-root
-./bootstrap.sh
-make V=0 PLATFORM=vpp TAG=vpp install-deb
+    cd /opt/vpp/build-root
+    ./bootstrap.sh
+    make V=0 PLATFORM=vpp TAG=vpp install-deb
 
-# Install the VPP package
-apt install -y python-ply-lex-3.5 python-ply-yacc-3.5 python-pycparser python-cffi
-dpkg -i *.deb
-systemctl stop vpp
+    # Install the VPP package
+    apt install -y python-ply-lex-3.5 python-ply-yacc-3.5 python-pycparser python-cffi
+    dpkg -i *.deb
+    systemctl stop vpp
+fi  # endif BUILD_STATE != "done"
 
-# Auto-start configuration for the VPP
-cat > /etc/vpp/startup.conf << EOF
+if [[ $BUILD_STATE != "build" ]]
+then
+    # Auto-start configuration for the VPP
+    cat > /etc/vpp/startup.conf << EOF
 
 unix {
   nodaemon
@@ -195,24 +217,28 @@ cpu {
 
 EOF
 
-cat > /etc/vpp/setup.gate << EOF
+    cat > /etc/vpp/setup.gate << EOF
 set int state GigabitEthernet0/4/0 up
-set int ip address GigabitEthernet0/4/0 10.1.0.20/24
+set int ip address GigabitEthernet0/4/0 ${BNG_MUX_IP}/${BNG_MUX_CIDR#*/}
 
 set int state GigabitEthernet0/6/0 up
-set int ip address GigabitEthernet0/6/0 10.5.0.20/24
+set int ip address GigabitEthernet0/6/0 ${MUX_GW_IP}/${MUX_GW_CIDR#*/}
 
-create vxlan tunnel src 10.5.0.20 dst 10.5.0.21 vni 100
+create vxlan tunnel src ${MUX_GW_IP} dst 10.5.0.21 vni 100
 EOF
 
-# Download and install HC2VPP from source
-cd /opt
-git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
-wget -O Hc2vpp-Add-VES-agent-for-vG-MUX.patch ${HC2VPP_PATCH_URL}
+fi  # endif BUILD_STATE != "build"
 
-apt-get install -y maven
-mkdir -p ~/.m2
-cat > ~/.m2/settings.xml << EOF
+if [[ $BUILD_STATE != "done" ]]
+then
+    # Download and install HC2VPP from source
+    cd /opt
+    git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
+    wget -O Hc2vpp-Add-VES-agent-for-vG-MUX.patch ${HC2VPP_PATCH_URL}
+
+    apt-get install -y maven
+    mkdir -p ~/.m2
+    cat > ~/.m2/settings.xml << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- vi: set et smarttab sw=2 tabstop=2: -->
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
@@ -320,23 +346,26 @@ cat > ~/.m2/settings.xml << EOF
 </settings>
 EOF
 
-cd hc2vpp
-patch -p1 < ../Hc2vpp-Add-VES-agent-for-vG-MUX.patch
-p_version_snap=$(cat ves/ves-impl/pom.xml | grep -A 1 "jvpp-ves" | tail -1)
-p_version_snap=$(echo "${p_version_snap%<*}")
-p_version_snap=$(echo "${p_version_snap#*>}")
-p_version=$(echo "${p_version_snap%-*}")
-mkdir -p  ~/.m2/repository/io/fd/vpp/jvpp-ves/${p_version_snap}
-mvn install:install-file -Dfile=/usr/share/java/jvpp-ves-${p_version}.jar -DgroupId=io.fd.vpp -DartifactId=jvpp-ves -Dversion=${p_version_snap} -Dpackaging=jar
-mvn clean install -nsu -DskipTests=true
-l_version=$(cat pom.xml | grep "<version>" | head -1)
-l_version=$(echo "${l_version%<*}")
-l_version=$(echo "${l_version#*>}")
-mv vpp-integration/minimal-distribution/target/vpp-integration-distribution-${l_version}-hc/vpp-integration-distribution-${l_version} /opt/honeycomb
-sed -i 's/127.0.0.1/0.0.0.0/g' /opt/honeycomb/config/honeycomb.json
+    cd hc2vpp
+    patch -p1 < ../Hc2vpp-Add-VES-agent-for-vG-MUX.patch
+    p_version_snap=$(cat ves/ves-impl/pom.xml | grep -A 1 "jvpp-ves" | tail -1)
+    p_version_snap=$(echo "${p_version_snap%<*}")
+    p_version_snap=$(echo "${p_version_snap#*>}")
+    p_version=$(echo "${p_version_snap%-*}")
+    mkdir -p  ~/.m2/repository/io/fd/vpp/jvpp-ves/${p_version_snap}
+    mvn install:install-file -Dfile=/usr/share/java/jvpp-ves-${p_version}.jar -DgroupId=io.fd.vpp -DartifactId=jvpp-ves -Dversion=${p_version_snap} -Dpackaging=jar
+    mvn clean install -nsu -DskipTests=true
+    l_version=$(cat pom.xml | grep "<version>" | head -1)
+    l_version=$(echo "${l_version%<*}")
+    l_version=$(echo "${l_version#*>}")
+    mv vpp-integration/minimal-distribution/target/vpp-integration-distribution-${l_version}-hc/vpp-integration-distribution-${l_version} /opt/honeycomb
+    sed -i 's/127.0.0.1/0.0.0.0/g' /opt/honeycomb/config/honeycomb.json
+fi  # endif BUILD_STATE != "done"
 
-# Create systemctl service for Honeycomb
-cat > /etc/systemd/system/honeycomb.service << EOF
+if [[ $BUILD_STATE != "build" ]]
+then
+    # Create systemctl service for Honeycomb
+    cat > /etc/systemd/system/honeycomb.service << EOF
 [Unit]
 Description=Honeycomb Agent for the VPP control plane
 Documentation=https://wiki.fd.io/view/Honeycomb
@@ -351,10 +380,10 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable /etc/systemd/system/honeycomb.service
+    systemctl enable /etc/systemd/system/honeycomb.service
 
-#Create a systemd service for auto-save
-cat > /usr/bin/save_config << EOF
+    #Create a systemd service for auto-save
+    cat > /usr/bin/save_config << EOF
 #!/bin/bash
 
 #########################################################################
@@ -506,8 +535,8 @@ save_vxlan_tunnel
 save_vxlan_xconnect
 
 EOF
-chmod a+x /usr/bin/save_config
-cat > /etc/systemd/system/autosave.service << EOF
+    chmod a+x /usr/bin/save_config
+    cat > /etc/systemd/system/autosave.service << EOF
 [Unit]
 Description=Run Scripts at Start and Stop
 Requires=vpp.service
@@ -521,27 +550,28 @@ ExecStop=/usr/bin/save_config
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable /etc/systemd/system/autosave.service
+    systemctl enable /etc/systemd/system/autosave.service
 
-# Download DHCP config files
-cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gmux_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gmux.sh
-chmod +x v_gmux_init.sh
-chmod +x v_gmux.sh
-mv v_gmux.sh /etc/init.d
-update-rc.d v_gmux.sh defaults
+    # Download DHCP config files
+    cd /opt
+    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gmux_init.sh
+    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gmux.sh
+    chmod +x v_gmux_init.sh
+    chmod +x v_gmux.sh
+    mv v_gmux.sh /etc/init.d
+    update-rc.d v_gmux.sh defaults
 
-# Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
-if [[ $CLOUD_ENV != "rackspace" ]]
-then
-	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
-	grub-mkconfig -o /boot/grub/grub.cfg
-	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
-	sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
-	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
-	reboot
-fi
+    # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
+    if [[ $CLOUD_ENV != "rackspace" ]]
+    then
+        sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+        grub-mkconfig -o /boot/grub/grub.cfg
+        sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
+        sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
+        echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+        echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+        reboot
+    fi
 
-./v_gmux_init.sh
+    ./v_gmux_init.sh
+fi  # endif BUILD_STATE != "build"
