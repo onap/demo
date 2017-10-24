@@ -12,7 +12,7 @@ The repository includes:
  
  - The "heat" directory: contains the following three directories:
  
- 	- OpenECOMP: contains the HEAT template for the installation of the ONAP platform. The template openecomp_rackspace.yaml and the environment file openecomp_rackspace.env work in Rackspace, while the template onap_openstack.yaml and the environment file onap_openstack.env work in vanilla OpenStack.
+ 	- ONAP: contains the HEAT template for the installation of the ONAP platform. The template onap_rackspace.yaml and the environment file onap_rackspace.env work in Rackspace, while the template onap_openstack.yaml and the environment file onap_openstack.env work in vanilla OpenStack.
  	
  	- vFW: contains the HEAT template for the instantiation of the vFirewall VNF (base_vfw.yaml) and the environment file (base_vfw.env)
  	
@@ -22,7 +22,7 @@ The repository includes:
  
  	- honeycomb_plugin: Honeycomb plugin that allows ONAP to change VNF configuration via RESTCONF or NETCONF protocols.
  	
- 	- VES: source code of the ECOMP Vendor Event Listener (VES) Library. The VES library used here has been cloned from the GitHub repository at https://github.com/att/evel-library on February 1, 2017.
+ 	- VES: source code of the ONAP Vendor Event Listener (VES) Library. The VES library used here has been cloned from the GitHub repository at https://github.com/att/evel-library on February 1, 2017.
  	
  	- VESreporting_vFW: VES client for vFirewall demo application.
  	
@@ -36,7 +36,7 @@ The repository includes:
 ONAP HEAT Template for Rackspace
 ---
 
-The ONAP HEAT template spins up the entire ONAP platform. The template, openecomp_rackspace.yaml, comes with an environment file, openecomp_rackspace.env, in which all the default values are defined.
+The ONAP HEAT template spins up the entire ONAP platform. The template, onap_rackspace.yaml, comes with an environment file, onap_rackspace.env, in which all the default values are defined.
 
 The HEAT template is composed of two sections: (i) parameters, and (ii) resources. The parameter section contains the declaration and description of the parameters that will be used to spin up ONAP, such as public network identifier, URLs of code and artifacts repositories, etc.
 The default values of these parameters can be found in the environment file. The resource section contains the definition of:
@@ -92,11 +92,11 @@ Instantiation via Rackspace GUI:
  - Login to Rackspace with your personal credentials
  - Click "Stack Templates" from the "Orchestration" menu
  - Click "Create Custom Template"
- - Paste or manually upload the HEAT template (openecomp.yaml)
+ - Paste or manually upload the HEAT template (onap.yaml)
  - Specify a name for your template in the "Template Name" form
  - Click "Create Template and Launch Stack" at the bottom of the page
  - In the "Create Stack" page, specify a name for your stack in the "Stack Name" form and select the Rackspace Region
- - In the "Advanced Option" menu, insert the values of the parameters specified in the environment file (openecomp.env)
+ - In the "Advanced Option" menu, insert the values of the parameters specified in the environment file (onap.env)
  - Click "Create Stack"
 
 
@@ -228,12 +228,12 @@ The vLoadBalancer/vDNS app contains 2 VMs in the base model: a load balancer and
 To test the application, in the command prompt:
 
 ``` 
-# nslookup host1.dnsdemo.openecomp.org *vLoadBalancer_IP*
+# nslookup host1.dnsdemo.onap.org *vLoadBalancer_IP*
 
 Server:     *vLoadBalancer_IP*
 Address:    *vLoadBalancer_IP*
 
-Name:     host1.dnsdemo.openecomp.org
+Name:     host1.dnsdemo.onap.org
 Address:  10.0.100.101
 
 ```
