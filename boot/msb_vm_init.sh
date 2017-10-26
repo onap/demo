@@ -119,7 +119,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnfres", "
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnfmgr", "version": "v1", "url": "/api/vnfmgr/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8803"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "activiti", "version": "v1", "url": "/api/activiti/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8804"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "activiti", "version": "v1", "url": "/activiti-rest", "path": "/activiti-rest" "protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8804"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "workflow", "version": "v1", "url": "/api/workflow/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8805"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
