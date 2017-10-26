@@ -12,7 +12,7 @@ The repository includes:
  
  - The "heat" directory: contains the following three directories:
  
- 	- ONAP: contains the HEAT template for the installation of the ONAP platform. The template onap_rackspace.yaml and the environment file onap_rackspace.env work in Rackspace, while the template onap_openstack.yaml and the environment file onap_openstack.env work in vanilla OpenStack.
+ 	- ONAP: contains the HEAT files for the installation of the ONAP platform. It includes the template onap_openstack.yaml and the environment file onap_openstack.env for vanilla OpenStack.
  	
  	- vFW: contains the HEAT template for the instantiation of the vFirewall VNF (base_vfw.yaml) and the environment file (base_vfw.env)
  	
@@ -33,10 +33,10 @@ The repository includes:
  	- vLB: scripts that download, install and run packages for the vLoadBalancer/vDNS demo application.
  
 
-ONAP HEAT Template for Rackspace
+ONAP HEAT Template
 ---
 
-The ONAP HEAT template spins up the entire ONAP platform. The template, onap_rackspace.yaml, comes with an environment file, onap_rackspace.env, in which all the default values are defined.
+The ONAP HEAT template spins up the entire ONAP platform. The template, onap_openstack.yaml, comes with an environment file, onap_openstack.env, in which all the default values are defined.
 
 The HEAT template is composed of two sections: (i) parameters, and (ii) resources. The parameter section contains the declaration and description of the parameters that will be used to spin up ONAP, such as public network identifier, URLs of code and artifacts repositories, etc.
 The default values of these parameters can be found in the environment file. The resource section contains the definition of:
@@ -53,15 +53,20 @@ When the HEAT template is executed, the Openstack HEAT engine creates the resour
 
 Before running HEAT, it is necessary to customize the environment file. Indeed, some parameters, namely public_net_id, pub_key, openstack_tenant_id, openstack_username, and openstack_api_key, need to be set depending on the user's environment:
 
-        public_net_id:       INSERT YOUR NETWORK ID/NAME HERE
-        pub_key:             INSERT YOUR PUBLIC KEY HERE
-        openstack_tenant_id: INSERT YOUR TENANT ID HERE
-        openstack_username:  INSERT YOUR USERNAME HERE
-        openstack_api_key:   INSERT YOUR API KEY HERE
+        public_net_id:       PUT YOUR NETWORK ID/NAME HERE
+        pub_key:             PUT YOUR PUBLIC KEY HERE
+        openstack_tenant_id: PUT YOUR OPENSTACK PROJECT ID HERE
+        openstack_username:  PUT YOUR OPENSTACK USERNAME HERE
+        openstack_api_key:   PUT YOUR OPENSTACK PASSWORD HERE
+        horizon_url:         PUT THE HORIZON URL HERE
+        keystone_url:        PUT THE KEYSTONE URL HERE (do not include version number)
 
-public_net_id is the unique identifier (UUID) or name of the public network of the cloud provider. Note that for Rackspace template, this value is already set to
-   
-        00000000-0000-0000-0000-000000000000
+
+openstack_region parameter is set to RegionOne (OpenStack default). If your OpenStack is using another Region, please modify this parameter.
+
+public_net_id is the unique identifier (UUID) or name of the public network of the cloud provider. To get the public_net_id, use the following OpenStack CLI command (ext is the name of the external network, change it with the name of the external network of your installation) 
+
+        openstack network list  | grep ext |  awk '{print $2}'   
 
 
 pub_key is string value of the public key that will be installed in each ONAP VM. To create a public/private key pair in Linux, please execute the following instruction:
@@ -78,27 +83,62 @@ The following operations to create the public/private key pair occur:
         Your identification has been saved in /home/user/.ssh/id_rsa.
         Your public key has been saved in /home/user/.ssh/id_rsa.pub.
 
-openstack_username, openstack_tenant_id (password), and openstack_api_key are user's credentials to access the Openstack-based cloud. Note that in the Rackspace web interface, openstack_api_key can be found by clicking on the username on the top-right corner of the GUI and then "Account Settings".
+openstack_username, openstack_tenant_id (password), and openstack_api_key are user's credentials to access the OpenrStack-based cloud. Note that in the Rackspace web interface, openstack_api_key can be found by clicking on the username on the top-right corner of the GUI and then "Account Settings".
 
-DCAE spins up the data collection and analytics environment outside the HEAT template. This environment is composed of: 3-VM CDAP/Hadoop cluster, 1 VM for the DCAE data collector, and 1 VM for Postgres DB. DCAE needs to know where (i.e. Rackspace region) it has to spin up these VMs. Three parameters have to be setup to reflect the Rackspace region, namely dcae_zone, dcae_state and openstack_region. dcae_zone and dcae_state are used to compose the name of the VMs, so any meaningful name can be used. openstack_region, instead, represents the actual location, so Rackspace-specific values must be used: IAD, DFW, HKG, SYD. The example below shows a snippet of the HEAT environment file that instantiate ONAP in IAD region in Rackspace: 
+Some global parameters used for all components are also required:
+        ubuntu_1404_image: PUT THE UBUNTU 14.04 IMAGE NAME HERE
+        ubuntu_1604_image: PUT THE UBUNTU 16.04 IMAGE NAME HERE
+        flavor_small: PUT THE SMALL FLAVOR NAME HERE
+        flavor_medium: PUT THE MEDIUM FLAVOR NAME HERE
+        flavor_large: PUT THE LARGE FLAVOR NAME HERE
+        flavor_xlarge: PUT THE XLARGE FLAVOR NAME HERE
+        flavor_xxlarge: PUT THE XXLARGE FLAVOR NAME HERE
 
-        dcae_zone:        iad4
-        dcae_state:       vi
-        openstack_region: IAD
+To get the images in your OpenStack environment, use the following OpenStack CLI command:
 
-The ONAP platform can be instantiated via Rackspace GUI or command line.
+        openstack image list | grep 'ubuntu'
 
-Instantiation via Rackspace GUI:
- - Login to Rackspace with your personal credentials
- - Click "Stack Templates" from the "Orchestration" menu
- - Click "Create Custom Template"
- - Paste or manually upload the HEAT template (onap.yaml)
- - Specify a name for your template in the "Template Name" form
- - Click "Create Template and Launch Stack" at the bottom of the page
- - In the "Create Stack" page, specify a name for your stack in the "Stack Name" form and select the Rackspace Region
- - In the "Advanced Option" menu, insert the values of the parameters specified in the environment file (onap.env)
- - Click "Create Stack"
+To get the flavor names used in your OpenStack environment, use the following OpenStack CLI command:
 
+        openstack flavor list
+
+Some network parameters must be configured
+        dns_list: PUT THE ADDRESS OF THE EXTERNAL DNS HERE (e.g. a comma-separated list of IP addresses in your /etc/resolv.conf in UNIX-based Operating Systems)
+        external_dns: PUT THE FIRST ADDRESS OF THE EXTERNAL DNS LIST HERE
+        oam_network_cidr: 10.0.0.0/16
+
+You can use the Google Public DNS 8.8.8.8 and 4.4.4.4 address or your internal DNS servers
+
+DCAE spins up the data collection and analytics environment outside the HEAT template. This environment is composed of: 3-VM CDAP/Hadoop cluster, 1 VM for the DCAE data collector, and 1 VM for Postgres DB. DCAE needs to know where it has to spin up these VMs. DCAE configuration requires many parameters:  
+
+        dcaeos_cloud_env: PUT DCAE TARGET DEPLOYMENT STACK'S FLAVOR (e.g. OpenStack) HERE
+        dcaeos_keystone_url: PUT DCAE TARGET DEPLOYMENT STACK'S KEYSTONE URL HERE
+        dcaeos_openstack_region: PUT DCAE TARGET DEPLOYMENT STACK'S REGION HERE
+        dcaeos_openstack_tenant_id: PUT DCAE TARGET DEPLOYMENT STACK'S TENANT ID HERE
+        dcaeos_openstack_username: PUT DCAE TARGET DEPLOYMENT STACK'S USERNAME HERE
+        dcaeos_openstack_password: PUT DCAE TARGET DEPLOYMENT STACK'S PASSWORD HERE
+        dcaeos_dcae_key_name: PUT DCE TARGET DEPLOYMENT STACK'S UPLOADED KEY-PAIR NAME HERE
+        dcaeos_dcae_pub_key: PUT DCAE TARGET DEPLOYMENT STACK'S PUBLIC KEY HERE
+        dcaeos_private_key: PUT DCAE TARGET DEPLOYMENT STACK'S PRIVATE KEY HERE
+        dcaeos_openstack_private_network_name: PUT DCAE TARGET DEPLOYMENT STACK'S INTERNAL NETWOKR ID HERE
+        dcaeos_public_net_id: PUT DCAE TARGET DEPLOYMENT STACK'S PUBLIC NETWORK ID HERE
+        dcaeos_ubuntu_1604_image: PUT DCAE TARGET DEPLOYMENT STACK'S UBUNTU1604 IMAGE ID (TO BE USED BY DCAE VMS) HERE
+        dcaeos_centos_7_image: PUT DCAE TARGET DEPLOYMENT STACK'S CENTOS7 IMAGE ID (TO BE USED BY DCAE VMS) HERE
+        dcaeos_security_group: PUT DCAE TARGET DEPLOYMENT STACK'S SECURITY GROUP ID (TO BE USED BY DCAE VMS) HERE
+        dcaeos_flavor_id: PUT DCAE TARGET DEPLOYMENT STACK'S VM FLAVOR ID (TO BE USED BY DCAE VMS) HERE
+
+The ONAP platform can be instantiated via Horizon (OpenStack dashboard) or Command Line.
+
+Instantiation via Horizon:
+ - Login to Horizon URL with your personal credentials
+ - Click "Stacks" from the "Orchestration" menu
+ - Click "Launch Stack"
+ - Paste or manually upload the HEAT template file (onap_openstack.yaml) in the "Template Source" form
+ - Paste or manually upload the HEAT environment file (onap_openstack.env) in the "Environment Source" form
+ - Click "Next"
+ - Specify a name in the "Stack Name" form
+ - Provide the password in the "Password" form
+ - Click "Launch" 
 
 Instantiation via Command Line:
  - Install the HEAT client on your machine, e.g. in Ubuntu (ref. http://docs.openstack.org/user-guide/common/cli-install-openstack-command-line-clients.html):
@@ -107,55 +147,22 @@ Instantiation via Command Line:
         pip install python-heatclient        # Install heat client
         pip install python-openstackclient   # Install the Openstack client to support multiple services
  
- - Create a file (named i.e. ~/rackspace/openrc) that sets all the environmental variables required to access Rackspace:
+ - Create a file (named i.e. ~/openstack/openrc) that sets all the environmental variables required to access Rackspace:
 
-        export OS_AUTH_URL=https://identity.api.rackspacecloud.com/v2.0/
+        export OS_AUTH_URL=INSERT THE AUTH URL HERE
         export OS_USERNAME=INSERT YOUR USERNAME HERE
         export OS_TENANT_ID=INSERT YOUR TENANT ID HERE
-        export OS_REGION_NAME=INSERT THE RACKSPACE REGION ID [IAD | DFW | SYD | HKG]
+        export OS_REGION_NAME=INSERT THE REGION HERE
         export OS_PASSWORD=INSERT YOUR PASSWORD HERE
         
  - Run the script from command line:
 
-        source ~/rackspace/openrc
+        source ~/openstack/openrc
         
  - In order to install the ONAP platform, type:
 
         heat stack-create STACK_NAME -f PATH_TO_HEAT_TEMPLATE(YAML FILE) -e PATH_TO_ENV_FILE       # Old HEAT client, OR
         openstack stack create -t PATH_TO_HEAT_TEMPLATE(YAML FILE) -e PATH_TO_ENV_FILE STACK_NAME  # New Openstack client
-
-
-ONAP HEAT Template for vanilla OpenStack
----
-
-The HEAT template for vanilla OpenStack is similar to the HEAT template for Rackspace. The main difference is the way resource-intensive VMs are defined. Unlike OpenStack, Rackspace requires to explicitly create a local disk for memory- or CPU-intensive VMs.
-
-The HEAT template for vanilla OpenStack replicates typical application deployments in OpenStack. VMs have a private IP address in the ONAP Private Management Network space and use floating IP addresses. A router that connects the ONAP Private Management Network to the external network is also created.
-
-In addition to the parameters described in the previous section, the HEAT template for vanilla OpenStack uses the following parameters to define the image name and flavor of a VM:
-
-        ubuntu_1404_image: PUT THE UBUNTU 14.04 IMAGE NAME HERE
-        ubuntu_1604_image: PUT THE UBUNTU 16.04 IMAGE NAME HERE
-        flavor_small: PUT THE SMALL FLAVOR NAME HERE
-        flavor_medium: PUT THE MEDIUM FLAVOR NAME HERE
-        flavor_large: PUT THE LARGE FLAVOR NAME HERE
-        flavor_xlarge: PUT THE XLARGE FLAVOR NAME HERE
-  
-Parameters for network configuration are also used:
-
-        aai_float_ip
-        appc_float_ip
-        ...
-        vid_float_ip
-        
-        external_dns
-        oam_network_cidr
-        aai_ip_addr
-        appc_ip_addr
-        ...
-        vid_ip_addr
-        
-These parameters are used to configure the ONAP internal DNS VM. The external_dns parameter is a comma-separated list of IP addresses (they can be obtained from /etc/resolv.conf in many UNIX-based Operating Systems). The IP address of the ONAP VMs must comply with the oam_network_cidr parameter, and viceversa. Except for external_dns, the other network parameters are already set. They should work for many deployments. 
 
 
 VNFs HEAT Templates
