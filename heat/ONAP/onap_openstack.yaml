@@ -1756,27 +1756,27 @@ resources:
             __sdc_ip_addr__: { get_param: sdc_ip_addr }
             # floating IPs
             __dns_floating_ip_addr__: { get_attr: [dns_floating_ip, floating_ip_address] }
-            __aai1_floating_ip_addr___: { get_attr: [aai1_floating_ip, floating_ip_address] }
-            __aai2_floating_ip_addr___: { get_attr: [aai2_floating_ip, floating_ip_address] }
-            __so_floating_ip_addr___: { get_attr: [so_floating_ip, floating_ip_address] }
-            __mrouter_floating_ip_addr___: { get_attr: [mrouter_floating_ip, floating_ip_address] }
-            __robot_floating_ip_addr___: { get_attr: [robot_floating_ip, floating_ip_address] }
-            __vid_floating_ip_addr___: { get_attr: [vid_floating_ip, floating_ip_address] }
-            __sdnc_floating_ip_addr___: { get_attr: [sdnc_floating_ip, floating_ip_address] }
-            __sdc_floating_ip_addr___: { get_attr: [sdc_floating_ip, floating_ip_address] }
-            __portal_floating_ip_addr___: { get_attr: [portal_floating_ip, floating_ip_address] }
-            __policy_floating_ip_addr___: { get_attr: [policy_floating_ip, floating_ip_address] }
-            __appc_floating_ip_addr___: { get_attr: [appc_floating_ip, floating_ip_address] }
-            __clamp_floating_ip_addr___: { get_attr: [clamp_floating_ip, floating_ip_address] }
-            __openo_floating_ip_addr___: { get_attr: [openo_floating_ip, floating_ip_address] }
-            __dcae_c_floating_ip_addr___: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
+            __aai1_floating_ip_addr__: { get_attr: [aai1_floating_ip, floating_ip_address] }
+            __aai2_floating_ip_addr__: { get_attr: [aai2_floating_ip, floating_ip_address] }
+            __so_floating_ip_addr__: { get_attr: [so_floating_ip, floating_ip_address] }
+            __mrouter_floating_ip_addr__: { get_attr: [mrouter_floating_ip, floating_ip_address] }
+            __robot_floating_ip_addr__: { get_attr: [robot_floating_ip, floating_ip_address] }
+            __vid_floating_ip_addr__: { get_attr: [vid_floating_ip, floating_ip_address] }
+            __sdnc_floating_ip_addr__: { get_attr: [sdnc_floating_ip, floating_ip_address] }
+            __sdc_floating_ip_addr__: { get_attr: [sdc_floating_ip, floating_ip_address] }
+            __portal_floating_ip_addr__: { get_attr: [portal_floating_ip, floating_ip_address] }
+            __policy_floating_ip_addr__: { get_attr: [policy_floating_ip, floating_ip_address] }
+            __appc_floating_ip_addr__: { get_attr: [appc_floating_ip, floating_ip_address] }
+            __clamp_floating_ip_addr__: { get_attr: [clamp_floating_ip, floating_ip_address] }
+            __openo_floating_ip_addr__: { get_attr: [openo_floating_ip, floating_ip_address] }
+            __dcae_c_floating_ip_addr__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
 
           template: |
             #!/bin/bash
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__dcae_zone__" > /opt/config/dcae_zone.txt
+            echo "__rand_str__" > /opt/config/dcae_zone.txt
             echo "__rand_str__" > /opt/config/rand_str.txt
             # repo related
             echo "__docker_version__" > /opt/config/docker_version.txt
