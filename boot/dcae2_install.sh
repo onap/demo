@@ -76,7 +76,7 @@ mkdir -p /opt/app/config
 
 
 # private key
-cp /opt/config/priv_key /opt/app/config/key
+sed -e 's/\\n/\n/g' /opt/config/priv_key > /opt/app/config/key
 chmod 777 /opt/app/config/key
 
 # move keystone url file
