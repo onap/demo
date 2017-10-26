@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_fee7b2e2",
+        "filename": "vnfs/vCPE/scripts/v_brgemu_install.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-26T22:58:54Z",
+      "side": 1,
+      "message": "you can remove this set of commented lines.",
+      "revId": "53ed7dcfd37d1d6e24c6bbb285708dbf395336c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_deecf6c9",
+        "filename": "vnfs/vCPE/scripts/v_brgemu_install.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-26T22:58:54Z",
+      "side": 1,
+      "message": "there\u0027s some inconsistent use of tabs vs spaces for indentation.  Looks odd - would be a good idea to switch to one (probably spaces) and make the indentation consistent.",
+      "revId": "53ed7dcfd37d1d6e24c6bbb285708dbf395336c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_bed12afd",
+        "filename": "vnfs/vCPE/scripts/v_brgemu_install.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-26T22:58:54Z",
+      "side": 1,
+      "message": "while fixing up tabs, check for white space at end of lines that can be removed.",
+      "revId": "53ed7dcfd37d1d6e24c6bbb285708dbf395336c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
