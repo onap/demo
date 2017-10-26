@@ -2,8 +2,9 @@
 "Dhcp4":
   {
 # For testing, you can use veth pair as described in README.md
+#   vDHCP needs to be listening on eth1
   "interfaces-config": {
-    "interfaces": ["eth0" ]
+    "interfaces": ["eth1" ]
   },
 
 # How to load the hook library.
