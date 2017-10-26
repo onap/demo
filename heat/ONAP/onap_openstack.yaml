@@ -222,59 +222,59 @@ parameters:
 
   dcaeos_keystone_url:
     type: string
-    description: the keystone URL of the OpenStack instance where DACE is deployed
+    description: the keystone URL of the OpenStack instance where DCAE is deployed
 
   dcaeos_openstack_region:
     type: string
-    description: the region of the OpenStack instance where DACE is deployed
+    description: the region of the OpenStack instance where DCAE is deployed
 
   dcaeos_openstack_tenant_id:
     type: string
-    description: the keystone URL of the OpenStack instance where DACE is deployed
+    description: the keystone URL of the OpenStack instance where DCAE is deployed
 
   dcaeos_openstack_username:
     type: string
-    description: the username of the identity API of the OpenStack instance where DACE is deployed
+    description: the username of the identity API of the OpenStack instance where DCAE is deployed
 
   dcaeos_openstack_password:
     type: string
-    description: the password of the identity API of the OpenStack instance where DACE is deployed
+    description: the password of the identity API of the OpenStack instance where DCAE is deployed
 
   dcaeos_dcae_key_name:
     type: string
-    description: the key-pair name uploaded to the OpenStack instance where DACE is deployed
+    description: the key-pair name uploaded to the OpenStack instance where DCAE is deployed
 
   dcaeos_dcae_pub_key:
     type: string
-    description: the public key of the key-pair uploaded to the OpenStack instance where DACE is deployed
+    description: the public key of the key-pair uploaded to the OpenStack instance where DCAE is deployed
 
   dcaeos_private_key:
     type: string
-    description: the private key of the key-pair uploaded to the OpenStack instance where DACE is deployed
+    description: the private key of the key-pair uploaded to the OpenStack instance where DCAE is deployed
 
   dcaeos_openstack_private_network_name:
     type: string
-    description: the name/id of the network used as DCAE internal network in the OpenStack instance where DACE is deployed
+    description: the name/id of the network used as DCAE internal network in the OpenStack instance where DCAE is deployed
 
   dcaeos_public_net_id:
     type: string
-    description: the name/id of the network where DCAE gets floating IPs from in the OpenStack instance where DACE is deployed
+    description: the name/id of the network where DCAE gets floating IPs from in the OpenStack instance where DCAE is deployed
 
   dcaeos_ubuntu_1604_image:
     type: string
-    description: the name/id of the Ubuntu1604 VM image in the OpenStack instance where DACE is deployed
+    description: the name/id of the Ubuntu1604 VM image in the OpenStack instance where DCAE is deployed
 
   dcaeos_centos_7_image:
     type: string
-    description: the name/id of the CentOS7 VM image in the OpenStack instance where DACE is deployed
+    description: the name/id of the CentOS7 VM image in the OpenStack instance where DCAE is deployed
 
   dcaeos_security_group:
     type: string
-    description: the name/id of the security group to be used by DACE VMs in the OpenStack instance where DACE is deployed
+    description: the name/id of the security group to be used by DCAE VMs in the OpenStack instance where DCAE is deployed
 
   dcaeos_flavor_id:
     type: string
-    description: the name/id of the VM flavor to be used by DACE VMs in the OpenStack instance where DACE is deployed
+    description: the name/id of the VM flavor to be used by DCAE VMs in the OpenStack instance where DCAE is deployed
 
 #  dcae_base_environment:
 #    type: string
