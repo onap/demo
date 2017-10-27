@@ -1,4 +1,6 @@
 #!/bin/bash
+set -o xtrace  # print commands during script execution
+set -o errexit # exit on command errors
 
 REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
@@ -8,6 +10,22 @@ VPP_SOURCE_REPO_URL=$(cat /opt/config/vpp_source_repo_url.txt)
 VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/vpp_source_repo_branch.txt)
 VPP_PATCH_URL=$(cat /opt/config/vpp_patch_url.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
+BNG_GMUX_NET_CIDR=$(cat /opt/config/bng_gmux_net_cidr.txt)
+BNG_GMUX_NET_IPADDR=$(cat /opt/config/bng_gmux_net_ipaddr.txt)
+BRGEMU_BNG_NET_CIDR=$(cat /opt/config/brgemu_bng_net_cidr.txt)
+BRGEMU_BNG_NET_IPADDR=$(cat /opt/config/brgemu_bng_net_ipaddr.txt)
+CPE_SIGNAL_NET_CIDR=$(cat /opt/config/cpe_signal_net_cidr.txt)
+CPE_SIGNAL_NET_IPADDR=$(cat /opt/config/cpe_signal_net_ipaddr.txt)
+
+# Build states are:
+# 'build' - just build the code
+# 'done' - code is build, install and setup
+# 'auto' - bulid, install and setup
+BUILD_STATE="auto"
+if [[ -f /opt/config/compile_state.txt ]]
+then
+    BUILD_STATE=$(cat /opt/config/compile_state.txt)
+fi
 
 # Convert Network CIDR to Netmask
 cdr2mask () {
@@ -18,103 +36,88 @@ cdr2mask () {
 }
 
 # OpenStack network configuration
-if [[ $CLOUD_ENV == "openstack" ]]
+if [[ $BUILD_STATE != "build" ]]
 then
-	echo 127.0.0.1 $(hostname) >> /etc/hosts
+    if [[ $CLOUD_ENV == "openstack" ]]
+    then
+        echo 127.0.0.1 $(hostname) >> /etc/hosts
 
-	# Allow remote login as root
-	mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
-	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
+        # Allow remote login as root
+        mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
+        cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
 
-	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+        MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
-	IP=$(cat /opt/config/brgemu_bng_net_ipaddr.txt)
-	BITS=$(cat /opt/config/brgemu_bng_net_cidr.txt | cut -d"/" -f2)
-	NETMASK=$(cdr2mask $BITS)
-	echo "auto eth1" >> /etc/network/interfaces
-	echo "iface eth1 inet static" >> /etc/network/interfaces
-	echo "    address $IP" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
-	echo "    mtu $MTU" >> /etc/network/interfaces
+        IP=$(cat /opt/config/oam_ipaddr.txt)
+        BITS=$(cat /opt/config/oam_cidr.txt | cut -d"/" -f2)
+        NETMASK=$(cdr2mask $BITS)
+        echo "auto eth2" >> /etc/network/interfaces
+        echo "iface eth2 inet static" >> /etc/network/interfaces
+        echo "    address $IP" >> /etc/network/interfaces
+        echo "    netmask $NETMASK" >> /etc/network/interfaces
+        echo "    mtu $MTU" >> /etc/network/interfaces
 
-	IP=$(cat /opt/config/oam_ipaddr.txt)
-	BITS=$(cat /opt/config/oam_cidr.txt | cut -d"/" -f2)
-	NETMASK=$(cdr2mask $BITS)
-	echo "auto eth2" >> /etc/network/interfaces
-	echo "iface eth2 inet static" >> /etc/network/interfaces
-	echo "    address $IP" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
-	echo "    mtu $MTU" >> /etc/network/interfaces
+        # eth2 probably doesn't exist yet and we should reboot after this anyway
+        # ifup eth2
+    fi
+fi  # endif BUILD_STATE != "build"
 
-	IP=$(cat /opt/config/cpe_signal_net_ipaddr.txt)
-	BITS=$(cat /opt/config/cpe_signal_net_cidr.txt | cut -d"/" -f2)
-	NETMASK=$(cdr2mask $BITS)
-	echo "auto eth3" >> /etc/network/interfaces
-	echo "iface eth3 inet static" >> /etc/network/interfaces
-	echo "    address $IP" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
-	echo "    mtu $MTU" >> /etc/network/interfaces
+if [[ $BUILD_STATE != "done" ]]
+then
+    # Download required dependencies
+    echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+    echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+    apt-get update
+    apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
+    sleep 1
 
-	IP=$(cat /opt/config/bng_gmux_net_ipaddr.txt)
-	BITS=$(cat /opt/config/bng_gmux_net_cidr.txt | cut -d"/" -f2)
-	NETMASK=$(cdr2mask $BITS)
-	echo "auto eth4" >> /etc/network/interfaces
-	echo "iface eth4 inet static" >> /etc/network/interfaces
-	echo "    address $IP" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
-	echo "    mtu $MTU" >> /etc/network/interfaces
+    # Install the tools required for download codes
+    apt-get install -y expect git patch make autoconf libtool linux-image-extra-`uname -r`
 
-	ifup eth1
-	ifup eth2
-	ifup eth3
-	ifup eth4
-fi
+    #Download and build the VPP codes
+    cd /opt
+    git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
+    wget -O Vpp-Integrate-FreeRADIUS-Client-for-vBNG.patch ${VPP_PATCH_URL}
+    cd vpp
+    patch -p1 < ../Vpp-Integrate-FreeRADIUS-Client-for-vBNG.patch
+    UNATTENDED='y' make install-dep
 
-# Download required dependencies
-echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-apt-get update
-apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
-sleep 1
+    # Install the FreeRADIUS client since we need the lib
+    cd /opt
+    git clone https://github.com/FreeRADIUS/freeradius-client.git
+    cd freeradius-client
+    ./configure
+    make && make install
+    cd /usr/local/lib && ln -s -f libfreeradius-client.so.2.0.0 libfreeradiusclient.so
+    ldconfig
 
-# Install the tools required for download codes
-apt-get install -y expect git patch
+    cd /opt/vpp/build-root
+    ./bootstrap.sh
+    mkdir -p build-vpp-native/vpp/vnet/dhcp/
+    # copy the "dummy" version of dhcp.api.h to the correct location so the build will succeed
+    make V=0 PLATFORM=vpp TAG=vpp install-deb
 
-#Download and build the VPP codes
-cd /opt
-git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
-wget -O Vpp-Integrate-FreeRADIUS-Client-for-vBNG.patch ${VPP_PATCH_URL}
+    # install additional dependencies for vpp
+    apt-get install -y python-cffi python-ply python-pycparser
 
-cd vpp
-patch -p1 < Vpp-Integrate-FreeRADIUS-Client-for-vBNG.patch
-expect -c "
-        set timeout 60;
-        spawn make install-dep;
-        expect {
-                \"Do you want to continue?*\" {send \"Y\r\"; interact}
-        }
-"
+    # Install the VPP package
+    cd /opt/vpp/build-root
+    dpkg -i *.deb
+    systemctl stop vpp
 
-cd build-root
-./bootstrap.sh
-make V=0 PLATFORM=vpp TAG=vpp install-deb
+    # Disable automatic upgrades
+    if [[ $CLOUD_ENV != "rackspace" ]]
+    then
+        echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+        sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
+    fi
 
-# Install the FreeRADIUS client since we need the lib
-cd /opt
-git clone https://github.com/FreeRADIUS/freeradius-client.git
-cd freeradius-client
-./configure
-make && make install
-cd /usr/local/lib && ln -s -f libfreeradius-client.so.2.0.0 libfreeradiusclient.so
-ldconfig
+fi  # endif BUILD_STATE != "done"
 
-# Install the VPP package
-cd /opt/vpp/build-root
-dpkg -i *.deb
-systemctl stop vpp
-
-# Auto-start configuration for the VPP
-cat > /etc/vpp/startup.conf << EOF
+if [[ $BUILD_STATE != "build" ]]
+then
+    # Auto-start configuration for the VPP
+    cat > /etc/vpp/startup.conf << EOF
 
 unix {
   nodaemon
@@ -219,18 +222,37 @@ cpu {
 
 EOF
 
-cat > /etc/vpp/setup.gate << EOF
-set int state GigabitEthernet0/8/0 up
-set interface ip address GigabitEthernet0/8/0 10.4.0.4/24
+    get_nic_pci_list() {
+		while read -r line ; do
+			if [ "$line" != "${line#*network device}" ]; then
+				echo -n "${line%% *} "
+			fi
+		done < <(lspci)
+    }
 
-set int state GigabitEthernet0/9/0 up
-set interface ip address GigabitEthernet0/9/0 10.4.0.3/24
+    NICS=$(get_nic_pci_list)
+    NICS=`echo ${NICS} | sed 's/[0]\+\([0-9]\)/\1/g' | sed 's/[.:]/\//g'`
 
-set vbng dhcp4 remote 10.4.0.1 local 10.4.0.3
+    BRGEMU_BNG_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 2` # second interface in list
+    CPE_SIGNAL_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 4` # fourth interface in list
+    BNG_GMUX_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 5` # fifth interface in list
+
+    cat > /etc/vpp/setup.gate << EOF
+set int state ${BRGEMU_BNG_NIC} up
+set interface ip address ${BRGEMU_BNG_NIC} ${BRGEMU_BNG_NET_IPADDR}/${BRGEMU_BNG_NET_CIDR#*/}
+
+set int state ${CPE_SIGNAL_NIC} up
+set interface ip address ${CPE_SIGNAL_NIC} ${CPE_SIGNAL_NET_IPADDR}/${CPE_SIGNAL_NET_CIDR#*/}
+
+set int state ${BNG_GMUX_NIC} up
+set interface ip address ${BNG_GMUX_NIC} ${BNG_GMUX_NET_IPADDR}/${BNG_GMUX_NET_CIDR#*/}
+
+set vbng dhcp4 remote 10.4.0.1 local ${CPE_SIGNAL_NET_IPADDR}
 set vbng aaa config /etc/vpp/vbng-aaa.cfg nas-port 5060
+
 EOF
 
-cat > /etc/vpp/vbng-aaa.cfg << EOF
+    cat > /etc/vpp/vbng-aaa.cfg << EOF
 # General settings
 
 # specify which authentication comes first respectively which
@@ -327,7 +349,7 @@ bindaddr *
 login_local	/bin/login
 EOF
 
-cat >> /usr/local/etc/radiusclient/dictionary << EOF
+    cat >> /usr/local/etc/radiusclient/dictionary << EOF
 
 #
 #	DHCP Proxy/Relay attributes
@@ -339,31 +361,34 @@ ATTRIBUTE	DHCP-Relay-Remote-Id	82.2	string
 
 EOF
 
-cat >> /usr/local/etc/radiusclient/servers << EOF
+    cat >> /usr/local/etc/radiusclient/servers << EOF
 10.4.0.2					testing123
 localhost/localhost				testing123
 
 EOF
 
-# Download DHCP config files
-cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_bng_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_bng.sh
-chmod +x v_bng_init.sh
-chmod +x v_bng.sh
-mv v_bng.sh /etc/init.d
-update-rc.d v_bng.sh defaults
+    # Download DHCP config files
+    cd /opt
+    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_bng_init.sh
+    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_bng.sh
+    chmod +x v_bng_init.sh
+    chmod +x v_bng.sh
+    sed -i 's/^\(# Provides:\).*/\1 v_bng/g' ./v_bng.sh
+    mv v_bng.sh /etc/init.d
+    update-rc.d v_bng.sh defaults
+    
+    # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
+    if [[ $CLOUD_ENV != "rackspace" ]]
+    then
+        sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+        grub-mkconfig -o /boot/grub/grub.cfg
+        sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
+        touch /etc/udev/rules.d/70-persistent-net.rules
+        sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
+        echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+        reboot
+    fi
 
-# Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
-if [[ $CLOUD_ENV != "rackspace" ]]
-then
-	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
-	grub-mkconfig -o /boot/grub/grub.cfg
-	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
-	sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
-	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
-	reboot
-fi
+    ./v_bng_init.sh
+fi # endif BUILD_STATE != "build"
 
-./v_bng_init.sh

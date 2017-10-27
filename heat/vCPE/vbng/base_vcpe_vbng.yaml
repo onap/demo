@@ -233,6 +233,7 @@ resources:
         - port: { get_resource: vbng_private_0_port }
         - port: { get_resource: vbng_private_1_port }
         - port: { get_resource: vbng_private_2_port }
+        - port: { get_resource: vbng_private_3_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
