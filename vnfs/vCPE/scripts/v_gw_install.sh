@@ -9,6 +9,18 @@ VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/vpp_source_repo_branch.txt)
 HC2VPP_SOURCE_REPO_URL=$(cat /opt/config/hc2vpp_source_repo_url.txt)
 HC2VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/hc2vpp_source_repo_branch.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
+MUX_GW_IP=$(cat /opt/config/mux_gw_private_net_ipaddr.txt)
+MUX_GW_CIDR=$(cat /opt/config/mux_gw_private_net_cidr.txt)
+
+# Build states are:
+# 'build' - just build the code
+# 'done' - code is build, install and setup
+# 'auto' - bulid, install and setup
+BUILD_STATE="auto"
+if [[ -f /opt/config/compile_state.txt ]]
+then
+    BUILD_STATE=$(cat /opt/config/compile_state.txt)
+fi
 
 # Convert Network CIDR to Netmask
 cdr2mask () {
@@ -19,8 +31,10 @@ cdr2mask () {
 }
 
 # OpenStack network configuration
-if [[ $CLOUD_ENV == "openstack" ]]
+if [[ $BUILD_STATE != "build" ]]
 then
+    if [[ $CLOUD_ENV == "openstack" ]]
+    then
 	echo 127.0.0.1 $(hostname) >> /etc/hosts
 
 	# Allow remote login as root
@@ -28,15 +42,6 @@ then
 	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
 
 	MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
-
-	IP=$(cat /opt/config/mux_gw_private_net_ipaddr.txt)
-	BITS=$(cat /opt/config/mux_gw_private_net_cidr.txt | cut -d"/" -f2)
-	NETMASK=$(cdr2mask $BITS)
-	echo "auto eth1" >> /etc/network/interfaces
-	echo "iface eth1 inet static" >> /etc/network/interfaces
-	echo "    address $IP" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
-	echo "    mtu $MTU" >> /etc/network/interfaces
 
 	IP=$(cat /opt/config/oam_ipaddr.txt)
 	BITS=$(cat /opt/config/oam_cidr.txt | cut -d"/" -f2)
@@ -47,43 +52,42 @@ then
 	echo "    netmask $NETMASK" >> /etc/network/interfaces
 	echo "    mtu $MTU" >> /etc/network/interfaces
 
-	ifup eth1
 	ifup eth2
-fi
+    fi
+fi  # endif BUILD_STATE != "build"
 
-# Download required dependencies
-echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-apt-get update
-apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
-sleep 1
+if [[ $BUILD_STATE != "done" ]]
+then
+    # Download required dependencies
+    echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+    echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+    apt-get --allow-unauthenticated update
+    apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
+    sleep 1
 
-# Install the tools required for download codes
-apt-get install -y expect git
+    # Install the tools required for download codes
+    apt-get --allow-unauthenticated install -y expect git make linux-image-extra-`uname -r`
 
-#Download and build the VPP codes
-cd /opt
-git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
+    #Download and build the VPP codes
+    cd /opt
+    git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
 
-cd vpp
-expect -c "
-        set timeout 60;
-        spawn make install-dep;
-        expect {
-                \"Do you want to continue?*\" {send \"Y\r\"; interact}
-        }
-"
+    cd vpp
+    make install-dep
 
-cd build-root
-./bootstrap.sh
-make V=0 PLATFORM=vpp TAG=vpp install-deb
+    cd build-root
+    ./bootstrap.sh
+    make V=0 PLATFORM=vpp TAG=vpp install-deb
 
-# Install the VPP package
-dpkg -i *.deb
-systemctl stop vpp
+    # Install the VPP package
+    dpkg -i *.deb
+    systemctl stop vpp
+fi  # endif BUILD_STATE != "done"
 
-# Auto-start configuration for the VPP
-cat > /etc/vpp/startup.conf << EOF
+if [[ $BUILD_STATE != "build" ]]
+then
+    # Auto-start configuration for the VPP
+    cat > /etc/vpp/startup.conf << EOF
 
 unix {
   nodaemon
@@ -188,12 +192,28 @@ cpu {
 
 EOF
 
-cat > /etc/vpp/setup.gate << EOF
-set int state GigabitEthernet0/8/0 up
-set int ip address GigabitEthernet0/8/0 10.5.0.21/24
+# Get list of network device PCI bus addresses
+    get_nic_pci_list() {
+        while read -r line ; do
+            if [ "$line" != "${line#*network device}" ]; then
+                echo -n "${line%% *} "
+            fi
+        done < <(lspci)
+    }
 
-set int state GigabitEthernet0/9/0 up
-set dhcp client intfc GigabitEthernet0/9/0 hostname vg-1
+    NICS=$(get_nic_pci_list)
+    NICS=`echo ${NICS} | sed 's/[0]\+\([0-9]\)/\1/g' | sed 's/[.:]/\//g'`
+
+    MUX_GW_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 2`  # second interface in list
+    GW_PUB_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 4`   # fourth interface in list
+
+touch /etc/vpp/setup.gate
+cat > /etc/vpp/setup.gate << EOF
+set int state ${MUX_GW_NIC} up
+set int ip address ${MUX_GW_NIC} 10.5.0.21/24
+
+set int state ${GW_PUB_NIC} up
+set dhcp client intfc ${GW_PUB_NIC} hostname vg-1
 
 tap connect lstack address 192.168.1.1/24
 set int state tap-0 up
@@ -204,16 +224,28 @@ set interface l2 bridge tap-0 10 0
 set interface l2 bridge vxlan_tunnel0 10 1
 set bridge-domain arp term 10
 
-set int ip address vxlan_tunnel0 192.168.1.254/24
-set interface snat in vxlan_tunnel0 out GigabitEthernet0/9/0
+loopback create
+set int l2 bridge loop0 10 bvi 2
+set int ip address loop0 192.168.1.254/24
+set int state loop0 up
+set int snat in loop0 out ${GW_PUB_NIC} 
+snat add int address ${GW_PUB_NIC}
+
 EOF
 
-# Download and install HC2VPP from source
-cd /opt
-git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
+fi  # endif BUILD_STATE != "build"
 
-apt-get install -y maven
-cat > ~/.m2/settings.xml << EOF
+if [[ $BUILD_STATE != "done" ]]
+then
+
+    # Download and install HC2VPP from source
+    cd /opt
+    git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
+
+    apt --allow-unauthenticated install -y python-ply-lex-3.5 python-ply-yacc-3.5 python-pycparser python-cffi
+    apt-get install -y maven
+    mkdir -p ~/.m2
+    cat > ~/.m2/settings.xml << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- vi: set et smarttab sw=2 tabstop=2: -->
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
@@ -321,16 +353,20 @@ cat > ~/.m2/settings.xml << EOF
 </settings>
 EOF
 
-cd hc2vpp
-mvn clean install
-l_version=$(cat pom.xml | grep "<version>" | head -1)
-l_version=$(echo "${l_version%<*}")
-l_version=$(echo "${l_version#*>}")
-mv vpp-integration/minimal-distribution/target/vpp-integration-distribution-${l_version}-hc/vpp-integration-distribution-${l_version} /opt/honeycomb
-sed -i 's/127.0.0.1/0.0.0.0/g' /opt/honeycomb/config/honeycomb.json
+    cd hc2vpp
+    mvn clean install
+    l_version=$(cat pom.xml | grep "<version>" | head -1)
+    l_version=$(echo "${l_version%<*}")
+    l_version=$(echo "${l_version#*>}")
+    mv vpp-integration/minimal-distribution/target/vpp-integration-distribution-${l_version}-hc/vpp-integration-distribution-${l_version} /opt/honeycomb
+    sed -i 's/127.0.0.1/0.0.0.0/g' /opt/honeycomb/config/honeycomb.json
 
-# Create systemctl service for Honeycomb
-cat > /etc/systemd/system/honeycomb.service << EOF
+fi  # endif BUILD_STATE != "done
+
+if [[ $BUILD_STATE != "build" ]]
+then
+    # Create systemctl service for Honeycomb
+    cat > /etc/systemd/system/honeycomb.service << EOF
 [Unit]
 Description=Honeycomb Agent for the VPP control plane
 Documentation=https://wiki.fd.io/view/Honeycomb
@@ -345,11 +381,11 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable /etc/systemd/system/honeycomb.service
+    systemctl enable /etc/systemd/system/honeycomb.service
 
-# Install the DHCP server and config
-apt-get install -y isc-dhcp-server
-cat >> /etc/dhcp/dhcpd.conf << EOF
+    # Install the DHCP server and config
+    apt-get install -y isc-dhcp-server
+    cat >> /etc/dhcp/dhcpd.conf << EOF
 subnet 192.168.1.0 netmask 255.255.255.0 {
   range 192.168.1.2 192.168.1.253;
   option subnet-mask 255.255.255.0;
@@ -360,18 +396,19 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 }
 EOF
 
-# Download DHCP config files
-cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gw_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gw.sh
-chmod +x v_gw_init.sh
-chmod +x v_gw.sh
-mv v_gw.sh /etc/init.d
-update-rc.d v_gw.sh defaults
+    # Download DHCP config files
+    cd /opt
+    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gw_init.sh
+    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gw.sh
+    chmod +x v_gw_init.sh
+    chmod +x v_gw.sh
+    mv v_gw.sh /etc/init.d
+    sed "s/Provides:/$/ v_gw" /etc/init.d/v_gw.sh
+    update-rc.d v_gw.sh defaults
 
-# Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
-if [[ $CLOUD_ENV != "rackspace" ]]
-then
+    # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
+    if [[ $CLOUD_ENV != "rackspace" ]]
+    then
 	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
 	grub-mkconfig -o /boot/grub/grub.cfg
 	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
@@ -381,4 +418,5 @@ then
 	reboot
 fi
 
-./v_gw_init.sh
+    ./v_gw_init.sh
+fi  # endif BUILD_STATE != "build"
