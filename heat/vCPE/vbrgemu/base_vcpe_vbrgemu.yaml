@@ -59,22 +59,22 @@ parameters:
     type: string
     label: vBNG IN private network CIDR
     description: The CIDR of the input side of vBNG private network
-  vbrgemu_private_net_id:
-    type: string
-    label: vBRGEMU Home private network name or ID
-    description: Private network that connects vBRGEMU to local devices
-  vbrgemu_private_net_cidr:
-    type: string
-    label: vBRGEMU Home private network CIDR
-    description: The CIDR of the input side of vBRGEMU Home private network
+  #vbrgemu_private_net_id:
+  #  type: string
+  #  label: vBRGEMU Home private network name or ID
+  #  description: Private network that connects vBRGEMU to local devices
+  #vbrgemu_private_net_cidr:
+  #  type: string
+  #  label: vBRGEMU Home private network CIDR
+  #  description: The CIDR of the input side of vBRGEMU Home private network
   vbrgemu_private_ip_0:
     type: string
     label: vGW private IP address
     description: Private IP address towards the BRGEMU-BNG network
-  vbrgemu_private_ip_1:
-    type: string
-    label: vGW private IP address
-    description: Private IP address towards the BRGEMU private network
+  #vbrgemu_private_ip_1:
+  #  type: string
+  #  label: vGW private IP address
+  #  description: Private IP address towards the BRGEMU private network
   vbrgemu_name_0:
     type: string
     label: vGW  name
@@ -165,17 +165,17 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  vbrgemu_private_network:
-    type: OS::Neutron::Net
-    properties:
-      name: { get_param: vbrgemu_private_net_id }
+  #vbrgemu_private_network:
+  #  type: OS::Neutron::Net
+  #  properties:
+  #    name: { get_param: vbrgemu_private_net_id }
 
-  vbrgemu_private_subnet:
-    type: OS::Neutron::Subnet
-    properties:
-      name: { get_param: vbrgemu_private_net_id }
-      network_id: { get_resource: vbrgemu_private_network }
-      cidr: { get_param: vbrgemu_private_net_cidr }
+  #vbrgemu_private_subnet:
+  #  type: OS::Neutron::Subnet
+  #  properties:
+  #    name: { get_param: vbrgemu_private_net_id }
+  #    network_id: { get_resource: vbrgemu_private_network }
+  #    cidr: { get_param: vbrgemu_private_net_cidr }
 
   # Virtual BRG Emulator Instantiation
   # 0_port should get IP address from DHCP discover through vBNG once the VNF is running
@@ -185,11 +185,11 @@ resources:
       network: { get_param: vbrgemu_bng_private_net_id }
       fixed_ips: [{"subnet": { get_param: vbrgemu_bng_private_subnet_id }, "ip_address": { get_param: vbrgemu_private_ip_0 }}]
 
-  vbrgemu_private_1_port:
-    type: OS::Neutron::Port
-    properties:
-      network: { get_resource: vbrgemu_private_network }
-      fixed_ips: [{"subnet": { get_resource: vbrgemu_private_subnet }, "ip_address": { get_param: vbrgemu_private_ip_1 }}]
+  #vbrgemu_private_1_port:
+  #  type: OS::Neutron::Port
+  #  properties:
+  #    network: { get_resource: vbrgemu_private_network }
+  #    fixed_ips: [{"subnet": { get_resource: vbrgemu_private_subnet }, "ip_address": { get_param: vbrgemu_private_ip_1 }}]
 
   vbrgemu_0:
     type: OS::Nova::Server
@@ -201,14 +201,14 @@ resources:
       networks:
         - network: { get_param: public_net_id }
         - port: { get_resource: vbrgemu_private_0_port }
-        - port: { get_resource: vbrgemu_private_1_port }
+      #  - port: { get_resource: vbrgemu_private_1_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
         str_replace:
           params:
-            __brgemu_net_ipaddr__: { get_param: vbrgemu_private_ip_1 }
-            __brgemu_cidr__: { get_param: vbrgemu_private_net_cidr }
+           # __brgemu_net_ipaddr__: { get_param: vbrgemu_private_ip_1 }
+           # __brgemu_cidr__: { get_param: vbrgemu_private_net_cidr }
             __brgemu_bng_private_net_cidr__: { get_param: vbrgemu_bng_private_net_cidr }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
@@ -226,8 +226,8 @@ resources:
 
             # Create configuration files
             mkdir /opt/config
-            echo "__brgemu_net_ipaddr__" > /opt/config/brgemu_net_ipaddr.txt
-            echo "__brgemu_cidr__" > /opt/config/brgemu_net_cidr.txt
+            #echo "__brgemu_net_ipaddr__" > /opt/config/brgemu_net_ipaddr.txt
+            #echo "__brgemu_cidr__" > /opt/config/brgemu_net_cidr.txt
             echo "__brgemu_bng_private_net_cidr__" > /opt/config/brgemu_bng_private_net_cidr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
