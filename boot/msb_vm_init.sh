@@ -85,7 +85,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdc-deprec
 #sdnc
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdnc", "version": "v1", "url": "/","protocol": "REST",  "nodes": [ {"ip": "'$SDNC_IP'","port": "8282"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdnc", "version": "v1", "url": "/restconf","path": "/restconf","protocol": "REST",  "nodes": [ {"ip": "'$SDNC_IP'","port": "8282"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "sdnc-compatible", "version": "v1", "url": "/restconf","path": "/restconf","protocol": "REST",  "nodes": [ {"ip": "'$SDNC_IP'","port": "8282"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 #multi-vim
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud", "version": "v0", "url": "/api/multicloud/v0","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "9001"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
