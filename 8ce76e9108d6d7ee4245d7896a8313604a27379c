@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_6f4e6ec3",
+        "filename": "heat/vCPE/vbng/base_vcpe_vbng.env",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-27T20:15:44Z",
+      "side": 1,
+      "message": "don\u0027t check in a sample of the .env template.\n\nif you need to add any paramters, add it to the generic template and check that in.",
+      "revId": "8ce76e9108d6d7ee4245d7896a8313604a27379c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_4f4bb2b0",
+        "filename": "heat/vCPE/vbng/base_vcpe_vbng.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-27T20:15:44Z",
+      "side": 1,
+      "message": "this should not be commented out.",
+      "revId": "8ce76e9108d6d7ee4245d7896a8313604a27379c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_2fc86621",
+        "filename": "vnfs/vCPE/scripts/v_bng_install.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-27T20:15:44Z",
+      "side": 1,
+      "message": "you didn\u0027t implement this yet?",
+      "revId": "8ce76e9108d6d7ee4245d7896a8313604a27379c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_0fcdaa31",
+        "filename": "vnfs/vCPE/scripts/v_bng_install.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-27T20:15:44Z",
+      "side": 1,
+      "message": "fourth",
+      "revId": "8ce76e9108d6d7ee4245d7896a8313604a27379c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_efd13ece",
+        "filename": "vnfs/vCPE/scripts/v_bng_install.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-27T20:15:44Z",
+      "side": 1,
+      "message": "fifth",
+      "revId": "8ce76e9108d6d7ee4245d7896a8313604a27379c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
