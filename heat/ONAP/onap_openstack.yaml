@@ -110,27 +110,27 @@ parameters:
 
   openstack_tenant_id:
     type: string
-    description: Openstack tenant ID
+    description: OpenStack tenant ID
 
   openstack_username:
     type: string
-    description: Openstack username
+    description: OpenStack username
 
   openstack_auth_method:
     type: string
-    description: Openstack authentication method (password VS. api-key)
+    description: OpenStack authentication method (password VS. api-key)
 
   openstack_api_key:
     type: string
-    description: Openstack password or API Key
+    description: OpenStack password or API Key
 
   horizon_url:
     type: string
-    description: URL of Openstack Horizon
+    description: URL of OpenStack Horizon
 
   keystone_url:
     type: string
-    description: URL of Openstack Keystone
+    description: URL of OpenStack Keystone
 
   cloud_env:
     type: string
