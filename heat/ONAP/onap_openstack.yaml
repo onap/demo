@@ -110,31 +110,31 @@ parameters:
 
   openstack_tenant_id:
     type: string
-    description: Openstack tenant ID
+    description: OpenStack tenant ID
 
   openstack_username:
     type: string
-    description: Openstack username
+    description: OpenStack username
 
   openstack_auth_method:
     type: string
-    description: Openstack authentication method (password VS. api-key)
+    description: OpenStack authentication method (password VS. api-key)
 
   openstack_api_key:
     type: string
-    description: Openstack password or API Key
+    description: OpenStack password or API Key
 
   horizon_url:
     type: string
-    description: URL of Openstack Horizon
+    description: URL of OpenStack Horizon
 
   keystone_url:
     type: string
-    description: URL of Openstack Keystone
+    description: URL of OpenStack Keystone
 
   cloud_env:
     type: string
-    description: Cloud Provider Name
+    description: Cloud Provider Name in lower case
 
   openstack_region:
     type: string
@@ -1734,7 +1734,7 @@ resources:
             __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __external_dns__: { get_param: external_dns }
-            # conf for the OpensStack env where DCAE is deployed
+            # conf for the OpenStack env where DCAE is deployed
             __dcaeos_cloud_env__: { get_param: dcaeos_cloud_env }
             __dcaeos_keystone_url__: { get_param: dcaeos_keystone_url }
             __dcaeos_openstack_region__: { get_param: dcaeos_openstack_region }
@@ -1793,7 +1793,7 @@ resources:
             echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
-            # conf for the OpensStack env where DCAE is deployed
+            # conf for the OpenStack env where DCAE is deployed
             echo "__dcaeos_cloud_env__" > /opt/config/cloud_env.txt
             echo "__dcaeos_keystone_url__" > /opt/config/keystone_url.txt
             echo "__dcaeos_openstack_region__" > /opt/config/openstack_region.txt
