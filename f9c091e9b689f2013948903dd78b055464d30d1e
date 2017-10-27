@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_a34eb26d",
+        "filename": "heat/vCPE/vbrgemu/base_vcpe_vbrgemu.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-27T23:16:40Z",
+      "side": 1,
+      "message": "trailing whitespace",
+      "revId": "f9c091e9b689f2013948903dd78b055464d30d1e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_c32f7e87",
+        "filename": "heat/vCPE/vbrgemu/base_vcpe_vbrgemu.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-10-27T23:16:40Z",
+      "side": 1,
+      "message": "should leave the install script uncommented by default.",
+      "revId": "f9c091e9b689f2013948903dd78b055464d30d1e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
