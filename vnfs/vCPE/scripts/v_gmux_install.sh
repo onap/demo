@@ -373,6 +373,13 @@ EOF
     l_version=$(echo "${l_version#*>}")
     mv vpp-integration/minimal-distribution/target/vpp-integration-distribution-${l_version}-hc/vpp-integration-distribution-${l_version} /opt/honeycomb
     sed -i 's/127.0.0.1/0.0.0.0/g' /opt/honeycomb/config/honeycomb.json
+
+    # Disable automatic upgrades
+    if [[ $CLOUD_ENV != "rackspace" ]]
+    then
+        echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+        sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
+    fi
 fi  # endif BUILD_STATE != "done"
 
 if [[ $BUILD_STATE != "build" ]]
@@ -582,7 +589,6 @@ EOF
         sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
         sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
         echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-        echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
         reboot
     fi
 
