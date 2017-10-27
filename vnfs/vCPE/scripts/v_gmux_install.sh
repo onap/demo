@@ -217,14 +217,27 @@ cpu {
 
 EOF
 
+    # Get list of network device PCI bus addresses
+    get_nic_pci_list() {
+        while read -r line ; do
+            if [ "$line" != "${line#*network device}" ]; then
+                echo -n "${line%% *} "
+            fi
+        done < <(lspci)
+    }
+
+    NICS=$(get_nic_pci_list)
+    NICS=`echo ${NICS} | sed 's/[0]\+\([0-9]\)/\1/g' | sed 's/[.:]/\//g'`
+
+    BNG_MUX_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 2`  # second interface in list
+    MUX_GW_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 4`   # fourth interface in list
+
     cat > /etc/vpp/setup.gate << EOF
-set int state GigabitEthernet0/4/0 up
-set int ip address GigabitEthernet0/4/0 ${BNG_MUX_IP}/${BNG_MUX_CIDR#*/}
+set int state ${BNG_MUX_NIC} up
+set int ip address ${BNG_MUX_NIC} ${BNG_MUX_IP}/${BNG_MUX_CIDR#*/}
 
-set int state GigabitEthernet0/6/0 up
-set int ip address GigabitEthernet0/6/0 ${MUX_GW_IP}/${MUX_GW_CIDR#*/}
-
-create vxlan tunnel src ${MUX_GW_IP} dst 10.5.0.21 vni 100
+set int state ${MUX_GW_NIC} up
+set int ip address ${MUX_GW_NIC} ${MUX_GW_IP}/${MUX_GW_CIDR#*/}
 EOF
 
 fi  # endif BUILD_STATE != "build"
