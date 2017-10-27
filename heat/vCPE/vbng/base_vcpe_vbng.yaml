@@ -233,6 +233,7 @@ resources:
         - port: { get_resource: vbng_private_0_port }
         - port: { get_resource: vbng_private_1_port }
         - port: { get_resource: vbng_private_2_port }
+        - port: { get_resource: vbng_private_3_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
@@ -284,4 +285,4 @@ resources:
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_bng_install.sh -o /opt/v_bng_install.sh
             cd /opt
             chmod +x v_bng_install.sh
-            ./v_bng_install.sh
+            #            ./v_bng_install.sh

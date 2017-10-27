@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:
+# Provides:          v_bng
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
