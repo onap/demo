@@ -59,10 +59,10 @@ parameters:
     type: string
     label: vBNG IN private network CIDR
     description: The CIDR of the input side of vBNG private network
-  #vbrgemu_private_net_id:
-  #  type: string
-  #  label: vBRGEMU Home private network name or ID
-  #  description: Private network that connects vBRGEMU to local devices
+ # vbrgemu_private_net_id:
+ #   type: string
+ #   label: vBRGEMU Home private network name or ID
+ #   description: Private network that connects vBRGEMU to local devices
   #vbrgemu_private_net_cidr:
   #  type: string
   #  label: vBRGEMU Home private network CIDR
@@ -138,8 +138,11 @@ parameters:
   sdnc_ip:
     type: string
     label: SDNC ip address
-    description: SDNC ip address uesd to set NAT
-
+    description: SDNC ip address used to set NAT
+  compile_state:
+    type: string
+    label: Compile State
+    description: State to compile code or not      
 #############
 #           #
 # RESOURCES #
@@ -201,7 +204,7 @@ resources:
       networks:
         - network: { get_param: public_net_id }
         - port: { get_resource: vbrgemu_private_0_port }
-      #  - port: { get_resource: vbrgemu_private_1_port }
+        #- port: { get_resource: vbrgemu_private_1_port }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
@@ -221,6 +224,7 @@ resources:
             __hc2vpp_source_repo_branch__ : { get_param: hc2vpp_source_repo_branch }
             __vpp_patch_url__ : { get_param: vpp_patch_url }
             __sdnc_ip__ : { get_param: sdnc_ip }
+            __compile_state__ : { get_param: compile_state }
           template: |
             #!/bin/bash
 
@@ -240,9 +244,10 @@ resources:
             echo "__hc2vpp_source_repo_branch__" > /opt/config/hc2vpp_source_repo_branch.txt
             echo "__vpp_patch_url__" > /opt/config/vpp_patch_url.txt
             echo "__sdnc_ip__" > /opt/config/sdnc_ip.txt
+            echo "__compile_state__" > /opt/config/compile_state.txt
 
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_brgemu_install.sh -o /opt/v_brgemu_install.sh
             cd /opt
             chmod +x v_brgemu_install.sh
-            ./v_brgemu_install.sh
+            #./v_brgemu_install.sh
