@@ -17,6 +17,13 @@ cp vm_config2robot.sh /opt/eteshare/config
 cp ete.sh /opt
 cp demo.sh /opt
 
+#
+# Deploy latest heat templates
+#
+cd /opt/demo
+git pull
+cp -rf heat /opt/eteshare
+
 #if [[ $CLOUD_ENV != "rackspace" ]]
 #then
 #	sed -i "s/10.0.1.1/"$(cat /opt/config/aai1_ip_addr.txt)"/g" /opt/eteshare/config/integration_robot_properties.py
