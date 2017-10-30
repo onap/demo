@@ -8,6 +8,7 @@ CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 CODE_REPO=$(cat /opt/config/remote_repo.txt)
+HEAT_CODE_REPO=http://gerrit.onap.org/r/demo.git
 
 # Short-term fix to get around MSO to SO name change
 cp /opt/config/so_ip_addr.txt /opt/config/mso_ip_addr.txt
@@ -99,6 +100,7 @@ mkdir -p /opt/eteshare/logs
 mkdir -p /opt/eteshare/config
 cd /opt
 git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO testsuite/properties
+git clone -b $GERRIT_BRANCH --single-branch $HEAT_CODE_REPO demo
 
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
