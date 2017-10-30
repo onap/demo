@@ -103,29 +103,28 @@ To get the flavor names used in your OpenStack environment, use the following Op
         openstack flavor list
 
 Some network parameters must be configured
-        dns_list: PUT THE ADDRESS OF THE EXTERNAL DNS HERE (e.g. a comma-separated list of IP addresses in your /etc/resolv.conf in UNIX-based Operating Systems)
+        dns_list: PUT THE ADDRESS OF THE EXTERNAL DNS HERE (e.g. a comma-separated list of IP addresses in your /etc/resolv.conf in UNIX-based Operating Systems).  THIS LIST MUST INCLUDE THE DNS SERVER THAT OFFERS DNS AS AS SERVICE (see DCAE section below for more details)
         external_dns: PUT THE FIRST ADDRESS OF THE EXTERNAL DNS LIST HERE
         oam_network_cidr: 10.0.0.0/16
 
 You can use the Google Public DNS 8.8.8.8 and 4.4.4.4 address or your internal DNS servers
 
-DCAE spins up the data collection and analytics environment outside the HEAT template. This environment is composed of: 3-VM CDAP/Hadoop cluster, 1 VM for the DCAE data collector, and 1 VM for Postgres DB. DCAE needs to know where it has to spin up these VMs. DCAE configuration requires many parameters:  
+DCAE spins up ONAP's data collection and analytics system in two phases.  The first is the launching of a bootstrap VM that is specified in the ONAP Heat template.  This VM requires a number of deployment specific conifiguration parameters being provided so that it can subsequently bring up the DCAE system.  There are two groups of parameters.  The first group relates to the launching of DCAE VMs, including parameters such as the keystone URL and additional VM image IDs/names.  DCAE VMs are connected to the same internal network as the rest of ONAP VMs, but dynamically spun up by the DCAE core platform.  Hence these parameters need to be provided to DCAE.  Note that although DCAE VMs will be launched in the same tenant as the rest of ONAP, because DCAE may use MultiCloud node as the agent for interfacing with the underying cloud, it needs a separate keystone URL (which points to MultiCloud node instead of the underlying cloud).  The second group of configuration parameters relate to DNS As A Service support (DNSaaS).  DCAE requires DNSaaS for registering its VMs into organization-wide DNS service.  For OpenStack, DNSaaS is provided by Designate.  Designate support can be provided via an integrated service endpoint listed under the service catalog of the OpenStack installation; or proxyed by the ONAP MultiCloud service.  For the latter case, a number of parameters are needed to configure MultiCloud to use the correct Designate service.  These parameters are described below:
 
-        dcaeos_cloud_env: PUT DCAE TARGET DEPLOYMENT STACK'S FLAVOR (e.g. OpenStack) HERE
-        dcaeos_keystone_url: PUT DCAE TARGET DEPLOYMENT STACK'S KEYSTONE URL HERE
-        dcaeos_openstack_region: PUT DCAE TARGET DEPLOYMENT STACK'S REGION HERE
-        dcaeos_openstack_tenant_id: PUT DCAE TARGET DEPLOYMENT STACK'S TENANT ID HERE
-        dcaeos_openstack_username: PUT DCAE TARGET DEPLOYMENT STACK'S USERNAME HERE
-        dcaeos_openstack_password: PUT DCAE TARGET DEPLOYMENT STACK'S PASSWORD HERE
-        dcaeos_dcae_key_name: PUT DCE TARGET DEPLOYMENT STACK'S UPLOADED KEY-PAIR NAME HERE
-        dcaeos_dcae_pub_key: PUT DCAE TARGET DEPLOYMENT STACK'S PUBLIC KEY HERE
-        dcaeos_private_key: PUT DCAE TARGET DEPLOYMENT STACK'S PRIVATE KEY HERE
-        dcaeos_openstack_private_network_name: PUT DCAE TARGET DEPLOYMENT STACK'S INTERNAL NETWOKR ID HERE
-        dcaeos_public_net_id: PUT DCAE TARGET DEPLOYMENT STACK'S PUBLIC NETWORK ID HERE
-        dcaeos_ubuntu_1604_image: PUT DCAE TARGET DEPLOYMENT STACK'S UBUNTU1604 IMAGE ID (TO BE USED BY DCAE VMS) HERE
-        dcaeos_centos_7_image: PUT DCAE TARGET DEPLOYMENT STACK'S CENTOS7 IMAGE ID (TO BE USED BY DCAE VMS) HERE
-        dcaeos_security_group: PUT DCAE TARGET DEPLOYMENT STACK'S SECURITY GROUP ID (TO BE USED BY DCAE VMS) HERE
-        dcaeos_flavor_id: PUT DCAE TARGET DEPLOYMENT STACK'S VM FLAVOR ID (TO BE USED BY DCAE VMS) HERE
+        dcae_keystone_url: PUT THE KEYSTONE URL OF THE OPENSTACK INSTANCE WHERE DCAE IS DEPLOYED (Note: put the MultiCloud proxy URL if the DNSaaS is proxyed by MultiCloud)
+        dcae_centos_7_image: PUT THE CENTOS7 IMAGE ID/NAME AVAILABLE AT THE OPENSTACK INSTANCE WHERE DCAE IS DEPLOYED
+        dcae_security_group: PUT THE SECURITY GROUP ID/NAME TO BE USED AT THE OPENSTACK INSTANCE WHERE DCAE IS DEPLOYED
+        dcae_key_name: PUT THE ACCESS KEY-PAIR NAME REGISTER AT THE OPENSTACK INSTANCE WHERE DCAE IS DEPLOYED
+        dcae_public_key: PUT THE PUBLIC KEY OF A KEY-PAIR USED FOR DCAE BOOTSTRAP NODE TO COMMUNICATE WITH DCAE VMS
+        dcae_private_key: PUT THE PRIVATE KEY OF A KEY-PAIR USED FOR DCAE BOOTSTRAP NODE TO COMMUNICATE WITH DCAE VMS
+
+        dnsaas_config_enabled: true for false FOR WHETHER DNSAAS IS PROXYED
+        dnsaas_region: PUT THE REGION OF THE OPENSTACK INSTANCE WHERE DNSAAS IS PROVIDED
+        dnsaas_tenant_id: PUT THE TENANT ID/NAME OF THE OPENSTACK INSTANCE WHERE DNSAAS IS PROVIDED
+        dnsaas_keystone_url: PUT THE KEYSTONE URL OF THE OPENSTACK INSTANCE WHERE DNSAAS IS PROVIDED
+        dnsaas_username: PUT THE USERNAME OF THE OPENSTACK INSTANCE WHERE DNSAAS IS PROVIDED
+        dnsaas_password: PUT THE PASSWORD OF THE OPENSTACK INSTANCE WHERE DNSAAS IS PROVIDED
+
 
 The ONAP platform can be instantiated via Horizon (OpenStack dashboard) or Command Line.
 
