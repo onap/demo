@@ -216,73 +216,62 @@ parameters:
   #                         #
   ###########################
 
-  dcaeos_cloud_env:
+  dnsaas_config_enabled:
     type: string
-    description: the cloud flavor of the OpenStack instance where DCAE is deployed
+    description: whether the DNSaaS configuration section is enabled
 
-  dcaeos_keystone_url:
+  dnsaas_region:
     type: string
-    description: the keystone URL of the OpenStack instance where DCAE is deployed
+    description: the region of the cloud instance providing the Designate DNS as a Service
 
-  dcaeos_openstack_region:
+  dnsaas_tenant_id:
     type: string
-    description: the region of the OpenStack instance where DCAE is deployed
+    description: the (default) tenant id of the cloud instance providing the Designate DNS as a Service
 
-  dcaeos_openstack_tenant_id:
+  dnsaas_keystone_url:
     type: string
-    description: the keystone URL of the OpenStack instance where DCAE is deployed
+    description: the keystone URL of the cloud instance providing the Designate DNS as a Service
 
-  dcaeos_openstack_username:
+  dnsaas_username:
     type: string
-    description: the username of the identity API of the OpenStack instance where DCAE is deployed
+    description: the username of the cloud instance providing the Designate DNS as a Service
 
-  dcaeos_openstack_password:
+  dnsaas_password:
     type: string
-    description: the password of the identity API of the OpenStack instance where DCAE is deployed
+    description: the password of the cloud instance providing the Designate DNS as a Service
 
-  dcaeos_dcae_key_name:
+  dcae_keystone_url:
     type: string
-    description: the key-pair name uploaded to the OpenStack instance where DCAE is deployed
+    description: the keystone URL for DCAE to use (via MultiCloud)
 
-  dcaeos_dcae_pub_key:
+  dcae_key_name:
     type: string
-    description: the public key of the key-pair uploaded to the OpenStack instance where DCAE is deployed
+    description: the name of the keypair on-boarded with Cloud
 
-  dcaeos_private_key:
+  dcae_private_key:
     type: string
-    description: the private key of the key-pair uploaded to the OpenStack instance where DCAE is deployed
+    description: the private key of the key-apir used between the DCAE bootstrap container and DCAE VMs
 
-  dcaeos_openstack_private_network_name:
+  dcae_public_key:
     type: string
-    description: the name/id of the network used as DCAE internal network in the OpenStack instance where DCAE is deployed
+    description: the prublic key of the key-apir used between the DCAE bootstrap container and DCAE VMs
 
-  dcaeos_public_net_id:
+  dcae_centos_7_image:
     type: string
-    description: the name/id of the network where DCAE gets floating IPs from in the OpenStack instance where DCAE is deployed
+    description: the id/name of the CentOS 7 VM imange
 
-  dcaeos_ubuntu_1604_image:
+  dcae_security_group:
     type: string
-    description: the name/id of the Ubuntu1604 VM image in the OpenStack instance where DCAE is deployed
+    description: the security group to be used by DCAE VMs
 
-  dcaeos_centos_7_image:
-    type: string
-    description: the name/id of the CentOS7 VM image in the OpenStack instance where DCAE is deployed
-
-  dcaeos_security_group:
-    type: string
-    description: the name/id of the security group to be used by DCAE VMs in the OpenStack instance where DCAE is deployed
-
-  dcaeos_flavor_id:
-    type: string
-    description: the name/id of the VM flavor to be used by DCAE VMs in the OpenStack instance where DCAE is deployed
 
 #  dcae_base_environment:
 #    type: string
 #    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/1-NIC-FLOATING-IPS)
 
-  dcae_zone:
-    type: string
-    description: DCAE Zone to use in VM names created by DCAE controller
+#  dcae_zone:
+#    type: string
+#    description: DCAE Zone to use in VM names created by DCAE controller
 
 #  dcae_state:
 #    type: string
@@ -1717,7 +1706,6 @@ resources:
       user_data:
         str_replace:
           params:
-            __dcae_zone__: { get_param: dcae_zone }
             __rand_str__: { get_resource: random-str }
             # repo related
             __artifacts_version__: { get_param: artifacts_version }
@@ -1734,40 +1722,45 @@ resources:
             __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __external_dns__: { get_param: external_dns }
-            # conf for the OpenStack env where DCAE is deployed
-            __dcaeos_cloud_env__: { get_param: dcaeos_cloud_env }
-            __dcaeos_keystone_url__: { get_param: dcaeos_keystone_url }
-            __dcaeos_openstack_region__: { get_param: dcaeos_openstack_region }
-            __dcaeos_tenant_id__: { get_param: dcaeos_openstack_tenant_id }
-            __dcaeos_openstack_user__: { get_param: dcaeos_openstack_username }
-            __dcaeos_openstack_password__: { get_param: dcaeos_openstack_password }
-            __dcaeos_key_name__: { get_param: dcaeos_dcae_key_name }
-            __dcaeos_pub_key__: { get_param: dcaeos_dcae_pub_key }
-            __dcaeos_private_key__: { get_param: dcaeos_private_key }
-            __dcaeos_openstack_private_network_name__: { get_param: dcaeos_openstack_private_network_name }
-            __dcaeos_public_net_id__: { get_param: dcaeos_public_net_id }
-            __dcaeos_ubuntu_1604_image__: { get_param: dcaeos_ubuntu_1604_image }
-            __dcaeos_centos_7_image__: { get_param: dcaeos_centos_7_image }
-            __dcaeos_security_group__ : { get_param: dcaeos_security_group }
-            __dcaeos_flavor_id__: { get_param: dcaeos_flavor_id }
+            # conf for VMs DCAE is to bringup
+            __openstack_keystone_url__: { get_param: keystone_url }
+            __dcae_keystone_url__: { get_param: dcae_keystone_url }
+            __dcaeos_cloud_env__: { get_param: cloud_env }
+            __dcaeos_keystone_url__: { get_param: dcae_keystone_url }
+            __dcaeos_region__: { get_param: openstack_region }
+            __dcaeos_tenant_id__: { get_param: openstack_tenant_id }
+            __dcaeos_username__: { get_param: openstack_username }
+            __dcaeos_password__: { get_param: openstack_api_key }
+            __dcaeos_key_name__: { get_attr: [vm_key, name] }
+            __dcaeos_key_name__: { get_param: dcae_key_name }
+            __dcaeos_public_key__: { get_param: dcae_public_key }
+            __dcaeos_private_key__: { get_param: dcae_private_key }
+            __dcaeos_private_network_name__: { get_attr: [oam_onap, name] }
+            __dcaeos_public_network_name__: { get_param: public_net_id }
+            __dcaeos_ubuntu_1604_image__: { get_param: ubuntu_1604_image }
+            __dcaeos_centos_7_image__: { get_param: dcae_centos_7_image }
+            __dcaeos_security_group__ : { get_param: dcae_security_group }
+            __dcaeos_flavor_id__: { get_param: flavor_medium }
+            __dcaeos_dnsaas_config_enabled__: { get_param: dnsaas_config_enabled }
+            __dcaeos_dnsaas_region__: { get_param: dnsaas_region }
+            __dcaeos_dnsaas_tenant_id__: { get_param: dnsaas_tenant_id}
+            __dcaeos_dnsaas_keystone_url__: { get_param: dnsaas_keystone_url }
+            __dcaeos_dnsaas_username__: { get_param: dnsaas_username }
+            __dcaeos_dnsaas_password__: { get_param: dnsaas_password }
             # fixed private IPs
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __policy_ip_addr__: { get_param: policy_ip_addr }
             __sdc_ip_addr__: { get_param: sdc_ip_addr }
+            __openo_ip_addr__: { get_param: openo_ip_addr }
+            __aai1_ip_addr__: { get_param: aai1_ip_addr }
+            __aai2_ip_addr__: { get_param: aai2_ip_addr }
             # floating IPs
             __dns_floating_ip_addr__: { get_attr: [dns_floating_ip, floating_ip_address] }
             __aai1_floating_ip_addr__: { get_attr: [aai1_floating_ip, floating_ip_address] }
             __aai2_floating_ip_addr__: { get_attr: [aai2_floating_ip, floating_ip_address] }
-            __so_floating_ip_addr__: { get_attr: [so_floating_ip, floating_ip_address] }
             __mrouter_floating_ip_addr__: { get_attr: [mrouter_floating_ip, floating_ip_address] }
-            __robot_floating_ip_addr__: { get_attr: [robot_floating_ip, floating_ip_address] }
-            __vid_floating_ip_addr__: { get_attr: [vid_floating_ip, floating_ip_address] }
-            __sdnc_floating_ip_addr__: { get_attr: [sdnc_floating_ip, floating_ip_address] }
             __sdc_floating_ip_addr__: { get_attr: [sdc_floating_ip, floating_ip_address] }
-            __portal_floating_ip_addr__: { get_attr: [portal_floating_ip, floating_ip_address] }
             __policy_floating_ip_addr__: { get_attr: [policy_floating_ip, floating_ip_address] }
-            __appc_floating_ip_addr__: { get_attr: [appc_floating_ip, floating_ip_address] }
-            __clamp_floating_ip_addr__: { get_attr: [clamp_floating_ip, floating_ip_address] }
             __openo_floating_ip_addr__: { get_attr: [openo_floating_ip, floating_ip_address] }
             __dcae_c_floating_ip_addr__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
 
@@ -1794,41 +1787,44 @@ resources:
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             # conf for the OpenStack env where DCAE is deployed
+            echo "__openstack_keystone_url__" > /opt/config/openstack_keystone_url.txt
             echo "__dcaeos_cloud_env__" > /opt/config/cloud_env.txt
             echo "__dcaeos_keystone_url__" > /opt/config/keystone_url.txt
-            echo "__dcaeos_openstack_region__" > /opt/config/openstack_region.txt
+            echo "__dcaeos_region__" > /opt/config/openstack_region.txt
             echo "__dcaeos_tenant_id__" > /opt/config/tenant_id.txt
             echo "__dcaeos_tenant_id__" > /opt/config/tenant_name.txt
-            echo "__dcaeos_openstack_user__" > /opt/config/openstack_user.txt
-            echo "__dcaeos_openstack_password__" > /opt/config/openstack_password.txt
+            echo "__dcaeos_username__" > /opt/config/openstack_user.txt
+            echo "__dcaeos_password__" > /opt/config/openstack_password.txt
             echo "__dcaeos_key_name__" > /opt/config/key_name.txt
-            echo "__dcaeos_pub_key__" > /opt/config/pub_key.txt
+            echo "__dcaeos_public_key__" > /opt/config/pub_key.txt
             echo "__dcaeos_private_key__" > /opt/config/priv_key
-            echo "__dcaeos_openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
-            echo "__dcaeos_public_net_id__" > /opt/config/public_net_id.txt
+            echo "__dcaeos_private_network_name__" > /opt/config/openstack_private_network_name.txt
+            echo "__dcaeos_public_network_name__" > /opt/config/public_net_id.txt
             echo "__dcaeos_ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
             echo "__dcaeos_centos_7_image__" > /opt/config/centos_7_image.txt
             echo "__dcaeos_security_group__" > /opt/config/security_group.txt
             echo "__dcaeos_flavor_id__" > /opt/config/flavor_id.txt
+            echo "__dcaeos_dnsaas_config_enabled__" > /opt/config/dnsaas_config_enabled.txt
+            echo "__dcaeos_dnsaas_region__" > /opt/config/dnsaas_region.txt
+            echo "__dcaeos_dnsaas_tenant_id__" > /opt/config/dnsaas_tenant_id.txt
+            echo "__dcaeos_dnsaas_keystone_url__" > /opt/config/dnsaas_keystone_url.txt
+            echo "__dcaeos_dnsaas_username__" > /opt/config/dnsaas_username.txt
+            echo "__dcaeos_dnsaas_password__" > /opt/config/dnsaas_password.txt
             # fixed private IP addresses of other ONAP components
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
+            echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
+            echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
+            echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
             # floating IPs
             echo "__dns_floating_ip_addr__" > /opt/config/dns_floating_ip_addr.txt
             echo "__aai1_floating_ip_addr__" > /opt/config/aai1_floating_ip_addr.txt
             echo "__aai2_floating_ip_addr__" > /opt/config/aai2_floating_ip_addr.txt
-            echo "__so_floating_ip_addr__" > /opt/config/so_floating_ip_addr.txt
             echo "__mrouter_floating_ip_addr__" > /opt/config/mrouter_floating_ip_addr.txt
-            echo "__robot_floating_ip_addr__" > /opt/config/robot_floating_ip_addr.txt
-            echo "__vid_floating_ip_addr__" > /opt/config/vid_floating_ip_addr.txt
-            echo "__sdnc_floating_ip_addr__" > /opt/config/sdnc_floating_ip_addr.txt
             echo "__sdc_floating_ip_addr__" > /opt/config/sdc_floating_ip_addr.txt
-            echo "__portal_floating_ip_addr__" > /opt/config/portal_floating_ip_addr.txt
             echo "__policy_floating_ip_addr__" > /opt/config/policy_floating_ip_addr.txt
-            echo "__appc_floating_ip_addr__" > /opt/config/appc_floating_ip_addr.txt
-            echo "__clamp_floating_ip_addr__" > /opt/config/clamp_floating_ip_addr.txt
-            echo "__openo_floating_ip_addr__" > /opt/config/opoeno_floating_ip_addr.txt
+            echo "__openo_floating_ip_addr__" > /opt/config/openo_floating_ip_addr.txt
             echo "__dcae_c_floating_ip_addr__" > /opt/config/dcae_c_floating_ip_addr.txt
 
             # Download and run install script
