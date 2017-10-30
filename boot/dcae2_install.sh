@@ -1,4 +1,20 @@
 #!/bin/bash
+#############################################################################
+#
+# Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#############################################################################
 
 set -ex 
 
@@ -23,10 +39,11 @@ then
 fi
 
 # Download dependencies
-echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+#echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
+#echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget make openjdk-8-jdk git ntp ntpdate python python-pip
+#apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget make openjdk-8-jdk git ntp ntpdate python python-pip
+apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget git ntp ntpdate python python-pip
 
 # Download scripts from Nexus
 curl -k "$NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dcae2_vm_init.sh" -o /opt/dcae2_vm_init.sh
@@ -80,7 +97,7 @@ sed -e 's/\\n/\n/g' /opt/config/priv_key | sed -e 's/^[ \t]*//g; s/[ \t]*$//g' >
 chmod 777 /opt/app/config/key
 
 # move keystone url file
-cp /opt/config/keystone_url.txt /opt/app/config/keystone_url.txt
+#cp /opt/config/keystone_url.txt /opt/app/config/keystone_url.txt
 
 # download blueprint input template files
 rm -rf /opt/app/inputs-templates
@@ -89,7 +106,10 @@ wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositor
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/phinputs.yaml
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/dhinputs.yaml
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/invinputs.yaml
-
+wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/vesinput.yaml
+wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/tcainputs.yaml
+wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/he-ip.yaml
+wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/hr-ip.yaml
 
 # generate blueprint input files
 pip install jinja2
