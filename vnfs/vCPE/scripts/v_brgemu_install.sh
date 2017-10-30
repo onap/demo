@@ -199,6 +199,9 @@ EOF
     echo $NICS
 
     BRG_BNG_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 2`  # second interface in list
+    cat > /opt/config/brg_nic.txt << EOF
+$BRG_BNG_NIC
+EOF
  
     cat > /etc/vpp/setup.gate << EOF
 set int state ${BRG_BNG_NIC} up
@@ -219,13 +222,15 @@ EOF
 #!/bin/bash
 while :
 do
-        if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]]; then
+        if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]];
+        then
                 echo "vpp not running"
         else
                 break
         fi
 done
 
+BRG_BNG_NIC=$(cat /opt/config/brg_nic.txt)
 sdnc_ip=$(cat /opt/config/sdnc_ip.txt)
 
 vppctl tap connect tap0
