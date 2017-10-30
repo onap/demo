@@ -219,12 +219,23 @@ EOF
 #!/bin/bash
 while :
 do
-        if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]]; then
+        if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]]; 
+        then
                 echo "vpp not running"
         else
                 break
         fi
 done
+
+while read -r line
+do
+        re=${line#*/[0-9]/[0-9]}
+        if [ "$line" != "$re" ];
+        then
+                nic=${line%(*}
+                break
+        fi
+done < <(vppctl show int addr)
 
 sdnc_ip=$(cat /opt/config/sdnc_ip.txt)
 
@@ -236,8 +247,8 @@ ifconfig tap0 192.168.4.20/24
 route add -host $sdnc_ip tap0
 route add -host 20.0.0.40 tap0
 vppctl ip route add 192.168.4.0/24 via tap-1
-vppctl set interface snat in tap-1 out ${BRG_BNG_NIC}
-vppctl snat add interface address ${BRG_BNG_NIC}
+vppctl set interface snat in tap-1 out $nic
+vppctl snat add interface address $nic
 
 
 while read -r hw
