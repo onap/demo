@@ -49,7 +49,7 @@ docker run -i -t -d --name vfc_catalog -p 8806:8806 -e MSB_ADDR=$OPENO_IP:80 $NE
 docker run -i -t -d --name vfc_emsdriver -p 8206:8206 -e MSB_ADDR=$OPENO_IP:80 -e VES_ADDR=$DCAE_COLL_IP:8080 -e VES_AUTHINFO="":"" $NEXUS_DOCKER_REPO/onap/vfc/emsdriver:$DOCKER_IMAGE_VERSION
 docker run -i -t -d --name vfc_gvnfmdriver -p 8484:8484 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/gvnfmdriver:$DOCKER_IMAGE_VERSION
 docker run -i -t -d --name vfc_jujudriver -p 8483:8483 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/jujudriver:$DOCKER_IMAGE_VERSION
-docker run -i -t -d --name vfc_svnfm_huawei -p 8482:8482 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/huawei:$DOCKER_IMAGE_VERSION
+docker run -i -t -d --name vfc_svnfm_huawei -p 8482:8482 -p 8443:8443 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/huawei:$DOCKER_IMAGE_VERSION
 docker run -i -t -d --name vfc_nslcm -p 8403:8403 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/nslcm:$DOCKER_IMAGE_VERSION
 docker run -i -t -d --name vfc_resmanagement -p 8480:8480 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/resmanagement:$DOCKER_IMAGE_VERSION
 docker run -i -t -d --name vfc_vnflcm -p 8801:8801 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/vnflcm:$DOCKER_IMAGE_VERSION
