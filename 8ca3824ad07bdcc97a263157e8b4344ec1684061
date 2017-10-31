@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_bd892728",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 343
+      },
+      "writtenOn": "2017-10-31T06:14:21Z",
+      "side": 1,
+      "message": "I thought it requires the following content here:\n-d \u0027{\"auth\":{\"tenantName\":\"Integration-SB-04\" }}\u0027",
+      "range": {
+        "startLine": 394,
+        "startChar": 70,
+        "endLine": 394,
+        "endChar": 115
+      },
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
