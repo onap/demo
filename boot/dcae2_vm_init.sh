@@ -160,8 +160,8 @@ register_multicloud_pod25dns_with_aai()
     local CLOUD_ENV
     local CLOUD_IDENTITY_URL
     local DNSAAS_SERVICE_URL
-    local DNSAAS_USERNAME
-    local DNSAAS_PASSWORD
+    local DNSAAS_USERNAME='demo'
+    local DNSAAS_PASSWORD='onapdemo'
     local DNSAAS_TENANT_ID
 
     CLOUD_REGION="$(cat /opt/config/openstack_region.txt)"
@@ -171,9 +171,8 @@ register_multicloud_pod25dns_with_aai()
 
     local RESPCODE
     DNSAAS_SERVICE_URL="$(cat /opt/config/dnsaas_keystone_url.txt)"
-    DNSAAS_USERNAME="$(cat /opt/config/dnsaas_username.txt)"
-    DNSAAS_PASSWORD="$(cat /opt/config/dnsaas_password.txt)"
-    DNSAAS_TENANT_ID="$(cat /opt/config/dnsaas_tenant_id.txt)"
+    # a tenant of the same name must be set up on the Deisgnate providing OpenStack
+    DNSAAS_TENANT_NAME="$(cat /opt/config/tenant_name.txt)"
     cat >"/tmp/${CLOUD_OWNER}_${CLOUD_REGION}.json" <<EOL
 {
     "cloud-owner" : "$CLOUD_OWNER",
@@ -190,7 +189,7 @@ register_multicloud_pod25dns_with_aai()
             {
                 "esr-system-info-id": "532ac032-e996-41f2-84ed-9c7a1766eb30",
                 "cloud-domain": "Default",
-                "default-tenant" : "$DNSAAS_TENANT_ID",
+                "default-tenant" : "$DNSAAS_TENANT_NAME",
                 "user-name" : "$DNSAAS_USERNAME",
                 "password" : "$DNSAAS_PASSWORD",
                 "service-url" : "$DNSAAS_SERVICE_URL",
@@ -240,16 +239,24 @@ register_multicloud_pod25_with_aai()
     local KEYSTONE_URL
     local USERNAME
     local PASSWORD
-    local TENANT_ID
+    local TENANT_NAME
 
     CLOUD_REGION="$(cat /opt/config/openstack_region.txt)"
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
     MCIP="$(cat /opt/config/openo_ip_addr.txt)"
     CLOUD_IDENTITY_URL="http://${MCIP}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}/identity/v2.0"
     KEYSTONE_URL="$(cat /opt/config/openstack_keystone_url.txt)"
+    if [[ "$KEYSTONE_URL" == */v3 ]]; then
+        echo $KEYSTONE_URL
+    elif [[ "$KEYSTONE_URL" == */v2.0 ]]; then
+        echo $KEYSTONE_URL
+    else
+        KEYSTONE_URL="${KEYSTONE_URL}/v3"
+        echo $KEYSTONE_URL
+    fi
     USERNAME="$(cat /opt/config/openstack_user.txt)"
     PASSWORD="$(cat /opt/config/openstack_password.txt)"
-    TENANT_ID="$(cat /opt/config/tenant_id.txt)"
+    TENANT_NAME="$(cat /opt/config/tenant_name.txt)"
     cat >"/tmp/${CLOUD_OWNER}_${CLOUD_REGION}.json" <<EOL
 { 
     "cloud-owner" : "$CLOUD_OWNER",
@@ -267,7 +274,7 @@ register_multicloud_pod25_with_aai()
             { 
                 "esr-system-info-id": "432ac032-e996-41f2-84ed-9c7a1766eb29",
                 "cloud-domain": "Default",
-                "default-tenant" : "$TENANT_ID",
+                "default-tenant" : "$TENANT_NAME",
                 "user-name" : "$USERNAME",
                 "password" : "$PASSWORD",
                 "service-url" : "$KEYSTONE_URL",
@@ -358,43 +365,55 @@ register_dns_zone()
     CLOUD_REGION="$(cat /opt/config/openstack_region.txt)"
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
     if [ -z "$1" ]; then DCAE_ZONE="$(cat /opt/config/dcae_zone.txt)"; else DCAE_ZONE="$1"; fi
-    DNSAAS_TENANT_ID="$(cat /opt/config/dnsaas_tenant_id.txt)"
+    DNSAAS_TENANT_NAME="$(cat /opt/config/dnsaas_tenant_name.txt)"
     MCHOST=$(cat /opt/config/openo_ip_addr.txt)
     MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
 
+    MCDATA='-d "{\"tenantName\": \"${DNSAAS_TENANT_ID}\"}"'
     MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
     MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}:9005/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
+
+     ### zone operations
+     # because all VM's use 10.0.100.1 as their first DNS server, the designate DNS server as seocnd, we need to use a
+     # domain outside of the first DNS server's domaine 
+    local ZONENAME
+    ZONENAME="${DCAE_ZONE}.dcaeg2.simpledemo.onap.org."
+
+    echo "===> Register DNS zone $ZONENAME"
 
 
     ### Get Token
     local TOKEN
 
     MCURL="${MULTICLOUD_PLUGIN_ENDPOINT}/identity/v3/auth/tokens"
-    TOKEN=$(call_api_for_response_header "$MCURL" "$MCMETHOD" "$MCRESP" "$MCHEADERS" "$MCAUTH" "$MCDATA" | grep 'X-Subject-Token' | sed "s/^.*: //")
-    #TOKEN=$(curl -v -s -H "Content-Type: application/json" -X POST -d "{\"tenantName\": \"${DNSAAS_TENANT_ID}\"}"  "${MULTICLOUD_PLUGIN_ENDPOINT}/identity/v3/auth/tokens" 2>&1 | grep X-Subject-Token | sed "s/^.*: //")
+    echo "=====> Getting token from $MCURL
+    #TOKEN=$(call_api_for_response_header "$MCURL" "$MCMETHOD" "$MCRESP" "$MCHEADERS" "$MCAUTH" "$MCDATA" | grep 'X-Subject-Token' | sed "s/^.*: //")
+    TOKEN=$(curl -v -s -H "Content-Type: application/json" -X POST -d "{\"tenantName\": \"${DNSAAS_TENANT_NAME}\"}"  "${MCURL}" 2>&1 | grep X-Subject-Token | sed "s/^.*: //")
     echo "Received Keystone token $TOKEN from $MCURL"
-
-    ### zone operations
-    local ZONENAME
-    ZONENAME="${DCAE_ZONE}.dcaeg2.simpledemo.onap.org."
+    if [ -z "$TOKEN" ]; then;
+        echo "Faile to acquire token for creating DNS zone.  Exit"
+        exit(1)
+    fi
 
     ### list zones
+    echo "=====> Get current zone listing"
     curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones"
 
     ### create a zone
-    echo "Creating zone $ZONENAME"
+    echo "=====> Creating zone $ZONENAME"
     curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X POST -d "{ \"name\": \"$ZONENAME\", \"email\": \"lji@research.att.com\"}" "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones"
 
     ### query the zone with zone name
+    echo "=====> Querying zone $ZONENAME"
     curl -s -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}"
 
     ### export ZONE id
     local ZONEID
     ZONEID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
-    echo "After creation, zone $ZONENAME ID is $ZONEID"
+    echo "=====> After creation, zone $ZONENAME ID is $ZONEID"
 
     ### query the zone with zone id
-    echo "Test listing zone info for zone $ZONENAME"
+    echo "=====> Querying zone $ZONENAME by ID $ZONEID"
     curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones/${ZONEID}"
 }
 
@@ -431,7 +450,7 @@ delete_dns_zone()
     TOKEN=$(curl -v -s -H "Content-Type: application/json" -X POST -d "{\"tenantName\": \"${DNSAAS_TENANT_ID}\"}"  "${MULTICLOUD_PLUGIN_ENDPOINT}/identity/v3/auth/tokens"  2>&1 | grep X-Subject-Token | sed "s/^.*: //")
 
     local ZONENAME
-    ZONENAME="$1.dcae.simpledemo.onap.org."
+    ZONENAME="$1.dcaeg2.simpledemo.onap.org."
     local ZONEID
     ZONEID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
 
@@ -470,7 +489,7 @@ list_dns_zone()
     TOKEN=$(curl -v -s -H "Content-Type: application/json" -X POST -d "{\"tenantName\": \"${DNSAAS_TENANT_ID}\"}"  "${MULTICLOUD_PLUGIN_ENDPOINT}/identity/v3/auth/tokens"  2>&1 | grep X-Subject-Token | sed "s/^.*: //")
 
     local ZONENAME
-    ZONENAME="$1.dcae.simpledemo.onap.org."
+    ZONENAME="$1.dcaeg2.simpledemo.onap.org."
     local ZONEID
     ZONEID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
 
@@ -485,13 +504,10 @@ NEXUS_USER=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWORD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DOCKER_VERSION=$(cat /opt/config/docker_version.txt)
-ZONE=$(cat /opt/config/dcae_zone.txt)
-RANDSTR=$(cat /opt/config/rand_str.txt)
+# use rand_str as zone
+ZONE=$(cat /opt/config/rand_str.txt)
 MYFLOATIP=$(cat /opt/config/dcae_float_ip.txt)
 MYLOCALIP=$(cat /opt/config/dcae_ip_addr.txt)
-TENANTNAME=$(cat /opt/config/tenant_name.txt)
-OSUSERNAME=$(cat /opt/config/openstack_user.txt)
-OSPASSWORD=$(cat /opt/config/openstack_password.txt)
 
 
 #########################################
@@ -540,7 +556,7 @@ while [ ! -f /opt/app/config/runtime.ip.consul ]; do echo "."; sleep 30; done
 
 
 # start proxy for consul's health check
-CONSULIP=$(head -1 /opt/config/runtime.ip.consul | sed 's/[[:space:]]//g')
+CONSULIP=$(head -1 /opt/app/config/runtime.ip.consul | sed 's/[[:space:]]//g')
 echo "Consul is available at $CONSULIP" 
 
 cat >./nginx.conf <<EOL
