@@ -42,7 +42,11 @@ parameters:
   
   public_net_id:
     type: string
-    description: Public network for floating IP address allocation
+    description: The ID of the Public network for floating IP address allocation
+
+  public_net_name:
+    type: string
+    description: The name of the Public network referred by public_net_id
 
   ubuntu_1404_image:
     type: string
@@ -111,6 +115,10 @@ parameters:
   openstack_tenant_id:
     type: string
     description: OpenStack tenant ID
+
+  openstack_tenant_name:
+    type: string
+    description: OpenStack tenant name (matching with the openstack_tenant_id) 
 
   openstack_username:
     type: string
@@ -224,10 +232,6 @@ parameters:
     type: string
     description: the region of the cloud instance providing the Designate DNS as a Service
 
-  dnsaas_tenant_id:
-    type: string
-    description: the (default) tenant id of the cloud instance providing the Designate DNS as a Service
-
   dnsaas_keystone_url:
     type: string
     description: the keystone URL of the cloud instance providing the Designate DNS as a Service
@@ -239,6 +243,10 @@ parameters:
   dnsaas_password:
     type: string
     description: the password of the cloud instance providing the Designate DNS as a Service
+
+  dnsaas_tenant_name:
+    type: string
+    description: the name of the tenant in the cloud instance providing the Designate DNS as a Service
 
   dcae_keystone_url:
     type: string
@@ -1693,7 +1701,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
-      flavor: { get_param: flavor_medium }
+      flavor: { get_param: flavor_small }
       name:
         str_replace:
           template: base-dcae-bootstrap
@@ -1729,6 +1737,7 @@ resources:
             __dcaeos_keystone_url__: { get_param: dcae_keystone_url }
             __dcaeos_region__: { get_param: openstack_region }
             __dcaeos_tenant_id__: { get_param: openstack_tenant_id }
+            __dcaeos_tenant_name__: { get_param: openstack_tenant_name }
             __dcaeos_username__: { get_param: openstack_username }
             __dcaeos_password__: { get_param: openstack_api_key }
             __dcaeos_key_name__: { get_attr: [vm_key, name] }
@@ -1736,15 +1745,15 @@ resources:
             __dcaeos_public_key__: { get_param: dcae_public_key }
             __dcaeos_private_key__: { get_param: dcae_private_key }
             __dcaeos_private_network_name__: { get_attr: [oam_onap, name] }
-            __dcaeos_public_network_name__: { get_param: public_net_id }
+            __dcaeos_public_network_name__: { get_param: public_net_name }
             __dcaeos_ubuntu_1604_image__: { get_param: ubuntu_1604_image }
             __dcaeos_centos_7_image__: { get_param: dcae_centos_7_image }
             __dcaeos_security_group__ : { get_param: dcae_security_group }
             __dcaeos_flavor_id__: { get_param: flavor_medium }
             __dcaeos_dnsaas_config_enabled__: { get_param: dnsaas_config_enabled }
             __dcaeos_dnsaas_region__: { get_param: dnsaas_region }
-            __dcaeos_dnsaas_tenant_id__: { get_param: dnsaas_tenant_id}
             __dcaeos_dnsaas_keystone_url__: { get_param: dnsaas_keystone_url }
+            __dnsaas_tenant_name__: { get_param: dnsaas_tenant_name }
             __dcaeos_dnsaas_username__: { get_param: dnsaas_username }
             __dcaeos_dnsaas_password__: { get_param: dnsaas_password }
             # fixed private IPs
@@ -1792,13 +1801,14 @@ resources:
             echo "__dcaeos_keystone_url__" > /opt/config/keystone_url.txt
             echo "__dcaeos_region__" > /opt/config/openstack_region.txt
             echo "__dcaeos_tenant_id__" > /opt/config/tenant_id.txt
-            echo "__dcaeos_tenant_id__" > /opt/config/tenant_name.txt
+            echo "__dcaeos_tenant_name__" > /opt/config/tenant_name.txt
             echo "__dcaeos_username__" > /opt/config/openstack_user.txt
             echo "__dcaeos_password__" > /opt/config/openstack_password.txt
             echo "__dcaeos_key_name__" > /opt/config/key_name.txt
             echo "__dcaeos_public_key__" > /opt/config/pub_key.txt
             echo "__dcaeos_private_key__" > /opt/config/priv_key
             echo "__dcaeos_private_network_name__" > /opt/config/openstack_private_network_name.txt
+            echo "__dcaeos_public_network_name__" > /opt/config/public_net_name.txt
             echo "__dcaeos_public_network_name__" > /opt/config/public_net_id.txt
             echo "__dcaeos_ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
             echo "__dcaeos_centos_7_image__" > /opt/config/centos_7_image.txt
@@ -1806,8 +1816,8 @@ resources:
             echo "__dcaeos_flavor_id__" > /opt/config/flavor_id.txt
             echo "__dcaeos_dnsaas_config_enabled__" > /opt/config/dnsaas_config_enabled.txt
             echo "__dcaeos_dnsaas_region__" > /opt/config/dnsaas_region.txt
-            echo "__dcaeos_dnsaas_tenant_id__" > /opt/config/dnsaas_tenant_id.txt
             echo "__dcaeos_dnsaas_keystone_url__" > /opt/config/dnsaas_keystone_url.txt
+            echo "__dnsaas_tenant_name__" > /opt/config/dnsaas_tenant_name.txt
             echo "__dcaeos_dnsaas_username__" > /opt/config/dnsaas_username.txt
             echo "__dcaeos_dnsaas_password__" > /opt/config/dnsaas_password.txt
             # fixed private IP addresses of other ONAP components
@@ -1831,4 +1841,4 @@ resources:
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae2_install.sh -o /opt/dcae2_install.sh
             cd /opt
             chmod +x dcae2_install.sh
-            ./dcae2_install.sh
+            ./dcae2_install.sh > /tmp/dcae2_install.log 2>&1
