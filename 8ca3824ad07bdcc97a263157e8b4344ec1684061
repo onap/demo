@@ -157,6 +157,30 @@
     },
     {
       "key": {
+        "uuid": "1a2f8d8d_0c1b6e1c",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T13:58:38Z",
+      "side": 1,
+      "message": "No, actually, you can choose one of following:\n\"{\\\"tenant_name\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}\"\nor\n\"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"\nBut I suggest you follow the latter one since it is standard Keystone V2.0 api request format.",
+      "parentUuid": "1a2f8d8d_6c72f2ae",
+      "range": {
+        "startLine": 394,
+        "startChar": 70,
+        "endLine": 394,
+        "endChar": 115
+      },
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a2f8d8d_5deb63b0",
         "filename": "boot/dcae2_vm_init.sh",
         "patchSetId": 2
