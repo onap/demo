@@ -133,6 +133,30 @@
     },
     {
       "key": {
+        "uuid": "1a2f8d8d_6c72f2ae",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 51
+      },
+      "writtenOn": "2017-10-31T13:40:26Z",
+      "side": 1,
+      "message": "My understanding is that if we use tenant name, we can do it either way, inside of the auth, or not.",
+      "parentUuid": "1a2f8d8d_bd892728",
+      "range": {
+        "startLine": 394,
+        "startChar": 70,
+        "endLine": 394,
+        "endChar": 115
+      },
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a2f8d8d_5deb63b0",
         "filename": "boot/dcae2_vm_init.sh",
         "patchSetId": 2
