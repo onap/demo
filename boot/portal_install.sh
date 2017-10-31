@@ -68,7 +68,7 @@ apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
 apt-get install -y --allow-unauthenticated docker-engine
 
 mkdir /opt/docker
-curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.16.1/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
 chmod +x /opt/docker/docker-compose
 
 # Set the MTU size of docker containers to the minimum MTU size supported by vNICs. OpenStack deployments may need to know the external DNS IP
