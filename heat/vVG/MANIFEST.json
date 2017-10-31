@@ -1,0 +1,17 @@
+{
+    "name": "",
+    "description": "",
+    "data": [
+        {
+            "file": "base_vvg.yaml",
+            "type": "HEAT",
+            "isBase": "true",
+            "data": [
+                {
+                    "file": "base_vvg.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        }
+    ]
+}
