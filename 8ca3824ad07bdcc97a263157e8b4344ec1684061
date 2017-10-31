@@ -2,6 +2,114 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a2f8d8d_bdb7e7d7",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "There will be 2 seperate cloud region: cloud region for pod25, and cloud region for pod25dns . There is no guarantee that these two region are with the same name. So I would suggest cloud region for pod25dns use the value provided by \u0027dnsaas_region\u0027\nSuggest change: CLOUD_REGION\u003d\"$(cat /opt/config/dnsaas_region.txt)\"",
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_1d3b9b39",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "add 1 more line:\nDNSAAS_CLOUD_REGION\u003d\"$(cat /opt/config/dnsaas_region.txt)\"",
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_9dbaebbe",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "could you replace this with value of \u0027dnsaas_region\u0027 from heat env? .e.g\n$DNSAAS_CLOUD_REGION",
+      "range": {
+        "startLine": 274,
+        "startChar": 308,
+        "endLine": 274,
+        "endChar": 317
+      },
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_ddbf53a9",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "MCDATA should be : \u0027-d \"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"\u0027",
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_3dcbf754",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "I think the line could be removed",
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_1dc6fb49",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "for debug purpose, print the tenant name as well",
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a2f8d8d_bd892728",
         "filename": "boot/dcae2_vm_init.sh",
         "patchSetId": 2
@@ -18,6 +126,86 @@
         "startChar": 70,
         "endLine": 394,
         "endChar": 115
+      },
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_5deb63b0",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "this line could be removed",
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_1dcddb5d",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "change to:  \"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"",
+      "range": {
+        "startLine": 453,
+        "startChar": 70,
+        "endLine": 453,
+        "endChar": 113
+      },
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_ddd633f1",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "this line could be removed",
+      "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_bd05a77b",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T07:47:08Z",
+      "side": 1,
+      "message": "change to:  \"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"",
+      "range": {
+        "startLine": 492,
+        "startChar": 70,
+        "endLine": 492,
+        "endChar": 113
       },
       "revId": "8ca3824ad07bdcc97a263157e8b4344ec1684061",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
