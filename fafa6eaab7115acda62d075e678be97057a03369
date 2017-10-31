@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a2f8d8d_6c80b246",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T13:31:50Z",
+      "side": 1,
+      "message": "there is no file named \u0027dnsaas_tenant_name.txt\u0027",
+      "range": {
+        "startLine": 370,
+        "startChar": 42,
+        "endLine": 370,
+        "endChar": 64
+      },
+      "revId": "fafa6eaab7115acda62d075e678be97057a03369",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_6cce72b6",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T13:31:50Z",
+      "side": 1,
+      "message": "you can change the tenantName to be tenant_name, or you can use this: \"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"",
+      "range": {
+        "startLine": 374,
+        "startChar": 15,
+        "endLine": 374,
+        "endChar": 60
+      },
+      "revId": "fafa6eaab7115acda62d075e678be97057a03369",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_ccd1e658",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T13:31:50Z",
+      "side": 1,
+      "message": "body is not correct. you can change the tenantName to be tenant_name, or you can use this: \"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"",
+      "range": {
+        "startLine": 392,
+        "startChar": 70,
+        "endLine": 392,
+        "endChar": 115
+      },
+      "revId": "fafa6eaab7115acda62d075e678be97057a03369",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_4cc5f68c",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T13:31:50Z",
+      "side": 1,
+      "message": "you can change the tenantName to be tenant_name, or you can use this: \"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"",
+      "range": {
+        "startLine": 446,
+        "startChar": 15,
+        "endLine": 446,
+        "endChar": 60
+      },
+      "revId": "fafa6eaab7115acda62d075e678be97057a03369",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_2cc06a7b",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T13:31:50Z",
+      "side": 1,
+      "message": "body is not correct. you can change the tenantName to be tenant_name, or you can use this: \"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"",
+      "range": {
+        "startLine": 451,
+        "startChar": 70,
+        "endLine": 451,
+        "endChar": 115
+      },
+      "revId": "fafa6eaab7115acda62d075e678be97057a03369",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_0cbfeefc",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T13:31:50Z",
+      "side": 1,
+      "message": "you can change the tenantName to be tenant_name, or you can use this: \"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"",
+      "range": {
+        "startLine": 485,
+        "startChar": 15,
+        "endLine": 485,
+        "endChar": 60
+      },
+      "revId": "fafa6eaab7115acda62d075e678be97057a03369",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a2f8d8d_8c42be0e",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2017-10-31T13:31:50Z",
+      "side": 1,
+      "message": "body is not correct. you can change the tenantName to be tenant_name, or you can use this: \"{\\\"auth\\\":{\\\"tenantName\\\": \\\"${DNSAAS_TENANT_NAME}\\\"}}\"",
+      "range": {
+        "startLine": 490,
+        "startChar": 70,
+        "endLine": 490,
+        "endChar": 115
+      },
+      "revId": "fafa6eaab7115acda62d075e678be97057a03369",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
