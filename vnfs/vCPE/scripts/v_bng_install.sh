@@ -16,6 +16,7 @@ BRGEMU_BNG_NET_CIDR=$(cat /opt/config/brgemu_bng_net_cidr.txt)
 BRGEMU_BNG_NET_IPADDR=$(cat /opt/config/brgemu_bng_net_ipaddr.txt)
 CPE_SIGNAL_NET_CIDR=$(cat /opt/config/cpe_signal_net_cidr.txt)
 CPE_SIGNAL_NET_IPADDR=$(cat /opt/config/cpe_signal_net_ipaddr.txt)
+SDNC_IP_ADDR=$(cat /opt/config/sdnc_ip_addr.txt)
 
 # Build states are:
 # 'build' - just build the code
@@ -64,6 +65,10 @@ fi  # endif BUILD_STATE != "build"
 
 if [[ $BUILD_STATE != "done" ]]
 then
+    # Enable IPV4 forwarding through kernel
+    sed -i 's/^.*\(net.ipv4.ip_forward\).*/\1=1/g' /etc/sysctl.conf
+    sysctl -p /etc/sysctl.conf
+
     # Download required dependencies
     echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
     echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
@@ -249,6 +254,11 @@ set interface ip address ${BNG_GMUX_NIC} ${BNG_GMUX_NET_IPADDR}/${BNG_GMUX_NET_C
 
 set vbng dhcp4 remote 10.4.0.1 local ${CPE_SIGNAL_NET_IPADDR}
 set vbng aaa config /etc/vpp/vbng-aaa.cfg nas-port 5060
+
+tap connect tap0 address 30.0.0.40/24
+set int state tap-0 up
+set int ip address tap-0 30.0.0.41/24
+ip route add ${SDNC_IP_ADDR}/32 via 30.0.0.40 tap-0
 
 EOF
 

@@ -257,6 +257,7 @@ resources:
             __vpp_source_repo_url__ : { get_param: vpp_source_repo_url }
             __vpp_source_repo_branch__ : { get_param: vpp_source_repo_branch }
             __vpp_patch_url__ : { get_param: vpp_patch_url }
+            __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
           template: |
             #!/bin/bash
 
@@ -280,6 +281,7 @@ resources:
             echo "__vpp_source_repo_url__" > /opt/config/vpp_source_repo_url.txt
             echo "__vpp_source_repo_branch__" > /opt/config/vpp_source_repo_branch.txt
             echo "__vpp_patch_url__" > /opt/config/vpp_patch_url.txt
+            echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
 
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_bng_install.sh -o /opt/v_bng_install.sh
