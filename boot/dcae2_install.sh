@@ -103,6 +103,7 @@ chmod 777 /opt/app/config/key
 rm -rf /opt/app/inputs-templates
 mkdir -p /opt/app/inputs-templates
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/inputs.yaml
+wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/cdapinputs.yaml
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/phinputs.yaml
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/dhinputs.yaml
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/invinputs.yaml
@@ -110,6 +111,7 @@ wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositor
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/tcainputs.yaml
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/he-ip.yaml
 wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/hr-ip.yaml
+
 
 # generate blueprint input files
 pip install jinja2
