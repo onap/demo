@@ -397,7 +397,7 @@ register_dns_zone()
     fi
 
     local PROJECTID
-    PROJECTID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"project_id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
+    PROJECTID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |grep 'project_id' |sed 's/^.*"project_id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
     if [ ! -z "$PROJECTID" ]; then 
         ### query the zone with zone id
         echo "!!!!!!> zone $ZONENAME already registered by project $PROJECTID"
@@ -416,8 +416,8 @@ register_dns_zone()
     #curl -s -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}"
 
     ### export ZONE id
-    #local ZONEID
-    #ZONEID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
+    local ZONEID
+    ZONEID=$(curl -v -sb  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |grep 'id' |sed 's/^.*"id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
     echo "=====> After creation, zone $ZONENAME ID is $ZONEID"
 
     ### query the zone with zone id
