@@ -5,6 +5,7 @@ NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
+
 if [[ $CLOUD_ENV != "rackspace" ]]
 then
 	# Add host name to /etc/host to avoid warnings in openstack images
@@ -64,9 +65,12 @@ curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$ZONE_ONAP -o /etc/bin
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$OPTIONS_FILE -o /etc/bind/named.conf.options
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/named.conf.local -o /etc/bind/named.conf.local
 
+
+
 # Set the private IP address of each ONAP VM in the Bind configuration in OpenStack deployments
 if [[ $CLOUD_ENV != "rackspace" ]]
 then
+        sed -i "s/dns_forwarder/"$(cat /opt/config/dns_forwarder.txt)"/g" /etc/bind/named.conf.options
 	sed -i "s/dns_ip_addr/"$(cat /opt/config/dns_ip_addr.txt)"/g" /etc/bind/named.conf.options
 	sed -i "s/external_dns/"$(cat /opt/config/external_dns.txt)"/g" /etc/bind/named.conf.options
 	sed -i "s/aai1_ip_addr/"$(cat /opt/config/aai1_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
@@ -108,3 +112,4 @@ fi
 modprobe ip_gre
 sed -i "s/OPTIONS=.*/OPTIONS=\"-4 -u bind\"/g" /etc/default/bind9
 service bind9 restart
+

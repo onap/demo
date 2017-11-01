@@ -10,8 +10,7 @@ options {
         allow-transfer { none; };      # disable zone transfers by default
 
         forwarders {
-                8.8.8.8;
-                8.8.4.4;
+                dns_forwarder;
         };
 
         // If there is a firewall between you and nameservers you want

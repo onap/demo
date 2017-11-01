@@ -162,7 +162,6 @@ register_multicloud_pod25dns_with_aai()
     local DNSAAS_SERVICE_URL
     local DNSAAS_USERNAME='demo'
     local DNSAAS_PASSWORD='onapdemo'
-    local DNSAAS_TENANT_ID
 
     CLOUD_REGION="$(cat /opt/config/dnsaas_region.txt)"
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
@@ -249,12 +248,12 @@ register_multicloud_pod25_with_aai()
     CLOUD_IDENTITY_URL="http://${MCIP}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}/identity/v2.0"
     KEYSTONE_URL="$(cat /opt/config/openstack_keystone_url.txt)"
     if [[ "$KEYSTONE_URL" == */v3 ]]; then
-        echo $KEYSTONE_URL
+        echo "$KEYSTONE_URL"
     elif [[ "$KEYSTONE_URL" == */v2.0 ]]; then
-        echo $KEYSTONE_URL
+        echo "$KEYSTONE_URL"
     else
         KEYSTONE_URL="${KEYSTONE_URL}/v3"
-        echo $KEYSTONE_URL
+        echo "$KEYSTONE_URL"
     fi
     USERNAME="$(cat /opt/config/openstack_user.txt)"
     PASSWORD="$(cat /opt/config/openstack_password.txt)"
@@ -351,7 +350,6 @@ register_dns_zone()
     local CLOUD_REGION
     local CLOUD_VERSION='titanium_cloud'
     local CLOUD_ENV
-    local DCAE_ZONE
     local DNSAAS_TENANT_NAME
     local MCHOST
     local MCURL
@@ -371,14 +369,16 @@ register_dns_zone()
     MCHOST=$(cat /opt/config/openo_ip_addr.txt)
     MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
 
-    MCDATA='-d "{\"auth\":{\"tenantName\": \"${DNSAAS_TENANT_NAME}\"}}"'
+    MCDATA='-d "{\"auth\":{\"tenantName\": \"'${DNSAAS_TENANT_NAME}'\"}}"'
     MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
 
      ### zone operations
      # because all VM's use 10.0.100.1 as their first DNS server, the designate DNS server as seocnd, we need to use a
      # domain outside of the first DNS server's domain
+    local DCAE_DOMAIN
     local ZONENAME
-    ZONENAME="${DCAE_ZONE}.dcaeg2.simpledemo.onap.org."
+    DCAE_DOMAIN="$(cat /opt/config/dcae_domain.txt)"
+    ZONENAME="${DCAE_ZONE}.${DCAE_DOMAIN}."
 
     echo "===> Register DNS zone $ZONENAME under $DNSAAS_TENANT_NAME"
 
@@ -396,26 +396,33 @@ register_dns_zone()
         exit 1
     fi
 
-    ### list zones
-    echo "=====> Get current zone listing"
-    curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones"
+    local PROJECTID
+    PROJECTID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"project_id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
+    if [ ! -z "$PROJECTID" ]; then 
+        ### query the zone with zone id
+        echo "!!!!!!> zone $ZONENAME already registered by project $PROJECTID"
+    else
+        ### create a zone
+        echo "=====> No zone of same name $ZONENAME found, creating new zone "
+        curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X POST -d "{ \"name\": \"$ZONENAME\", \"email\": \"lji@research.att.com\"}" "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones"
+    fi
 
-    ### create a zone
-    echo "=====> Creating zone $ZONENAME"
-    curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X POST -d "{ \"name\": \"$ZONENAME\", \"email\": \"lji@research.att.com\"}" "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones"
+    ### list zones
+    echo "=====> Zone listing"
+    curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones" | python -m json.tool
 
     ### query the zone with zone name
-    echo "=====> Querying zone $ZONENAME"
-    curl -s -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}"
+    #echo "=====> Querying zone $ZONENAME"
+    #curl -s -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}"
 
     ### export ZONE id
-    local ZONEID
-    ZONEID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
+    #local ZONEID
+    #ZONEID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
     echo "=====> After creation, zone $ZONENAME ID is $ZONEID"
 
     ### query the zone with zone id
-    echo "=====> Querying zone $ZONENAME by ID $ZONEID"
-    curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones/${ZONEID}"
+    #echo "=====> Querying zone $ZONENAME by ID $ZONEID"
+    #curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones/${ZONEID}"
 }
 
 
@@ -443,15 +450,18 @@ delete_dns_zone()
     MCHOST=$(cat /opt/config/openo_ip_addr.txt)
     MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
 
-    MCDATA='"{\"auth\":{\"tenantName\": \"${DNSAAS_TENANT_NAME}\"}}"'
+    local DCAE_DOMAIN
+    local ZONENAME
+    DCAE_DOMAIN="$(cat /opt/config/dcae_domain.txt)"
+    ZONENAME="${DCAE_ZONE}.${DCAE_DOMAIN}."
+
+    MCDATA='"{\"auth\":{\"tenantName\": \"'${DNSAAS_TENANT_NAME}'\"}}"'
     MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
 
     ### Get Token
     local TOKEN
     TOKEN=$(curl -v -s -H "Content-Type: application/json" -X POST -d "{\"auth\":{\"tenantName\": \"${DNSAAS_TENANT_NAME}\"}}" "${MULTICLOUD_PLUGIN_ENDPOINT}/identity/v3/auth/tokens"  2>&1 | grep X-Subject-Token | sed "s/^.*: //")
 
-    local ZONENAME
-    ZONENAME="$1.dcaeg2.simpledemo.onap.org."
     local ZONEID
     ZONEID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
 
@@ -482,15 +492,17 @@ list_dns_zone()
     MCHOST=$(cat /opt/config/openo_ip_addr.txt)
     MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
 
-    MCDATA='"{\"auth\":{\"tenantName\": \"${DNSAAS_TENANT_NAME}\"}}"'
+    MCDATA='"{\"auth\":{\"tenantName\": \"'${DNSAAS_TENANT_NAME}'\"}}"'
     MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
 
     ### Get Token
     local TOKEN
     TOKEN=$(curl -v -s -H "Content-Type: application/json" -X POST -d "{\"auth\":{\"tenantName\": \"${DNSAAS_TENANT_NAME}\"}}" "${MULTICLOUD_PLUGIN_ENDPOINT}/identity/v3/auth/tokens"  2>&1 | grep X-Subject-Token | sed "s/^.*: //")
 
+    local DCAE_DOMAIN
     local ZONENAME
-    ZONENAME="$1.dcaeg2.simpledemo.onap.org."
+    DCAE_DOMAIN="$(cat /opt/config/dcae_domain.txt)"
+    ZONENAME="${DCAE_ZONE}.${DCAE_DOMAIN}."
     local ZONEID
     ZONEID=$(curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones?name=${ZONENAME}" |sed 's/^.*"id":"\([a-zA-Z0-9-]*\)",.*$/\1/')
 
@@ -510,7 +522,7 @@ ZONE=$(cat /opt/config/rand_str.txt)
 MYFLOATIP=$(cat /opt/config/dcae_float_ip.txt)
 MYLOCALIP=$(cat /opt/config/dcae_ip_addr.txt)
 
-
+# start docker image pulling while we are waiting for A&AI to come online
 docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
 docker pull "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION" && docker pull nginx &
 
@@ -548,9 +560,9 @@ rm -f /opt/config/runtime.ip.consul
 rm -f /opt/config/runtime.ip.cm
 
 
-docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
-docker pull "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION"
-docker run -d --name boot -v /opt/app/config:/opt/app/installer/config -e "LOCATION=$ZONE" "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION"
+#docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
+#docker pull "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION"
+#docker run -d --name boot -v /opt/app/config:/opt/app/installer/config -e "LOCATION=$ZONE" "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION"
 
 
 # waiting for bootstrap to complete then starting nginx for proxying healthcheck calls

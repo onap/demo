@@ -162,6 +162,10 @@ parameters:
     type: string
     description: First element of the dns_list for ONAP network
 
+  dns_forwarder:
+    type: string
+    description: the forwarder address for setting up ONAP's private DNS server
+
   oam_network_cidr:
     type: string
     description: CIDR of the OAM ONAP network
@@ -252,10 +256,6 @@ parameters:
     type: string
     description: the keystone URL for DCAE to use (via MultiCloud)
 
-  dcae_key_name:
-    type: string
-    description: the name of the keypair on-boarded with Cloud
-
   dcae_private_key:
     type: string
     description: the private key of the key-apir used between the DCAE bootstrap container and DCAE VMs
@@ -268,10 +268,9 @@ parameters:
     type: string
     description: the id/name of the CentOS 7 VM imange
 
-  dcae_security_group:
+  dcae_domain:
     type: string
-    description: the security group to be used by DCAE VMs
-
+    description: the top level domain to register DCAE VMs (the zone will be random-str.dcae_domain)
 
 #  dcae_base_environment:
 #    type: string
@@ -419,7 +418,6 @@ resources:
     properties:
       length: 4
 
-
   # Public key used to access ONAP components
   vm_key:
     type: OS::Nova::KeyPair
@@ -432,6 +430,36 @@ resources:
             rand: { get_resource: random-str }
       public_key: { get_param: pub_key }
       save_private_key: false
+
+
+  # ONAP security group
+  onap_sg:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name:
+        str_replace:
+          template: base_rand
+          params:
+            base: onap_sg
+            rand: { get_resource: random-str }
+      description: security group used by ONAP
+      rules:
+        # All egress traffic
+        - direction: egress
+          ethertype: IPv4
+        - direction: egress
+          ethertype: IPv6
+        # ingress traffic
+        # ICMP
+        - protocol: icmp
+        - protocol: udp
+          port_range_min: 1
+          port_range_max: 65535
+        - protocol: tcp
+          port_range_min: 1
+          port_range_max: 65535
+
+ 
 
   # ONAP management private network
   oam_onap:
@@ -519,6 +547,7 @@ resources:
             __openo_ip_addr__: { get_param: openo_ip_addr }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
+            __dns_forwarder__: { get_param: dns_forwarder }
           template: |
             #!/bin/bash
 
@@ -545,6 +574,7 @@ resources:
             echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
             echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dns_install.sh -o /opt/dns_install.sh
@@ -1710,6 +1740,8 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: dcae_c_private_port }
+      #security_groups:
+      #  - { get_resource: onap_sg }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -1730,6 +1762,8 @@ resources:
             __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __external_dns__: { get_param: external_dns }
+            __dns_forwarder__: { get_param: dns_forwarder }
+            __dcae_domain__: { get_param: dcae_domain }
             # conf for VMs DCAE is to bringup
             __openstack_keystone_url__: { get_param: keystone_url }
             __dcae_keystone_url__: { get_param: dcae_keystone_url }
@@ -1738,18 +1772,23 @@ resources:
             __dcaeos_region__: { get_param: openstack_region }
             __dcaeos_tenant_id__: { get_param: openstack_tenant_id }
             __dcaeos_tenant_name__: { get_param: openstack_tenant_name }
+            __dcaeos_security_group__: 
+              str_replace: 
+                template: 'onap_sg_rand'
+                params: 
+                  rand: { get_resource: random-str }
+            #__dcaeos_security_group__: { get_attr: [onap_sg, name] }
             __dcaeos_username__: { get_param: openstack_username }
             __dcaeos_password__: { get_param: openstack_api_key }
-            __dcaeos_key_name__: { get_attr: [vm_key, name] }
-            __dcaeos_key_name__: { get_param: dcae_key_name }
+            __dcaeos_key_name__: { get_resource: vm_key }
             __dcaeos_public_key__: { get_param: dcae_public_key }
             __dcaeos_private_key__: { get_param: dcae_private_key }
             __dcaeos_private_network_name__: { get_attr: [oam_onap, name] }
             __dcaeos_public_network_name__: { get_param: public_net_name }
             __dcaeos_ubuntu_1604_image__: { get_param: ubuntu_1604_image }
             __dcaeos_centos_7_image__: { get_param: dcae_centos_7_image }
-            __dcaeos_security_group__ : { get_param: dcae_security_group }
             __dcaeos_flavor_id__: { get_param: flavor_medium }
+            __dcaeos_flavor_id_cdap__: { get_param: flavor_xlarge }
             __dcaeos_dnsaas_config_enabled__: { get_param: dnsaas_config_enabled }
             __dcaeos_dnsaas_region__: { get_param: dnsaas_region }
             __dcaeos_dnsaas_keystone_url__: { get_param: dnsaas_keystone_url }
@@ -1795,6 +1834,8 @@ resources:
             echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt  
+            echo "__dcae_domain__" > /opt/config/dcae_domain.txt
             # conf for the OpenStack env where DCAE is deployed
             echo "__openstack_keystone_url__" > /opt/config/openstack_keystone_url.txt
             echo "__dcaeos_cloud_env__" > /opt/config/cloud_env.txt
@@ -1814,6 +1855,7 @@ resources:
             echo "__dcaeos_centos_7_image__" > /opt/config/centos_7_image.txt
             echo "__dcaeos_security_group__" > /opt/config/security_group.txt
             echo "__dcaeos_flavor_id__" > /opt/config/flavor_id.txt
+            echo "__dcaeos_flavor_id_cdap__" > /opt/config/flavor_id_cdap.txt
             echo "__dcaeos_dnsaas_config_enabled__" > /opt/config/dnsaas_config_enabled.txt
             echo "__dcaeos_dnsaas_region__" > /opt/config/dnsaas_region.txt
             echo "__dcaeos_dnsaas_keystone_url__" > /opt/config/dnsaas_keystone_url.txt
