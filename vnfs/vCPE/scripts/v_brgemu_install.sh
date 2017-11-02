@@ -201,6 +201,7 @@ EOF
     BRG_BNG_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 2`  # second interface in list
     echo $BRG_BNG_NIC > /opt/config/brg_nic.txt
 
+
     cat > /etc/vpp/setup.gate << EOF
 set int state ${BRG_BNG_NIC} up
 set dhcp client intfc ${BRG_BNG_NIC} hostname brg-emulator
@@ -212,21 +213,21 @@ set interface l2 bridge tap-0 10 0
 set bridge-domain arp term 10
 EOF
 
-    cat >> /opt/config/ip.txt << EOF
-hcip: 192.168.4.20
-EOF
+echo "sdnc_ip: $(cat /opt/config/sdnc_ip.txt)" > /opt/config/ip.txt
+echo "hcip: 192.168.4.20" >> /opt/config/ip.txt
+
 
     cat > /opt/bind_nic.sh << 'EOF'
 #!/bin/bash
 while :
 do
-        if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]];
-        then
+        if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]]; then
                 echo "vpp not running"
         else
                 break
         fi
 done
+
 
 BRG_BNG_NIC=$(cat /opt/config/brg_nic.txt)
 sdnc_ip=$(cat /opt/config/sdnc_ip.txt)
@@ -242,10 +243,17 @@ vppctl ip route add 192.168.4.0/24 via tap-1
 vppctl set interface snat in tap-1 out ${BRG_BNG_NIC}
 vppctl snat add interface address ${BRG_BNG_NIC}
 
+#Get vBNG ip addr
+output=$(vppctl show dhcp client)
+vbng_ip=${output##*gw }
 
+vppctl ip route add $vbng_ip/32 via $vbng_ip ${BRG_BNG_NIC}
+vppctl ip route add $sdnc_ip/32 via $vbng_ip ${BRG_BNG_NIC}
+
+#Get HW addr of tap-1
 while read -r hw
 do
-    if [[ "$hw" = tap-1* ]];
+    if [[ "$hw" = tap-1* ]]; 
     then
         read -r hw
         hw_addr=${hw##* }
@@ -253,6 +261,16 @@ do
     fi
 done < <(vppctl show hardware)
 arp -s $sdnc_ip $hw_addr
+arp -s 20.0.0.40 $hw_addr
+
+#Get HW addr of tap0
+var=$(ifconfig tap0)
+var=${var##*HWaddr}
+var=${var%inet*}
+tap0_addr=${var%inet*}
+
+vppctl set ip arp tap-1 192.168.4.20 $tap0_addr
+
 EOF
     chmod +x /opt/bind_nic.sh
 
@@ -262,7 +280,7 @@ EOF
 
 while :
 do
-    if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]];
+    if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]]; 
     then
         #echo "vpp not running"
         continue
@@ -447,7 +465,7 @@ EOF
     then
         echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
         sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
-    fi
+    fi  
 fi  # endif BUILD_STATE != "done"
 
 if [[ $BUILD_STATE != "build" ]]
@@ -486,7 +504,7 @@ EOF
         sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
         grub-mkconfig -o /boot/grub/grub.cfg
         sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
-        sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
+        sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rulesf
         echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
         reboot
     fi
