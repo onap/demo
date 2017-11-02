@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a4e6583_396d9705",
+        "filename": "vnfs/vCPE/scripts/v_bng_init.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-11-02T23:21:06Z",
+      "side": 1,
+      "message": "got to change the 30... address here too",
+      "revId": "2fe9793f0004f9110177da286e0f4ec9f9c94dff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
