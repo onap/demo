@@ -38,6 +38,8 @@ ONAP HEAT Template
 
 The ONAP HEAT template spins up the entire ONAP platform. The template, onap_openstack.yaml, comes with an environment file, onap_openstack.env, in which all the default values are defined.
 
+NOTE: onap_openstack.yaml AND onap_openstack.env ARE THE HEAT TEMPLATE AND ENVIRONMENT FILE CURRENTLY SUPPORTED. onap_openstack_float.yaml/env AND onap_openstack_nofloat.yaml/env AREN'T UPDATED AND THEIR USAGE IS NOT SUGGESTED.
+
 The HEAT template is composed of two sections: (i) parameters, and (ii) resources. The parameter section contains the declaration and description of the parameters that will be used to spin up ONAP, such as public network identifier, URLs of code and artifacts repositories, etc.
 The default values of these parameters can be found in the environment file. The resource section contains the definition of:
  - ONAP Private Management Network, which ONAP components use to communicate with each other and with VNFs
