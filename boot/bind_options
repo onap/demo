@@ -11,8 +11,6 @@ options {
 
         forwarders {
                 dns_forwarder;
-                external_dns;
-                8.8.4.4;
         };
 
         // If there is a firewall between you and nameservers you want
