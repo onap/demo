@@ -169,6 +169,10 @@ parameters:
     type: string
     label: VPP Patch URL
     description: URL for VPP patch for vBNG
+  sdnc_ip_addr:
+    type: string
+    label: SDNC IP address
+    description: IP address of the SDNC
 
 #############
 #           #
