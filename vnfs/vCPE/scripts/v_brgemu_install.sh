@@ -188,7 +188,8 @@ EOF
     #Get list of network device PCI bus addresses
     get_nic_pci_list() {
         while read -r line ; do
-            if [ "$line" != "${line#*network device}" ]; then
+            if [ "$line" != "${line#*network device}" ];
+            then
                  echo -n "${line%% *} "
             fi
         done < <(lspci)
@@ -205,12 +206,6 @@ EOF
     cat > /etc/vpp/setup.gate << EOF
 set int state ${BRG_BNG_NIC} up
 set dhcp client intfc ${BRG_BNG_NIC} hostname brg-emulator
-
-tap connect lstack
-set int state tap-0 up
-
-set interface l2 bridge tap-0 10 0
-set bridge-domain arp term 10
 EOF
 
 echo "sdnc_ip: $(cat /opt/config/sdnc_ip.txt)" > /opt/config/ip.txt
@@ -233,34 +228,34 @@ done
 BRG_BNG_NIC=$(cat /opt/config/brg_nic.txt)
 sdnc_ip=$(cat /opt/config/sdnc_ip.txt)
 
-vppctl tap connect tap0
+lstack_tap=$(vppctl tap connect lstack)
+vppctl set int state $lstack_tap up
+
+vppctl set interface l2 bridge $lstack_tap 10 0
+vppctl set bridge-domain arp term 10
+
+tap0_tap=$(vppctl tap connect tap0)
 sleep 3
-vppctl set int state tap-1 up
-vppctl set int ip addr tap-1 20.0.0.40/24
+vppctl set int state $tap0_tap up
+vppctl set int ip addr $tap0_tap 20.0.0.40/24
 ifconfig tap0 192.168.4.20/24
 route add -host $sdnc_ip tap0
 route add -host 20.0.0.40 tap0
-vppctl ip route add 192.168.4.0/24 via tap-1
-vppctl set interface snat in tap-1 out ${BRG_BNG_NIC}
+vppctl ip route add 192.168.4.0/24 via $tap0_tap
+vppctl set interface snat in $tap0_tap out ${BRG_BNG_NIC}
 vppctl snat add interface address ${BRG_BNG_NIC}
 
-#Get vBNG ip addr
-output=$(vppctl show dhcp client)
-vbng_ip=${output##*gw }
-
-vppctl ip route add $vbng_ip/32 via $vbng_ip ${BRG_BNG_NIC}
-vppctl ip route add $sdnc_ip/32 via $vbng_ip ${BRG_BNG_NIC}
-
-#Get HW addr of tap-1
+#Get HW addr of $tap0_tap
 while read -r hw
 do
-    if [[ "$hw" = tap-1* ]];
+    if [[ "$hw" = $tap0_tap* ]];
     then
         read -r hw
         hw_addr=${hw##* }
         break
     fi
 done < <(vppctl show hardware)
+
 arp -s $sdnc_ip $hw_addr
 arp -s 20.0.0.40 $hw_addr
 
@@ -270,7 +265,7 @@ var=${var##*HWaddr}
 var=${var%inet*}
 tap0_addr=${var%inet*}
 
-vppctl set ip arp tap-1 192.168.4.20 $tap0_addr
+vppctl set ip arp $tap0_tap 192.168.4.20 $tap0_addr
 
 EOF
     chmod +x /opt/bind_nic.sh
