@@ -1,0 +1,17 @@
+{
+    "name": "", 
+    "description": "", 
+    "data": [
+        {
+            "file": "base_vpng.yaml", 
+            "type": "HEAT", 
+            "isBase": "true", 
+            "data": [
+                {
+                    "file": "base_vpng.env", 
+                    "type": "HEAT_ENV"
+                }
+            ]
+        }
+    ]
+}
