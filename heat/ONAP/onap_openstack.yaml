@@ -1787,7 +1787,7 @@ resources:
             __dcaeos_public_network_name__: { get_param: public_net_name }
             __dcaeos_ubuntu_1604_image__: { get_param: ubuntu_1604_image }
             __dcaeos_centos_7_image__: { get_param: dcae_centos_7_image }
-            __dcaeos_flavor_id__: { get_param: flavor_medium }
+            __dcaeos_flavor_id__: { get_param: flavor_xlarge }
             __dcaeos_flavor_id_cdap__: { get_param: flavor_xlarge }
             __dcaeos_dnsaas_config_enabled__: { get_param: dnsaas_config_enabled }
             __dcaeos_dnsaas_region__: { get_param: dnsaas_region }
