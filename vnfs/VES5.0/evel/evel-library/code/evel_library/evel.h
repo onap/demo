@@ -46,7 +46,7 @@ extern "C" {
 /* Supported API version.                                                    */
 /*****************************************************************************/
 #define EVEL_API_MAJOR_VERSION 5
-#define EVEL_API_MINOR_VERSION 3
+#define EVEL_API_MINOR_VERSION 0
 
 /**************************************************************************//**
  * Error codes
@@ -400,8 +400,8 @@ typedef struct internal_header_fields
 /*****************************************************************************/
 /* Supported Common Event Header version.                                    */
 /*****************************************************************************/
-#define EVEL_HEADER_MAJOR_VERSION 3
-#define EVEL_HEADER_MINOR_VERSION 0
+#define EVEL_HEADER_MAJOR_VERSION 1
+#define EVEL_HEADER_MINOR_VERSION 2
 
 /**************************************************************************//**
  * Event header.
@@ -597,7 +597,7 @@ void evel_free_jsonobject(EVEL_JSON_OBJECT * jsobj);
 /* Supported Measurement version.                                            */
 /*****************************************************************************/
 #define EVEL_MEASUREMENT_MAJOR_VERSION 2
-#define EVEL_MEASUREMENT_MINOR_VERSION 0
+#define EVEL_MEASUREMENT_MINOR_VERSION 1
 
 /**************************************************************************//**
  * Errors.
@@ -1082,8 +1082,8 @@ typedef struct mobile_gtp_per_flow_metrics {
 /*****************************************************************************/
 /* Supported Mobile Flow version.                                            */
 /*****************************************************************************/
-#define EVEL_MOBILE_FLOW_MAJOR_VERSION 2
-#define EVEL_MOBILE_FLOW_MINOR_VERSION 0
+#define EVEL_MOBILE_FLOW_MAJOR_VERSION 1
+#define EVEL_MOBILE_FLOW_MINOR_VERSION 2
 
 /**************************************************************************//**
  * Mobile Flow.
@@ -1173,14 +1173,14 @@ typedef struct other_field {
 /* Supported Service Events version.                                         */
 /*****************************************************************************/
 #define EVEL_HEARTBEAT_FIELD_MAJOR_VERSION 1
-#define EVEL_HEARTBEAT_FIELD_MINOR_VERSION 0
+#define EVEL_HEARTBEAT_FIELD_MINOR_VERSION 1
 
 
 /*****************************************************************************/
 /* Supported Signaling version.                                              */
 /*****************************************************************************/
-#define EVEL_SIGNALING_MAJOR_VERSION 1
-#define EVEL_SIGNALING_MINOR_VERSION 0
+#define EVEL_SIGNALING_MAJOR_VERSION 2
+#define EVEL_SIGNALING_MINOR_VERSION 1
 
 /**************************************************************************//**
  * Vendor VNF Name fields.
@@ -1235,8 +1235,8 @@ typedef struct signaling_additional_field {
 /*****************************************************************************/
 /* Supported State Change version.                                           */
 /*****************************************************************************/
-#define EVEL_STATE_CHANGE_MAJOR_VERSION 2
-#define EVEL_STATE_CHANGE_MINOR_VERSION 0
+#define EVEL_STATE_CHANGE_MAJOR_VERSION 1
+#define EVEL_STATE_CHANGE_MINOR_VERSION 2
 
 /**************************************************************************//**
  * State Change.
@@ -1277,8 +1277,8 @@ typedef struct state_change_additional_field {
 /*****************************************************************************/
 /* Supported Syslog version.                                                 */
 /*****************************************************************************/
-#define EVEL_SYSLOG_MAJOR_VERSION 3
-#define EVEL_SYSLOG_MINOR_VERSION 0
+#define EVEL_SYSLOG_MAJOR_VERSION 1
+#define EVEL_SYSLOG_MINOR_VERSION 2
 
 /**************************************************************************//**
  * Syslog.
@@ -3955,7 +3955,7 @@ int evel_get_measurement_interval();
 /* Supported Report version.                                                 */
 /*****************************************************************************/
 #define EVEL_VOICEQ_MAJOR_VERSION 1
-#define EVEL_VOICEQ_MINOR_VERSION 0
+#define EVEL_VOICEQ_MINOR_VERSION 1
 
 /**************************************************************************//**
  * End of Call Voice Quality Metrices
@@ -4255,8 +4255,8 @@ typedef struct perf_counter {
 /*****************************************************************************/
 /* Supported Threshold Crossing version.                                     */
 /*****************************************************************************/
-#define EVEL_THRESHOLD_CROSS_MAJOR_VERSION 2
-#define EVEL_THRESHOLD_CROSS_MINOR_VERSION 0
+#define EVEL_THRESHOLD_CROSS_MAJOR_VERSION 1
+#define EVEL_THRESHOLD_CROSS_MINOR_VERSION 1
 
 /**************************************************************************//**
  * Threshold Crossing.
