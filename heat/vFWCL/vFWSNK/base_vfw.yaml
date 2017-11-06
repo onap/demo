@@ -1,7 +1,7 @@
 ##########################################################################
 #
 #==================LICENSE_START==========================================
-# 
+#
 #
 # Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
 #
@@ -24,7 +24,7 @@
 
 heat_template_version: 2013-05-23
 
-description: Heat template that deploys vFirewall Closed Loop demo app (FW and Sink) for ONAP
+description: Heat template that deploys vFirewall Closed Loop demo app (vFW and vSink) for ONAP
 
 ##############
 #            #
@@ -33,11 +33,11 @@ description: Heat template that deploys vFirewall Closed Loop demo app (FW and S
 ##############
 
 parameters:
-  vfw_image_name:
+  image_name:
     type: string
     label: Image name or ID
     description: Image to be used for compute instance
-  vfw_flavor_name:
+  flavor_name:
     type: string
     label: Flavor
     description: Type of instance (flavor) to be used
@@ -49,10 +49,26 @@ parameters:
     type: string
     label: Unprotected private network name or ID
     description: Private network that connects vPacketGenerator with vFirewall
+  unprotected_private_subnet_id:
+    type: string
+    label: Unprotected private subnetwork name or ID
+    description: Private subnetwork of the protected network
+  unprotected_private_net_cidr:
+    type: string
+    label: Unprotected private network CIDR
+    description: The CIDR of the unprotected private network
   protected_private_net_id:
     type: string
     label: Protected private network name or ID
     description: Private network that connects vFirewall with vSink
+  protected_private_subnet_id:
+    type: string
+    label: Protected private subnetwork name or ID
+    description: Private subnetwork of the unprotected network
+  protected_private_net_cidr:
+    type: string
+    label: Protected private network CIDR
+    description: The CIDR of the protected private network
   onap_private_net_id:
     type: string
     label: ONAP management network name or ID
@@ -61,14 +77,6 @@ parameters:
     type: string
     label: ONAP management sub-network name or ID
     description: Private sub-network that connects ONAP components and the VNF
-  unprotected_private_net_cidr:
-    type: string
-    label: Unprotected private network CIDR
-    description: The CIDR of the unprotected private network
-  protected_private_net_cidr:
-    type: string
-    label: Protected private network CIDR
-    description: The CIDR of the protected private network
   onap_private_net_cidr:
     type: string
     label: ONAP private network CIDR
@@ -179,17 +187,17 @@ resources:
     properties:
       name: { get_param: unprotected_private_net_id }
 
-  protected_private_network:
-    type: OS::Neutron::Net
-    properties:
-      name: { get_param: protected_private_net_id }
-
   unprotected_private_subnet:
     type: OS::Neutron::Subnet
     properties:
       name: { get_param: unprotected_private_subnet_id }
       network_id: { get_resource: unprotected_private_network }
       cidr: { get_param: unprotected_private_net_cidr }
+
+  protected_private_network:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: protected_private_net_id }
 
   protected_private_subnet:
     type: OS::Neutron::Subnet
@@ -221,8 +229,8 @@ resources:
   vfw_0:
     type: OS::Nova::Server
     properties:
-      image: { get_param: vfw_image_name }
-      flavor: { get_param: vfw_flavor_name }
+      image: { get_param: image_name }
+      flavor: { get_param: flavor_name }
       name: { get_param: vfw_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
@@ -250,7 +258,7 @@ resources:
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
-            
+
             # Create configuration files
             mkdir /opt/config
             echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
@@ -266,7 +274,7 @@ resources:
             echo "__protected_private_net_cidr__" > /opt/config/protected_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
-            
+
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_firewall_install.sh -o /opt/v_firewall_install.sh
             cd /opt
@@ -290,8 +298,8 @@ resources:
   vsn_0:
     type: OS::Nova::Server
     properties:
-      image: { get_param: vfw_image_name }
-      flavor: { get_param: vfw_flavor_name }
+      image: { get_param: image_name }
+      flavor: { get_param: flavor_name }
       name: { get_param: vsn_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
@@ -315,7 +323,7 @@ resources:
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
-            
+
             # Create configuration files
             mkdir /opt/config
             echo "__protected_net_gw__" > /opt/config/protected_net_gw.txt
@@ -327,7 +335,7 @@ resources:
             echo "__protected_private_net_cidr__" > /opt/config/protected_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
-            
+
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_sink_install.sh -o /opt/v_sink_install.sh
             cd /opt

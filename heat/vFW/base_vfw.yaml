@@ -1,7 +1,7 @@
 ##########################################################################
 #
 #==================LICENSE_START==========================================
-# 
+#
 #
 # Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
 #
@@ -256,7 +256,7 @@ resources:
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
-            
+
             # Create configuration files
             mkdir /opt/config
             echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
@@ -272,7 +272,7 @@ resources:
             echo "__protected_private_net_cidr__" > /opt/config/protected_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
-            
+
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_firewall_install.sh -o /opt/v_firewall_install.sh
             cd /opt
@@ -323,7 +323,7 @@ resources:
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
-            
+
             # Create configuration files
             mkdir /opt/config
             echo "__fw_ipaddr__" > /opt/config/fw_ipaddr.txt
@@ -338,7 +338,7 @@ resources:
             echo "__unprotected_private_net_cidr__" > /opt/config/unprotected_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
-            
+
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
             cd /opt
@@ -387,7 +387,7 @@ resources:
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
-            
+
             # Create configuration files
             mkdir /opt/config
             echo "__protected_net_gw__" > /opt/config/protected_net_gw.txt
@@ -399,7 +399,7 @@ resources:
             echo "__protected_private_net_cidr__" > /opt/config/protected_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
-            
+
             # Download and run install script
             curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_sink_install.sh -o /opt/v_sink_install.sh
             cd /opt
