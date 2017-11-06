@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a4e6583_5d827601",
+        "filename": "heat/vCPE/vgw/base_vcpe_vgw.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-11-06T23:32:35Z",
+      "side": 1,
+      "message": "uncomment this line",
+      "revId": "6676c869c401350e8d2258b35b679bc007f21ab6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
