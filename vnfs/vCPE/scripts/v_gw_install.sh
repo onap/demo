@@ -11,6 +11,8 @@ HC2VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/hc2vpp_source_repo_branch.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 MUX_GW_IP=$(cat /opt/config/mux_gw_private_net_ipaddr.txt)
 MUX_GW_CIDR=$(cat /opt/config/mux_gw_private_net_cidr.txt)
+MUX_IP_ADDR=$(cat /opt/config/mux_ip_addr.txt)
+VG_VGMUX_TUNNEL_VNI=$(cat /opt/config/vg_vgmux_tunnel_vni.txt)
 
 # Build states are:
 # 'build' - just build the code
@@ -207,10 +209,9 @@ EOF
     MUX_GW_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 2`  # second interface in list
     GW_PUB_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 4`   # fourth interface in list
 
-touch /etc/vpp/setup.gate
 cat > /etc/vpp/setup.gate << EOF
 set int state ${MUX_GW_NIC} up
-set int ip address ${MUX_GW_NIC} 10.5.0.21/24
+set int ip address ${MUX_GW_NIC} ${MUX_GW_IP}/${MUX_GW_CIDR#*/}
 
 set int state ${GW_PUB_NIC} up
 set dhcp client intfc ${GW_PUB_NIC} hostname vg-1
@@ -218,7 +219,7 @@ set dhcp client intfc ${GW_PUB_NIC} hostname vg-1
 tap connect lstack address 192.168.1.1/24
 set int state tap-0 up
 
-create vxlan tunnel src 10.5.0.21 dst 10.5.0.20 vni 100
+create vxlan tunnel src ${MUX_GW_IP} dst ${MUX_IP_ADDR} vni ${VG_VGMUX_TUNNEL_VNI}
 
 set interface l2 bridge tap-0 10 0
 set interface l2 bridge vxlan_tunnel0 10 1
@@ -361,6 +362,12 @@ EOF
     mv vpp-integration/minimal-distribution/target/vpp-integration-distribution-${l_version}-hc/vpp-integration-distribution-${l_version} /opt/honeycomb
     sed -i 's/127.0.0.1/0.0.0.0/g' /opt/honeycomb/config/honeycomb.json
 
+    # Disable automatic upgrades
+    if [[ $CLOUD_ENV != "rackspace" ]]
+    then
+        echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+        sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
+    fi
 fi  # endif BUILD_STATE != "done
 
 if [[ $BUILD_STATE != "build" ]]
@@ -403,7 +410,7 @@ EOF
     chmod +x v_gw_init.sh
     chmod +x v_gw.sh
     mv v_gw.sh /etc/init.d
-    sed "s/Provides:/$/ v_gw" /etc/init.d/v_gw.sh
+    sed -i '/# Provides:/ s/$/ v_gw/' /etc/init.d/v_gw.sh
     update-rc.d v_gw.sh defaults
 
     # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
@@ -414,7 +421,6 @@ EOF
 	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
 	sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
 	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
 	reboot
 fi
 
