@@ -14,8 +14,10 @@ LIBEVEL_PATCH_URL=$(cat /opt/config/libevel_patch_url.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 MUX_GW_IP=$(cat /opt/config/mux_gw_net_ipaddr.txt)
 MUX_GW_CIDR=$(cat /opt/config/mux_gw_net_cidr.txt)
-BNG_MUX_IP=$(cat /opt/config/bng_mux_net_ipaddr.txt)
+MUX_TO_BNG_IP=$(cat /opt/config/mux_to_bng_net_ipaddr.txt)
 BNG_MUX_CIDR=$(cat /opt/config/bng_mux_net_cidr.txt)
+BRG_BNG_CIDR=$(cat /opt/config/brg_bng_net_cidr.txt)
+BNG_TO_MUX_IP=$(cat /opt/config/bng_to_mux_net_ipaddr.txt)
 
 # Build states are:
 # 'build' - just build the code
@@ -234,10 +236,11 @@ EOF
 
     cat > /etc/vpp/setup.gate << EOF
 set int state ${BNG_MUX_NIC} up
-set int ip address ${BNG_MUX_NIC} ${BNG_MUX_IP}/${BNG_MUX_CIDR#*/}
+set int ip address ${BNG_MUX_NIC} ${MUX_TO_BNG_IP}/${BNG_MUX_CIDR#*/}
 
 set int state ${MUX_GW_NIC} up
 set int ip address ${MUX_GW_NIC} ${MUX_GW_IP}/${MUX_GW_CIDR#*/}
+ip route add ${BRG_BNG_CIDR} via ${BNG_TO_MUX_IP} ${BNG_MUX_NIC}
 EOF
 
 fi  # endif BUILD_STATE != "build"
