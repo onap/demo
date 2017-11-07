@@ -69,6 +69,10 @@ parameters:
     type: string
     label: vGMUX private network CIDR
     description: The CIDR of the vGMUX private network
+  brgemu_bng_private_net_cidr:
+    type: string
+    label: vBRG vBNG private network CIDR
+    description: The CIDR of the vBRG-vBNG private network
   onap_private_net_id:
     type: string
     label: ONAP management network name or ID
@@ -105,6 +109,10 @@ parameters:
     type: string
     label: vCPE module ID
     description: The vCPE Module ID is provided by ONAP
+  bng_gmux_private_ip:
+    type: string
+    label: vBNG private IP address towards the vBNG-vGMUX private network
+    description: Private IP address that is assigned to the vBNG to communicate with the vGMUX
   dcae_collector_ip:
     type: string
     label: DCAE collector IP address
@@ -232,12 +240,14 @@ resources:
       user_data:
         str_replace:
           params:
-            __bng_mux_net_ipaddr__ : { get_param: vgmux_private_ip_0 }
+            __mux_to_bng_net_ipaddr__ : { get_param: vgmux_private_ip_0 }
             __oam_ipaddr__ : { get_param: vgmux_private_ip_1 }
             __mux_gw_net_ipaddr__ : { get_param: vgmux_private_ip_2 }
+            __bng_to_mux_ipaddr__ : { get_param: bng_gmux_private_ip }
             __bng_mux_net_cidr__ : { get_param: bng_gmux_private_net_cidr }
             __oam_cidr__ : { get_param: onap_private_net_cidr }
             __mux_gw_net_cidr__ : { get_param: mux_gw_private_net_cidr }
+            __brg_bng_net_cidr__ : { get_param: brgemu_bng_private_net_cidr }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
@@ -255,12 +265,14 @@ resources:
 
             # Create configuration files
             mkdir /opt/config
-            echo "__bng_mux_net_ipaddr__" > /opt/config/bng_mux_net_ipaddr.txt
+            echo "__mux_to_bng_net_ipaddr__" > /opt/config/mux_to_bng_net_ipaddr.txt
             echo "__oam_ipaddr__" > /opt/config/oam_ipaddr.txt
             echo "__mux_gw_net_ipaddr__" > /opt/config/mux_gw_net_ipaddr.txt
+            echo "__bng_to_mux_ipaddr__ " > /opt/config/bng_to_mux_net_ipaddr.txt
             echo "__bng_mux_net_cidr__" > /opt/config/bng_mux_net_cidr.txt
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__mux_gw_net_cidr__" > /opt/config/mux_gw_net_cidr.txt
+            echo "__brg_bng_net_cidr__" > /opt/config/brg_bng_net_cidr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
