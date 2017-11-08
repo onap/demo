@@ -16,7 +16,7 @@
 # limitations under the License.
 #*******************************************************************************
 
-CLI_LATEST_BINARY="https://nexus.onap.org/service/local/artifact/maven/redirect?r=snapshots&g=org.onap.cli&a=cli-zip&e=zip&v=LATEST"
+CLI_LATEST_BINARY="https://nexus.onap.org/content/repositories/releases/org/onap/cli/cli-zip/1.1.0/cli-zip-1.1.0.zip"
 CLI_INSTALL_DIR=/opt/onap/cli
 CLI_ZIP=cli.zip
 CLI_BIN=/usr/bin/onap
