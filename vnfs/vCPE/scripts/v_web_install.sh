@@ -51,13 +51,22 @@ fi
 echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
+apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates  kea-dhcp4-server g++ libcurl4-gnutls-dev
 sleep 1
 
-# Download DHCP config files
+# Download DHCP config and init files
 cd /opt
+wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-dhcp4-web.conf
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_web_init.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_web.sh
+
+
+
+# Configure DHCP
+cp kea-dhcp4-web.conf /etc/kea-dhcp4-server.conf
+mv kea-dhcp4-web.conf /etc/kea/kea-dhcp4.conf
+
+
 chmod +x v_web_init.sh
 chmod +x v_web.sh
 mv v_web.sh /etc/init.d
