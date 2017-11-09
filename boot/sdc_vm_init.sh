@@ -30,5 +30,8 @@ sed -i "s/xxx/"$ENV_NAME"/g" /data/environments/$ENV_NAME.json
 sed -i "s/\"ueb_url_list\":.*/\"ueb_url_list\": \""$MR_IP_ADDR","$MR_IP_ADDR"\",/g" /data/environments/$ENV_NAME.json
 sed -i "s/\"fqdn\":.*/\"fqdn\": [\""$MR_IP_ADDR"\", \""$MR_IP_ADDR"\"]/g" /data/environments/$ENV_NAME.json
 
+
+
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 bash /data/scripts/docker_run.sh -e $ENV_NAME -r $RELEASE -p $NEXUS_DOCKER_PORT
+bash ./docker_run_workflow_designer.sh -e $ENV_NAME -r $RELEASE -p $NEXUS_DOCKER_PORT
