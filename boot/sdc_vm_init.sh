@@ -18,6 +18,14 @@ cp sdc/sdc-os-chef/scripts/docker_health.sh /data/scripts
 chmod +x /data/scripts/docker_run.sh
 chmod +x /data/scripts/docker_health.sh
 
+
+cd /opt/sdc-workflow-designer
+git pull
+
+cd /opt
+cp sdc/scripts/docker_run.sh /data/scripts/docker_run_workflow_designer.sh
+chmod +x /data/scripts/docker_run_workflow_designer.sh
+
 if [ -e /opt/config/public_ip.txt ]
 then
   IP_ADDRESS=$(cat /opt/config/public_ip.txt)
@@ -30,5 +38,8 @@ sed -i "s/xxx/"$ENV_NAME"/g" /data/environments/$ENV_NAME.json
 sed -i "s/\"ueb_url_list\":.*/\"ueb_url_list\": \""$MR_IP_ADDR","$MR_IP_ADDR"\",/g" /data/environments/$ENV_NAME.json
 sed -i "s/\"fqdn\":.*/\"fqdn\": [\""$MR_IP_ADDR"\", \""$MR_IP_ADDR"\"]/g" /data/environments/$ENV_NAME.json
 
+
+
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 bash /data/scripts/docker_run.sh -e $ENV_NAME -r $RELEASE -p $NEXUS_DOCKER_PORT
+bash /data/scripts/docker_run_workflow_designer.sh -e $ENV_NAME -r $RELEASE -p $NEXUS_DOCKER_PORT
