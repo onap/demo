@@ -128,7 +128,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "catalog", 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "emsdriver", "version": "v1", "url": "/api/emsdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8206"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 #UUI
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "usecaseui", "version": "v1", "url": "/api/usecaseui/server/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8901"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "usecaseui-server", "version": "v1", "url": "/api/usecaseui/server/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8082"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "usecaseui-gui", "version": "v1", "url": "/iui/usecaseui","path": "/iui/usecaseui","protocol": "UI",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8900"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "usecaseui-ui", "version": "v1", "url": "/usecase-ui","path": "/iui/usecaseui","protocol": "UI",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8080"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
