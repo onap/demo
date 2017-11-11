@@ -6,7 +6,7 @@ Subject: [PATCH] Add VES agent configuration for vG-MUX
 Signed-off-by: Johnson Li <johnson.li@intel.com>
 
 diff --git a/pom.xml b/pom.xml
-index 538a5d98..581bedfc 100644
+index 538a5d9..581bedf 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -44,13 +44,14 @@
@@ -28,7 +28,7 @@ index 538a5d98..581bedfc 100644
 \ No newline at end of file
 diff --git a/ves/asciidoc/Readme.adoc b/ves/asciidoc/Readme.adoc
 new file mode 100644
-index 00000000..682e7555
+index 0000000..682e755
 --- /dev/null
 +++ b/ves/asciidoc/Readme.adoc
 @@ -0,0 +1,3 @@
@@ -37,7 +37,7 @@ index 00000000..682e7555
 +Overview of ves-agent
 diff --git a/ves/pom.xml b/ves/pom.xml
 new file mode 100644
-index 00000000..1ded0109
+index 0000000..1ded010
 --- /dev/null
 +++ b/ves/pom.xml
 @@ -0,0 +1,56 @@
@@ -99,7 +99,7 @@ index 00000000..1ded0109
 +</project>
 diff --git a/ves/ves-api/asciidoc/Readme.adoc b/ves/ves-api/asciidoc/Readme.adoc
 new file mode 100644
-index 00000000..b561268c
+index 0000000..b561268
 --- /dev/null
 +++ b/ves/ves-api/asciidoc/Readme.adoc
 @@ -0,0 +1,3 @@
@@ -109,7 +109,7 @@ index 00000000..b561268c
 \ No newline at end of file
 diff --git a/ves/ves-api/pom.xml b/ves/ves-api/pom.xml
 new file mode 100644
-index 00000000..78bf47b9
+index 0000000..78bf47b
 --- /dev/null
 +++ b/ves/ves-api/pom.xml
 @@ -0,0 +1,52 @@
@@ -167,10 +167,10 @@ index 00000000..78bf47b9
 +</project>
 diff --git a/ves/ves-api/src/main/yang/vesagent.yang b/ves/ves-api/src/main/yang/vesagent.yang
 new file mode 100644
-index 00000000..a3c79797
+index 0000000..dde09c2
 --- /dev/null
 +++ b/ves/ves-api/src/main/yang/vesagent.yang
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,77 @@
 +module vesagent {
 +
 +    yang-version 1;
@@ -235,6 +235,12 @@ index 00000000..a3c79797
 +                description
 +                    "VES Working Mode, Demo Or Real Only.";
 +            }
++
++            leaf source-name {
++                type string;
++                description
++                    "Override for the sourceName field in the VES event";
++            }
 +        }
 +    }
 +
@@ -244,7 +250,7 @@ index 00000000..a3c79797
 +}
 diff --git a/ves/ves-impl/asciidoc/Readme.adoc b/ves/ves-impl/asciidoc/Readme.adoc
 new file mode 100644
-index 00000000..e07fb05f
+index 0000000..e07fb05
 --- /dev/null
 +++ b/ves/ves-impl/asciidoc/Readme.adoc
 @@ -0,0 +1,3 @@
@@ -254,7 +260,7 @@ index 00000000..e07fb05f
 \ No newline at end of file
 diff --git a/ves/ves-impl/pom.xml b/ves/ves-impl/pom.xml
 new file mode 100644
-index 00000000..5ed2c1b4
+index 0000000..5ed2c1b
 --- /dev/null
 +++ b/ves/ves-impl/pom.xml
 @@ -0,0 +1,157 @@
@@ -417,7 +423,7 @@ index 00000000..5ed2c1b4
 +</project>
 diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/VesModule.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/VesModule.java
 new file mode 100644
-index 00000000..0cd60068
+index 0000000..0cd6006
 --- /dev/null
 +++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/VesModule.java
 @@ -0,0 +1,67 @@
@@ -490,7 +496,7 @@ index 00000000..0cd60068
 +}
 diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/jvpp/JVppVesProvider.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/jvpp/JVppVesProvider.java
 new file mode 100644
-index 00000000..8afed84e
+index 0000000..8afed84
 --- /dev/null
 +++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/jvpp/JVppVesProvider.java
 @@ -0,0 +1,59 @@
@@ -555,7 +561,7 @@ index 00000000..8afed84e
 +
 diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/read/VesReaderFactory.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/read/VesReaderFactory.java
 new file mode 100644
-index 00000000..bef652fd
+index 0000000..bef652f
 --- /dev/null
 +++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/read/VesReaderFactory.java
 @@ -0,0 +1,50 @@
@@ -611,7 +617,7 @@ index 00000000..bef652fd
 +}
 diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesConfigCustomizer.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesConfigCustomizer.java
 new file mode 100644
-index 00000000..e06afa73
+index 0000000..e06afa7
 --- /dev/null
 +++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesConfigCustomizer.java
 @@ -0,0 +1,127 @@
@@ -744,10 +750,10 @@ index 00000000..e06afa73
 +}
 diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesModeCustomizer.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesModeCustomizer.java
 new file mode 100644
-index 00000000..8b6d5a9a
+index 0000000..248d819
 --- /dev/null
 +++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesModeCustomizer.java
-@@ -0,0 +1,97 @@
+@@ -0,0 +1,99 @@
 +/*
 + * Copyright (c) 2017 Intel Corp and/or its affiliates.
 + *
@@ -804,7 +810,7 @@ index 00000000..8b6d5a9a
 +                                       @Nonnull final WriteContext writeContext) throws WriteFailedException {
 +        LOG.debug("Writing VES Agent Working Mode {} dataAfter={}", iid, dataAfter);
 +
-+        checkArgument(dataAfter.getWorkingMode() != null && dataAfter.getBasePacketLoss() <= 100,
++        checkArgument(dataAfter.getSourceName() != null && dataAfter.getWorkingMode() != null && dataAfter.getBasePacketLoss() <= 100,
 +                      "VES Agent Working Mode need to be correctly configured.");
 +
 +        setVesAgentMode(iid, dataAfter);
@@ -816,7 +822,7 @@ index 00000000..8b6d5a9a
 +        throws WriteFailedException {
 +        LOG.debug("Writing VES Agent Working Mode {} {}-->{}", iid, dataBefore, dataAfter);
 +
-+        checkArgument(dataAfter.getWorkingMode() != null && dataAfter.getBasePacketLoss() <= 100,
++        checkArgument(dataAfter.getSourceName() != null && dataAfter.getWorkingMode() != null && dataAfter.getBasePacketLoss() <= 100,
 +                      "VES Agent Working Mode need to be correctly configured.");
 +
 +        setVesAgentMode(iid, dataAfter);
@@ -829,7 +835,8 @@ index 00000000..8b6d5a9a
 +        LOG.debug("Restoring VES Mode {} dataBefore={} to default.", iid, dataBefore);
 +
 +        modeBuilder.setWorkingMode("Real")
-+                   .setBasePacketLoss(0L);
++                   .setBasePacketLoss(0L)
++                   .setSourceName("");
 +
 +        setVesAgentMode(iid, modeBuilder.build());
 +    }
@@ -840,6 +847,7 @@ index 00000000..8b6d5a9a
 +
 +        request.pktLossRate = mode.getBasePacketLoss().byteValue();
 +        request.workMode = mode.getWorkingMode().getBytes();
++        request.sourceName = mode.getSourceName().getBytes();
 +
 +        LOG.debug("VES agent working mode change id={} request={}", id, request);
 +        getReplyForWrite(jvppVes.vesAgentMode(request).toCompletableFuture(), id);
@@ -847,7 +855,7 @@ index 00000000..8b6d5a9a
 +}
 diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesWriterFactory.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesWriterFactory.java
 new file mode 100644
-index 00000000..581f0460
+index 0000000..581f046
 --- /dev/null
 +++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesWriterFactory.java
 @@ -0,0 +1,54 @@
@@ -907,7 +915,7 @@ index 00000000..581f0460
 +}
 diff --git a/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesagentCustomizer.java b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesagentCustomizer.java
 new file mode 100644
-index 00000000..62e46cdb
+index 0000000..62e46cd
 --- /dev/null
 +++ b/ves/ves-impl/src/main/java/io/fd/hc2vpp/ves/write/VesagentCustomizer.java
 @@ -0,0 +1,131 @@
@@ -1043,7 +1051,7 @@ index 00000000..62e46cdb
 +    }
 +}
 diff --git a/vpp-integration/minimal-distribution/pom.xml b/vpp-integration/minimal-distribution/pom.xml
-index e126114a..ca0e5b24 100644
+index e126114..ca0e5b2 100644
 --- a/vpp-integration/minimal-distribution/pom.xml
 +++ b/vpp-integration/minimal-distribution/pom.xml
 @@ -40,6 +40,7 @@
@@ -1074,6 +1082,3 @@ index e126114a..ca0e5b24 100644
        <groupId>io.fd.hc2vpp.management</groupId>
        <artifactId>vpp-management-impl</artifactId>
        <version>${vpp-management-impl.version}</version>
--- 
-2.12.2.windows.2
-

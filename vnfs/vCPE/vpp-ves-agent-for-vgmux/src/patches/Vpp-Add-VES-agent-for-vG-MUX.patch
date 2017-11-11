@@ -4,13 +4,14 @@ Date: Fri, 22 Sep 2017 08:58:40 +0800
 Subject: [PATCH] Add VES Agent to report statistics
 
 Change Log:
+v3: Add option to configure source name for VES event
 v2: Use VES 5.x as agent library
 v1: Add VES agent to report statistics
 
 Signed-off-by: Johnson Li <johnson.li@intel.com>
 
 diff --git a/src/configure.ac b/src/configure.ac
-index fb2ead6d..ea641525 100644
+index fb2ead6..ea64152 100644
 --- a/src/configure.ac
 +++ b/src/configure.ac
 @@ -154,6 +154,7 @@ PLUGIN_ENABLED(lb)
@@ -22,7 +23,7 @@ index fb2ead6d..ea641525 100644
  ###############################################################################
  # Dependency checks
 diff --git a/src/plugins/Makefile.am b/src/plugins/Makefile.am
-index 623892e7..84513755 100644
+index 623892e..8451375 100644
 --- a/src/plugins/Makefile.am
 +++ b/src/plugins/Makefile.am
 @@ -69,6 +69,10 @@ if ENABLE_SNAT_PLUGIN
@@ -38,7 +39,7 @@ index 623892e7..84513755 100644
  # Remove *.la files
 diff --git a/src/plugins/ves.am b/src/plugins/ves.am
 new file mode 100644
-index 00000000..10f2194b
+index 0000000..10f2194
 --- /dev/null
 +++ b/src/plugins/ves.am
 @@ -0,0 +1,35 @@
@@ -79,7 +80,7 @@ index 00000000..10f2194b
 +# vi:syntax=automake
 diff --git a/src/plugins/ves/include/double_list.h b/src/plugins/ves/include/double_list.h
 new file mode 100644
-index 00000000..5cf7e1af
+index 0000000..5cf7e1a
 --- /dev/null
 +++ b/src/plugins/ves/include/double_list.h
 @@ -0,0 +1,57 @@
@@ -142,7 +143,7 @@ index 00000000..5cf7e1af
 +#endif
 diff --git a/src/plugins/ves/include/evel.h b/src/plugins/ves/include/evel.h
 new file mode 100644
-index 00000000..6aceec30
+index 0000000..d696085
 --- /dev/null
 +++ b/src/plugins/ves/include/evel.h
 @@ -0,0 +1,4494 @@
@@ -1869,7 +1870,7 @@ index 00000000..6aceec30
 + *          ::evel_free_event.
 + * @retval  NULL  Failed to create the event.
 + *****************************************************************************/
-+EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval,const char* ev_name, const char *ev_id);
++EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval,const char* ev_name, const char *ev_id, const char *ev_source_name);
 +
 +/**************************************************************************//**
 + * Free a Measurement.
@@ -4642,7 +4643,7 @@ index 00000000..6aceec30
 +
 diff --git a/src/plugins/ves/include/evel_internal.h b/src/plugins/ves/include/evel_internal.h
 new file mode 100644
-index 00000000..46f71af1
+index 0000000..46f71af
 --- /dev/null
 +++ b/src/plugins/ves/include/evel_internal.h
 @@ -0,0 +1,858 @@
@@ -5506,7 +5507,7 @@ index 00000000..46f71af1
 +#endif
 diff --git a/src/plugins/ves/include/evel_throttle.h b/src/plugins/ves/include/evel_throttle.h
 new file mode 100644
-index 00000000..c97b3c37
+index 0000000..c97b3c3
 --- /dev/null
 +++ b/src/plugins/ves/include/evel_throttle.h
 @@ -0,0 +1,214 @@
@@ -5726,7 +5727,7 @@ index 00000000..c97b3c37
 +#endif
 diff --git a/src/plugins/ves/include/hashtable.h b/src/plugins/ves/include/hashtable.h
 new file mode 100644
-index 00000000..8be17dc1
+index 0000000..8be17dc
 --- /dev/null
 +++ b/src/plugins/ves/include/hashtable.h
 @@ -0,0 +1,97 @@
@@ -5829,7 +5830,7 @@ index 00000000..8be17dc1
 +#endif
 diff --git a/src/plugins/ves/include/jsmn.h b/src/plugins/ves/include/jsmn.h
 new file mode 100644
-index 00000000..4ae6d9b4
+index 0000000..4ae6d9b
 --- /dev/null
 +++ b/src/plugins/ves/include/jsmn.h
 @@ -0,0 +1,93 @@
@@ -5928,7 +5929,7 @@ index 00000000..4ae6d9b4
 +#endif /* __JSMN_H_ */
 diff --git a/src/plugins/ves/include/metadata.h b/src/plugins/ves/include/metadata.h
 new file mode 100644
-index 00000000..1ee44092
+index 0000000..1ee4409
 --- /dev/null
 +++ b/src/plugins/ves/include/metadata.h
 @@ -0,0 +1,58 @@
@@ -5992,7 +5993,7 @@ index 00000000..1ee44092
 +#endif
 diff --git a/src/plugins/ves/include/ring_buffer.h b/src/plugins/ves/include/ring_buffer.h
 new file mode 100644
-index 00000000..1236b78b
+index 0000000..1236b78
 --- /dev/null
 +++ b/src/plugins/ves/include/ring_buffer.h
 @@ -0,0 +1,96 @@
@@ -6094,10 +6095,10 @@ index 00000000..1236b78b
 +#endif
 diff --git a/src/plugins/ves/ves.api b/src/plugins/ves/ves.api
 new file mode 100644
-index 00000000..a7106f8d
+index 0000000..bae2620
 --- /dev/null
 +++ b/src/plugins/ves/ves.api
-@@ -0,0 +1,72 @@
+@@ -0,0 +1,74 @@
 +/*
 + * Copyright (c) 2017 Intel and/or its affiliates.
 + * Licensed under the Apache License, Version 2.0 (the "License");
@@ -6146,6 +6147,7 @@ index 00000000..a7106f8d
 +    @param context - sender context, to match reply w/ request
 +    @param pkt_loss_rate - Base packet loss rate if Demo Mode
 +    @param work_mode[] - Agent's work mode, real or demo
++    @param source_name[] - Agent's source name
 +*/
 +define ves_agent_mode
 +{
@@ -6153,6 +6155,7 @@ index 00000000..a7106f8d
 +  u32 context;
 +  u32 pkt_loss_rate;
 +  u8  work_mode[8];
++  u8  source_name[129];
 +};
 +
 +/** \brief VES Agent Mode response
@@ -6172,7 +6175,7 @@ index 00000000..a7106f8d
 + */
 diff --git a/src/plugins/ves/ves_all_api_h.h b/src/plugins/ves/ves_all_api_h.h
 new file mode 100644
-index 00000000..72b15697
+index 0000000..72b1569
 --- /dev/null
 +++ b/src/plugins/ves/ves_all_api_h.h
 @@ -0,0 +1,18 @@
@@ -6196,7 +6199,7 @@ index 00000000..72b15697
 +#include <ves/ves.api.h>
 diff --git a/src/plugins/ves/ves_api.c b/src/plugins/ves/ves_api.c
 new file mode 100644
-index 00000000..7a9b8004
+index 0000000..06f0a96
 --- /dev/null
 +++ b/src/plugins/ves/ves_api.c
 @@ -0,0 +1,139 @@
@@ -6283,7 +6286,7 @@ index 00000000..7a9b8004
 +      || !strcmp((char *)mp->work_mode, "DEMO"))
 +    mode = VES_AGENT_MODE_DEMO;
 +
-+  rv = ves_agent_set_mode(mode, (u32) ntohl(mp->pkt_loss_rate));
++  rv = ves_agent_set_mode(mode, (u32) ntohl(mp->pkt_loss_rate), (char *) mp->source_name);
 +
 +  REPLY_MACRO (VL_API_VES_AGENT_MODE_REPLY);
 +}
@@ -6341,7 +6344,7 @@ index 00000000..7a9b8004
 + */
 diff --git a/src/plugins/ves/ves_msg_enum.h b/src/plugins/ves/ves_msg_enum.h
 new file mode 100644
-index 00000000..6e8a5dfa
+index 0000000..6e8a5df
 --- /dev/null
 +++ b/src/plugins/ves/ves_msg_enum.h
 @@ -0,0 +1,31 @@
@@ -6378,10 +6381,10 @@ index 00000000..6e8a5dfa
 +#endif /* _VES_MSG_ENUM_H_ */
 diff --git a/src/plugins/ves/ves_node.c b/src/plugins/ves/ves_node.c
 new file mode 100644
-index 00000000..7540dd16
+index 0000000..49d7e87
 --- /dev/null
 +++ b/src/plugins/ves/ves_node.c
-@@ -0,0 +1,646 @@
+@@ -0,0 +1,656 @@
 +/*
 + * Copyright (c) 2017 Intel and/or its affiliates.
 + * Licensed under the Apache License, Version 2.0 (the "License");
@@ -6565,7 +6568,7 @@ index 00000000..7540dd16
 +		packets_out_this_round = 0;
 +	}
 +
-+	vpp_m = evel_new_measurement(vam->config.read_interval, "Measurement_vGMUX", "Generic_traffic");
++	vpp_m = evel_new_measurement(vam->config.read_interval, "Measurement_vGMUX", "Generic_traffic", (char *) vam->config.source_name);
 +	if(vpp_m != NULL) {
 +          char str_pkt_loss[12];
 +          MEASUREMENT_VNIC_PERFORMANCE * vnic_performance = NULL;
@@ -6912,11 +6915,17 @@ index 00000000..7540dd16
 +
 +int
 +ves_agent_set_mode(ves_agent_mode_t mode,
-+                   u32 pkt_loss_rate)
++                   u32 pkt_loss_rate, char *source_name)
 +{
 +	ves_agent_main_t *vam = &ves_agent_main;
 +	int retval = 0;
 +
++	if (source_name != NULL) {
++		strncpy((char *) vam->config.source_name, source_name, MAX_SRC_NAME_LEN);
++		vam->config.source_name[MAX_SRC_NAME_LEN] = '\0';
++	} else {
++		vam->config.source_name[0] = '\0';
++	}
 +	if (VES_AGENT_MODE_DEMO == mode) {
 +		if (pkt_loss_rate > 100) {
 +			vam->config.mode = VES_AGENT_MODE_REAL;
@@ -6941,6 +6950,7 @@ index 00000000..7540dd16
 +	u32 pkt_loss_rate = 0;
 +	ves_agent_mode_t mode = VES_AGENT_MODE_REAL;
 +        int set_mode = 0;
++	u8 *source_name = NULL;
 +
 +	while (unformat_check_input(input) != UNFORMAT_END_OF_INPUT) 
 +	{
@@ -6955,13 +6965,15 @@ index 00000000..7540dd16
 +			set_mode = 1;
 +		else if (unformat (input, "base %u", &pkt_loss_rate))
 +			;
++		else if (unformat (input, "source %s", &source_name))
++			;
 +		else
 +			break;
 +	}
 +
 +	if (set_mode)
 +	{
-+		int retval = ves_agent_set_mode(mode, pkt_loss_rate);
++		int retval = ves_agent_set_mode(mode, pkt_loss_rate, (char *)source_name);
 +		if (retval == 0)
 +			return 0;
 +		else
@@ -6974,7 +6986,7 @@ index 00000000..7540dd16
 +
 +VLIB_CLI_COMMAND (ves_mode_set_command, static) = {
 +	.path = "set ves mode",
-+	.short_help = "set ves mode <demo|real> [base <pkt-loss-rate>]",
++	.short_help = "set ves mode <demo|real> [base <pkt-loss-rate>] [source <name>]",
 +	.function = ves_mode_set_command_fn,
 +};
 +
@@ -6983,11 +6995,12 @@ index 00000000..7540dd16
 +{
 +	ves_agent_main_t *vam = &ves_agent_main;
 +
-+	s = format(s, "%=8s %s\n", "Mode", "Base Packet Loss Rate");
++	s = format(s, "%=8s %s   %s\n", "Mode", "Base Packet Loss Rate", "Source Name");
 +
-+	s = format(s, "%=8s         %.1f %%\n",
++	s = format(s, "%=8s %20.1f%%   %s\n",
 +		vam->config.mode ==  VES_AGENT_MODE_DEMO ? "Demo" : "Real",
-+		(double) vam->config.base_pkt_loss);
++		(double) vam->config.base_pkt_loss,
++		(strlen((char *)vam->config.source_name) > 0) ? (char *)vam->config.source_name : "[default]");
 +
 +	return s;
 +}
@@ -7030,10 +7043,10 @@ index 00000000..7540dd16
 + */
 diff --git a/src/plugins/ves/ves_node.h b/src/plugins/ves/ves_node.h
 new file mode 100644
-index 00000000..7b773843
+index 0000000..9a57f34
 --- /dev/null
 +++ b/src/plugins/ves/ves_node.h
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,68 @@
 +/*
 + * Copyright (c) 2017 Intel and/or its affiliates.
 + * Licensed under the Apache License, Version 2.0 (the "License");
@@ -7060,6 +7073,7 @@ index 00000000..7b773843
 +#define DEFAULT_MEASURE_ETH	"eth0"
 +#define DEFAULT_SERVER_PORT	8080
 +#define DEFAULT_READ_INTERVAL	100
++#define MAX_SRC_NAME_LEN        128
 +
 +typedef enum {
 +	VES_AGENT_MODE_REAL = 0,
@@ -7075,6 +7089,7 @@ index 00000000..7b773843
 +	int			is_enabled;
 +	u32			base_pkt_loss; /* For demo only */
 +	ves_agent_mode_t	mode; /* Demo or Real */
++        u8                      source_name[MAX_SRC_NAME_LEN+1];
 +} ves_agent_config_t;
 +
 +typedef struct {
@@ -7097,18 +7112,17 @@ index 00000000..7b773843
 +		   u32 read_interval, int is_del);
 +
 +int ves_agent_set_mode(ves_agent_mode_t mode,
-+                       u32 pkt_loss_rate);
++                       u32 pkt_loss_rate, char *source_name);
 +
 +#endif /* _VES_NODE_H_ */
 diff --git a/src/vpp-api/java/Makefile.am b/src/vpp-api/java/Makefile.am
-index f18e0c24..7f4738d8 100644
+index f18e0c2..7f4738d 100644
 --- a/src/vpp-api/java/Makefile.am
 +++ b/src/vpp-api/java/Makefile.am
-@@ -148,6 +148,26 @@ jvpp-snat/io_fd_vpp_jvpp_snat_JVppSnatImpl.h: $(jvpp_registry_ok) $(jvpp_snat_js
- 	$(call japigen,snat,JVppSnatImpl)
+@@ -149,6 +149,26 @@ jvpp-snat/io_fd_vpp_jvpp_snat_JVppSnatImpl.h: $(jvpp_registry_ok) $(jvpp_snat_js
  endif
  
-+#
+ #
 +# VES Plugin
 +#
 +if ENABLE_VES_PLUGIN
@@ -7128,12 +7142,13 @@ index f18e0c24..7f4738d8 100644
 +	$(call japigen,ves,JVppVesImpl)
 +endif
 +
- #
++#
  # iOAM Trace Plugin
  #
+ if ENABLE_IOAM_PLUGIN
 diff --git a/src/vpp-api/java/jvpp-ves/jvpp_ves.c b/src/vpp-api/java/jvpp-ves/jvpp_ves.c
 new file mode 100644
-index 00000000..60e325b5
+index 0000000..60e325b
 --- /dev/null
 +++ b/src/vpp-api/java/jvpp-ves/jvpp_ves.c
 @@ -0,0 +1,108 @@
@@ -7247,7 +7262,7 @@ index 00000000..60e325b5
 +}
 diff --git a/src/vpp-api/java/jvpp-ves/jvpp_ves.h b/src/vpp-api/java/jvpp-ves/jvpp_ves.h
 new file mode 100644
-index 00000000..642101ca
+index 0000000..642101c
 --- /dev/null
 +++ b/src/vpp-api/java/jvpp-ves/jvpp_ves.h
 @@ -0,0 +1,43 @@
@@ -7294,6 +7309,3 @@ index 00000000..642101ca
 +
 +
 +#endif /* __included_jvpp_ves_h__ */
--- 
-2.14.1.windows.1
-
