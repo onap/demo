@@ -219,10 +219,7 @@ set dhcp client intfc ${GW_PUB_NIC} hostname vg-1
 tap connect lstack address 192.168.1.1/24
 set int state tap-0 up
 
-create vxlan tunnel src ${MUX_GW_IP} dst ${MUX_IP_ADDR} vni ${VG_VGMUX_TUNNEL_VNI}
-
 set interface l2 bridge tap-0 10 0
-set interface l2 bridge vxlan_tunnel0 10 1
 set bridge-domain arp term 10
 
 loopback create
@@ -239,7 +236,7 @@ fi  # endif BUILD_STATE != "build"
 if [[ $BUILD_STATE != "done" ]]
 then
 
-    # Download and install HC2VPP from source
+    # Download and install HC2VPP from source
     cd /opt
     git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
 
