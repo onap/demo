@@ -1,8 +1,28 @@
+diff --git a/vnfs/VES5.0/evel/evel-library/code/evel_library/evel.h b/vnfs/VES5.0/evel/evel-library/code/evel_library/evel.h
+index 0ae1713..be3ae6c 100644
+--- a/vnfs/VES5.0/evel/evel-library/code/evel_library/evel.h
++++ b/vnfs/VES5.0/evel/evel-library/code/evel_library/evel.h
+@@ -1715,13 +1715,14 @@ void evel_fault_type_set(EVENT_FAULT * fault, const char * const type);
+  * @param   measurement_interval
+  * @param event_name    Unique Event Name
+  * @param event_id    A universal identifier of the event for analysis etc
++ * @param event_source_name  Optional override of the source name
+  *
+  * @returns pointer to the newly manufactured ::EVENT_MEASUREMENT.  If the
+  *          event is not used (i.e. posted) it must be released using
+  *          ::evel_free_event.
+  * @retval  NULL  Failed to create the event.
+  *****************************************************************************/
+-EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval,const char* ev_name, const char *ev_id);
++EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval,const char* ev_name, const char *ev_id, const char *ev_source_name);
+ 
+ /**************************************************************************//**
+  * Free a Measurement.
 diff --git a/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_event.c b/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_event.c
-index ced29b2..892e4b6 100644
+index 4de49bc..de6b362 100644
 --- a/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_event.c
 +++ b/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_event.c
-@@ -166,7 +166,8 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
+@@ -167,7 +167,8 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
    header->last_epoch_microsec = tv.tv_usec + 1000000 * tv.tv_sec;
    header->priority = EVEL_PRIORITY_NORMAL;
    header->reporting_entity_name = strdup(openstack_vm_name());
@@ -12,7 +32,7 @@ index ced29b2..892e4b6 100644
    header->sequence = event_sequence;
    header->start_epoch_microsec = header->last_epoch_microsec;
    header->major_version = EVEL_HEADER_MAJOR_VERSION;
-@@ -180,7 +181,8 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
+@@ -181,7 +182,8 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
    evel_init_option_string(&header->nfcnaming_code);
    evel_init_option_string(&header->nfnaming_code);
    evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
@@ -22,7 +42,7 @@ index ced29b2..892e4b6 100644
    evel_init_option_intheader(&header->internal_field);
  
    EVEL_EXIT();
-@@ -215,7 +217,8 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
+@@ -216,7 +218,8 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
    header->last_epoch_microsec = tv.tv_usec + 1000000 * tv.tv_sec;
    header->priority = EVEL_PRIORITY_NORMAL;
    header->reporting_entity_name = strdup(openstack_vm_name());
@@ -32,21 +52,105 @@ index ced29b2..892e4b6 100644
    header->sequence = event_sequence;
    header->start_epoch_microsec = header->last_epoch_microsec;
    header->major_version = EVEL_HEADER_MAJOR_VERSION;
-@@ -229,7 +232,8 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
+@@ -230,7 +233,63 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
    evel_init_option_string(&header->nfcnaming_code);
    evel_init_option_string(&header->nfnaming_code);
    evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
 -  evel_force_option_string(&header->source_id, openstack_vm_uuid());
 +  /* evel_force_option_string(&header->source_id, openstack_vm_uuid()); */
 +  evel_force_option_string(&header->source_id, openstack_vnf_id()); /* vCPE quick hack */
++  evel_init_option_intheader(&header->internal_field);
++
++  EVEL_EXIT();
++}
++
++/**************************************************************************//**
++ * Initialize a newly created event header.
++ *
++ * @param header  Pointer to the header being initialized.
++ *****************************************************************************/
++void evel_init_header_source_name(EVENT_HEADER * const header,const char *const eventname, const char *eventid, const char *eventsrcname)
++{
++  struct timeval tv;
++
++  EVEL_ENTER();
++
++  assert(header != NULL);
++  assert(eventname != NULL);
++  assert(eventid != NULL);
++
++  gettimeofday(&tv, NULL);
++
++  /***************************************************************************/
++  /* Initialize the header.  Get a new event sequence number.  Note that if  */
++  /* any memory allocation fails in here we will fail gracefully because     */
++  /* everything downstream can cope with NULLs.                              */
++  /***************************************************************************/
++  header->event_domain = EVEL_DOMAIN_HEARTBEAT;
++  header->event_id = strdup(eventid);
++  header->event_name = strdup(eventname);
++  header->last_epoch_microsec = tv.tv_usec + 1000000 * tv.tv_sec;
++  header->priority = EVEL_PRIORITY_NORMAL;
++  header->reporting_entity_name = strdup(openstack_vm_name());
++  /* header->source_name = strdup(openstack_vm_name()); */
++  /* vCPE quck hack */
++  if (strlen(eventsrcname)) {
++    header->source_name = strdup(eventsrcname);
++  } else {
++    header->source_name = strdup(openstack_vnf_id());
++  }
++  header->sequence = event_sequence;
++  header->start_epoch_microsec = header->last_epoch_microsec;
++  header->major_version = EVEL_HEADER_MAJOR_VERSION;
++  header->minor_version = EVEL_HEADER_MINOR_VERSION;
++  event_sequence++;
++
++  /***************************************************************************/
++  /* Optional parameters.                                                    */
++  /***************************************************************************/
++  evel_init_option_string(&header->event_type);
++  evel_init_option_string(&header->nfcnaming_code);
++  evel_init_option_string(&header->nfnaming_code);
++  evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
++  /* evel_force_option_string(&header->source_id, openstack_vm_uuid()); */
++  evel_force_option_string(&header->source_id, openstack_vnf_id()); /* vCPE quick hack */
    evel_init_option_intheader(&header->internal_field);
  
    EVEL_EXIT();
+diff --git a/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_scaling_measurement.c b/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_scaling_measurement.c
+index b73eb97..2446e02 100644
+--- a/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_scaling_measurement.c
++++ b/vnfs/VES5.0/evel/evel-library/code/evel_library/evel_scaling_measurement.c
+@@ -40,13 +40,14 @@
+  * @param   measurement_interval
+  * @param event_name  Unique Event Name confirming Domain AsdcModel Description
+  * @param event_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
++ * @param event_source_name  Optional override of the source name
+  *
+  * @returns pointer to the newly manufactured ::EVENT_MEASUREMENT.  If the
+  *          event is not used (i.e. posted) it must be released using
+  *          ::evel_free_event.
+  * @retval  NULL  Failed to create the event.
+  *****************************************************************************/
+-EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval, const char* ev_name, const char *ev_id)
++EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval, const char* ev_name, const char *ev_id, const char *ev_source_name)
+ {
+   EVENT_MEASUREMENT * measurement = NULL;
+ 
+@@ -72,7 +73,7 @@ EVENT_MEASUREMENT * evel_new_measurement(double measurement_interval, const char
+   /***************************************************************************/
+   /* Initialize the header & the measurement fields.                         */
+   /***************************************************************************/
+-  evel_init_header_nameid(&measurement->header,ev_name,ev_id);
++  evel_init_header_source_name(&measurement->header,ev_name,ev_id,ev_source_name);
+   measurement->header.event_domain = EVEL_DOMAIN_MEASUREMENT;
+   measurement->measurement_interval = measurement_interval;
+   dlist_initialize(&measurement->additional_info);
 diff --git a/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.c b/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.c
-index 11fef1b..d82f282 100644
+index 62ea6b5..6c322db 100644
 --- a/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.c
 +++ b/vnfs/VES5.0/evel/evel-library/code/evel_library/metadata.c
-@@ -59,6 +59,11 @@ static char vm_uuid[MAX_METADATA_STRING+1] = {0};
+@@ -60,6 +60,11 @@ static char vm_uuid[MAX_METADATA_STRING+1] = {0};
  static char vm_name[MAX_METADATA_STRING+1] = {0};
  
  /**************************************************************************//**
@@ -58,7 +162,7 @@ index 11fef1b..d82f282 100644
   * How many metadata elements we allow for in the retrieved JSON.
   *****************************************************************************/
  static const int MAX_METADATA_TOKENS = 128;
-@@ -289,6 +294,19 @@ EVEL_ERR_CODES openstack_metadata(int verbosity)
+@@ -290,6 +295,19 @@ EVEL_ERR_CODES openstack_metadata(int verbosity)
      {
        EVEL_DEBUG("VM Name: %s", vm_name);
      }
@@ -78,7 +182,7 @@ index 11fef1b..d82f282 100644
    }
  
  exit_label:
-@@ -318,6 +336,9 @@ void openstack_metadata_initialize()
+@@ -319,6 +337,9 @@ void openstack_metadata_initialize()
    strncpy(vm_name,
            "Dummy VM name - No Metadata available",
            MAX_METADATA_STRING);
@@ -88,7 +192,7 @@ index 11fef1b..d82f282 100644
  }
  
  /**************************************************************************//**
-@@ -590,3 +611,13 @@ const char *openstack_vm_uuid()
+@@ -591,3 +612,13 @@ const char *openstack_vm_uuid()
  {
    return vm_uuid;
  }
