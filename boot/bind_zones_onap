@@ -120,8 +120,6 @@ portal.api.simpledemo.onap.org.	IN	CNAME	vm1.portal.simpledemo.onap.org.
 ;Message Router
 ;mr.api.simpledemo.onap.org.	IN	CNAME	vm1.mr.simpledemo.onap.org.	
 ueb.api.simpledemo.onap.org.	IN	CNAME	vm1.mr.simpledemo.onap.org.
-mr.api.simpledemo.onap.org.        IN      A   dcae_coll_ip_addr
-collector.api.simpledemo.onap.org. IN      A   dcae_coll_ip_addr
 ;dbc.api.simpledemo.onap.org.	IN	CNAME  	vm1.mr.simpledemo.onap.org.
 ;drprov.api.simpledemo.onap.org.	IN	CNAME  	vm1.mr.simpledemo.onap.org.
 

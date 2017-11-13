@@ -160,7 +160,7 @@ parameters:
 
   external_dns:
     type: string
-    description: First element of the dns_list for ONAP network
+    description: Public IP of the external DNS for ONAP network
 
   dns_forwarder:
     type: string
@@ -178,16 +178,6 @@ parameters:
   appc_ip_addr:
     type: string
   dcae_ip_addr:
-    type: string
-  dcae_coll_ip_addr:
-    type: string
-  dcae_db_ip_addr:
-    type: string
-  dcae_hdp1_ip_addr:
-    type: string
-  dcae_hdp2_ip_addr:
-    type: string
-  dcae_hdp3_ip_addr:
     type: string
   dns_ip_addr:
     type: string
@@ -211,16 +201,6 @@ parameters:
     type: string
   openo_ip_addr:
     type: string
-#  dcae_coll_float_ip:
-#    type: string
-#  dcae_db_float_ip:
-#    type: string
-#  dcae_hdp1_float_ip:
-#    type: string
-#  dcae_hdp2_float_ip:
-#    type: string
-#  dcae_hdp3_float_ip:
-#    type: string
 
   ###########################
   #                         #
@@ -272,34 +252,6 @@ parameters:
     type: string
     description: the top level domain to register DCAE VMs (the zone will be random-str.dcae_domain)
 
-#  dcae_base_environment:
-#    type: string
-#    description: DCAE Base Environment configuration (RACKSPACE/2-NIC/1-NIC-FLOATING-IPS)
-
-#  dcae_zone:
-#    type: string
-#    description: DCAE Zone to use in VM names created by DCAE controller
-
-#  dcae_state:
-#    type: string
-#    description: DCAE State to use in VM names created by DCAE controller
-
-#  nexus_repo_root:
-#    type: string
-#    description: Root URL of Nexus repository
-
-#  nexus_url_snapshot:
-#    type: string
-#    description: Snapshot of Maven repository for DCAE deployment
-
-#  gitlab_branch:
-#    type: string
-#    description: Branch of the Gitlab repository
-
-#  dcae_code_version:
-#    type: string
-#    description: DCAE Code Version Number
-
   #####################
   #                   #
   # ONAP repositories #
@@ -309,8 +261,6 @@ parameters:
   aai_repo:
     type: string
   appc_repo:
-    type: string
-  dcae_repo:
     type: string
   mr_repo:
     type: string
@@ -341,11 +291,11 @@ parameters:
 
   aai_docker:
     type: string
+  aai_sparky_docker:
+    type: string
   appc_docker:
     type: string
   so_docker:
-    type: string
-  mr_docker:
     type: string
   dcae_docker:
     type: string
@@ -367,8 +317,6 @@ parameters:
     type: string
   mvim_docker:
     type: string
-  vfc_docker:
-    type: string
   uui_docker:
     type: string
   esr_docker:
@@ -376,6 +324,36 @@ parameters:
   dgbuilder_docker:
     type: string
   cli_docker:
+    type: string
+  vfc_nokia_docker:
+    type: string
+  vfc_ztevmanagerdriver_docker:
+    type: string
+  vfc_ztesdncdriver_docker:
+    type: string
+  vfc_vnfres_docker:
+    type: string
+  vfc_vnfmgr_docker:
+    type: string
+  vfc_vnflcm_docker:
+    type: string
+  vfc_resmanagement_docker:
+    type: string
+  vfc_nslcm_docker:
+    type: string
+  vfc_huawei_docker:
+    type: string
+  vfc_jujudriver_docker:
+    type: string
+  vfc_gvnfmdriver_docker:
+    type: string
+  vfc_emsdriver_docker:
+    type: string
+  vfc_catalog_docker:
+    type: string
+  vfc_wfengine_mgrservice_docker:
+    type: string
+  vfc_wfengine_activiti_docker:
     type: string
 
   aai_branch:
@@ -385,8 +363,6 @@ parameters:
   so_branch:
     type: string
   mr_branch:
-    type: string
-  dcae_branch:
     type: string
   policy_branch:
     type: string
@@ -534,7 +510,6 @@ resources:
             __aai2_ip_addr__: { get_param: aai2_ip_addr }
             __appc_ip_addr__: { get_param: appc_ip_addr }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
-            __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
             __so_ip_addr__: { get_param: so_ip_addr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __policy_ip_addr__: { get_param: policy_ip_addr }
@@ -562,7 +537,6 @@ resources:
             echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
             echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
             echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-            echo "__dcae_coll_ip_addr__" > /opt/config/dcae_coll_ip_addr.txt
             echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
@@ -622,6 +596,7 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __docker_version__: { get_param: aai_docker }
+            __aai_sparky_docker__ : { get_param: aai_sparky_docker }
             __gerrit_branch__: { get_param: aai_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
@@ -639,6 +614,7 @@ resources:
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__aai_sparky_docker__" > /opt/config/sparky_version.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "aai_instance_1" > /opt/config/aai_instance.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
@@ -902,7 +878,6 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __openstack_region__: { get_param: openstack_region }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: mr_docker }
             __gerrit_branch__: { get_param: mr_branch }
             __cloud_env__: { get_param: cloud_env }
             __keystone_url__: { get_param: keystone_url }
@@ -1253,147 +1228,6 @@ resources:
             ./portal_install.sh
 
 
-  # DCAE Controller instantiation
-#  dcae_c_private_port:
-#    type: OS::Neutron::Port
-#    properties:
-#      network: { get_resource: oam_onap }
-#      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
-
-#  dcae_c_floating_ip:
-#    type: OS::Neutron::FloatingIP
-#    properties:
-#      floating_network_id: { get_param: public_net_id }
-#      port_id: { get_resource: dcae_c_private_port }
-
-#  dcae_c_vm:
-#    type: OS::Nova::Server
-#    properties:
-#      image: { get_param: ubuntu_1404_image }
-#      flavor: { get_param: flavor_medium }
-#      name:
-#        str_replace: 
-#          template: base-dcae-controller
-#          params:
-#            base: { get_param: vm_base_name }
-#      key_name: { get_resource: vm_key }
-#      networks:
-#        - port: { get_resource: dcae_c_private_port }
-#      user_data_format: RAW
-#      user_data:
-#        str_replace:
-#          params:
-#            __nexus_repo__: { get_param: nexus_repo }
-#            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-#            __nexus_username__: { get_param: nexus_username }
-#            __nexus_password__: { get_param: nexus_password }
-#            __nexus_url_snapshots__: { get_param: nexus_url_snapshot }
-#            __gitlab_branch__: { get_param: gitlab_branch }
-#            __dns_ip_addr__: { get_param: dns_ip_addr }
-#            __dcae_zone__: { get_param: dcae_zone }
-#            __dcae_state__: { get_param: dcae_state }
-#            __artifacts_version__: { get_param: artifacts_version }
-#            __tenant_id__: { get_param: openstack_tenant_id }
-#            __openstack_private_network_name__: { get_attr: [oam_onap, name] }
-#            __openstack_user__: { get_param: openstack_username }
-#            __openstack_password__: { get_param: openstack_api_key }
-#            __openstack_auth_method__: { get_param: openstack_auth_method }
-#            __key_name__: { get_param: key_name }
-#            __rand_str__: { get_resource: random-str }
-#            __pub_key__: { get_param: pub_key }
-#            __nexus_repo_root__: { get_param: nexus_repo_root }
-#            __openstack_region__: { get_param: openstack_region }
-#            __horizon_url__: { get_param: horizon_url }
-#            __keystone_url__: { get_param: keystone_url }
-#            __docker_version__: { get_param: dcae_docker }
-#            __gerrit_branch__: { get_param: dcae_branch }
-#            __dcae_code_version__: { get_param: dcae_code_version }
-#            __cloud_env__: { get_param: cloud_env }
-#            __public_net_id__: { get_param: public_net_id }
-#            __dcae_base_environment__: { get_param: dcae_base_environment }
-#            __dcae_ip_addr__: { get_param: dcae_ip_addr }
-#            __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
-#            __dcae_db_ip_addr__: { get_param: dcae_db_ip_addr }
-#            __dcae_hdp1_ip_addr__: { get_param: dcae_hdp1_ip_addr }
-#            __dcae_hdp2_ip_addr__: { get_param: dcae_hdp2_ip_addr }
-#            __dcae_hdp3_ip_addr__: { get_param: dcae_hdp3_ip_addr }
-#            __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
-#            __dcae_coll_float_ip__: { get_param: dcae_coll_float_ip }
-#            __dcae_db_float_ip__: { get_param: dcae_db_float_ip }
-#            __dcae_hdp1_float_ip__: { get_param: dcae_hdp1_float_ip }
-#            __dcae_hdp2_float_ip__: { get_param: dcae_hdp2_float_ip }
-#            __dcae_hdp3_float_ip__: { get_param: dcae_hdp3_float_ip }
-#            __external_dns__: { get_param: external_dns }
-#            __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
-#            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
-#            __flavor_small__: { get_param: flavor_small }
-#            __flavor_medium__: { get_param: flavor_medium }
-#            __flavor_large__: { get_param: flavor_large }
-#            __flavor_xlarge__: { get_param: flavor_xlarge }
-#            __dcae_repo__: { get_param: dcae_repo }
-#            __mr_repo__: { get_param: mr_repo }
-#          template: |
-            #!/bin/bash
-
-            # Create configuration files
-#            mkdir -p /opt/config
-#            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
-#            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-#            echo "__nexus_username__" > /opt/config/nexus_username.txt
-#            echo "__nexus_password__" > /opt/config/nexus_password.txt
-#            echo "__nexus_url_snapshots__" > /opt/config/nexus_url_snapshots.txt
-#            echo "__gitlab_branch__" > /opt/config/gitlab_branch.txt
-#            echo "__docker_version__" > /opt/config/docker_version.txt
-#            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-#            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-#            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-#            echo "__dcae_zone__" > /opt/config/dcae_zone.txt
-#            echo "__dcae_state__" > /opt/config/dcae_state.txt
-#            echo "__tenant_id__" > /opt/config/tenant_id.txt
-#            echo "__openstack_private_network_name__" > /opt/config/openstack_private_network_name.txt
-#            echo "__openstack_user__" > /opt/config/openstack_user.txt
-#            echo "__openstack_password__" > /opt/config/openstack_password.txt
-#            echo "__openstack_auth_method__" > /opt/config/openstack_auth_method.txt
-#            echo "__key_name__" > /opt/config/key_name.txt
-#            echo "__rand_str__" > /opt/config/rand_str.txt
-#            echo "__pub_key__" > /opt/config/pub_key.txt
-#            echo "__nexus_repo_root__" > /opt/config/nexus_repo_root.txt
-#            echo "__openstack_region__" > /opt/config/openstack_region.txt
-#            echo "__horizon_url__" > /opt/config/horizon_url.txt
-#            echo "__keystone_url__" > /opt/config/keystone_url.txt
-#            echo "__cloud_env__" > /opt/config/cloud_env.txt
-#            echo "__public_net_id__" > /opt/config/public_net_id.txt
-#            echo "__dcae_base_environment__" > /opt/config/dcae_base_environment.txt
-#            echo "__dcae_code_version__" > /opt/config/dcae_code_version.txt
-#            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-#            echo "__dcae_coll_ip_addr__" > /opt/config/dcae_coll_ip_addr.txt
-#            echo "__dcae_db_ip_addr__" > /opt/config/dcae_db_ip_addr.txt
-#            echo "__dcae_hdp1_ip_addr__" > /opt/config/dcae_hdp1_ip_addr.txt
-#            echo "__dcae_hdp2_ip_addr__" > /opt/config/dcae_hdp2_ip_addr.txt
-#            echo "__dcae_hdp3_ip_addr__" > /opt/config/dcae_hdp3_ip_addr.txt
-#            echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
-#            echo "__dcae_coll_float_ip__" > /opt/config/dcae_coll_float_ip.txt
-#            echo "__dcae_db_float_ip__" > /opt/config/dcae_db_float_ip.txt
-#            echo "__dcae_hdp1_float_ip__" > /opt/config/dcae_hdp1_float_ip.txt
-#            echo "__dcae_hdp2_float_ip__" > /opt/config/dcae_hdp2_float_ip.txt
-#            echo "__dcae_hdp3_float_ip__" > /opt/config/dcae_hdp3_float_ip.txt
-#            echo "__external_dns__" > /opt/config/external_dns.txt
-#            echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
-#            echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
-#            echo "__flavor_small__" > /opt/config/flavor_small.txt
-#            echo "__flavor_medium__" > /opt/config/flavor_medium.txt
-#            echo "__flavor_large__" > /opt/config/flavor_large.txt
-#            echo "__flavor_xlarge__" > /opt/config/flavor_xlarge.txt
-#            echo "__dcae_repo__" > /opt/config/remote_repo.txt
-#            echo "__mr_repo__" > /opt/config/mr_repo.txt
-
-            # Download and run install script
-#            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae_install.sh -o /opt/dcae_install.sh
-#            cd /opt
-#            chmod +x dcae_install.sh
-#            ./dcae_install.sh
-
-
   # Policy Engine instantiation
   policy_private_port:
     type: OS::Neutron::Port
@@ -1648,7 +1482,6 @@ resources:
             __aai2_ip_addr__: { get_param: aai2_ip_addr }
             __appc_ip_addr__: { get_param: appc_ip_addr }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
-            __dcae_coll_ip_addr__: { get_param: dcae_coll_ip_addr }
             __so_ip_addr__: { get_param: so_ip_addr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __policy_ip_addr__: { get_param: policy_ip_addr }
@@ -1664,10 +1497,24 @@ resources:
             __vnfsdk_branch__: { get_param: vnfsdk_branch }
             __msb_docker__: { get_param: msb_docker }
             __mvim_docker__: { get_param: mvim_docker }
-            __vfc_docker__: { get_param: vfc_docker }
             __uui_docker__: { get_param: uui_docker }
             __esr_docker__: { get_param: esr_docker }
             __vnfsdk_repo__: { get_param: vnfsdk_repo }
+            __vfc_nokia_docker__: { get_param: vfc_nokia_docker }
+            __vfc_ztevmanagerdriver_docker__: { get_param: vfc_ztevmanagerdriver_docker }
+            __vfc_ztesdncdriver_docker__: { get_param: vfc_ztesdncdriver_docker }
+            __vfc_vnfres_docker__: { get_param: vfc_vnfres_docker }
+            __vfc_vnfmgr_docker__: { get_param: vfc_vnfmgr_docker }
+            __vfc_vnflcm_docker__: { get_param: vfc_vnflcm_docker }
+            __vfc_resmanagement_docker__: { get_param: vfc_resmanagement_docker }
+            __vfc_nslcm_docker__: { get_param: vfc_nslcm_docker }
+            __vfc_huawei_docker__: { get_param: vfc_huawei_docker }
+            __vfc_jujudriver_docker__: { get_param: vfc_jujudriver_docker }
+            __vfc_gvnfmdriver_docker__: { get_param: vfc_gvnfmdriver_docker }
+            __vfc_emsdriver_docker__: { get_param: vfc_emsdriver_docker }
+            __vfc_catalog_docker__: { get_param: vfc_catalog_docker }
+            __vfc_wfengine_mgrservice_docker__: { get_param: vfc_wfengine_mgrservice_docker }
+            __vfc_wfengine_activiti_docker__: { get_param: vfc_wfengine_activiti_docker }
           template: |
             #!/bin/bash
 
@@ -1685,17 +1532,31 @@ resources:
             echo "__vnfsdk_branch__" > /opt/config/vnfsdk_branch.txt
             echo "__msb_docker__" > /opt/config/msb_docker.txt
             echo "__mvim_docker__" > /opt/config/mvim_docker.txt
-            echo "__vfc_docker__" > /opt/config/vfc_docker.txt
             echo "__uui_docker__" > /opt/config/uui_docker.txt
             echo "__esr_docker__" > /opt/config/esr_docker.txt
             echo "__vnfsdk_repo__" > /opt/config/vnfsdk_repo.txt
+
+            echo "export NOKIA_DOCKER_VER=__vfc_nokia_docker__" >> /opt/config/vfc_docker.txt
+            echo "export ZTEVMANAGERDRIVER_DOCKER_VER=__vfc_ztevmanagerdriver_docker__" >> /opt/config/vfc_docker.txt
+            echo "export ZTESDNCDRIVER_DOCKER_VER=__vfc_ztesdncdriver_docker__" >> /opt/config/vfc_docker.txt
+            echo "export VNFRES_DOCKER_VER=__vfc_vnfres_docker__" >> /opt/config/vfc_docker.txt
+            echo "export VNFMGR_DOCKER_VER=__vfc_vnfmgr_docker__" >> /opt/config/vfc_docker.txt
+            echo "export VNFLCM_DOCKER_VER=__vfc_vnflcm_docker__" >> /opt/config/vfc_docker.txt
+            echo "export RESMANAGEMENT_DOCKER_VER=__vfc_resmanagement_docker__" >> /opt/config/vfc_docker.txt
+            echo "export NSLCM_DOCKER_VER=__vfc_nslcm_docker__" >> /opt/config/vfc_docker.txt
+            echo "export HUAWEI_DOCKER_VER=__vfc_huawei_docker__" >> /opt/config/vfc_docker.txt
+            echo "export JUJUDRIVER_DOCKER_VER=__vfc_jujudriver_docker__" >> /opt/config/vfc_docker.txt
+            echo "export GVNFMDRIVER_DOCKER_VER=__vfc_gvnfmdriver_docker__" >> /opt/config/vfc_docker.txt
+            echo "export EMSDRIVER_DOCKER_VER=__vfc_emsdriver_docker__" >> /opt/config/vfc_docker.txt
+            echo "export CATALOG_DOCKER_VER=__vfc_catalog_docker__" >> /opt/config/vfc_docker.txt
+            echo "export MGRSERVICE_DOCKER_VER=__vfc_wfengine_mgrservice_docker__" >> /opt/config/vfc_docker.txt
+            echo "export ACTIVITI_DOCKER_VER=__vfc_wfengine_activiti_docker__" >> /opt/config/vfc_docker.txt
 
             # Create env file with the IP address of all ONAP components
             echo "export AAI_IP1=__aai1_ip_addr__" >> /opt/config/onap_ips.txt
             echo "export AAI_IP2=__aai2_ip_addr__" >> /opt/config/onap_ips.txt
             echo "export APPC_IP=__appc_ip_addr__" >> /opt/config/onap_ips.txt
             echo "export DCAE_IP=__dcae_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export DCAE_COLL_IP=__dcae_coll_ip_addr__" >> /opt/config/onap_ips.txt
             echo "export SO_IP=__so_ip_addr__" >> /opt/config/onap_ips.txt
             echo "export MR_IP=__mr_ip_addr__" >> /opt/config/onap_ips.txt
             echo "export POLICY_IP=__policy_ip_addr__" >> /opt/config/onap_ips.txt
@@ -1754,8 +1615,6 @@ resources:
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
-            __dcae_repo__: { get_param: dcae_repo }
-            __gerrit_branch__: { get_param: dcae_branch }
             # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
             __mac_addr__: { get_attr: [dcae_c_private_port, mac_address] }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
@@ -1826,7 +1685,6 @@ resources:
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__dcae_repo__" > /opt/config/remote_repo.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
             echo "__mac_addr__" > /opt/config/mac_addr.txt
