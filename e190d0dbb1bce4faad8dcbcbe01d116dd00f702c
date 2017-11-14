@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a4e6583_6c48cf2d",
+        "filename": "vnfs/vCPE/scripts/v_brgemu_install.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2017-11-14T20:19:02Z",
+      "side": 1,
+      "message": "This new chunk should be above the \u0027fi\u0027 (i.e. line 330)",
+      "revId": "e190d0dbb1bce4faad8dcbcbe01d116dd00f702c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
