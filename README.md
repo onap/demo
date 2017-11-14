@@ -22,7 +22,7 @@ The Demo repository contains the HEAT templates and scripts for the instantiatio
  
  - The "heat" directory contains the following sub-directories:
  
- 	- ONAP: contains the HEAT files for the installation of the ONAP platform. NOTE: onap\_openstack.yaml AND onap\_openstack.env ARE THE HEAT TEMPLATE AND ENVIRONMENT FILE CURRENTLY SUPPORTED. onap\_openstack\_float.yaml, onap\_openstack\_float.env AND onap\_openstack\_nofloat.yaml, onap\_openstack\_float.env AREN'T UPDATED AND THEIR USAGE IS DEPRECATED.
+ 	- ONAP: contains the HEAT files for the installation of the ONAP platform. NOTE: onap\_openstack.yaml AND onap\_openstack.env ARE THE HEAT TEMPLATE AND ENVIRONMENT FILE CURRENTLY SUPPORTED. onap\_openstack\_float.yaml, onap\_openstack\_float.env, onap\_openstack\_nofloat.yaml, onap\_openstack\_nofloat.env AND onap\_rackspace.yaml, onap\_rackspace.env AREN'T UPDATED AND THEIR USAGE IS DEPRECATED.
  	
  	- vCPE: contains sub-directories with HEAT templates for the installation of vCPE Infrastructure (Radius Server, DHCP, DNS, Web Server), vBNG, vBRG Emulator, vGMUX, and vGW.
  	
@@ -70,7 +70,7 @@ ONAP Installation in OpenStack Clouds via HEAT Template
 
 The ONAP HEAT template spins up the entire ONAP platform in OpenStack-based clouds. The template, onap\_openstack.yaml, comes with an environment file, onap\_openstack.env, in which all the default values are defined.
 
-NOTE: onap\_openstack.yaml AND onap\_openstack.env ARE THE HEAT TEMPLATE AND ENVIRONMENT FILE CURRENTLY SUPPORTED. onap\_openstack\_float.yaml, onap\_openstack\_float.env AND onap\_openstack\_nofloat.yaml, onap\_openstack\_nofloat.env AREN'T UPDATED AND THEIR USAGE IS DEPRECATED. As such, the following description refers to onap\_openstack.yaml and onap\_openstack.env.
+NOTE: onap\_openstack.yaml AND onap\_openstack.env ARE THE HEAT TEMPLATE AND ENVIRONMENT FILE CURRENTLY SUPPORTED. onap\_openstack\_float.yaml, onap\_openstack\_float.env, onap\_openstack\_nofloat.yaml, onap\_openstack\_nofloat.env AND onap\_rackspace.yaml, onap\_rackspace.env AREN'T UPDATED AND THEIR USAGE IS DEPRECATED. As such, the following description refers to onap\_openstack.yaml and onap\_openstack.env.
 
 The HEAT template is composed of two sections: (i) parameters, and (ii) resources.
 
