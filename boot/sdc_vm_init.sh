@@ -3,7 +3,6 @@
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
-NEXUS_DOCKER_PORT=$(echo $NEXUS_DOCKER_REPO | cut -d':' -f2)
 ENV_NAME=$(cat /opt/config/env_name.txt)
 MR_IP_ADDR=$(cat /opt/config/mr_ip_addr.txt)
 RELEASE=$(cat /opt/config/docker_version.txt)
@@ -18,12 +17,7 @@ cp sdc/sdc-os-chef/scripts/docker_health.sh /data/scripts
 chmod +x /data/scripts/docker_run.sh
 chmod +x /data/scripts/docker_health.sh
 
-if [ -e /opt/config/public_ip.txt ]
-then
-  IP_ADDRESS=$(cat /opt/config/public_ip.txt)
-else
-  IP_ADDRESS=$(ifconfig eth0 | grep "inet addr" | tr -s ' ' | cut -d' ' -f3 | cut -d':' -f2)
-fi
+IP_ADDRESS=$(cat /opt/config/private_ip.txt)
 
 cat /data/environments/Template.json | sed "s/yyy/"$IP_ADDRESS"/g" > /data/environments/$ENV_NAME.json
 sed -i "s/xxx/"$ENV_NAME"/g" /data/environments/$ENV_NAME.json
