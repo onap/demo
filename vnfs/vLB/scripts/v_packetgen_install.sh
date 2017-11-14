@@ -56,7 +56,6 @@ cd /opt
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_packetgen_init.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vpacketgen.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/run_streams_dns.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdnspacketgen_change_streams_ports.sh
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb_dns_streams/$DEMO_ARTIFACTS_VERSION/vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
 
 tar -zmxvf vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
@@ -65,7 +64,6 @@ rm *.tar.gz
 chmod +x v_packetgen_init.sh
 chmod +x vpacketgen.sh
 chmod +x run_streams_dns.sh
-chmod +x vdnspacketgen_change_streams_ports.sh
 
 # Install VPP
 export UBUNTU="xenial"
@@ -92,8 +90,5 @@ then
 	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
 	reboot
 fi
-
-# Install a cron job that restart streams every minute. This allows to map streams to different vDNSs when we scale out the VNF
-echo "* * * * * /opt/vdnspacketgen_change_streams_ports.sh" | crontab
 
 ./v_packetgen_init.sh
