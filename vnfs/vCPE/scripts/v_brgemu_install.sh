@@ -326,10 +326,10 @@ do
     sleep 1
 done
 EOF
-    chmod +x /opt/set_nat.sh
-fi  # endif BUILD_STATE != "build"
 
-#Create script to run bind_nic.sh and set_nat.sh
+    chmod +x /opt/set_nat.sh
+
+    #Create script to run bind_nic.sh and set_nat.sh
     cat > /opt/nat_service.sh << 'EOF'
 #! /bin/bash
 
@@ -339,6 +339,8 @@ sleep 15
 
 EOF
     chmod +x /opt/nat_service.sh
+
+fi  # endif BUILD_STATE != "build"
 
 if [[ $BUILD_STATE != "done" ]]
 then
