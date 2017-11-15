@@ -900,6 +900,7 @@ resources:
             __public_net_id__: { get_param: public_net_id }
             __script_version__: { get_param: artifacts_version }
             __robot_repo__: { get_param: robot_repo }
+            __docker_version__: { get_param: robot_docker }
           template: |
             #!/bin/bash
 
