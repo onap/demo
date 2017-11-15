@@ -197,7 +197,6 @@ EOF
 
     NICS=$(get_nic_pci_list)
     NICS=`echo ${NICS} | sed 's/[0]\+\([0-9]\)/\1/g' | sed 's/[.:]/\//g'`
-    echo $NICS
 
     BRG_BNG_NIC=GigabitEthernet`echo ${NICS} | cut -d " " -f 2`  # second interface in list
     echo $BRG_BNG_NIC > /opt/config/brg_nic.txt
@@ -235,7 +234,6 @@ vppctl set interface l2 bridge $lstack_tap 10 0
 vppctl set bridge-domain arp term 10
 
 tap0_tap=$(vppctl tap connect tap0)
-sleep 3
 vppctl set int state $tap0_tap up
 vppctl set int ip addr $tap0_tap 20.0.0.40/24
 ifconfig tap0 192.168.4.20/24
@@ -276,7 +274,7 @@ EOF
 
 while :
 do
-    if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]];
+    if [[ ! $(ps -aux | grep [[:alnum:]]*/vpp/startup.conf | wc -l) = 2 ]]; 
     then
         #echo "vpp not running"
         continue
@@ -329,6 +327,17 @@ done
 EOF
     chmod +x /opt/set_nat.sh
 fi  # endif BUILD_STATE != "build"
+
+#Create script to run bind_nic.sh and set_nat.sh
+    cat > /opt/nat_service.sh << 'EOF'
+#! /bin/bash
+
+sleep 15
+/opt/bind_nic.sh
+/opt/set_nat.sh
+
+EOF
+    chmod +x /opt/nat_service.sh
 
 if [[ $BUILD_STATE != "done" ]]
 then
@@ -461,7 +470,7 @@ EOF
     then
         echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
         sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
-    fi
+    fi  
 fi  # endif BUILD_STATE != "done"
 
 if [[ $BUILD_STATE != "build" ]]
@@ -482,7 +491,25 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
-    systemctl enable /etc/systemd/system/honeycomb.service
+    systemctl enable /etc/systemd/system/nat.service
+
+
+    # Create systemctl service for nat script
+    cat > /etc/systemd/system/nat.service << EOF
+[Unit]
+Description=Runs vbrg scripts for nat configuration
+Requires=vpp.service
+After=vpp.service
+
+[Service]
+RemainAfterExit=True
+ExecStart=/opt/nat_service.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl enable /etc/systemd/system/nat.service    
 
     # Download DHCP config files
     cd /opt
