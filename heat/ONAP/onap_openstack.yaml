@@ -1126,7 +1126,7 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
-            __public_ip__: { get_attr: [sdc_floating_ip, floating_ip_address] }
+            __private_ip__: { get_param: sdc_ip_addr }
             __docker_version__: { get_param: sdc_docker }
             __gerrit_branch__: { get_param: sdc_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -1143,7 +1143,7 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__env_name__" > /opt/config/env_name.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
-            echo "__public_ip__" > /opt/config/public_ip.txt
+            echo "__private_ip__" > /opt/config/private_ip.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
