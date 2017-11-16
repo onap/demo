@@ -219,6 +219,8 @@ set dhcp client intfc ${GW_PUB_NIC} hostname vg-1
 tap connect lstack address 192.168.1.1/24
 set int state tap-0 up
 
+create vxlan tunnel src ${MUX_GW_IP} dst ${MUX_IP_ADDR} vni ${VG_VGMUX_TUNNEL_VNI}
+set interface l2 bridge vxlan_tunnel0 10 1
 set interface l2 bridge tap-0 10 0
 set bridge-domain arp term 10
 
