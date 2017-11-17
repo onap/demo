@@ -1,5 +1,11 @@
+commit 43028d14c3bfb09c582caa8b610e447118fb71c1
+Author: Itohan Ukponmwan <itohan.ukponmwan@intel.com>
+Date:   Fri Nov 17 21:18:23 2017 +0000
+
+    Modified out2in.c and client.c
+
 diff --git a/src/plugins/snat/out2in.c b/src/plugins/snat/out2in.c
-index 5c12b47..f7c7caf 100644
+index 7de85eb..e2e6cec 100644
 --- a/src/plugins/snat/out2in.c
 +++ b/src/plugins/snat/out2in.c
 @@ -1,3 +1,4 @@
@@ -7,7 +13,7 @@ index 5c12b47..f7c7caf 100644
  /*
   * Copyright (c) 2016 Cisco and/or its affiliates.
   * Licensed under the Apache License, Version 2.0 (the "License");
-@@ -658,6 +659,26 @@ snat_out2in_node_fn (vlib_main_t * vm,
+@@ -648,6 +649,25 @@ snat_out2in_node_fn (vlib_main_t * vm,
    n_left_from = frame->n_vectors;
    next_index = node->cached_next_index;
  
@@ -16,25 +22,24 @@ index 5c12b47..f7c7caf 100644
 +  char line_input[128];
 +  char * path = "/opt/config/ip.txt";
 +  FILE * f = fopen(path, "r");
-+  if (f == NULL)
-+    printf("cannot open such file\n");
-+
-+  while (fgets(line_input, 128, f) != NULL){
-+    if (!strcmp(strtok(line_input, " "),"sdnc_ip:")){
-+      char * ip = strtok(NULL, " ");
-+      char * num = strtok(ip, ".");
-+      sdnc_addr->data[0] = atoi(num);
-+      for (int i = 1; i < 4; i ++){
-+        num = strtok(NULL, ".");
-+        sdnc_addr->data[i] = atoi(num);
++  if (f != NULL){
++    while (fgets(line_input, 128, f) != NULL){
++      if (!strcmp(strtok(line_input, " "),"sdnc_ip:")){
++        char * ip = strtok(NULL, " ");
++        char * num = strtok(ip, ".");
++        sdnc_addr->data[0] = atoi(num);
++        for (int i = 1; i < 4; i ++){
++          num = strtok(NULL, ".");
++          sdnc_addr->data[i] = atoi(num);
++        }
 +      }
 +    }
++    fclose(f);
 +  }
-+
    while (n_left_from > 0)
      {
        u32 n_left_to_next;
-@@ -733,6 +754,13 @@ snat_out2in_node_fn (vlib_main_t * vm,
+@@ -723,6 +743,13 @@ snat_out2in_node_fn (vlib_main_t * vm,
  
            proto0 = ip_proto_to_snat_proto (ip0->protocol);
  
@@ -46,9 +51,9 @@ index 5c12b47..f7c7caf 100644
 +            }
 +
            if (PREDICT_FALSE (proto0 == ~0))
-             {
-               snat_out2in_unknown_proto(sm, b0, ip0, rx_fib_index0);
-@@ -871,6 +899,13 @@ snat_out2in_node_fn (vlib_main_t * vm,
+               goto trace0;
+ 
+@@ -858,6 +885,13 @@ snat_out2in_node_fn (vlib_main_t * vm,
  
            proto1 = ip_proto_to_snat_proto (ip1->protocol);
  
@@ -60,9 +65,9 @@ index 5c12b47..f7c7caf 100644
 +            }
 +
            if (PREDICT_FALSE (proto1 == ~0))
-             {
-               snat_out2in_unknown_proto(sm, b1, ip1, rx_fib_index1);
-@@ -1033,6 +1068,13 @@ snat_out2in_node_fn (vlib_main_t * vm,
+               goto trace1;
+ 
+@@ -1017,6 +1051,13 @@ snat_out2in_node_fn (vlib_main_t * vm,
  
            proto0 = ip_proto_to_snat_proto (ip0->protocol);
  
@@ -74,13 +79,21 @@ index 5c12b47..f7c7caf 100644
 +            }
 +
            if (PREDICT_FALSE (proto0 == ~0))
-             {
-               snat_out2in_unknown_proto(sm, b0, ip0, rx_fib_index0);
+               goto trace00;
+ 
+@@ -1153,6 +1194,7 @@ snat_out2in_node_fn (vlib_main_t * vm,
+   vlib_node_increment_counter (vm, snat_out2in_node.index, 
+                                SNAT_OUT2IN_ERROR_OUT2IN_PACKETS, 
+                                pkts_processed);
++  free(sdnc_addr);
+   return frame->n_vectors;
+ }
+ 
 diff --git a/src/vnet/dhcp/client.c b/src/vnet/dhcp/client.c
-index 014f17a..296e1a7 100644
+index 7c3f7f6..41bc2c7 100644
 --- a/src/vnet/dhcp/client.c
 +++ b/src/vnet/dhcp/client.c
-@@ -427,6 +427,16 @@ send_dhcp_pkt (dhcp_client_main_t * dcm, dhcp_client_t * c,
+@@ -426,6 +426,16 @@ send_dhcp_pkt (dhcp_client_main_t * dcm, dhcp_client_t * c,
    clib_memcpy (o->data, c->option_55_data, vec_len(c->option_55_data));
    o = (dhcp_option_t *) (((uword) o) + (o->length + 2));
  
