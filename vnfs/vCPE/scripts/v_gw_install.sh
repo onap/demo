@@ -216,12 +216,8 @@ set int ip address ${MUX_GW_NIC} ${MUX_GW_IP}/${MUX_GW_CIDR#*/}
 set int state ${GW_PUB_NIC} up
 set dhcp client intfc ${GW_PUB_NIC} hostname vg-1
 
-tap connect lstack address 192.168.1.1/24
-set int state tap-0 up
-
 create vxlan tunnel src ${MUX_GW_IP} dst ${MUX_IP_ADDR} vni ${VG_VGMUX_TUNNEL_VNI}
 set interface l2 bridge vxlan_tunnel0 10 1
-set interface l2 bridge tap-0 10 0
 set bridge-domain arp term 10
 
 loopback create
@@ -402,15 +398,46 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 }
 EOF
 
-    # Download DHCP config files
-    cd /opt
-    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gw_init.sh
-    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_gw.sh
+echo '#!/bin/bash
+STATUS=$(ip link show lstack)
+if [ -z "$STATUS" ]
+then
+   vppctl tap connect lstack address 192.168.1.1/24
+   vppctl set int state tap-0 up
+   vppctl set interface l2 bridge tap-0 10 0
+fi
+IP=$(/sbin/ifconfig lstack | grep "inet addr:" | cut -d: -f2 | awk "{ print $1 }")
+if [ ! -z "$STATUS" ] && [ -z "$IP" ]
+then
+   ip link delete lstack
+   vppctl tap delete tap-0
+   vppctl tap connect lstack address 192.168.1.1/24
+   vppctl set int state tap-0 up
+   vppctl set interface l2 bridge tap-0 10 0
+fi' > /opt/v_gw_init.sh
+
     chmod +x v_gw_init.sh
-    chmod +x v_gw.sh
-    mv v_gw.sh /etc/init.d
-    sed -i '/# Provides:/ s/$/ v_gw/' /etc/init.d/v_gw.sh
-    update-rc.d v_gw.sh defaults
+
+    cat > /etc/systemd/system/vgw.service << EOF
+[Unit]
+Description=vGW service to run after honeycomb service
+Requires=honeycomb.service
+After=honeycomb.service
+
+[Service]
+ExecStart=/opt/v_gw_init.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    systemctl enable /etc/systemd/system/vgw.service
+
+    cp /etc/systemd/system/multi-user.target.wants/isc-dhcp-server.service /etc/systemd/system/
+    sed -i '/Documentation/a Wants=vgw.service\nAfter=vgw.service' /etc/systemd/system/isc-dhcp-server.service
+    sed -i '/exec dhcpd/a Restart=always\nRestartSec=10' /etc/systemd/system/isc-dhcp-server.service
 
     # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
     if [[ $CLOUD_ENV != "rackspace" ]]
@@ -423,5 +450,4 @@ EOF
 	reboot
 fi
 
-    ./v_gw_init.sh
 fi  # endif BUILD_STATE != "build"
