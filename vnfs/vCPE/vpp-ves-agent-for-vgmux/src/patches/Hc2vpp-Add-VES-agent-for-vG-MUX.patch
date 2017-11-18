@@ -739,7 +739,7 @@ index 0000000..e06afa7
 +        throws WriteFailedException {
 +        final VesAgentConfig request = new VesAgentConfig();
 +
-+        request.serverPort = config.getServerPort().byteValue();
++        request.serverPort = config.getServerPort().intValue();
 +        request.readInterval = config.getReadInterval().byteValue();
 +        request.isAdd = config.getIsAdd().byteValue();
 +        request.serverAddr = ipv4AddressNoZoneToArray(config.getServerAddr().getValue());
@@ -1041,7 +1041,7 @@ index 0000000..62e46cd
 +        throws WriteFailedException {
 +        final VesAgentConfig request = new VesAgentConfig();
 +
-+        request.serverPort = config.getServerPort().byteValue();
++        request.serverPort = config.getServerPort().intValue();
 +        request.readInterval = config.getReadInterval().byteValue();
 +        request.isAdd = config.getIsAdd().byteValue();
 +        request.serverAddr = ipv4AddressNoZoneToArray(config.getServerAddr().getValue());
