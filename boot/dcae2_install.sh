@@ -56,7 +56,7 @@ update-rc.d dcae2_serv.sh defaults
 # Download and install docker-engine and docker-compose
 echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
 apt-get update
-apt-get install -y "linux-image-extra-$(uname -r)" linux-image-extra-virtual
+apt-get install -y "linux-image-extra-$(uname -r)" linux-image-extra-virtual jq
 apt-get install -y --allow-unauthenticated docker-engine
 
 mkdir -p /opt/docker
@@ -79,6 +79,7 @@ echo "DOCKER_OPTS=\"$DNS_FLAG--mtu=$MTU\"" >> /etc/default/docker
 
 cp /lib/systemd/system/docker.service /etc/systemd/system
 sed -i "/ExecStart/s/$/ --mtu=$MTU/g" /etc/systemd/system/docker.service
+systemctl daemon-reload
 service docker restart
 
 
@@ -114,7 +115,7 @@ wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositor
 
 
 # generate blueprint input files
-pip install jinja2
+pip install --upgrade jinja2
 wget https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.deployments/releases/scripts/detemplate-bpinputs.py && (python detemplate-bpinputs.py /opt/config /opt/app/inputs-templates /opt/app/config; rm detemplate-bpinputs.py)
 
 
