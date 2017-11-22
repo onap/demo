@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_1d35f345",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2017-11-22T07:50:37Z",
+      "side": 1,
+      "message": "Should be not hard-coded",
+      "revId": "ce34d8a702ab6fe99dab6d6a94b2600bd1464e59",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_3d3a2f37",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2017-11-22T07:50:37Z",
+      "side": 1,
+      "message": "Should be not hard-coded",
+      "revId": "ce34d8a702ab6fe99dab6d6a94b2600bd1464e59",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
