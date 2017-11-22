@@ -344,7 +344,7 @@ verify_multicloud_registration()
 }
 
 
-register_dns_zone()
+register_dns_zone_proxied_designate()
 {
     local CLOUD_OWNER='pod25' 
     local CLOUD_REGION
@@ -425,6 +425,83 @@ register_dns_zone()
     #curl -sv -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones/${ZONEID}"
 }
 
+
+register_dns_zone_designate()
+{
+    local HEADER_CONTENT_TYPE_JSON="Content-Type: application/json"
+    local HEADER_ACCEPT_JSON="Accept: application/json"
+    local HEADER_TOKEN
+    local DCAE_ZONE
+    local DCAE_DOMAIN
+    local ZONE_NAME
+    local ZONE_ID
+    local KEYSTONE_URL
+    local API_ENDPOINT
+    local API_DATA
+    local TENANT_NAME
+    local TENANT_ID
+    local ZONE_PROJECT_ID
+    
+    if [ -z "$1" ]; then DCAE_ZONE="$(cat /opt/config/dcae_zone.txt)"; else DCAE_ZONE="$1"; fi
+    DCAE_DOMAIN="$(cat /opt/config/dcae_domain.txt)"
+    ZONE_NAME="${DCAE_ZONE}.${DCAE_DOMAIN}."
+
+    TENANT_NAME="$(cat /opt/config/tenant_name.txt)"
+    TENANT_ID="$(cat /opt/config/tenant_id.txt)"
+
+    KEYSTONE_URL="$(cat /opt/config/openstack_keystone_url.txt)"
+    USERNAME="$(cat /opt/config/openstack_user.txt)"
+    PASSWORD="$(cat /opt/config/openstack_password.txt)"
+
+
+    API_ENDPOINT="${KEYSTONE_URL}/tokens"
+    API_DATA="{\"auth\": {\"project\": \"${TENANT_NAME}\", \"tenantId\": \"${TENANT_ID}\", \"passwordCredentials\": {\"username\": \"${USERNAME}\", \"password\": \"${PASSWORD}\"}}}"
+    
+    echo "===> Getting token from ${API_ENDPOINT}"
+    RESP=$(curl -s -v -H "${HEADER_CONTENT_TYPE_JSON}" -d "${API_DATA}" "${API_ENDPOINT}")
+
+    TOKEN="$(echo ${RESP} | jq -r .access.token.id)"
+    if [ -z "$TOKEN" ]; then
+        echo "Faile to acquire token for creating DNS zone.  Exit"
+        exit 1
+    fi
+    HEADER_TOKEN="X-Auth-Token: ${TOKEN}" 
+ 
+
+    DESIGNATE_URL=$(echo ${RESP} | jq -r '.access.serviceCatalog[] | select(.name=="designate") | .endpoints[0].publicURL')
+    if [ -z ${DESIGNATE_URL} ]; then
+        echo "Fail to find Designate API endpoint.  Exit"
+        exit 1
+    fi
+
+
+    API_ENDPOINT="${DESIGNATE_URL}/v2/zones"
+    echo "===> Register DNS zone $ZONE_NAME at Designate API endpoint ${API_ENDPOINT}"
+   
+    RESP=$(curl -v -s -H $HEADER_TOKEN $API_ENDPOINT)
+    ZONE_ID=$(echo $RESP |jq -r --arg ZONE_NAME "$ZONE_NAME" '.zones[] |select(.name==$ZONE_NAME) |.id')
+    if [ -z "$ZONE_ID" ]; then
+        echo "======> Zone ${ZONE_NAME} does not exist.  Create"
+        API_DATA="{\"name\": \"${ZONE_NAME}\", \"email\": \"dcae@onap.org\", \"type\": \"PRIMARY\", \"ttl\": 7200, \"description\": \"DCAE DNS zoen created for ONAP deployment $DCAE_ZONE\"}"
+        RESP=$(curl -s -v -X POST -H "$HEADER_ACCEPT_JSON" -H "$HEADER_CONTENT_TYPE_JSON" -H "$HEADER_TOKEN" -d "$API_DATA" "$API_ENDPOINT")
+        ZONE_ID=$(echo $RESP | jq .id)
+
+        if [ -z "$ZONE_ID" ]; then
+            echo "Fail to create DNS zone ${ZONE_NAME}.  Exit"
+            exit 1
+        fi
+    else
+        echo "======> Zone ${ZONE_NAME} already exists."
+        API_ENDPOINT="${DESIGNATE_URL}/v2/zones/${ZONE_ID}"
+        RESP=$(curl -s -v -H "$HEADER_ACCEPT_JSON" -H "$HEADER_TOKEN" "$API_ENDPOINT")
+        ZONE_PROJECT_ID=$(echo $RESP | jq -r .project_id)
+        if [ "$ZONE_PROJECT_ID" != "noauth-project" ] && [ "$ZONE_PROJECT_ID" != "$TENANT_ID" ]; then
+            echo "======> Zone ${ZONE_NAME} owned by other projects, may have problem creating records"
+        else
+            echo "======> Zone ${ZONE_NAME} okay to create new records"
+        fi
+    fi
+}
 
 delete_dns_zone()
 {
@@ -541,10 +618,11 @@ if [ "$DNSAAS_PROXYED" == 'true' ]; then
     verify_multicloud_registration
 
     wait_for_multicloud_ready
-    register_dns_zone "$ZONE" 
+    register_dns_zone_proxied_designate "$ZONE" 
     echo "Registration and configuration for proxying DNSaaS completed."
 else
-    echo "Using proxyed DNSaaS service, performing additional registration and configuration"
+    echo "Using Designate DNSaaS service, performing additional registration and configuration"
+    register_dns_zone_designate "$ZONE" 
 fi
 
 
