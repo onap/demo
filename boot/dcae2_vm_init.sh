@@ -450,6 +450,15 @@ register_dns_zone_designate()
     TENANT_ID="$(cat /opt/config/tenant_id.txt)"
 
     KEYSTONE_URL="$(cat /opt/config/openstack_keystone_url.txt)"
+    if [[ "$KEYSTONE_URL" == */v3 ]]; then
+        echo "$KEYSTONE_URL"
+    elif [[ "$KEYSTONE_URL" == */v2.0 ]]; then
+        echo "$KEYSTONE_URL"
+    else
+        KEYSTONE_URL="${KEYSTONE_URL}/v2.0"
+        echo "$KEYSTONE_URL"
+    fi
+
     USERNAME="$(cat /opt/config/openstack_user.txt)"
     PASSWORD="$(cat /opt/config/openstack_password.txt)"
 
