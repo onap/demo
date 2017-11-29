@@ -183,6 +183,7 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
   evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
   evel_force_option_string(&header->source_id, openstack_vm_uuid());
   evel_init_option_intheader(&header->internal_field);
+  dlist_initialize(&header->batch_events);
 
   EVEL_EXIT();
 }
@@ -191,6 +192,9 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
 /**************************************************************************//**
  * Initialize a newly created event header.
  *
+ * @param header  Pointer to the header being initialized.
+ * @param eventname Eventname string
+ * @param eventid   Event id : unique id for classification and analysis
  * @param header  Pointer to the header being initialized.
  *****************************************************************************/
 void evel_init_header_nameid(EVENT_HEADER * const header,const char *const eventname, const char *eventid)
@@ -232,6 +236,7 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
   evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
   evel_force_option_string(&header->source_id, openstack_vm_uuid());
   evel_init_option_intheader(&header->internal_field);
+  dlist_initialize(&header->batch_events);
 
   EVEL_EXIT();
 }
@@ -505,6 +510,78 @@ void evel_free_header(EVENT_HEADER * const event)
   EVEL_EXIT();
 }
 
+
+/**************************************************************************//**
+ * Encode the event as a JSON event object according to AT&T's schema.
+ *
+ * @param json      Pointer to where to store the JSON encoded data.
+ * @param max_size  Size of storage available in json_body.
+ * @param event     Pointer to the ::EVENT_HEADER to encode.
+ * @returns Number of bytes actually written.
+ *****************************************************************************/
+void evel_json_encode_eventtype(
+			   EVEL_JSON_BUFFER * jbuf,
+                           EVENT_HEADER * event)
+{
+      switch (event->event_domain)
+      {
+        case EVEL_DOMAIN_HEARTBEAT:
+          evel_json_encode_header(jbuf, event);
+          break;
+
+        case EVEL_DOMAIN_FAULT:
+          evel_json_encode_fault(jbuf, (EVENT_FAULT *)event);
+          break;
+
+        case EVEL_DOMAIN_MEASUREMENT:
+          evel_json_encode_measurement(jbuf, (EVENT_MEASUREMENT *)event);
+          break;
+
+        case EVEL_DOMAIN_MOBILE_FLOW:
+          evel_json_encode_mobile_flow(jbuf, (EVENT_MOBILE_FLOW *)event);
+          break;
+
+        case EVEL_DOMAIN_REPORT:
+          evel_json_encode_report(jbuf, (EVENT_REPORT *)event);
+          break;
+
+        case EVEL_DOMAIN_HEARTBEAT_FIELD:
+          evel_json_encode_hrtbt_field(jbuf, (EVENT_HEARTBEAT_FIELD *)event);
+          break;
+
+        case EVEL_DOMAIN_SIPSIGNALING:
+          evel_json_encode_signaling(jbuf, (EVENT_SIGNALING *)event);
+          break;
+
+        case EVEL_DOMAIN_STATE_CHANGE:
+          evel_json_encode_state_change(jbuf, (EVENT_STATE_CHANGE *)event);
+          break;
+
+        case EVEL_DOMAIN_SYSLOG:
+          evel_json_encode_syslog(jbuf, (EVENT_SYSLOG *)event);
+          break;
+
+        case EVEL_DOMAIN_OTHER:
+          evel_json_encode_other(jbuf, (EVENT_OTHER *)event);
+          break;
+
+        case EVEL_DOMAIN_VOICE_QUALITY:
+          evel_json_encode_voice_quality(jbuf, (EVENT_VOICE_QUALITY *)event);
+          break;
+
+        case EVEL_DOMAIN_THRESHOLD_CROSS:
+          evel_json_encode_threshold_cross(jbuf, (EVENT_THRESHOLD_CROSS *)event);
+          break;
+
+        case EVEL_DOMAIN_INTERNAL:
+        default:
+          EVEL_ERROR("Unexpected domain %d", event->event_domain);
+          assert(0);
+      }
+}
+
+
+
 /**************************************************************************//**
  * Encode the event as a JSON event object according to AT&T's schema.
  *
@@ -535,61 +612,7 @@ int evel_json_encode_event(char * json,
   evel_json_open_object(jbuf);
   evel_json_open_named_object(jbuf, "event");
 
-  switch (event->event_domain)
-  {
-    case EVEL_DOMAIN_HEARTBEAT:
-      evel_json_encode_header(jbuf, event);
-      break;
-
-    case EVEL_DOMAIN_FAULT:
-      evel_json_encode_fault(jbuf, (EVENT_FAULT *)event);
-      break;
-
-    case EVEL_DOMAIN_MEASUREMENT:
-      evel_json_encode_measurement(jbuf, (EVENT_MEASUREMENT *)event);
-      break;
-
-    case EVEL_DOMAIN_MOBILE_FLOW:
-      evel_json_encode_mobile_flow(jbuf, (EVENT_MOBILE_FLOW *)event);
-      break;
-
-    case EVEL_DOMAIN_REPORT:
-      evel_json_encode_report(jbuf, (EVENT_REPORT *)event);
-      break;
-
-    case EVEL_DOMAIN_HEARTBEAT_FIELD:
-      evel_json_encode_hrtbt_field(jbuf, (EVENT_HEARTBEAT_FIELD *)event);
-      break;
-
-    case EVEL_DOMAIN_SIPSIGNALING:
-      evel_json_encode_signaling(jbuf, (EVENT_SIGNALING *)event);
-      break;
-
-    case EVEL_DOMAIN_STATE_CHANGE:
-      evel_json_encode_state_change(jbuf, (EVENT_STATE_CHANGE *)event);
-      break;
-
-    case EVEL_DOMAIN_SYSLOG:
-      evel_json_encode_syslog(jbuf, (EVENT_SYSLOG *)event);
-      break;
-
-    case EVEL_DOMAIN_OTHER:
-      evel_json_encode_other(jbuf, (EVENT_OTHER *)event);
-      break;
-
-    case EVEL_DOMAIN_VOICE_QUALITY:
-      evel_json_encode_voice_quality(jbuf, (EVENT_VOICE_QUALITY *)event);
-      break;
-
-    case EVEL_DOMAIN_THRESHOLD_CROSS:
-      evel_json_encode_threshold_cross(jbuf, (EVENT_THRESHOLD_CROSS *)event);
-      break;
-
-    case EVEL_DOMAIN_INTERNAL:
-    default:
-      EVEL_ERROR("Unexpected domain %d", event->event_domain);
-      assert(0);
-  }
+  evel_json_encode_eventtype(jbuf, event);
 
   evel_json_close_object(jbuf);
   evel_json_close_object(jbuf);
@@ -598,6 +621,75 @@ int evel_json_encode_event(char * json,
   /* Sanity check.                                                           */
   /***************************************************************************/
   assert(jbuf->depth == 0);
+
+  EVEL_EXIT();
+
+  return jbuf->offset;
+}
+/**************************************************************************//**
+ * Encode the event as a JSON event object according to AT&T's schema.
+ *
+ * @param json      Pointer to where to store the JSON encoded data.
+ * @param max_size  Size of storage available in json_body.
+ * @param event     Pointer to the ::EVENT_HEADER to encode.
+ * @returns Number of bytes actually written.
+ *****************************************************************************/
+int evel_json_encode_batch_event(char * json,
+                           int max_size,
+                           EVENT_HEADER * event)
+{
+  EVEL_JSON_BUFFER json_buffer;
+  EVEL_JSON_BUFFER *jbuf = &json_buffer;
+  EVEL_THROTTLE_SPEC * throttle_spec;
+  int tot_size = 0;
+  EVENT_HEADER * batch_field = NULL;
+  DLIST_ITEM * batch_field_item = NULL;
+
+  EVEL_ENTER();
+
+  /***************************************************************************/
+  /* Get the latest throttle specification for the domain.                   */
+  /***************************************************************************/
+  throttle_spec = evel_get_throttle_spec(event->event_domain);
+
+  /***************************************************************************/
+  /* Initialize the JSON_BUFFER and open the top-level objects.              */
+  /***************************************************************************/
+  if (event->event_domain == EVEL_DOMAIN_BATCH){
+      evel_json_buffer_init(jbuf, json, max_size, throttle_spec);
+
+  if(dlist_count(&event->batch_events) > 0)
+  {
+    evel_json_open_object(jbuf);
+    evel_json_open_named_list(jbuf, "eventList");
+    batch_field_item = dlist_get_first(&event->batch_events);
+    while (batch_field_item != NULL)
+    {
+     batch_field = (EVENT_HEADER *) batch_field_item->item;
+     if(batch_field != NULL){
+       EVEL_DEBUG("Batch Event %p %p added curr fsize %d offset %d depth %d check %d", batch_field_item->item, batch_field, tot_size,jbuf->offset,jbuf->depth,jbuf->checkpoint);
+       evel_json_open_object(jbuf);
+       evel_json_encode_eventtype(jbuf, batch_field);
+       evel_json_close_object(jbuf);
+
+       tot_size += jbuf->offset;
+       EVEL_DEBUG("Batch Event result size %d offset %d depth %d check %d", tot_size,jbuf->offset,jbuf->depth,jbuf->checkpoint);
+       if( tot_size >= max_size ){
+          EVEL_ERROR("Batch Event exceeded size limit %d", tot_size);
+          assert(0);
+       }
+       batch_field_item = dlist_get_next(batch_field_item);
+     }
+    }
+    evel_json_close_list(jbuf);
+    evel_json_close_object(jbuf);
+  }
+
+  }
+  /***************************************************************************/
+  /* Sanity check.                                                           */
+  /***************************************************************************/
+  //assert(jbuf->depth == 0);
 
   EVEL_EXIT();
 

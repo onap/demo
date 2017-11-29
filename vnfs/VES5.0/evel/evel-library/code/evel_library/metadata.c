@@ -23,6 +23,7 @@
 #include <string.h>
 #include <assert.h>
 #include <malloc.h>
+#include <unistd.h>
 
 #include <curl/curl.h>
 
@@ -313,12 +314,30 @@ exit_label:
  *****************************************************************************/
 void openstack_metadata_initialize()
 {
+  char hostname[MAX_METADATA_STRING];
+
+  FILE * f = fopen ("/proc/sys/kernel/random/uuid", "r");
+
   strncpy(vm_uuid,
           "Dummy VM UUID - No Metadata available",
           MAX_METADATA_STRING);
   strncpy(vm_name,
           "Dummy VM name - No Metadata available",
           MAX_METADATA_STRING);
+
+  if( gethostname(hostname, 1024) != -1 )
+      strcpy(vm_name,hostname);
+
+  if (f)
+  {
+    if (fgets(vm_uuid,MAX_METADATA_STRING, f)!=NULL)
+    {
+      vm_uuid[strlen( vm_uuid ) - 1 ] = '\0';
+      EVEL_DEBUG("VM UUID: %s", vm_uuid);
+    }
+    fclose (f);
+  }
+
 }
 
 /**************************************************************************//**

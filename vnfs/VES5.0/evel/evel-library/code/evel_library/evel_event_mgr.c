@@ -102,6 +102,7 @@ static EVT_HANDLER_STATE evt_handler_state = EVT_HANDLER_UNINITIALIZED;
  *****************************************************************************/
 static char * evel_event_api_url;
 static char * evel_throt_api_url;
+static char * evel_batch_api_url;
 
 /**************************************************************************//**
  * Initialize the event handler.
@@ -126,6 +127,7 @@ EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
 {
   int rc = EVEL_SUCCESS;
   CURLcode curl_rc = CURLE_OK;
+  char batch_api_url[EVEL_MAX_URL_LEN + 1] = {0};
 
   EVEL_ENTER();
 
@@ -142,6 +144,9 @@ EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
   /***************************************************************************/
   evel_event_api_url = strdup(event_api_url);
   assert(evel_event_api_url != NULL);
+  sprintf(batch_api_url,"%s/eventBatch",event_api_url);
+  evel_batch_api_url = strdup(batch_api_url);
+  assert(evel_batch_api_url != NULL);
   evel_throt_api_url = strdup(throt_api_url);
   assert(evel_throt_api_url != NULL);
 
@@ -790,7 +795,37 @@ static void * event_handler(void * arg __attribute__ ((unused)))
     /* Internal events get special treatment while regular events get posted */
     /* to the far side.                                                      */
     /*************************************************************************/
-    if (msg->event_domain != EVEL_DOMAIN_INTERNAL)
+    if (msg->event_domain == EVEL_DOMAIN_BATCH )
+    {
+      EVEL_DEBUG("Batch event received");
+
+      /***********************************************************************/
+      /* Encode the event in JSON.                                           */
+      /***********************************************************************/
+      json_size = evel_json_encode_batch_event(json_body, EVEL_MAX_JSON_BODY, msg);
+
+      /***************************************************************************/
+      /* Set the URL for the API.                                                */
+      /***************************************************************************/
+      curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_batch_api_url);
+      if (curl_rc != CURLE_OK)
+      {
+        rc = EVEL_CURL_LIBRARY_FAIL;
+        log_error_state("Failed to initialize libCURL with the Batch API URL. "
+                    "Error code=%d (%s)", curl_rc, curl_err_string);
+      }
+
+      /***********************************************************************/
+      /* Send the JSON across the API.                                       */
+      /***********************************************************************/
+      EVEL_DEBUG("Sending Batch JSON of size %d is: %s", json_size, json_body);
+      rc = evel_post_api(json_body, json_size);
+      if (rc != EVEL_SUCCESS)
+      {
+        EVEL_ERROR("Failed to transfer the data. Error code=%d", rc);
+      }
+    }
+    else if (msg->event_domain != EVEL_DOMAIN_INTERNAL )
     {
       EVEL_DEBUG("External event received");
 
@@ -798,6 +833,17 @@ static void * event_handler(void * arg __attribute__ ((unused)))
       /* Encode the event in JSON.                                           */
       /***********************************************************************/
       json_size = evel_json_encode_event(json_body, EVEL_MAX_JSON_BODY, msg);
+
+      /***************************************************************************/
+      /* Set the URL for the API.                                                */
+      /***************************************************************************/
+      curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_event_api_url);
+      if (curl_rc != CURLE_OK)
+      {
+        rc = EVEL_CURL_LIBRARY_FAIL;
+        log_error_state("Failed to initialize libCURL with the API URL. "
+                    "Error code=%d (%s)", curl_rc, curl_err_string);
+      }
 
       /***********************************************************************/
       /* Send the JSON across the API.                                       */
