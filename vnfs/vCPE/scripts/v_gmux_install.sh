@@ -397,6 +397,7 @@ After=vpp.service
 
 [Service]
 ExecStart=/opt/honeycomb/honeycomb
+ExecStop=/opt/reset_ves_mode.sh
 Restart=always
 RestartSec=10
 
@@ -404,6 +405,19 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
     systemctl enable /etc/systemd/system/honeycomb.service
+
+    # Create script that is used to reset the ves mode configuration
+    # when the honeycomb service is stopped
+    cat > /opt/reset_ves_mode.sh << EOF
+#!/bin/bash
+mode_data=\$(curl -X GET -u admin:admin http://127.0.0.1:8183/restconf/config/vesagent:vesagent/mode 2>/dev/null | sed s/\"base-packet-loss\":[0-9]\*,/\"base-packet-loss\":0,/)
+if [[ "\${mode_data}" != "" ]]
+then
+    curl -X DELETE -u admin:admin http://127.0.0.1:8183/restconf/config/vesagent:vesagent/mode
+    curl -H "Content-Type:application/json" --data "\${mode_data}" -X POST -u admin:admin http://127.0.0.1:8183/restconf/config/vesagent:vesagent
+fi
+EOF
+    chmod a+x /opt/reset_ves_mode.sh
 
     #Create a systemd service for auto-save
     cat > /usr/bin/save_config << EOF
@@ -460,30 +474,6 @@ write_startup_scripts()
 				return 0
 			fi
 		done < \${VPP_SETUP_GATE}
-	fi
-}
-
-# Saves the VES agent configuration to the startup script.
-#
-# Get the current VES agent configuration from the bash command:
-# \$vppctl show ves agent
-#    Server Addr    Server Port Interval Enabled
-#    127.0.0.1        8080         10    True
-# Set the VES agent configuration with the bash command:
-# \$vppctl set ves agent server 127.0.0.1 port 8080 intval 10
-#
-save_ves_config()
-{
-	local server=""
-	local port=""
-	local intval=""
-
-	local ves_config=\`vppctl show ves agent | head -2 | tail -1\`
-	if [ "\${ves_config}" != "" ] ;then
-		server=\`echo \${ves_config} | awk '{ print \$1 }'\`
-		port=\`echo \${ves_config} | awk '{ print \$2 }'\`
-		intval=\`echo \${ves_config} | awk '{ print \$3 }'\`
-		write_startup_scripts add "set ves agent server \${server} port \${port} intval \${intval}"
 	fi
 }
 
@@ -550,8 +540,6 @@ save_vxlan_xconnect()
 }
 
 ################################# MAIN ###################################
-
-save_ves_config
 
 save_vxlan_tunnel
 
