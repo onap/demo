@@ -146,6 +146,7 @@ API_SOURCES=$(EVELLIB_ROOT)/evel.c \
             $(EVELLIB_ROOT)/evel_threshold_cross.c \
             $(EVELLIB_ROOT)/evel_voicequality.c \
             $(EVELLIB_ROOT)/evel_logging.c \
+            $(EVELLIB_ROOT)/evel_batch.c \
             $(EVELLIB_ROOT)/jsmn.c
 API_OBJECTS=$(API_SOURCES:.c=.o)
 -include $(API_SOURCES:.c=.d)

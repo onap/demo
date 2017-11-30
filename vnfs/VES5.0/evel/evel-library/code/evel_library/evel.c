@@ -388,6 +388,13 @@ void evel_free_event(void * event)
       free(evt_ptr);
       break;
 
+    case EVEL_DOMAIN_BATCH:
+      EVEL_DEBUG("Event is a Batch at %lp", evt_ptr);
+      evel_free_batch((EVENT_HEADER *)evt_ptr);
+      memset(evt_ptr, 0, sizeof(EVENT_HEADER));
+      free(evt_ptr);
+      break;
+
     default:
       EVEL_ERROR("Unexpected event domain (%d)", evt_ptr->event_domain);
       assert(0);

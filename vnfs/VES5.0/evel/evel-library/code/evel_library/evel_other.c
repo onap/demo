@@ -118,7 +118,6 @@ void evel_other_type_set(EVENT_OTHER * other,
  *****************************************************************************/
 void evel_other_field_set_namedarraysize(EVENT_OTHER * other, const int size)
 {
-  OTHER_FIELD * other_field = NULL;
   EVEL_ENTER();
 
   /***************************************************************************/
