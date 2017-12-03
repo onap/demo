@@ -9,9 +9,9 @@ cd /opt/vid
 git pull
 cd /opt
 
+docker pull mariadb:10
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/openecomp/vid:$DOCKER_IMAGE_VERSION
-docker pull $NEXUS_DOCKER_REPO/library/mariadb:10
 
 docker rm -f vid-mariadb
 docker rm -f vid-server
