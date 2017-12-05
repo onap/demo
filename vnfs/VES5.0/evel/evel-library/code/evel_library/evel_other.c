@@ -13,14 +13,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and 
  * limitations under the License.
- * ECOMP is a trademark and service mark of AT&T Intellectual Property.
+ *
  ****************************************************************************/
 
 /**************************************************************************//**
  * @file
- * Implementation of EVEL functions relating to Other.
+ * Implementation of EVEL functions relating to Other domain.
  *
- ****************************************************************************/
+ *****************************************************************************/
 
 #include <string.h>
 #include <assert.h>
@@ -40,7 +40,7 @@
  *          not used (i.e. posted) it must be released using ::evel_free_other.
  * @retval  NULL  Failed to create the event.
  *****************************************************************************/
-EVENT_OTHER * evel_new_other(const char *ev_name, const char *ev_id)
+EVENT_OTHER * evel_new_other(const char* ev_name, const char *ev_id)
 {
   EVENT_OTHER * other = NULL;
   EVEL_ENTER();
@@ -107,11 +107,9 @@ void evel_other_type_set(EVENT_OTHER * other,
 }
 
 /**************************************************************************//**
- * Add a json object to jsonObject list.
+ * Set size of Named arrays hash table
  *
- * The name and value are null delimited ASCII strings.  The library takes
- * a copy so the caller does not have to preserve values after the function
- * returns.
+ * The max size of hash table is passed
  *
  * @param other         Pointer to the Other.
  * @param size          size of hashtable
@@ -171,19 +169,19 @@ void evel_other_field_add_namedarray(EVENT_OTHER * other, const char *hashname, 
   assert(other_field->value != NULL);
 
 
-  list = ht_get(other->namedarrays, hashname);
+  list = (DLIST *)ht_get(other->namedarrays, hashname);
   if( list == NULL )
   {
      DLIST * nlist = malloc(sizeof(DLIST));
      dlist_initialize(nlist);
      dlist_push_last(nlist, other_field);
-     ht_set(other->namedarrays, hashname, nlist);
-     EVEL_DEBUG("Created to new table table");
+     ht_set(other->namedarrays, hashname,(void*)nlist);
+     EVEL_DEBUG("Created to new namedarray table %p",nlist);
   }
   else
   {
      dlist_push_last(list, other_field);
-     EVEL_DEBUG("Adding to existing table");
+     EVEL_DEBUG("Adding to existing table %p",list);
   }
 
   EVEL_EXIT();
@@ -276,9 +274,10 @@ void evel_json_encode_other(EVEL_JSON_BUFFER * jbuf,
   EVEL_INTERNAL_KEY * keyinst = NULL;
   DLIST_ITEM * keyinst_field_item = NULL;
   HASHTABLE_T *ht = NULL;
-  int i;
+  int idx;
   bool itm_added = false;
   DLIST *itm_list = NULL;
+  ENTRY_T *entry = NULL;
 
   EVEL_ENTER();
 
@@ -293,33 +292,31 @@ void evel_json_encode_other(EVEL_JSON_BUFFER * jbuf,
 
 // iterate through hashtable and print DLIST for each entry
 
+   evel_json_checkpoint(jbuf);
    ht = event->namedarrays;
    if( ht != NULL )
    {
      if( ht->size > 0)
      {
-        for( i = 0; i < ht->size; i++ ) {
-             if( ht->table[i] != NULL)
-	     {
-		itm_added = true;
-	     }
-        }
-        if( itm_added == true)
-        {
 
-  if (evel_json_open_opt_named_list(jbuf, "hashOfNameValuePairArrays"))
-  {
-       for( i = 0; i < ht->size; i++ ) {
-             if( ht->table[i] != NULL)
+        evel_json_open_opt_named_list(jbuf, "hashOfNameValuePairArrays");
+        for( idx = 0; idx < ht->size; idx++ ) {
+             if( ht->table[idx] != NULL)
 	     {
-		itm_list = ht->table[i];
+                entry =  ht->table[idx]; 
+                EVEL_DEBUG("Encoding other %s %p",(char *) (entry->key), entry->value);
 
-  if(evel_json_open_opt_named_list(jbuf, ht->table[i]->key))
-  {
-    other_field_item = dlist_get_first(&itm_list);
+		evel_json_open_object(jbuf);
+		evel_enc_kv_string(jbuf, "name", entry->key);
+
+		itm_list = (DLIST*)(entry->value);
+		evel_json_open_opt_named_list(jbuf, "arrayOfFields");
+
+    other_field_item = dlist_get_first(itm_list);
     while (other_field_item != NULL)
     {
      other_field = (OTHER_FIELD *) other_field_item->item;
+     EVEL_DEBUG("Encoding other %s %s",(char *)other_field->name,(char*)other_field->value);
      if(other_field != NULL){
        evel_json_open_object(jbuf);
        evel_enc_kv_string(jbuf, "name", other_field->name);
@@ -328,17 +325,15 @@ void evel_json_encode_other(EVEL_JSON_BUFFER * jbuf,
        other_field_item = dlist_get_next(other_field_item);
      }
     }
-    evel_json_close_list(jbuf);
-  }
+                 evel_json_close_list(jbuf);
+                 evel_json_close_object(jbuf);
 
 	     }
-       }
-
-       evel_json_close_list(jbuf);
-  }
-
-
         }
+        evel_json_close_list(jbuf);
+
+     } else {
+       evel_json_rewind(jbuf);
      }
    }
 
@@ -427,22 +422,36 @@ void evel_json_encode_other(EVEL_JSON_BUFFER * jbuf,
 
   }
 
+  evel_json_checkpoint(jbuf);
   if( evel_json_open_opt_named_list(jbuf, "nameValuePairs"))
   {
+     bool item_added = false;
+
   other_field_item = dlist_get_first(&event->namedvalues);
   while (other_field_item != NULL)
   {
     other_field = (OTHER_FIELD *) other_field_item->item;
-    assert(other_field != NULL);
-
-    evel_json_open_object(jbuf);
-    evel_enc_kv_string(jbuf, "name", other_field->name);
-    evel_enc_kv_string(jbuf, "value", other_field->value);
-    evel_json_close_object(jbuf);
+    if(other_field != NULL)
+    {
+      evel_json_open_object(jbuf);
+      evel_enc_kv_string(jbuf, "name", other_field->name);
+      evel_enc_kv_string(jbuf, "value", other_field->value);
+      evel_json_close_object(jbuf);
+      item_added = true;
+    }
     other_field_item = dlist_get_next(other_field_item);
   }
-  }
   evel_json_close_list(jbuf);
+
+    /*************************************************************************/
+    /* If we've not written anything, rewind to before we opened the list.   */
+    /*************************************************************************/
+    if (!item_added)
+    {
+      evel_json_rewind(jbuf);
+    }
+
+  }
 
   evel_enc_version(jbuf, "otherFieldsVersion", event->major_version,event->minor_version);
 
