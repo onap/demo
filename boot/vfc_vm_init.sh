@@ -23,7 +23,7 @@ docker pull $NEXUS_DOCKER_REPO/onap/vfc/vnflcm:$VNFLCM_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/vnfmgr:$VNFMGR_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/vnfres:$VNFRES_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/ztesdncdriver:$ZTESDNCDRIVER_DOCKER_VER
-docker pull $NEXUS_DOCKER_REPO/onap/vfc/ztevmanagerdriver:$ZTEVMANAGERDRIVER_DOCKER_VER
+docker pull $NEXUS_DOCKER_REPO/onap/vfc/ztevnfmdriver:$ZTEVNFMDRIVER_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokia:$NOKIA_DOCKER_VER
 
 docker rm -f vfc_wfengine_mgrservice
@@ -39,7 +39,7 @@ docker rm -f vfc_vnflcm
 docker rm -f vfc_vnfmgr
 docker rm -f vfc_vnfres
 docker rm -f vfc_ztesdncdriver
-docker rm -f vfc_ztevmanagerdriver
+docker rm -f vfc_ztevnfmdriver
 docker rm -f vfc_svnfm_nokia
 
 # Insert docker run instructions here
@@ -56,5 +56,5 @@ docker run -i -t -d --name vfc_vnflcm -p 8801:8801 -e MSB_ADDR=$OPENO_IP:80 $NEX
 docker run -i -t -d --name vfc_vnfmgr -p 8803:8803 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/vnfmgr:$VNFMGR_DOCKER_VER
 docker run -i -t -d --name vfc_vnfres -p 8802:8802 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/vnfres:$VNFRES_DOCKER_VER
 docker run -i -t -d --name vfc_ztesdncdriver -p 8411:8411 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/ztesdncdriver:$ZTESDNCDRIVER_DOCKER_VER
-docker run -i -t -d --name vfc_ztevmanagerdriver -p 8410:8410 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/ztevmanagerdriver:$ZTEVMANAGERDRIVER_DOCKER_VER
+docker run -i -t -d --name vfc_ztevnfmdriver -p 8410:8410 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/ztevnfmdriver:$ZTEVNFMDRIVER_DOCKER_VER
 docker run -i -t -d --name vfc_svnfm_nokia -p 8486:8486 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokia:$NOKIA_DOCKER_VER

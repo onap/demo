@@ -99,7 +99,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud
 #VF-C
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "nslcm", "version": "v1", "url": "/api/nslcm/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8403"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "ztevmanagerdriver", "version": "v1", "url": "/api/ztevmanagerdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8410"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "ztevnfmdriver", "version": "v1", "url": "/api/ztevnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8410"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "ztesdncdriver", "version": "v1", "url": "/api/ztesdncdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8411"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
