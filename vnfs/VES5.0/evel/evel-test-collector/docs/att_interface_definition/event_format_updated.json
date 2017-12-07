@@ -1340,7 +1340,7 @@
 					}
 				}
 			},
-			"required": [ "name", "measurements" ]
+			"required": [ "name", "arrayOfFields" ]
 		},
 		"otherFields": {
 			"description": "fields for events belonging to the 'other' domain of the commonEventHeader domain enumeration",
