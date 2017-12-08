@@ -9,6 +9,22 @@ POLICY_HOST=$1
 RESOURCE_ID=$2
 PATH_TO_PRIVATE_KEY=$3
 
+echo 
+echo 
+echo "Removing the vFW Policy from PDP.." 
+echo 
+echo 
+
+curl -v -X DELETE --header 'Content-Type: application/json' --header 'Accept: text/plain' --header 'ClientAuth: cHl0aG9uOnRlc3Q=' --header 'Authorization: Basic dGVzdHBkcDphbHBoYTEyMw==' --header 'Environment: TEST' -d '{ 
+  "pdpGroup": "default", 
+  "policyComponent" : "PDP", 
+  "policyName": "com.BRMSParamvFirewall", 
+  "policyType": "BRMS_Param" 
+}' http://${POLICY_HOST}:8081/pdp/api/deletePolicy
+
+sleep 20
+
+echo
 echo
 echo "Updating vFW Operational Policy .."
 echo
