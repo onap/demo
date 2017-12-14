@@ -474,6 +474,11 @@ EVEL_ERR_CODES event_handler_terminate()
     free(evel_event_api_url);
     evel_event_api_url = NULL;
   }
+  if (evel_batch_api_url != NULL)
+  {
+    free(evel_batch_api_url);
+    evel_batch_api_url = NULL;
+  }
   if (evel_throt_api_url != NULL)
   {
     free(evel_throt_api_url);
