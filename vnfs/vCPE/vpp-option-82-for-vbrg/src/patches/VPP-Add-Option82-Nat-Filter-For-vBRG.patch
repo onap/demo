@@ -1,8 +1,10 @@
-commit 43028d14c3bfb09c582caa8b610e447118fb71c1
-Author: Itohan Ukponmwan <itohan.ukponmwan@intel.com>
-Date:   Fri Nov 17 21:18:23 2017 +0000
+commit 06ba776f6be670e547c4cf527a0a386f3917e567
+Author: Itohan <itohan.ukponmwan@intel.com>
+Date:   Fri Dec 8 00:12:07 2017 +0000
 
-    Modified out2in.c and client.c
+    Modified
+    
+    Signed-off-by: Itohan <itohan.ukponmwan@intel.com>
 
 diff --git a/src/plugins/snat/out2in.c b/src/plugins/snat/out2in.c
 index 7de85eb..e2e6cec 100644
@@ -16,7 +18,7 @@ index 7de85eb..e2e6cec 100644
 @@ -648,6 +649,25 @@ snat_out2in_node_fn (vlib_main_t * vm,
    n_left_from = frame->n_vectors;
    next_index = node->cached_next_index;
-
+ 
 +  //FOR BRG
 +  ip4_address_t * sdnc_addr = malloc(4);
 +  char line_input[128];
@@ -40,9 +42,9 @@ index 7de85eb..e2e6cec 100644
      {
        u32 n_left_to_next;
 @@ -723,6 +743,13 @@ snat_out2in_node_fn (vlib_main_t * vm,
-
+ 
            proto0 = ip_proto_to_snat_proto (ip0->protocol);
-
+ 
 +          //for BRG
 +          if (PREDICT_TRUE (ip0->src_address.data_u32 != sdnc_addr->data_u32))
 +            {
@@ -52,11 +54,11 @@ index 7de85eb..e2e6cec 100644
 +
            if (PREDICT_FALSE (proto0 == ~0))
                goto trace0;
-
+ 
 @@ -858,6 +885,13 @@ snat_out2in_node_fn (vlib_main_t * vm,
-
+ 
            proto1 = ip_proto_to_snat_proto (ip1->protocol);
-
+ 
 +	  //for BRG
 +          if (PREDICT_TRUE (ip1->src_address.data_u32 != sdnc_addr->data_u32))
 +            {
@@ -66,9 +68,9 @@ index 7de85eb..e2e6cec 100644
 +
            if (PREDICT_FALSE (proto1 == ~0))
                goto trace1;
-
+ 
 @@ -1017,6 +1051,13 @@ snat_out2in_node_fn (vlib_main_t * vm,
-
+ 
            proto0 = ip_proto_to_snat_proto (ip0->protocol);
  
 +	  //for BRG
@@ -80,15 +82,15 @@ index 7de85eb..e2e6cec 100644
 +
            if (PREDICT_FALSE (proto0 == ~0))
                goto trace00;
-
+ 
 @@ -1153,6 +1194,7 @@ snat_out2in_node_fn (vlib_main_t * vm,
-   vlib_node_increment_counter (vm, snat_out2in_node.index,
-                                SNAT_OUT2IN_ERROR_OUT2IN_PACKETS,
+   vlib_node_increment_counter (vm, snat_out2in_node.index, 
+                                SNAT_OUT2IN_ERROR_OUT2IN_PACKETS, 
                                 pkts_processed);
 +  free(sdnc_addr);
    return frame->n_vectors;
  }
-
+ 
 diff --git a/src/vnet/dhcp/client.c b/src/vnet/dhcp/client.c
 index 7c3f7f6..41bc2c7 100644
 --- a/src/vnet/dhcp/client.c
@@ -96,7 +98,7 @@ index 7c3f7f6..41bc2c7 100644
 @@ -426,6 +426,16 @@ send_dhcp_pkt (dhcp_client_main_t * dcm, dhcp_client_t * c,
    clib_memcpy (o->data, c->option_55_data, vec_len(c->option_55_data));
    o = (dhcp_option_t *) (((uword) o) + (o->length + 2));
-
+ 
 +  /*send option 82*/
 +  u8 sub2_len = vec_len(hw->hw_address);
 +  o->option = 82;
