@@ -1401,8 +1401,15 @@ typedef struct copyright {
  * @param   path    The optional path (may be NULL).
  * @param   topic   The optional topic part of the URL (may be NULL).
  * @param   secure  Whether to use HTTPS (0=HTTP, 1=HTTPS).
+ * @param   cert_file_path     Path to client certificate file
+ * @param   key_file_path      Path to client key file
+ * @param   ca_info            Path to CA info
+ * @param   ca_file_path       Path to CA file
+ * @param   verify_peer        SSL verification of peer 0 or 1
+ * @param   verify_host        SSL verification of host 0 or 1
  * @param   username  Username for Basic Authentication of requests.
  * @param   password  Password for Basic Authentication of requests.
+ * @param   source_ip The ip of node we represent.(NULL for default ip)
  * @param   source_type The kind of node we represent.
  * @param   role    The role this node undertakes.
  * @param   verbosity  0 for normal operation, positive values for chattier
@@ -1417,8 +1424,15 @@ EVEL_ERR_CODES evel_initialize(const char * const fqdn,
                                const char * const path,
                                const char * const topic,
                                int secure,
+                               const char * const cert_file_path,
+                               const char * const key_file_path,
+                               const char * const ca_info,
+                               const char * const ca_file_path,
+                               long verify_peer,
+                               long verify_host,
                                const char * const username,
                                const char * const password,
+                               const char * const source_ip,
                                EVEL_SOURCE_TYPES source_type,
                                const char * const role,
                                int verbosity

@@ -140,8 +140,15 @@ int main(int argc, char** argv)
                      NULL,                         /* optional path         */
                      NULL,                         /* optional topic        */
                      0,                            /* HTTPS?                */
+                     NULL,                         /* cert file             */
+                     NULL,                         /* key  file             */
+                     NULL,                         /* ca   info             */
+                     NULL,                         /* ca   file             */
+                     0,                            /* verify peer           */
+                     0,                            /* verify host           */
                      "",                           /* Username              */
                      "",                           /* Password              */
+                     NULL,                         /* Source IP             */
                      EVEL_SOURCE_VIRTUAL_MACHINE,  /* Source type           */
                      "vLoadBalancer",              /* Role                  */
                      1))                           /* Verbosity             */

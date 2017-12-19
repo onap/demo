@@ -174,6 +174,14 @@ typedef struct evel_throttle_spec {
  *                      to be.
  * @param[in] throt_api_url
  *                      The URL where the Throttling API is expected to be.
+ * @param[in] source_ip  Source IP of VES Agent
+ * @param[in] secure     Whether Using http or https
+ * @param[in] cert_file_path  Path to Client Certificate file
+ * @param[in] key_file_path   Path to Client key file
+ * @param[in] ca_info         Path to CA info file
+ * @param[in] ca_file_path    Path to CA file 
+ * @param[in] verify_peer     Using peer verification or not
+ * @param[in] verify_host     Using host verification or not
  * @param[in] username  The username for the Basic Authentication of requests.
  * @param[in] password  The password for the Basic Authentication of requests.
  * @param     verbosity 0 for normal operation, positive values for chattier
@@ -181,6 +189,14 @@ typedef struct evel_throttle_spec {
  *****************************************************************************/
 EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
                                         const char * const throt_api_url,
+                                        const char * const source_ip,
+                                        int secure,
+                                        const char * const cert_file_path,
+                                        const char * const key_file_path,
+                                        const char * const ca_info,
+                                        const char * const ca_file_path,
+                                        long verify_peer,
+                                        long verify_host,
                                         const char * const username,
                                         const char * const password,
                                         int verbosity);

@@ -1,0 +1,15 @@
+# Generate CA key and certificate
+openssl genrsa -des3 -out test.ca.key 8192
+openssl req -new -key test.ca.key -x509 -days 30 -out test.ca.crt
+
+# Generate server key and certificate
+openssl genrsa -out www.testsite.com.key 1024
+openssl req -new -key www.testsite.com.key -out www.testsite.com.csr
+openssl x509 -req -days 30 -in www.testsite.com.csr -CA test.ca.crt -CAkey test.ca.key -CAcreateserial -out www.testsite.com.crt
+
+# Generate client key and certificate
+openssl genrsa -out testclient.key 1024
+openssl req -new -key testclient.key -out testclient.csr
+openssl x509 -req -days 30 -in testclient.csr -CA test.ca.crt -CAkey test.ca.key -CAcreateserial -out testclient.crt
+
+openssl pkcs12 -export -clcerts -in testclient.crt -inkey testclient.key -out testclient.p12

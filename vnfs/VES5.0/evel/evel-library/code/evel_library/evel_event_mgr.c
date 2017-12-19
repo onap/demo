@@ -114,6 +114,14 @@ static char * evel_batch_api_url;
  *                      to be.
  * @param[in] throt_api_url
  *                      The URL where the Throttling API is expected to be.
+ * @param[in] source_ip  Source IP of VES Agent
+ * @param[in] secure     Whether Using http or https
+ * @param[in] cert_file_path  Path to Client Certificate file
+ * @param[in] key_file_path   Path to Client key file
+ * @param[in] ca_info         Path to CA info file
+ * @param[in] ca_file_path    Path to CA file 
+ * @param[in] verify_peer     Using peer verification or not 0 or 1
+ * @param[in] verify_host     Using host verification or not 0 or 1
  * @param[in] username  The username for the Basic Authentication of requests.
  * @param[in] password  The password for the Basic Authentication of requests.
  * @param     verbosity 0 for normal operation, positive values for chattier
@@ -121,6 +129,14 @@ static char * evel_batch_api_url;
  *****************************************************************************/
 EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
                                         const char * const throt_api_url,
+                                        const char * const source_ip,
+                                        int secure,
+                                        const char * const cert_file_path,
+                                        const char * const key_file_path,
+                                        const char * const ca_info,
+                                        const char * const ca_file_path,
+                                        long verify_peer,
+                                        long verify_host,
                                         const char * const username,
                                         const char * const password,
                                         int verbosity)
@@ -128,6 +144,7 @@ EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
   int rc = EVEL_SUCCESS;
   CURLcode curl_rc = CURLE_OK;
   char batch_api_url[EVEL_MAX_URL_LEN + 1] = {0};
+  char local_address[64];
 
   EVEL_ENTER();
 
@@ -239,6 +256,114 @@ EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
                     "Error code=%d (%s)", curl_rc, curl_err_string);
     goto exit_label;
   }
+
+  /***************************************************************************/
+  /* configure local ip address if provided */
+  /* Default ip if NULL */
+  /***************************************************************************/
+  if( source_ip != NULL )
+  {
+    snprintf(local_address,sizeof(local_address),source_ip);
+    if( local_address[0] != '\0' )
+    {
+      curl_rc = curl_easy_setopt(curl_handle,
+                             CURLOPT_INTERFACE,
+                             local_address);
+      if (curl_rc != CURLE_OK)
+      {
+        rc = EVEL_CURL_LIBRARY_FAIL;
+        log_error_state("Failed to initialize libCURL with the local address. "
+                    "Error code=%d (%s)", curl_rc, curl_err_string);
+        goto exit_label;
+      }
+    }
+  }
+
+  /***************************************************************************/
+  /* configure SSL options for HTTPS transfers */
+  /***************************************************************************/
+  if( secure )
+  {
+    if( cert_file_path != NULL )
+    {
+      curl_rc = curl_easy_setopt(curl_handle,
+                             CURLOPT_SSLCERT,
+                             cert_file_path);
+      if (curl_rc != CURLE_OK)
+      {
+        rc = EVEL_CURL_LIBRARY_FAIL;
+        log_error_state("Failed to initialize libCURL with the client cert. "
+                    "Error code=%d (%s)", curl_rc, curl_err_string);
+        goto exit_label;
+      }
+    }
+
+    if( key_file_path != NULL )
+    {
+      curl_rc = curl_easy_setopt(curl_handle,
+                             CURLOPT_SSLKEY,
+                             key_file_path);
+      if (curl_rc != CURLE_OK)
+      {
+        rc = EVEL_CURL_LIBRARY_FAIL;
+        log_error_state("Failed to initialize libCURL with the client key. "
+                    "Error code=%d (%s)", curl_rc, curl_err_string);
+        goto exit_label;
+      }
+    }
+
+    if( ca_info != NULL )
+    {
+      curl_rc = curl_easy_setopt(curl_handle,
+                             CURLOPT_CAINFO,
+                             ca_info);
+      if (curl_rc != CURLE_OK)
+      {
+        rc = EVEL_CURL_LIBRARY_FAIL;
+        log_error_state("Failed to initialize libCURL with the CA cert file. "
+                    "Error code=%d (%s)", curl_rc, curl_err_string);
+        goto exit_label;
+      }
+    }
+
+    if( ca_file_path != NULL )
+    {
+      curl_rc = curl_easy_setopt(curl_handle,
+                             CURLOPT_CAPATH,
+                             ca_file_path);
+      if (curl_rc != CURLE_OK)
+      {
+        rc = EVEL_CURL_LIBRARY_FAIL;
+        log_error_state("Failed to initialize libCURL with the CA cert path. "
+                    "Error code=%d (%s)", curl_rc, curl_err_string);
+        goto exit_label;
+      }
+    }
+
+      curl_rc = curl_easy_setopt(curl_handle,
+                             CURLOPT_SSL_VERIFYPEER,
+                             verify_peer);
+      if (curl_rc != CURLE_OK)
+      {
+        rc = EVEL_CURL_LIBRARY_FAIL;
+        log_error_state("Failed to initialize libCURL with SSL Server verification. "
+                    "Error code=%d (%s)", curl_rc, curl_err_string);
+        goto exit_label;
+      }
+      curl_rc = curl_easy_setopt(curl_handle,
+                             CURLOPT_SSL_VERIFYHOST,
+                             verify_host);
+      if (curl_rc != CURLE_OK)
+      {
+        rc = EVEL_CURL_LIBRARY_FAIL;
+        log_error_state("Failed to initialize libCURL with Client host verification. "
+                    "Error code=%d (%s)", curl_rc, curl_err_string);
+        goto exit_label;
+      }
+
+  }
+
+
 
   /***************************************************************************/
   /* some servers don't like requests that are made without a user-agent     */

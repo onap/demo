@@ -38,6 +38,7 @@ import string
 import json
 import jsonschema
 from functools import partial
+import ssl
 
 _hello_resp = '''\
 <html>
@@ -407,7 +408,8 @@ USAGE
         defaults = {'log_file': 'collector.log',
                     'vel_port': '12233',
                     'vel_path': '',
-                    'vel_topic_name': ''
+                    'vel_topic_name': '',
+                    'transport_prot': 'http'
                    }
         overrides = {}
         config = ConfigParser.SafeConfigParser(defaults)
@@ -419,9 +421,16 @@ USAGE
         log_file = config.get(config_section, 'log_file', vars=overrides)
         vel_port = config.get(config_section, 'vel_port', vars=overrides)
         vel_path = config.get(config_section, 'vel_path', vars=overrides)
+        transport_prot = config.get(config_section, 'protocol', vars=overrides)
         vel_topic_name = config.get(config_section,
                                     'vel_topic_name',
                                     vars=overrides)
+
+        if (transport_prot.lower() != 'http' and transport_prot.lower() != 'https' ):
+            logger.error('Invalid Transport must be http or https ({0}) '
+                         'specified'.format(transport_prot))
+            raise RuntimeError('Invalid Transport protcol specified ({0}) '
+                               'specified'.format(transport_prot))
         global vel_username
         global vel_password
         vel_username = config.get(config_section,
@@ -457,6 +466,28 @@ USAGE
         handler = logging.handlers.RotatingFileHandler(log_file,
                                                        maxBytes=1000000,
                                                        backupCount=10)
+
+        if (transport_prot.lower() == 'https' ):
+           transport_prot = transport_prot.lower()
+           ca_file = config.get(config_section, 'ca_file', vars=overrides)
+           cert_file = config.get(config_section, 'cert_file', vars=overrides)
+           key_file = config.get(config_section, 'key_file', vars=overrides)
+           if not os.path.exists(ca_file):
+                logger.error('Event Listener SSL CA File ({0}) not found. '
+                           'No validation will be undertaken.'.format(ca_file))
+                raise RuntimeError('Invalid CA file ({0}) '
+                               'specified'.format(ca_file))
+           if not os.path.exists(cert_file):
+                logger.error('Event Listener SSL Certificate File ({0}) not found. '
+                           'No validation will be undertaken.'.format(cert_file))
+                raise RuntimeError('Invalid Certificate file ({0}) '
+                               'specified'.format(cert_file))
+           if not os.path.exists(key_file):
+                logger.error('Event Listener SSL Key File ({0}) not found. '
+                           'No validation will be undertaken.'.format(key_file))
+                raise RuntimeError('Invalid Key file ({0}) '
+                               'specified'.format(key_file))
+
         if (platform.system() == 'Windows'):
             date_format = '%Y-%m-%d %H:%M:%S'
         else:
@@ -472,6 +503,7 @@ USAGE
         # Log the details of the configuration.
         #----------------------------------------------------------------------
         logger.debug('Log file = {0}'.format(log_file))
+        logger.debug('Event Listener Transport = {0}'.format(transport_prot))
         logger.debug('Event Listener Port = {0}'.format(vel_port))
         logger.debug('Event Listener Path = {0}'.format(vel_path))
         logger.debug('Event Listener Topic = {0}'.format(vel_topic_name))
@@ -587,6 +619,10 @@ USAGE
         dispatcher.register('GET', test_control_url, test_control_listener)
 
         httpd = make_server('', int(vel_port), dispatcher)
+        if (transport_prot == 'https' ):
+            #httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, ca_certs = "../../../sslcerts/test.ca.pem", certfile="../../../sslcerts/www.testsite.com.crt", keyfile="../../../sslcerts/www.testsite.com.key", cert_reqs=ssl.CERT_REQUIRED, ssl_version=ssl.PROTOCOL_TLSv1_2)
+            logger.debug('Invoking HTTP Secure mode : ca file {0} cert file {1} key file {2} '.format(ca_file,cert_file,key_file))
+            httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, ca_certs=ca_file, certfile=cert_file, keyfile=key_file, cert_reqs=ssl.CERT_REQUIRED, ssl_version=ssl.PROTOCOL_TLSv1_2)
         print('Serving on port {0}...'.format(vel_port))
         httpd.serve_forever()
 
