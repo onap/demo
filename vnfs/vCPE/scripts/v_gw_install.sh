@@ -70,6 +70,9 @@ then
     # Install the tools required for download codes
     apt-get --allow-unauthenticated install -y expect git make linux-image-extra-`uname -r`
 
+    #Install DHCP server
+    apt-get install -y isc-dhcp-server
+
     #Download and build the VPP codes
     cd /opt
     git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
@@ -385,8 +388,7 @@ WantedBy=multi-user.target
 EOF
     systemctl enable /etc/systemd/system/honeycomb.service
 
-    # Install the DHCP server and config
-    apt-get install -y isc-dhcp-server
+    # DHCP server config
     cat >> /etc/dhcp/dhcpd.conf << EOF
 subnet 192.168.1.0 netmask 255.255.255.0 {
   range 192.168.1.2 192.168.1.253;
