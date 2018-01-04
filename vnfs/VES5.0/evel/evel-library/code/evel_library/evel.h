@@ -87,7 +87,7 @@ typedef enum {
 /* Maximum string lengths.                                                   */
 /*****************************************************************************/
 #define EVEL_MAX_STRING_LEN          4096
-#define EVEL_MAX_JSON_BODY           160000
+#define EVEL_MAX_JSON_BODY           524288
 #define EVEL_MAX_ERROR_STRING_LEN    255
 #define EVEL_MAX_URL_LEN             511
 

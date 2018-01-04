@@ -984,6 +984,25 @@ void evel_measurement_disk_use_mergewritemax_set(MEASUREMENT_DISK_USE * const di
 /**************************************************************************//**
  * Set number of logical write operations that were merged into physical read
  * operations, e.g., two logical writes were served by one physical disk access;
+ * provide the average measurement within the measurement interval
+ *
+ * @note  The property is treated as immutable: it is only valid to call
+ *        the setter once.  However, we don't assert if the caller tries to
+ *        overwrite, just ignoring the update instead.
+ *
+ * @param disk_use     Pointer to the Disk Use.
+ * @param val          double
+ *****************************************************************************/
+void evel_measurement_disk_use_mergewriteavg_set(MEASUREMENT_DISK_USE * const disk_use,
+                                    const double val)
+{
+  EVEL_ENTER();
+  evel_set_option_double(&disk_use->mergewriteavg, val, "Disk writeavg set");
+  EVEL_EXIT();
+}
+/**************************************************************************//**
+ * Set number of logical write operations that were merged into physical read
+ * operations, e.g., two logical writes were served by one physical disk access;
  * provide the maximum measurement within the measurement interval
  *
  * @note  The property is treated as immutable: it is only valid to call
