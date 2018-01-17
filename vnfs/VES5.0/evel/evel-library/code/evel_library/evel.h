@@ -1400,6 +1400,7 @@ typedef struct copyright {
  * @param   port    The API's port.
  * @param   path    The optional path (may be NULL).
  * @param   topic   The optional topic part of the URL (may be NULL).
+ * @param   ring_buf_size   Ring buffer size (>=100) ~ Avg Messages in 1hr
  * @param   secure  Whether to use HTTPS (0=HTTP, 1=HTTPS).
  * @param   cert_file_path     Path to client certificate file
  * @param   key_file_path      Path to client key file
@@ -1423,6 +1424,7 @@ EVEL_ERR_CODES evel_initialize(const char * const fqdn,
                                int port,
                                const char * const path,
                                const char * const topic,
+                               int ring_buf_size,
                                int secure,
                                const char * const cert_file_path,
                                const char * const key_file_path,

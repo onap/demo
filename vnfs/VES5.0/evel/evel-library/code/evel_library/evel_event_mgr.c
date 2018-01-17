@@ -115,6 +115,7 @@ static char * evel_batch_api_url;
  * @param[in] throt_api_url
  *                      The URL where the Throttling API is expected to be.
  * @param[in] source_ip  Source IP of VES Agent
+ * @param[in] ring_buf_size     Initial size of ring buffer
  * @param[in] secure     Whether Using http or https
  * @param[in] cert_file_path  Path to Client Certificate file
  * @param[in] key_file_path   Path to Client key file
@@ -130,6 +131,7 @@ static char * evel_batch_api_url;
 EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
                                         const char * const throt_api_url,
                                         const char * const source_ip,
+                                        int ring_buf_size,
                                         int secure,
                                         const char * const cert_file_path,
                                         const char * const key_file_path,
@@ -473,6 +475,12 @@ EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
   /* Initialize a message ring-buffer to be used between the foreground and  */
   /* the thread which sends the messages.  This can't fail.                  */
   /***************************************************************************/
+  if( ring_buf_size < EVEL_EVENT_BUFFER_DEPTH )
+  {
+    log_error_state("Warning: Failed to initialize Ring buffer size to %d. "
+                    ring_buf_size);
+    goto exit_label;
+  }
   ring_buffer_initialize(&event_buffer, EVEL_EVENT_BUFFER_DEPTH);
 
   /***************************************************************************/

@@ -175,6 +175,7 @@ typedef struct evel_throttle_spec {
  * @param[in] throt_api_url
  *                      The URL where the Throttling API is expected to be.
  * @param[in] source_ip  Source IP of VES Agent
+ * @param[in] ring_buf_size     Initialization size of Ring Buffer
  * @param[in] secure     Whether Using http or https
  * @param[in] cert_file_path  Path to Client Certificate file
  * @param[in] key_file_path   Path to Client key file
@@ -190,6 +191,7 @@ typedef struct evel_throttle_spec {
 EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
                                         const char * const throt_api_url,
                                         const char * const source_ip,
+                                        int ring_buf_size,
                                         int secure,
                                         const char * const cert_file_path,
                                         const char * const key_file_path,

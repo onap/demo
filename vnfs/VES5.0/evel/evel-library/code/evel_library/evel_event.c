@@ -621,6 +621,10 @@ int evel_json_encode_event(char * json,
   /* Sanity check.                                                           */
   /***************************************************************************/
   assert(jbuf->depth == 0);
+  if( jbuf->offset >= max_size ){
+          EVEL_ERROR("Event exceeded size limit %d", max_size);
+          assert(0);
+  }
 
   EVEL_EXIT();
 
