@@ -160,8 +160,8 @@ register_multicloud_pod25dns_with_aai()
     local CLOUD_ENV
     local CLOUD_IDENTITY_URL
     local DNSAAS_SERVICE_URL
-    local DNSAAS_USERNAME='demo'
-    local DNSAAS_PASSWORD='onapdemo'
+    local DNSAAS_USERNAME="$(cat /opt/config/dnsaas_username.txt)"
+    local DNSAAS_PASSWORD="$(cat /opt/config/dnsaas_password.txt)"
 
     CLOUD_REGION="$(cat /opt/config/dnsaas_region.txt)"
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
