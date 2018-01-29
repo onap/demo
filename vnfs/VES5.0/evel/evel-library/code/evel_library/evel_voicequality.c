@@ -467,7 +467,6 @@ void evel_json_encode_voice_quality(EVEL_JSON_BUFFER * jbuf,
   DLIST_ITEM * addlInfoItem = NULL;
 
   END_OF_CALL_VOICE_QUALITY_METRICS * vQMetrics = NULL;
-  DLIST_ITEM * vQMetricsItem = NULL;
 
   EVEL_ENTER();
 

@@ -309,6 +309,7 @@ exit_label:
   return rc;
 }
 
+
 /**************************************************************************//**
  * Initialize default values for vm_name and vm_uuid - for testing purposes.
  *****************************************************************************/
@@ -338,6 +339,29 @@ void openstack_metadata_initialize()
     fclose (f);
   }
 
+}
+
+/**************************************************************************//**
+ * Initialize value for vm_name for all coming events
+ * @param  source_name  Source name string.
+ *                      Must confirm with EVEL source name standard
+ * @returns Status code
+ * @retval  EVEL_SUCCESS      On success
+ * @retval  ::EVEL_ERR_CODES  On failure.
+ *****************************************************************************/
+EVEL_ERR_CODES evel_set_source_name(char * src_name)
+{
+  if( src_name && src_name[0] )
+  {
+      if( strlen(src_name) < MAX_METADATA_STRING ){
+          strcpy(vm_name,src_name);
+          return EVEL_SUCCESS;
+       } else 
+          EVEL_DEBUG("Event Source Name too long");
+  }
+  else
+     EVEL_DEBUG("Invalid Event Source Name string");
+  return EVEL_ERR_GEN_FAIL;
 }
 
 /**************************************************************************//**

@@ -1441,6 +1441,17 @@ EVEL_ERR_CODES evel_initialize(const char * const fqdn,
                                );
 
 /**************************************************************************//**
+ * Initialize value for vm_name for all coming events
+ * @param  source_name  Source name string.
+ *                      Must confirm with EVEL source name standard
+ * @returns Status code
+ * @retval  EVEL_SUCCESS      On success
+ * @retval  ::EVEL_ERR_CODES  On failure.
+ *****************************************************************************/
+EVEL_ERR_CODES evel_set_source_name(char * src_name);
+
+
+/**************************************************************************//**
  * Clean up the EVEL library.
  *
  * @note that at present don't expect Init/Term cycling not to leak memory!

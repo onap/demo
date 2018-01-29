@@ -477,7 +477,7 @@ EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
   /***************************************************************************/
   if( ring_buf_size < EVEL_EVENT_BUFFER_DEPTH )
   {
-    log_error_state("Warning: Failed to initialize Ring buffer size to %d. "
+    log_error_state("Warning: Failed to initialize Ring buffer size to %d. ",
                     ring_buf_size);
     goto exit_label;
   }
