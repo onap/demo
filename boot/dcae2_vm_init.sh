@@ -346,7 +346,7 @@ verify_multicloud_registration()
 
 register_dns_zone_proxied_designate()
 {
-    local CLOUD_OWNER='pod25' 
+    local CLOUD_OWNER='pod25dns'
     local CLOUD_REGION
     local CLOUD_VERSION='titanium_cloud'
     local CLOUD_ENV
@@ -362,7 +362,7 @@ register_dns_zone_proxied_designate()
     ## export endpoint prefix
     local MULTICLOUD_PLUGIN_ENDPOINT
 
-    CLOUD_REGION="$(cat /opt/config/openstack_region.txt)"
+    CLOUD_REGION="$(cat /opt/config/dnsaas_region.txt)"
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
     if [ -z "$1" ]; then DCAE_ZONE="$(cat /opt/config/dcae_zone.txt)"; else DCAE_ZONE="$1"; fi
     DNSAAS_TENANT_NAME="$(cat /opt/config/dnsaas_tenant_name.txt)"
