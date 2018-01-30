@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_f3e33403",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 747
+      },
+      "writtenOn": "2018-01-30T03:55:57Z",
+      "side": 1,
+      "message": "I see. You mean, multicloud will take care of handling designate requests to correct cloud? Where I can see this federation happening?\nIn my case using \"pod25\" is not working The keystone of pod25 is using SSL, will that be a problem. In SSL case do we need any changes while registering the cloud",
+      "parentUuid": "5a93c517_931e7062",
+      "range": {
+        "startLine": 349,
+        "startChar": 4,
+        "endLine": 349,
+        "endChar": 32
+      },
+      "revId": "763d9d3af92f5f31ea1b34974a46c12391d05513",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_b3192c7b",
         "filename": "boot/dcae2_vm_init.sh",
         "patchSetId": 1
