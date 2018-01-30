@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_931e7062",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2018-01-30T01:01:45Z",
+      "side": 1,
+      "message": "DCAEgen2 is not supposed to talk to the proxied openstack while MultiCloud federates 2 OpenStack instance into single one. This design is to make the federation invisible to DCAEgen2. (The only trick thing is that DCAEgen2 has to input the parameters and registration 2 openstack instance to make the federation happen, but that should be the only place that DCAEgen2 knows something about the proxied openstack, and that part might be encapsulated/moved to other place in future",
+      "range": {
+        "startLine": 349,
+        "startChar": 4,
+        "endLine": 349,
+        "endChar": 32
+      },
+      "revId": "763d9d3af92f5f31ea1b34974a46c12391d05513",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_b3192c7b",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2018-01-30T01:01:45Z",
+      "side": 1,
+      "message": "The same comment as above",
+      "range": {
+        "startLine": 365,
+        "startChar": 4,
+        "endLine": 365,
+        "endChar": 54
+      },
+      "revId": "763d9d3af92f5f31ea1b34974a46c12391d05513",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
