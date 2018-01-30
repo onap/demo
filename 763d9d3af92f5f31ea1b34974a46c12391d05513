@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_0e6f93fe",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 747
+      },
+      "writtenOn": "2018-01-30T14:06:30Z",
+      "side": 1,
+      "message": "Hi Bin, I understood this concept of proxy openstack. So I already created small openstack with designate installed. So that\u0027s why I changed \u0027pod25\u0027 to \u0027pod25dns\u0027. But as you said, I saw the cloud_extra_info, and now I understood why we used \u0027pod25\u0027 here. Thanks for the clarification.\n\nComing to SSl, yes pod25 openstack is using SSL. But in this case I can\u0027t use the actual keystone_url, becuase we don\u0027t have support for keystone/v3 in cloudify. So I want to take multicloud approach. \n\nYeah it would be great if you can share that \"tricky\" approach that would be great. I will also add the JIRA issue today",
+      "parentUuid": "5a93c517_6ec177e3",
+      "range": {
+        "startLine": 349,
+        "startChar": 4,
+        "endLine": 349,
+        "endChar": 32
+      },
+      "revId": "763d9d3af92f5f31ea1b34974a46c12391d05513",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_b3192c7b",
         "filename": "boot/dcae2_vm_init.sh",
         "patchSetId": 1
