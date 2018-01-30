@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "5a93c517_6ec177e3",
+        "filename": "boot/dcae2_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1889
+      },
+      "writtenOn": "2018-01-30T13:53:36Z",
+      "side": 1,
+      "message": "First of all, make sure you understand this proxy designate feature is for those OpenStack without integrated designate service deployed by default and don\u0027t want to do so. So you will have to deploy one more small openstack to run designate service.\nthis VM init scripts registered 2 cloud regions,the first one is pod25dns which is the small openstack, the second one is pod25 which is the bigger one. The cloud owner and cloud region id of pod25dns has been put into the \"cloud-extra-info\" property of request to register pod25. please search this property name and find it out.\nyou mentioned pod25 is using ssl? how about pod25dns which is the one running Designate service? If only pod25 is using ssl, you just replace the \"keystone_url\" the ONAP heat env file with your secured keystone url . If your pod25dns is using ssl, please replace the \"dnsaas_keystone_url\" with corresponding keystone url.\nBut I have to clarify that: multicloud in R1 propably is not supporting keystone with SSL. If you have to use this proxy designate feature, I can support you to do some tricky work to get this done. Please also file a jira to multicloud as well.",
+      "parentUuid": "5a93c517_f3e33403",
+      "range": {
+        "startLine": 349,
+        "startChar": 4,
+        "endLine": 349,
+        "endChar": 32
+      },
+      "revId": "763d9d3af92f5f31ea1b34974a46c12391d05513",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a93c517_b3192c7b",
         "filename": "boot/dcae2_vm_init.sh",
         "patchSetId": 1
