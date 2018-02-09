@@ -1,7 +1,7 @@
 ##########################################################################
 #
 #==================LICENSE_START==========================================
-# 
+#
 #
 # Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
 #
@@ -39,7 +39,7 @@ parameters:
   # Parameters used across all ONAP components #
   #                                            #
   ##############################################
-  
+
   public_net_id:
     type: string
     description: The ID of the Public network for floating IP address allocation
@@ -118,7 +118,7 @@ parameters:
 
   openstack_tenant_name:
     type: string
-    description: OpenStack tenant name (matching with the openstack_tenant_id) 
+    description: OpenStack tenant name (matching with the openstack_tenant_id)
 
   openstack_username:
     type: string
@@ -435,7 +435,7 @@ resources:
           port_range_min: 1
           port_range_max: 65535
 
- 
+
 
   # ONAP management private network
   oam_onap:
@@ -478,6 +478,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: dns_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   dns_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -563,6 +565,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: aai1_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   aai1_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -580,7 +584,7 @@ resources:
         str_replace:
           template: base-aai-inst1
           params:
-            base: { get_param: vm_base_name }      
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: aai1_private_port }
@@ -633,6 +637,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: aai2_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   aai2_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -649,7 +655,7 @@ resources:
         str_replace:
           template: base-aai-inst2
           params:
-            base: { get_param: vm_base_name }      
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: aai2_private_port }
@@ -701,6 +707,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: so_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   so_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -717,7 +725,7 @@ resources:
         str_replace:
           template: base-so
           params:
-            base: { get_param: vm_base_name }      
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: so_private_port }
@@ -780,6 +788,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: mr_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   mrouter_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -793,7 +803,7 @@ resources:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_large }
       name:
-        str_replace: 
+        str_replace:
           template: base-message-router
           params:
             base: { get_param: vm_base_name }
@@ -843,20 +853,22 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: robot_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   robot_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network_id: { get_param: public_net_id }
       port_id: { get_resource: robot_private_port }
- 
+
   robot_vm:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_medium }
       name:
-        str_replace: 
+        str_replace:
           template: base-robot
           params:
             base: { get_param: vm_base_name }
@@ -954,6 +966,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: vid_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   vid_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -967,7 +981,7 @@ resources:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_medium }
       name:
-        str_replace: 
+        str_replace:
           template: base-vid
           params:
             base: { get_param: vm_base_name }
@@ -1012,13 +1026,15 @@ resources:
             chmod +x vid_install.sh
             ./vid_install.sh
 
- 
+
   # SDN-C instantiation
   sdnc_private_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: sdnc_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   sdnc_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1032,7 +1048,7 @@ resources:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_large }
       name:
-        str_replace: 
+        str_replace:
           template: base-sdnc
           params:
             base: { get_param: vm_base_name }
@@ -1086,6 +1102,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: sdc_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   sdc_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1105,7 +1123,7 @@ resources:
       image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_xlarge }
       name:
-        str_replace: 
+        str_replace:
           template: base-sdc
           params:
             base: { get_param: vm_base_name }
@@ -1166,6 +1184,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: portal_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   portal_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1179,7 +1199,7 @@ resources:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_large }
       name:
-        str_replace: 
+        str_replace:
           template: base-portal
           params:
             base: { get_param: vm_base_name }
@@ -1235,6 +1255,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: policy_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   policy_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1248,7 +1270,7 @@ resources:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_xlarge }
       name:
-        str_replace: 
+        str_replace:
           template: base-policy
           params:
             base: { get_param: vm_base_name }
@@ -1302,6 +1324,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: appc_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   appc_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1315,7 +1339,7 @@ resources:
       image: { get_param: ubuntu_1404_image }
       flavor: { get_param: flavor_large }
       name:
-        str_replace: 
+        str_replace:
           template: base-appc
           params:
             base: { get_param: vm_base_name }
@@ -1371,6 +1395,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: clamp_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   clamp_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1387,7 +1413,7 @@ resources:
         str_replace:
           template: base-clamp
           params:
-            base: { get_param: vm_base_name }      
+            base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: clamp_private_port }
@@ -1448,6 +1474,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: openo_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   openo_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1582,6 +1610,8 @@ resources:
     properties:
       network: { get_resource: oam_onap }
       fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: dcae_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
 
   dcae_c_floating_ip:
     type: OS::Neutron::FloatingIP
@@ -1632,10 +1662,10 @@ resources:
             __dcaeos_region__: { get_param: openstack_region }
             __dcaeos_tenant_id__: { get_param: openstack_tenant_id }
             __dcaeos_tenant_name__: { get_param: openstack_tenant_name }
-            __dcaeos_security_group__: 
-              str_replace: 
+            __dcaeos_security_group__:
+              str_replace:
                 template: 'onap_sg_rand'
-                params: 
+                params:
                   rand: { get_resource: random-str }
             #__dcaeos_security_group__: { get_attr: [onap_sg, name] }
             __dcaeos_username__: { get_param: openstack_username }
@@ -1693,7 +1723,7 @@ resources:
             echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt  
+            echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
             echo "__dcae_domain__" > /opt/config/dcae_domain.txt
             # conf for the OpenStack env where DCAE is deployed
             echo "__openstack_keystone_url__" > /opt/config/openstack_keystone_url.txt
