@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>io.fd.honeycomb.common</groupId>
+    <artifactId>minimal-distribution-parent</artifactId>
+    <version>1.17.07</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.onap.vnf.vlb</groupId>
+  <artifactId>vlb-vnf-onap-distribution</artifactId>
+  <version>1.2.0-SNAPSHOT</version>
+
+  <properties>
+    <exec.parameters>-Xms128m -Xmx128m</exec.parameters>
+    <main.class>io.fd.honeycomb.infra.distro.Main</main.class>
+    <interfaces.mapping.version>1.17.07</interfaces.mapping.version>
+    <honeycomb.min.distro.version>1.17.07</honeycomb.min.distro.version>
+    <!--
+       Defines list of specific modules provided by the distribution
+       (adds them to base modules like NetconfModule and RestconfModule).
+
+       Module configuration is placed in 'modules' subdir of the target distro folder.
+       Modules can be disabled by commenting them out in the pom.xml
+       or modules configuration file.
+     -->
+    <distribution.modules>
+      org.onap.vnf.vlb.Module
+    </distribution.modules>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>none</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+    <!-- Dependency on sample plugin -->
+    <dependency>
+      <groupId>org.onap.vnf.vlb</groupId>
+      <artifactId>vlb-business-vnf-onap-plugin-impl</artifactId>
+      <version>${interfaces.mapping.version}</version>
+    </dependency>
+    <!-- Dependency on distribution base -->
+    <dependency>
+      <groupId>io.fd.honeycomb</groupId>
+      <artifactId>minimal-distribution</artifactId>
+      <version>${honeycomb.min.distro.version}</version>
+    </dependency>
+
+  </dependencies>
+</project>

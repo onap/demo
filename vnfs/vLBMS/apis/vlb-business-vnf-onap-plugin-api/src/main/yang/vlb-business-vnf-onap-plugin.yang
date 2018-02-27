@@ -1,0 +1,66 @@
+module vlb-business-vnf-onap-plugin {
+
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:vlb-business-vnf-onap-plugin";
+    prefix "vlb-business-vnf-onap-plugin";
+
+    description
+        "This YANG module defines the generic configuration and
+        operational data for vlb-business-vnf-onap-plugin in VPP";
+
+    revision "2016-09-18" {
+        description "Initial revision of vlb-business-vnf-onap-plugin model";
+    }
+
+    container vlb-business-vnf-onap-plugin {
+        uses vlb-business-vnf-onap-plugin-params;
+        description "Configuration data of vlb-business-vnf-onap-plugin in Honeycomb";
+
+        // READ
+        // curl -u admin:admin http://localhost:8181/restconf/config/vlb-business-vnf-onap-plugin:vlb-business-vnf-onap-plugin
+
+        // WRITE
+        // curl http://localhost:8181/restconf/operational/vlb-business-vnf-onap-plugin:vlb-business-vnf-onap-plugin
+
+    }
+
+    container vlb-business-vnf-onap-plugin-state {
+        config false;
+        uses vlb-business-vnf-onap-plugin-params;
+        description "Operational data of vlb-business-vnf-onap-plugin persisted in VPP";
+
+        // READ
+        // curl -u admin:admin  http://localhost:8181/restconf/operational/vlb-business-vnf-onap-plugin:vlb-business-vnf-onap-plugin-state
+    }
+
+//    grouping vlb-business-vnf-onap-plugin-params {
+//        list element {
+//
+//            key id;
+//            leaf id {
+//                type uint32;
+//            }
+//
+//            leaf description {
+//                type string;
+//            }
+//        }
+//    }
+
+
+    grouping vlb-business-vnf-onap-plugin-params {
+        container vdns-instances {
+            list vdns-instance {
+
+                key ip-addr;
+                leaf ip-addr {
+                    type string;
+                }
+
+                leaf is-enabled {
+                    type boolean;
+                }
+            }
+        }
+    }
+}
