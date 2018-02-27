@@ -17,14 +17,13 @@
   <parent>
     <groupId>io.fd.honeycomb.common</groupId>
     <artifactId>api-parent</artifactId>
-    <version>1.17.07.1-SNAPSHOT</version>
+    <version>1.17.07</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.onap.vnf.vlb</groupId>
   <artifactId>vlb-business-vnf-onap-plugin-api</artifactId>
   <name>vlb-business-vnf-onap-plugin-api</name>
-  <version>1.2.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <dependencies>

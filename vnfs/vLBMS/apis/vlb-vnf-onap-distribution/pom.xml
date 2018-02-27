@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.fd.honeycomb.common</groupId>
     <artifactId>minimal-distribution-parent</artifactId>
-    <version>1.17.07.1-SNAPSHOT</version>
+    <version>1.17.07</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -15,8 +15,8 @@
   <properties>
     <exec.parameters>-Xms128m -Xmx128m</exec.parameters>
     <main.class>io.fd.honeycomb.infra.distro.Main</main.class>
-    <interfaces.mapping.version>1.17.07.1-SNAPSHOT</interfaces.mapping.version>
-    <honeycomb.min.distro.version>1.17.07.1-SNAPSHOT</honeycomb.min.distro.version>
+    <interfaces.mapping.version>1.17.07</interfaces.mapping.version>
+    <honeycomb.min.distro.version>1.17.07</honeycomb.min.distro.version>
     <!--
        Defines list of specific modules provided by the distribution
        (adds them to base modules like NetconfModule and RestconfModule).

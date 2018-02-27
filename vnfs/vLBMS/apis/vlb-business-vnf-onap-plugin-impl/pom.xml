@@ -16,7 +16,7 @@
     <parent>
         <groupId>io.fd.honeycomb.common</groupId>
         <artifactId>impl-parent</artifactId>
-        <version>1.17.07.1-SNAPSHOT</version>
+        <version>1.17.07</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -26,14 +26,14 @@
     <packaging>bundle</packaging>
 
     <properties>
-        <honeycomb.infra.version>1.17.07.1-SNAPSHOT</honeycomb.infra.version>
+        <honeycomb.infra.version>1.17.07</honeycomb.infra.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>vlb-business-vnf-onap-plugin-api</artifactId>
-            <version>${honeycomb.infra.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- Honeycomb infrastructure-->
