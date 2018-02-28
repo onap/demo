@@ -8,7 +8,7 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.onap.vnf.vlb</groupId>
+  <groupId>org.onap.demo.vnf.vlb</groupId>
   <artifactId>vlb-vnf-onap-distribution</artifactId>
   <version>1.2.0-SNAPSHOT</version>
 
@@ -26,7 +26,7 @@
        or modules configuration file.
      -->
     <distribution.modules>
-      org.onap.vnf.vlb.Module
+      org.onap.demo.vnf.vlb.Module
     </distribution.modules>
   </properties>
 
@@ -112,7 +112,7 @@
   <dependencies>
     <!-- Dependency on sample plugin -->
     <dependency>
-      <groupId>org.onap.vnf.vlb</groupId>
+      <groupId>org.onap.demo.vnf.vlb</groupId>
       <artifactId>vlb-business-vnf-onap-plugin-impl</artifactId>
       <version>${interfaces.mapping.version}</version>
     </dependency>

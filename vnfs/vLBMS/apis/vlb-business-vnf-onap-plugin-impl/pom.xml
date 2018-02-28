@@ -20,7 +20,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.onap.vnf.vlb</groupId>
+    <groupId>org.onap.demo.vnf.vlb</groupId>
     <artifactId>vlb-business-vnf-onap-plugin-impl</artifactId>
     <name>vlb-business-vnf-onap-plugin-impl</name>
     <packaging>bundle</packaging>
