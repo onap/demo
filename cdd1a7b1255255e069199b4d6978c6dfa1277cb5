@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_a76bc1b5",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 343
+      },
+      "writtenOn": "2018-03-06T00:24:26Z",
+      "side": 1,
+      "message": "Please remove this one.",
+      "range": {
+        "startLine": 26,
+        "startChar": 3,
+        "endLine": 30,
+        "endChar": 33
+      },
+      "revId": "cdd1a7b1255255e069199b4d6978c6dfa1277cb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_872ec58a",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 343
+      },
+      "writtenOn": "2018-03-06T00:24:26Z",
+      "side": 1,
+      "message": "Please remove Xiaolong Kong. There\u0027re another two committers from Orange will be added later once we finish the promotion process.",
+      "range": {
+        "startLine": 51,
+        "startChar": 3,
+        "endLine": 55,
+        "endChar": 41
+      },
+      "revId": "cdd1a7b1255255e069199b4d6978c6dfa1277cb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2751f10e",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 343
+      },
+      "writtenOn": "2018-03-06T00:24:26Z",
+      "side": 1,
+      "message": "Please remove this one as well.",
+      "range": {
+        "startLine": 56,
+        "startChar": 3,
+        "endLine": 60,
+        "endChar": 30
+      },
+      "revId": "cdd1a7b1255255e069199b4d6978c6dfa1277cb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2778118f",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 343
+      },
+      "writtenOn": "2018-03-06T00:24:26Z",
+      "side": 1,
+      "message": "Pls remove this one as well",
+      "range": {
+        "startLine": 71,
+        "startChar": 3,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "cdd1a7b1255255e069199b4d6978c6dfa1277cb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_477bdd8b",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 343
+      },
+      "writtenOn": "2018-03-06T00:24:26Z",
+      "side": 1,
+      "message": "Please remove this one.",
+      "range": {
+        "startLine": 81,
+        "startChar": 3,
+        "endLine": 85,
+        "endChar": 30
+      },
+      "revId": "cdd1a7b1255255e069199b4d6978c6dfa1277cb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
