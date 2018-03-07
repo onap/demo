@@ -487,7 +487,7 @@ register_dns_zone_designate()
     API_ENDPOINT="${DESIGNATE_URL}/v2/zones"
     echo "===> Register DNS zone $ZONE_NAME at Designate API endpoint ${API_ENDPOINT}"
    
-    RESP=$(curl -v -s -H $HEADER_TOKEN $API_ENDPOINT)
+    RESP=$(curl -v -s -H "$HEADER_TOKEN" "$API_ENDPOINT")
     ZONE_ID=$(echo $RESP |jq -r --arg ZONE_NAME "$ZONE_NAME" '.zones[] |select(.name==$ZONE_NAME) |.id')
     if [ -z "$ZONE_ID" ]; then
         echo "======> Zone ${ZONE_NAME} does not exist.  Create"
