@@ -57,7 +57,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-extern
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-externalSystem-deprecated", "version": "v11", "url": "/aai/v11/external-system","path": "/aai/v11/external-system","protocol": "REST",  "enable_ssl":"true", "nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
-curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-esr-server", "version": "v1", "url": "/api/aai-esr-server/v1","protocol": "REST", "visualRange":"1", "nodes": [ {"ip": "'$OPENO_IP'","port": "9518"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-esr-server", "version": "v1", "url": "/api/aai-esr-server/v1","protocol": "REST", "enable_ssl":"true",  "visualRange":"1", "nodes": [ {"ip": "'$OPENO_IP'","port": "9518"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-esr-gui", "version": "v1", "url": "/esr-gui","path": "/iui/aai-esr-gui","protocol": "UI",  "nodes": [ {"ip": "'$OPENO_IP'","port": "9519"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
