@@ -132,3 +132,5 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "usecaseui-
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "usecaseui-ui", "version": "v1", "url": "/usecase-ui","path": "/iui/usecaseui","protocol": "UI",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8080"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
+# CLAMP
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "clamp", "version": "v1", "url": "/restservices/clds/v1","protocol": "REST", "visualRange":"1", "nodes": [ {"ip": "'$CLAMP_IP'","port": "8080"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
