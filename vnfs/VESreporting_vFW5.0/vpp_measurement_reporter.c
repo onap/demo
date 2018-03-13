@@ -191,6 +191,7 @@ int main(int argc, char** argv)
                      port, 	                   /* Port                  */
                      NULL,                         /* optional path         */
                      NULL,                         /* optional topic        */
+                     100,                          /* Ring Buffer size      */
                      0,                            /* HTTPS?                */
                      NULL,                         /* cert file             */
                      NULL,                         /* key  file             */
