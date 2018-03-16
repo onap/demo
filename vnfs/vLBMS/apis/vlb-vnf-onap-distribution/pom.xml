@@ -26,7 +26,8 @@
        or modules configuration file.
      -->
     <distribution.modules>
-      org.onap.demo.vnf.vlb.Module
+      org.onap.vnf.vlb.Module
+      org.onap.vnf.health.Module
     </distribution.modules>
   </properties>
 
@@ -114,6 +115,11 @@
     <dependency>
       <groupId>org.onap.demo.vnf.vlb</groupId>
       <artifactId>vlb-business-vnf-onap-plugin-impl</artifactId>
+      <version>${interfaces.mapping.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.onap.demo.vnf.health</groupId>
+      <artifactId>health-vnf-onap-plugin-impl</artifactId>
       <version>${interfaces.mapping.version}</version>
     </dependency>
     <!-- Dependency on distribution base -->

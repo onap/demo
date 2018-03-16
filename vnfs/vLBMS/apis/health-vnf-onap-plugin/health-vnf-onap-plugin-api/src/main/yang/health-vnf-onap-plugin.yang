@@ -1,0 +1,64 @@
+module health-vnf-onap-plugin {
+
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:health-vnf-onap-plugin";
+    prefix "health-vnf-onap-plugin";
+
+    description
+        "This YANG module defines the generic configuration and
+        operational data for health-vnf-onap-plugin in Honeycomb";
+
+    revision "2016-09-18" {
+        description "Initial revision of health-vnf-onap-plugin model";
+    }
+
+    container health-vnf-onap-plugin {
+        uses health-vnf-onap-plugin-params;
+        description "Configuration data of health-vnf-onap-plugin in Honeycomb";
+    }
+
+    container health-vnf-onap-plugin-state {
+        config false;
+        uses health-vnf-onap-plugin-params;
+        description "Operational data of health-vnf-onap-plugin persisted in Honeycomb";
+    }
+
+    grouping health-vnf-onap-plugin-params {
+        container health-check {
+          	leaf vnf-name {
+           		type string;
+           	}
+
+           	leaf state {
+           		type string;
+           	}
+
+            leaf time {
+           		type string;
+           	}
+
+           	container faults {
+           		leaf info {
+          			type string;
+           		}
+
+           		list fault {
+           			key vnf-component;
+           			leaf vnf-component {
+           				type string;
+           			}
+
+       			    leaf message {
+           			    type string;
+           		    }
+            	}
+            }
+        }
+    }
+
+    // READ
+    // curl -u admin:admin http://localhost:8181/restconf/config/health-vnf-onap-plugin:health-vnf-onap-plugin
+
+    // WRITE
+    // curl http://localhost:8181/restconf/operational/health-vnf-onap-plugin:health-vnf-onap-plugin
+}

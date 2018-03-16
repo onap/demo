@@ -1,3 +1,0 @@
-= vlb-vnf-onap-distribution
-
-Overview of vlb-vnf-onap-distribution
