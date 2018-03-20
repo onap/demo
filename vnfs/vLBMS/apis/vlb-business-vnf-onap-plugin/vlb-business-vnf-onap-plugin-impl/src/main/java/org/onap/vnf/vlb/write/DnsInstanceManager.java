@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vlb.business.vnf.onap.plugin.rev160918.vlb.business.vnf.onap.plugin.params.vdns.instances.VdnsInstance;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,26 +49,40 @@ import org.slf4j.LoggerFactory;
 
 public class DnsInstanceManager {
 
+	private static DnsInstanceManager thisInstance = null;
 	private static final Logger LOG = LoggerFactory.getLogger(DnsInstanceManager.class);
-	private Map<String, Boolean> dnsInstances = new HashMap<String, Boolean>();
+	private Map<String, VdnsInstance> dnsInstances = new HashMap<String, VdnsInstance>();
 
 	/*
 	 * Add a new DNS instance to the map and create a GRE tunnel 
 	 * towards that instance if isEnabled is set to true.
 	 */
-	void addDnsInstance(String ipAddr, Boolean isEnabled) {
+
+	public static DnsInstanceManager getInstance() {
+		if(thisInstance == null) {
+			thisInstance = new DnsInstanceManager();
+		}
+
+		return thisInstance;
+	}
+
+	private DnsInstanceManager() {
+
+	}
+
+	void addDnsInstance(String ipAddr, VdnsInstance data) {
 		// Call updateDnsInstance in case the DNS instance already exists.
 		// This is somewhat redundant because Honeycomb already runs this check.
 		if(dnsInstances.containsKey(ipAddr)) {
-			updateDnsInstance(ipAddr, isEnabled);
+			updateDnsInstance(ipAddr, data);
 			return;
 		}
 
-		dnsInstances.put(ipAddr, isEnabled);
-		LOG.debug("DNS instance " + ipAddr + " with status isEnabled=" + isEnabled + " has been added.");
+		dnsInstances.put(ipAddr, data);
+		LOG.debug("DNS instance " + ipAddr + " with status isEnabled=" + data.isEnabled() + " has been added.");
 
 		// Create a GRE tunnel towards the new DNS instance if isEnabled is true.
-		if(isEnabled) {
+		if(data.isEnabled()) {
 			addGreTunnel(ipAddr);
 		}
 	}
@@ -75,14 +91,15 @@ public class DnsInstanceManager {
 	 * Update an existing DNS instance and create or remove a GRE
 	 * tunnel based on the current value of the isEnabled flag.
 	 */
-	void updateDnsInstance(String ipAddr, Boolean isEnabled) {
+	void updateDnsInstance(String ipAddr, VdnsInstance data) {
 		// This is somewhat redundant because Honeycomb already runs this check.
-		if(dnsInstances.get(ipAddr) == isEnabled) {
+		boolean isEnabled = data.isEnabled();
+		if(dnsInstances.get(ipAddr).isEnabled() == isEnabled) {
 			LOG.debug("DNS instance " + ipAddr + " with status isEnabled=" + isEnabled + " already exists. No update is necessary.");
 			return;
 		}
 
-		dnsInstances.put(ipAddr, isEnabled);
+		dnsInstances.put(ipAddr, data);
 		LOG.debug("DNS instance " + ipAddr + " has been updated with status isEnabled=" + isEnabled + ".");
 
 		if(isEnabled) {
@@ -105,7 +122,7 @@ public class DnsInstanceManager {
 		}
 
 		// Remove a GRE tunnel towards this DNS instance if it exists.
-		if(dnsInstances.get(ipAddr)) {
+		if(dnsInstances.get(ipAddr).isEnabled()) {
 			deleteGreTunnel(ipAddr);
 		}
 
@@ -138,5 +155,12 @@ public class DnsInstanceManager {
 			LOG.error("remove_dns.sh returned an error.");
 			e.printStackTrace();
 		}
+	}
+
+	/*
+	 * Auxiliary function that returns vDNS instances as map.
+	 */
+	public Map<String, VdnsInstance> getDnsInstancesAsMap() {
+		return dnsInstances;
 	}
 }

@@ -23,6 +23,9 @@ package org.onap.vnf.health.read;
 import org.onap.vnf.health.CrudService;
 import org.onap.vnf.health.RESTManager;
 import org.onap.vnf.health.RESTManager.Pair;
+import org.onap.vnf.vlb.write.DnsInstanceManager;
+
+import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vlb.business.vnf.onap.plugin.rev160918.vlb.business.vnf.onap.plugin.params.vdns.instances.VdnsInstance;
 
 import io.fd.honeycomb.translate.read.ReadContext;
 import io.fd.honeycomb.translate.read.ReadFailedException;
@@ -38,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -66,15 +70,18 @@ import org.slf4j.LoggerFactory;
 public final class ElementStateCustomizer implements InitializingReaderCustomizer<HealthCheck, HealthCheckBuilder> {
 
     private final CrudService<HealthCheck> crudService;
+    private DnsInstanceManager dnsInstanceManager;
     private static final Logger LOG = LoggerFactory.getLogger(ElementStateCustomizer.class);
     private final String SCRIPT;
     private final String OUTPUT;
     private final String VNFC;
     private final Boolean PRIMARY;
     private static SimpleDateFormat SDF;
+    private String vPktGenIp;
 
     public ElementStateCustomizer(final CrudService<HealthCheck> crudService) throws IOException {
         this.crudService = crudService;
+        dnsInstanceManager = DnsInstanceManager.getInstance();
 
         // initialize data format
         SDF = new SimpleDateFormat("MM-dd-yyyy:HH.mm.ss");
@@ -89,6 +96,10 @@ public final class ElementStateCustomizer implements InitializingReaderCustomize
 	   	VNFC = prop.getProperty("vnfc");
 	   	PRIMARY = Boolean.parseBoolean(prop.getProperty("primary"));
     	prop_file.close();
+
+    	if(PRIMARY) {
+    		vPktGenIp = readFromFile("/opt/config/oam_vpktgen_ip.txt");
+    	}
     }
     
     @Override
@@ -109,18 +120,6 @@ public final class ElementStateCustomizer implements InitializingReaderCustomize
     public void readCurrentAttributes(@Nonnull final InstanceIdentifier<HealthCheck> id,
                                       @Nonnull final HealthCheckBuilder builder,
                                       @Nonnull final ReadContext ctx) throws ReadFailedException {
-
-    	List<String> ipAddr = new ArrayList<String>();
-    	if(PRIMARY) {
-    		String ret = readFromFile("/opt/config/oam_vpktgen_ip.txt");
-    		if(ret != null) {
-    			ipAddr.add(ret);
-    		}
-    		ret = readFromFile("/opt/config/oam_vdns_ip.txt");
-    		if(ret != null) {
-    			ipAddr.add(ret);
-    		}
-    	}
 
     	// assess the health status of the local service (try at most three times, otherwise return an error).
     	String healthStatus;
@@ -157,13 +156,20 @@ public final class ElementStateCustomizer implements InitializingReaderCustomize
     		LOG.info("Failed to assess the health status of the local component. Return status = \"unhealthy\"");
     	}
 
-        // perform read of details of data specified by key of Element in id
-        // final HealthCheck data = crudService.readSpecific(id);
-
     	// check the status of other VNF components, if any
     	if(PRIMARY) {
-    		for(int i = 0; i < ipAddr.size(); i++) {
-    			if(!getRemoteVnfcHealthStatus(ipAddr.get(i))) {
+    		// check the vPacketGenerator first
+    		if(vPktGenIp != null) {
+    			if(!getRemoteVnfcHealthStatus(vPktGenIp)) {
+    				healthStatus = "unhealthy";
+    			}
+    		}
+
+    		// check all the vDNS instances
+    		Map<String, VdnsInstance> activeVdnsInstances = dnsInstanceManager.getDnsInstancesAsMap();
+    		Iterator<String> iter = activeVdnsInstances.keySet().iterator();
+    		while(iter.hasNext()){
+    			if(!getRemoteVnfcHealthStatus(activeVdnsInstances.get(iter.next()).getOamIpAddr())) {
     				healthStatus = "unhealthy";
     			}
     		}

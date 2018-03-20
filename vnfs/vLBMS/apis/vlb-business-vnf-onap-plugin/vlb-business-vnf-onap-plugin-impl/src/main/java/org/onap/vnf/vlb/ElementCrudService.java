@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+ /*
+ * Modifications copyright (c) 2018 AT&T Intellectual Property
+ */
+
 package org.onap.vnf.vlb;
 
 import io.fd.honeycomb.translate.read.ReadFailedException;
@@ -101,7 +105,8 @@ final class ElementCrudService implements CrudService<VdnsInstance> {
         return new VdnsInstanceBuilder()
                 .setIpAddr(key.getIpAddr())
                 .setKey(key)
-                .setIsEnabled(true)
+                .setOamIpAddr("10.0.80.0")
+                .setEnabled(true)
                 .build();
     }
 
