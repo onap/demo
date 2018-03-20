@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_5f45a615",
+        "filename": "boot/portal_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 681
+      },
+      "writtenOn": "2018-03-20T13:40:12Z",
+      "side": 1,
+      "message": "Gerrit shows a change on every line - please check if you introduced Windows CR/LF line endings inadvertently.",
+      "revId": "e106e5a4a03e584e70266d05f87744dd5bfe27cd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
