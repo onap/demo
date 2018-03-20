@@ -33,21 +33,6 @@ module vlb-business-vnf-onap-plugin {
         // curl -u admin:admin  http://localhost:8181/restconf/operational/vlb-business-vnf-onap-plugin:vlb-business-vnf-onap-plugin-state
     }
 
-//    grouping vlb-business-vnf-onap-plugin-params {
-//        list element {
-//
-//            key id;
-//            leaf id {
-//                type uint32;
-//            }
-//
-//            leaf description {
-//                type string;
-//            }
-//        }
-//    }
-
-
     grouping vlb-business-vnf-onap-plugin-params {
         container vdns-instances {
             list vdns-instance {
@@ -57,7 +42,11 @@ module vlb-business-vnf-onap-plugin {
                     type string;
                 }
 
-                leaf is-enabled {
+                leaf oam-ip-addr {
+                	type string;
+                }
+
+                leaf enabled {
                     type boolean;
                 }
             }

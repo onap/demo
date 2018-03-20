@@ -40,6 +40,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.onap.demo.vnf.vlb</groupId>
+            <artifactId>vlb-business-vnf-onap-plugin-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Honeycomb infrastructure-->
         <dependency>
             <groupId>io.fd.honeycomb</groupId>

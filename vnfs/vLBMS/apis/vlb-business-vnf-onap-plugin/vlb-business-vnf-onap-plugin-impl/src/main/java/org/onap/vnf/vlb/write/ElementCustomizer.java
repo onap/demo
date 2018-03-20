@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+ /*
+ * Modifications copyright (c) 2018 AT&T Intellectual Property
+ */
+
 package org.onap.vnf.vlb.write;
 
 import org.onap.vnf.vlb.CrudService;
@@ -24,8 +28,6 @@ import javax.annotation.Nonnull;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vlb.business.vnf.onap.plugin.rev160918.vlb.business.vnf.onap.plugin.params.vdns.instances.VdnsInstance;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.vlb.business.vnf.onap.plugin.rev160918.vlb.business.vnf.onap.plugin.params.vdns.instances.VdnsInstanceKey;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Writer for {@link Element} list node from our YANG model.
@@ -34,11 +36,10 @@ public final class ElementCustomizer implements ListWriterCustomizer<VdnsInstanc
 
     private final CrudService<VdnsInstance> crudService;
     private DnsInstanceManager dnsInstanceManager;
-    private static final Logger LOG = LoggerFactory.getLogger(ElementCustomizer.class);
 
     public ElementCustomizer(@Nonnull final CrudService<VdnsInstance> crudService) {
         this.crudService = crudService;
-        dnsInstanceManager = new DnsInstanceManager();
+        dnsInstanceManager = DnsInstanceManager.getInstance();
     }
 
     @Override
@@ -47,7 +48,7 @@ public final class ElementCustomizer implements ListWriterCustomizer<VdnsInstanc
         //perform write of data,or throw exception
         //invoked by PUT operation,if provided data doesn't exist in Config data
         crudService.writeData(id, dataAfter);
-        dnsInstanceManager.addDnsInstance(dataAfter.getIpAddr(), dataAfter.isIsEnabled());
+        dnsInstanceManager.addDnsInstance(dataAfter.getIpAddr(), dataAfter);
     }
 
     @Override
@@ -58,7 +59,7 @@ public final class ElementCustomizer implements ListWriterCustomizer<VdnsInstanc
         //perform update of data,or throw exception
         //invoked by PUT operation,if provided data does exist in Config data
         crudService.updateData(id, dataBefore, dataAfter);
-        dnsInstanceManager.updateDnsInstance(dataAfter.getIpAddr(), dataAfter.isIsEnabled());
+        dnsInstanceManager.updateDnsInstance(dataAfter.getIpAddr(), dataAfter);
     }
 
     @Override
