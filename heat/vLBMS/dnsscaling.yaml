@@ -65,10 +65,6 @@ parameters:
     type: string
     label: ONAP private network CIDR
     description: The CIDR of the protected private network
-  vlb_public_ip:
-    type: string
-    label: vLoadBalancer public IP address
-    description: Public IP address of the vLoadBalancer
   vlb_private_ip_0:
     type: string
     label: vLoadBalancer private IP address towards the private network
@@ -77,6 +73,10 @@ parameters:
     type: string
     label: vLoadBalancer private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vLoadBalancer to communicate with ONAP components
+  vlb_private_ip_2:
+    type: string
+    label: vLoadBalancer private IP address towards the vPacketGen network
+    description: Private IP address that is assigned to the vLoadBalancer to communicate with vPacketGen
   vdns_private_ip_0:
     type: string
     label: vDNS private IP address towards the private network
@@ -181,7 +181,7 @@ resources:
           params:
             __lb_oam_int__: { get_param: vlb_private_ip_1 }
             __lb_private_ipaddr__: { get_param: vlb_private_ip_0 }
-            __lb_public_ipaddr__: { get_param: vlb_public_ip }
+            __lb_to_pktgen_if__: { get_param: vlb_private_ip_2}
             __local_private_ipaddr__: { get_param: vdns_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vdns_private_ip_1 }
             __repo_url_blob__: { get_param: repo_url_blob }
@@ -198,7 +198,7 @@ resources:
             mkdir /opt/config
             echo "__lb_oam_int__" > /opt/config/lb_oam_int.txt
             echo "__lb_private_ipaddr__" > /opt/config/lb_private_ipaddr.txt
-            echo "__lb_public_ipaddr__" > /opt/config/lb_public_ipaddr.txt
+            echo "__lb_to_pktgen_if__" > /opt/config/lb_to_pktgen_if.txt
             echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt

@@ -333,7 +333,7 @@ resources:
           params:
             __lb_oam_int__: { get_param: vlb_private_ip_1 }
             __lb_private_ipaddr__: { get_param: vlb_private_ip_0 }
-            __lb_public_ipaddr__: { get_attr: [vlb_0, networks, { get_param: public_net_id }, 0]}
+            __lb_to_pktgen_if__: { get_param: vlb_private_ip_2}
             __local_private_ipaddr__: { get_param: vdns_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vdns_private_ip_1 }
             __repo_url_blob__: { get_param: repo_url_blob }
@@ -350,7 +350,7 @@ resources:
             mkdir /opt/config
             echo "__lb_oam_int__" > /opt/config/lb_oam_int.txt
             echo "__lb_private_ipaddr__" > /opt/config/lb_private_ipaddr.txt
-            echo "__lb_public_ipaddr__" > /opt/config/lb_public_ipaddr.txt
+            echo "__lb_to_pktgen_if__" > /opt/config/lb_to_pktgen_if.txt
             echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
