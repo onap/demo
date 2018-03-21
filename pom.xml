@@ -54,6 +54,7 @@
     <module>vnfs/vCPE/kea-sdnc-notify-mod</module>
     <module>vnfs/vLBMS/apis/vlb-business-vnf-onap-plugin</module>
     <module>vnfs/vLBMS/apis/health-vnf-onap-plugin</module>
+    <module>vnfs/vLBMS/apis/vlb-vnf-onap-distribution</module>
   </modules>
 
   <properties>

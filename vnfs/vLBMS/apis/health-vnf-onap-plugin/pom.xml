@@ -31,7 +31,6 @@
   <modules>
     <module>health-vnf-onap-plugin-api</module>
     <module>health-vnf-onap-plugin-impl</module>
-    <module>../vlb-vnf-onap-distribution</module>
   </modules>
 
   <!-- DO NOT install or deploy the repo root pom as it's only needed to initiate a build -->
