@@ -64,13 +64,14 @@ sed -i 's/vnfc=.*/vnfc=vDNS/g' /opt/config/properties.conf
 
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -DremoteRepositories=https://nexus.onap.org/content/repositories/snapshots -Dartifact=org.onap.demo.vnf.vlb:vlb-vnf-onap-distribution:$DEMO_ARTIFACTS_VERSION-SNAPSHOT:tar.gz:hc -Dtransitive=false -Ddest=.
 tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT-hc.tar.gz
-rm vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT.tar.gz
+rm vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT-hc.tar.gz
 sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT/config/honeycomb.json
 sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT/config/honeycomb.json
 
 chmod +x v_dns_init.sh
 chmod +x vdns.sh
 chmod +x set_gre_tunnel.sh
+chmod +x run_health.sh
 
 # Download Bind config files
 cd /opt/config

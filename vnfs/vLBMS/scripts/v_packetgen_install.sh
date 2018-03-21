@@ -75,6 +75,7 @@ rm *.tar.gz
 chmod +x v_packetgen_init.sh
 chmod +x vpacketgen.sh
 chmod +x run_streams_dns.sh
+chmod +x run_health.sh
 
 echo "vpp" > config/service.txt
 

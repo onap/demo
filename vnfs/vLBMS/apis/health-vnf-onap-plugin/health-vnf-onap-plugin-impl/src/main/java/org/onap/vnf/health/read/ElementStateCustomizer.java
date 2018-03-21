@@ -168,9 +168,12 @@ public final class ElementStateCustomizer implements InitializingReaderCustomize
     		// check all the vDNS instances
     		Map<String, VdnsInstance> activeVdnsInstances = dnsInstanceManager.getDnsInstancesAsMap();
     		Iterator<String> iter = activeVdnsInstances.keySet().iterator();
-    		while(iter.hasNext()){
-    			if(!getRemoteVnfcHealthStatus(activeVdnsInstances.get(iter.next()).getOamIpAddr())) {
-    				healthStatus = "unhealthy";
+    		while(iter.hasNext()) {
+    			VdnsInstance vdns = activeVdnsInstances.get(iter.next());
+    			if(vdns.isEnabled()) {
+    				if(!getRemoteVnfcHealthStatus(vdns.getOamIpAddr())) {
+        				healthStatus = "unhealthy";
+        			}
     			}
     		}
     	}

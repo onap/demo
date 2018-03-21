@@ -89,6 +89,7 @@ chmod +x vlb.sh
 chmod +x /opt/VES/evel/evel-library/code/VESreporting/go-client.sh
 chmod +x add_dns.sh
 chmod +x remove_dns.sh
+chmod +x run_health.sh
 
 echo "vpp" > config/service.txt
 
