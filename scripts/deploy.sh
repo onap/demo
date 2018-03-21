@@ -18,20 +18,22 @@ echo "Version number: " $VERSION
 
 PATH_TO_PARENT=${WORKSPACE}
 PATH_TO_BOOT=${WORKSPACE}"/boot"
-PATH_TO_HEAT_MASTER=${WORKSPACE}"/heat/ONAP"
-PATH_TO_HEAT_VFW=${WORKSPACE}"/heat/vFW"
-PATH_TO_HEAT_VLB=${WORKSPACE}"/heat/vLB"
+#PATH_TO_HEAT_MASTER=${WORKSPACE}"/heat/ONAP"
+#PATH_TO_HEAT_VFW=${WORKSPACE}"/heat/vFW"
+#PATH_TO_HEAT_VLB=${WORKSPACE}"/heat/vLB"
 PATH_TO_VFW=${WORKSPACE}"/vnfs/vFW/scripts"
 PATH_TO_VLB=${WORKSPACE}"/vnfs/vLB/scripts"
+PATH_TO_VLBMS=${WORKSPACE}"/vnfs/vLBMS/scripts"
 PATH_TO_VCPE=${WORKSPACE}"/vnfs/vCPE/scripts"
 
 PARENT_GROUP_ID="org.onap.demo"
 BOOT_GROUP_ID=$PARENT_GROUP_ID"/boot"
-HEAT_MASTER_GROUP_ID=$PARENT_GROUP_ID"/heat/ONAP"
-HEAT_VFW_GROUP_ID=$PARENT_GROUP_ID"/heat/vFW"
-HEAT_VLB_GROUP_ID=$PARENT_GROUP_ID"/heat/vLB"
+#HEAT_MASTER_GROUP_ID=$PARENT_GROUP_ID"/heat/ONAP"
+#HEAT_VFW_GROUP_ID=$PARENT_GROUP_ID"/heat/vFW"
+#HEAT_VLB_GROUP_ID=$PARENT_GROUP_ID"/heat/vLB"
 VFW_GROUP_ID=$PARENT_GROUP_ID"/vnfs/vfw"
 VLB_GROUP_ID=$PARENT_GROUP_ID"/vnfs/vlb"
+VLBMS_GROUP_ID=$PARENT_GROUP_ID"/vnfs/vlbms"
 VCPE_GROUP_ID=$PARENT_GROUP_ID"/vnfs/vcpe"
 
 REPO_URL="https://nexus.onap.org/content/sites/raw"
@@ -49,20 +51,23 @@ curl -vk --netrc-file "${NETRC}" --upload-file LICENSE.TXT $REPO_URL/$PARENT_GRO
 cd $PATH_TO_BOOT
 ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$BOOT_GROUP_ID/$VERSION/{}
 
-cd $PATH_TO_HEAT_MASTER
-ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_MASTER_GROUP_ID/$VERSION/{}
+#cd $PATH_TO_HEAT_MASTER
+#ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_MASTER_GROUP_ID/$VERSION/{}
 
-cd $PATH_TO_HEAT_VFW
-ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_VFW_GROUP_ID/$VERSION/{}
+#cd $PATH_TO_HEAT_VFW
+#ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_VFW_GROUP_ID/$VERSION/{}
 
-cd $PATH_TO_HEAT_VLB
-ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_VLB_GROUP_ID/$VERSION/{}
+#cd $PATH_TO_HEAT_VLB
+#ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$HEAT_VLB_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_VFW
 ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$VFW_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_VLB
 ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$VLB_GROUP_ID/$VERSION/{}
+
+cd $PATH_TO_VLBMS
+ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$VLBMS_GROUP_ID/$VERSION/{}
 
 cd $PATH_TO_VCPE
 ls | xargs -I{} curl -vk --netrc-file "${NETRC}" --upload-file {} $REPO_URL/$VCPE_GROUP_ID/$VERSION/{}
