@@ -201,6 +201,12 @@ parameters:
     type: string
   openo_ip_addr:
     type: string
+  music_ip_addr:
+    type: string
+  oof_ip_addr:
+    type: string
+  aaf_ip_addr:
+    type: string
 
   ###########################
   #                         #
@@ -325,6 +331,13 @@ parameters:
     type: string
   cli_docker:
     type: string
+  music_docker:
+    type: string
+  oof_docker:
+    type: string
+  aaf_docker:
+    type: string
+
   vfc_nokia_docker:
     type: string
   vfc_ztevnfmdriver_docker:
@@ -522,6 +535,9 @@ resources:
             __vid_ip_addr__: { get_param: vid_ip_addr }
             __clamp_ip_addr__: { get_param: clamp_ip_addr }
             __openo_ip_addr__: { get_param: openo_ip_addr }
+            __music_ip_addr__: { get_param: music_ip_addr }
+            __oof_ip_addr__: { get_param: oof_ip_addr }
+            __aaf_ip_addr__: { get_param: aaf_ip_addr }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __dns_forwarder__: { get_param: dns_forwarder }
@@ -549,6 +565,9 @@ resources:
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
             echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
             echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
+            echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
+            echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
+            echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
 
@@ -906,8 +925,12 @@ resources:
             __vid_ip_addr__: { get_param: vid_ip_addr }
             __clamp_ip_addr__: { get_param: clamp_ip_addr }
             __openo_ip_addr__: { get_param: openo_ip_addr }
+            __music_ip_addr__: { get_param: music_ip_addr }
+            __oof_ip_addr__: { get_param: oof_ip_addr }
+            __aaf_ip_addr__: { get_param: aaf_ip_addr }
             __external_dns__: { get_param: external_dns }
-            __vm_image_name__: { get_param: ubuntu_1404_image }
+            __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
+            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
             __vm_flavor__: { get_param: flavor_medium }
             __public_net_id__: { get_param: public_net_id }
             __script_version__: { get_param: artifacts_version }
@@ -945,10 +968,14 @@ resources:
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
             echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
             echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
+            echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
+            echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
+            echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__vm_image_name__" > /opt/config/vm_image_name.txt
-            echo "__vm_flavor__" > /opt/config/vm_flavor.txt
+            echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
+            echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
             echo "__script_version__" > /opt/config/script_version.txt
             echo "__public_net_id__" > /opt/config/public_net_id.txt
             echo "__robot_repo__" > /opt/config/remote_repo.txt
@@ -1773,3 +1800,192 @@ resources:
             cd /opt
             chmod +x dcae2_install.sh
             ./dcae2_install.sh > /tmp/dcae2_install.log 2>&1
+
+
+  # MUSIC instantiation
+  music_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: music_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
+
+  music_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: music_private_port }
+
+  music_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_large }
+      name:
+        str_replace:
+          template: base-music
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: music_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: music_docker }
+            __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/music_install.sh -o /opt/music_install.sh
+            cd /opt
+            chmod +x music_install.sh
+            ./music_install.sh
+
+
+  # OOF instantiation
+  oof_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: oof_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
+
+  oof_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: oof_private_port }
+
+  oof_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_medium }
+      name:
+        str_replace:
+          template: base-oof
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: oof_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: oof_docker }
+            __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/oof_install.sh -o /opt/oof_install.sh
+            cd /opt
+            chmod +x oof_install.sh
+            ./oof_install.sh
+
+
+  # AAF instantiation
+  aaf_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: aaf_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
+
+  aaf_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: aaf_private_port }
+
+  aaf_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1404_image }
+      flavor: { get_param: flavor_medium }
+      name:
+        str_replace:
+          template: base-aaf
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: aaf_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: aaf_docker }
+            __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aaf_install.sh -o /opt/aaf_install.sh
+            cd /opt
+            chmod +x aaf_install.sh
+            ./aaf_install.sh

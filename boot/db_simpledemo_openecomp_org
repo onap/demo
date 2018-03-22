@@ -81,6 +81,12 @@ vm1.clamp.simpledemo.openecomp.org.           IN      A       10.0.12.1
 c1.vm1.clamp.simpledemo.openecomp.org.        IN      A       10.0.12.1
 c2.vm1.clamp.simpledemo.openecomp.org.        IN      A       10.0.12.1
 
+vm1.openo.simpledemo.openecomp.org.	IN	A	10.0.14.1
+
+vm1.music.simpledemo.openecomp.org.	IN	A	10.0.15.1
+
+vm1.oof.simpledemo.openecomp.org.	IN	A	10.0.16.1
+
 
 ;CNAMES
 ;A&AI
@@ -132,3 +138,17 @@ clamp.api.simpledemo.openecomp.org.	IN	CNAME	vm1.clamp.simpledemo.openecomp.org.
 
 ;AAF
 aaf.api.simpledemo.openecomp.org.	IN	CNAME	vm1.aaf.simpledemo.openecomp.org.
+
+;OPEN-O
+msb.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+mvim.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+vnfsdk.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+vfc.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+uui.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+esr.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+
+;MUSIC
+music.api.simpledemo.openecomp.org.	IN	CNAME	vm1.music.simpledemo.openecomp.org.
+
+;OOF
+oof.api.simpledemo.openecomp.org.	IN	CNAME	vm1.oof.simpledemo.openecomp.org.
