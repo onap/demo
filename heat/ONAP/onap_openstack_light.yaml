@@ -340,6 +340,8 @@ parameters:
 
   vfc_nokia_docker:
     type: string
+  vfc_nokiav2_docker:
+    type: string
   vfc_ztevnfmdriver_docker:
     type: string
   vfc_ztesdncdriver_docker:
@@ -1556,6 +1558,7 @@ resources:
             __esr_docker__: { get_param: esr_docker }
             __vnfsdk_repo__: { get_param: vnfsdk_repo }
             __vfc_nokia_docker__: { get_param: vfc_nokia_docker }
+            __vfc_nokiav2_docker__: { get_param: vfc_nokiav2_docker }
             __vfc_ztevnfmdriver_docker__: { get_param: vfc_ztevnfmdriver_docker }
             __vfc_ztesdncdriver_docker__: { get_param: vfc_ztesdncdriver_docker }
             __vfc_vnfres_docker__: { get_param: vfc_vnfres_docker }
@@ -1592,6 +1595,7 @@ resources:
             echo "__vnfsdk_repo__" > /opt/config/vnfsdk_repo.txt
 
             echo "export NOKIA_DOCKER_VER=__vfc_nokia_docker__" >> /opt/config/vfc_docker.txt
+            echo "export NOKIAV2_DOCKER_VER=__vfc_nokiav2_docker__" >> /opt/config/vfc_docker.txt
             echo "export ZTEVNFMDRIVER_DOCKER_VER=__vfc_ztevnfmdriver_docker__" >> /opt/config/vfc_docker.txt
             echo "export ZTESDNCDRIVER_DOCKER_VER=__vfc_ztesdncdriver_docker__" >> /opt/config/vfc_docker.txt
             echo "export VNFRES_DOCKER_VER=__vfc_vnfres_docker__" >> /opt/config/vfc_docker.txt
