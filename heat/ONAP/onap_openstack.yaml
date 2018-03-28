@@ -907,7 +907,8 @@ resources:
             __clamp_ip_addr__: { get_param: clamp_ip_addr }
             __openo_ip_addr__: { get_param: openo_ip_addr }
             __external_dns__: { get_param: external_dns }
-            __vm_image_name__: { get_param: ubuntu_1404_image }
+            __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
+            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
             __vm_flavor__: { get_param: flavor_medium }
             __public_net_id__: { get_param: public_net_id }
             __script_version__: { get_param: artifacts_version }
@@ -947,7 +948,8 @@ resources:
             echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__vm_image_name__" > /opt/config/vm_image_name.txt
+            echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
+            echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
             echo "__vm_flavor__" > /opt/config/vm_flavor.txt
             echo "__script_version__" > /opt/config/script_version.txt
             echo "__public_net_id__" > /opt/config/public_net_id.txt
