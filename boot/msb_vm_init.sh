@@ -174,6 +174,8 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "activiti",
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "workflow", "version": "v1", "url": "/api/workflow/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8805"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "workflow-modeler", "version": "v1", "url": "/api/workflow-modeler/v1","protocol": "REST",  "nodes": [ {"ip": "'$SDC_IP'","port": "9527"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "catalog", "version": "v1", "url": "/api/catalog/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8806"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "emsdriver", "version": "v1", "url": "/api/emsdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8206"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
