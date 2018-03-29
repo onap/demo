@@ -986,7 +986,7 @@ resources:
             echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__vm_image_name__" > /opt/config/vm_image_name.txt
+            echo "__vm_flavor__" > /opt/config/vm_flavor.txt
             echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
             echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
             echo "__script_version__" > /opt/config/script_version.txt
