@@ -75,10 +75,16 @@ vppctl set ip arp proxy $IPADDR1" - "$IPADDR1
 vppctl set interface proxy-arp tap-0 enable
 vppctl set ip arp tap-0 $PKTGEN_IPADDR $PKTGEN_MAC
 
-# Start Honeycomb and VES client
+# Start Honeycomb and initialize the vLB with information about vDNS
 cd /opt
 ./vlb-vnf-onap-distribution-$(cat /opt/config/demo_artifacts_version.txt)-SNAPSHOT/honeycomb &>/var/log/honeycomb.log &disown
+sleep 10
 
+OAM_VDNS_IP=$(cat /opt/config/oam_vdns_ip.txt)
+VDNS_IPADDR=$(cat /opt/config/vdns_ipaddr.txt)
+curl -X PUT http://localhost:8183/restconf/config/vlb-business-vnf-onap-plugin:vlb-business-vnf-onap-plugin/vdns-instances/vdns-instance/$VDNS_IPADDR -H 'Accept: application/json' -H 'Cache-Control: no-cache' -H 'Content-Type: application/json' -H 'Postman-Token: 8bfe8815-3efb-4c9b-8974-7b8d7b6da4c6' -H "Authorization: Basic YWRtaW46YWRtaW4=" -d '{"vdns-instance": [{ "ip-addr": "'$VDNS_IPADDR'", "oam-ip-addr": "'$OAM_VDNS_IP'", "enabled": true }]}'
+
+# Start VES agent
 cd /opt/VES/evel/evel-library/code/VESreporting/
 echo 0 > active_dns.txt
 ./go-client.sh &>/dev/null &disown

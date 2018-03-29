@@ -259,9 +259,11 @@ resources:
             __ip_to_dns_net__: { get_param: vlb_private_ip_0 }
             __ip_to_pktgen_net__: { get_param: vlb_private_ip_2 }
             __oam_vpktgen_ip__: { get_param: vpg_private_ip_1 }
+            __oam_vdns_ip__: { get_param: vdns_private_ip_1 }
             __vip__: { get_param: vip }
             __gre_ipaddr__: { get_param: gre_ipaddr }
             __pktgen_ipaddr__: { get_param: vpg_private_ip_0 }
+            __vdns_ipaddr__: { get_param: vdns_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vlb_private_ip_1 }
             __repo_url_blob__: { get_param: repo_url_blob }
             __repo_url_artifacts__: { get_param: repo_url_artifacts }
@@ -282,9 +284,11 @@ resources:
             echo "__ip_to_dns_net__" > /opt/config/ip_to_dns_net.txt
             echo "__ip_to_pktgen_net__" > /opt/config/ip_to_pktgen_net.txt
             echo "__oam_vpktgen_ip__" > /opt/config/oam_vpktgen_ip.txt
+            echo "__oam_vdns_ip__" > /opt/config/oam_vdns_ip.txt
             echo "__vip__" > /opt/config/vip.txt
             echo "__gre_ipaddr__" > /opt/config/gre_ipaddr.txt
             echo "__pktgen_ipaddr__" > /opt/config/pktgen_ipaddr.txt
+            echo "__vdns_ipaddr__" > /opt/config/vdns_ipaddr.txt
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
