@@ -1,5 +1,5 @@
 #!/bin/bash
-
+:<<END
 #Disable all the running streams
 vppctl packet-gen disable
 
@@ -17,7 +17,7 @@ while true; do
 	vppctl pac del dns3
 	vppctl pac del dns4
 	vppctl pac del dns5
-
+END
 	#Update destination (vLB) IP
 	VLB_IPADDR=$(cat /opt/config/vlb_ipaddr.txt)
 	IPADDR1=$(cat /opt/config/local_private_ipaddr.txt)
@@ -46,6 +46,7 @@ while true; do
 	vppctl packet-gen enable-stream dns3
 	vppctl packet-gen enable-stream dns4
 	vppctl packet-gen enable-stream dns5
-
+:<<END
 	sleep 60
 done
+END
