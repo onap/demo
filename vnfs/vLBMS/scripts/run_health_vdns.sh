@@ -1,8 +1,8 @@
 #!/bin/bash
 
-PID=$(service bind9 status | grep active)
+PID=$(service bind9 status | grep inactive)
 if [[ -z $PID ]]; then
-  echo "unhealthy" > status.txt
+	echo "healthy" > status.txt
 else
-  echo "healthy" > status.txt
+	echo "unhealthy" > status.txt
 fi
