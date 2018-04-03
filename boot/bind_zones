@@ -87,6 +87,8 @@ vm1.music.simpledemo.openecomp.org. IN  A   music_ip_addr
 
 vm1.oof.simpledemo.openecomp.org. IN  A   oof_ip_addr
 
+vm1.nbi.simpledemo.openecomp.org. IN  A   nbi_ip_addr
+
 
 ;CNAMES
 ;A&AI
@@ -150,3 +152,6 @@ music.api.simpledemo.openecomp.org.	IN	CNAME	vm1.music.simpledemo.openecomp.org.
 
 ;OOF
 oof.api.simpledemo.openecomp.org.	IN	CNAME	vm1.oof.simpledemo.openecomp.org.
+
+;NBI
+nbi.api.simpledemo.openecomp.org.	IN	CNAME	vm1.nbi.simpledemo.openecomp.org.

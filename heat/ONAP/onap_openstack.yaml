@@ -551,6 +551,7 @@ resources:
             __music_ip_addr__: { get_param: music_ip_addr }
             __oof_ip_addr__: { get_param: oof_ip_addr }
             __aaf_ip_addr__: { get_param: aaf_ip_addr }
+            __nbi_ip_addr__: { get_param: nbi_ip_addr }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __dns_forwarder__: { get_param: dns_forwarder }
@@ -581,6 +582,7 @@ resources:
             echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
             echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
             echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
+            echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
 

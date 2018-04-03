@@ -87,6 +87,8 @@ vm1.music.simpledemo.onap.org.	IN	A	10.0.15.1
 
 vm1.oof.simpledemo.onap.org.	IN	A	10.0.16.1
 
+vm1.nbi.simpledemo.onap.org.	IN	A	10.0.17.1
+
 
 ;CNAMES
 ;A&AI
@@ -152,3 +154,6 @@ music.api.simpledemo.onap.org.	IN	CNAME	vm1.music.simpledemo.onap.org.
 
 ;OOF
 oof.api.simpledemo.onap.org.	IN	CNAME	vm1.oof.simpledemo.onap.org.
+
+;NBI
+nbi.api.simpledemo.onap.org.	IN	CNAME	vm1.nbi.simpledemo.onap.org.
