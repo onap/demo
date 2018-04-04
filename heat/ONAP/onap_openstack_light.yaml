@@ -976,6 +976,8 @@ resources:
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
             echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
+            echo "__sdc_ip_addr__" > /opt/config/sdc_be_ip_addr.txt
+            echo "__sdc_ip_addr__" > /opt/config/sdc_fe_ip_addr.txt
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
             echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
