@@ -685,6 +685,58 @@ fi
 
 if [ "$DEPLOYMENT_PROFILE" == "R2MVP" ]; then
   cd /opt/app/config
-  /opt/docker/docker-compose up -d
+  /opt/docker/docker-compose -f docker-compose-1.yaml up -d
+  echo "Waiting for Consul to come up ready"
+  while ! nc -z localhost 8500; do sleep 1; done
+  echo "Waiting for DB to come up ready"
+  while ! nc -z localhost 5432; do sleep 1; done
+  echo "Waiting for CBS to come up ready"
+  while ! nc -z localhost 10000; do sleep 1; done
+  echo "All dependencies are up, proceed to the next phase"
+  sleep 5
+
+  NAME='config_binding_service'
+  PORT='10000'
+  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
+  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
+  REG='{"ID": "'"$NAME"'0", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
+  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
+
+  sleep 5
+  echo "Now bring up DCAE service components"
+  /opt/docker/docker-compose -f docker-compose-2.yaml up -d
+
+  
+  NAME='ves'
+  PORT='8080'
+  echo "Registering for $NAME:$PORT"
+  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
+  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
+  REG='{"ID": "'"$NAME"'", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
+  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
+
+  NAME='tca'
+  PORT='11011'
+  echo "Registering for $NAME:$PORT"
+  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
+  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
+  REG='{"ID": "'"$NAME"'", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
+  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
+
+  NAME='hr'
+  PORT='9101'
+  echo "Registering for $NAME:$PORT"
+  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
+  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
+  REG='{"ID": "'"$NAME"'", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
+  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
+
+  NAME='he'
+  PORT='9102'
+  echo "Registering for $NAME:$PORT"
+  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
+  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
+  REG='{"ID": "'"$NAME"'", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
+  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
 fi
 
