@@ -139,7 +139,8 @@ if [ "$DEPLOYMENT_PROFILE" == "R2MVP" ]; then
   RELEASE_TAG='R2'
   rm -rf /opt/app/inputs-templates
   mkdir -p /opt/app/inputs-templates
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/${DEPLOYMENT_PROFILE}/docker-compose.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/${DEPLOYMENT_PROFILE}/docker-compose-1.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/${DEPLOYMENT_PROFILE}/docker-compose-2.yaml
 
   pip install --upgrade jinja2
   wget https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/scripts/detemplate-bpinputs.py && \
