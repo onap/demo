@@ -597,7 +597,13 @@ list_dns_zone()
 
 
 
-
+URL_ROOT='nexus.onap.org/service/local/repositories/raw/content'
+REPO_BLUEPRINTS='org.onap.dcaegen2.platform.blueprints'
+REPO_DEPLOYMENTS='org.onap.dcaegen2.deployments'
+if [ -e /opt/config/dcae_deployment_profile.txt ]; then
+  DEPLOYMENT_PROFILE=$(cat /opt/config/dcae_deployment_profile.txt)
+fi
+DEPLOYMENT_PROFILE=${DEPLOYMENT_PROFILE:-R1}
 
 NEXUS_USER=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWORD=$(cat /opt/config/nexus_password.txt)
@@ -610,14 +616,18 @@ MYLOCALIP=$(cat /opt/config/dcae_ip_addr.txt)
 
 # start docker image pulling while we are waiting for A&AI to come online
 docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
-docker pull "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION" && docker pull nginx &
 
-#########################################
-# Wait for then register with A&AI
-########################################
 
-DNSAAS_PROXYED=$(tr '[:upper:]' '[:lower:]' < /opt/config/dnsaas_config_enabled.txt)
-if [ "$DNSAAS_PROXYED" == 'true' ]; then
+
+if [ "$DEPLOYMENT_PROFILE" == "R1" ]; then
+  docker pull "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION" && docker pull nginx &
+
+  #########################################
+  # Wait for then register with A&AI
+  ########################################
+
+  DNSAAS_PROXYED=$(tr '[:upper:]' '[:lower:]' < /opt/config/dnsaas_config_enabled.txt)
+  if [ "$DNSAAS_PROXYED" == 'true' ]; then
     echo "Using proxyed DNSaaS service, performing additional registration and configuration"
     wait_for_aai_ready
 
@@ -629,40 +639,35 @@ if [ "$DNSAAS_PROXYED" == 'true' ]; then
     wait_for_multicloud_ready
     register_dns_zone_proxied_designate "$ZONE" 
     echo "Registration and configuration for proxying DNSaaS completed."
-else
+  else
     echo "Using Designate DNSaaS service, performing additional registration and configuration"
     register_dns_zone_designate "$ZONE" 
-fi
+  fi
+
+  #########################################
+  # Start DCAE Bootstrap container
+  #########################################
+
+  chmod 777 /opt/app/config
+  rm -f /opt/config/runtime.ip.consul
+  rm -f /opt/config/runtime.ip.cm
 
 
+  #docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
+  #docker pull "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION"
+  docker run -d --name boot -v /opt/app/config:/opt/app/installer/config -e "LOCATION=$ZONE" "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION"
 
 
-
-#########################################
-# Start DCAE Bootstrap container
-#########################################
-
-chmod 777 /opt/app/config
-rm -f /opt/config/runtime.ip.consul
-rm -f /opt/config/runtime.ip.cm
+  # waiting for bootstrap to complete then starting nginx for proxying healthcheck calls
+  echo "Waiting for Consul to become accessible"
+  while [ ! -f /opt/app/config/runtime.ip.consul ]; do echo "."; sleep 30; done
 
 
-#docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
-#docker pull "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION"
-docker run -d --name boot -v /opt/app/config:/opt/app/installer/config -e "LOCATION=$ZONE" "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION"
+  # start proxy for consul's health check
+  CONSULIP=$(head -1 /opt/app/config/runtime.ip.consul | sed 's/[[:space:]]//g')
+  echo "Consul is available at $CONSULIP" 
 
-
-# waiting for bootstrap to complete then starting nginx for proxying healthcheck calls
-echo "Waiting for Consul to become accessible"
-while [ ! -f /opt/app/config/runtime.ip.consul ]; do echo "."; sleep 30; done
-
-
-
-# start proxy for consul's health check
-CONSULIP=$(head -1 /opt/app/config/runtime.ip.consul | sed 's/[[:space:]]//g')
-echo "Consul is available at $CONSULIP" 
-
-cat >./nginx.conf <<EOL
+  cat >./nginx.conf <<EOL
 server {
     listen 80;
     server_name dcae.simpledemo.onap.org;
@@ -671,6 +676,15 @@ server {
     }
 }
 EOL
-docker run --name dcae-proxy -p 8080:80 -v "$(pwd)/nginx.conf:/etc/nginx/conf.d/default.conf" -d nginx
-echo "Healthcheck API available at http://${MYFLOATIP}:8080/healthcheck"
-echo "                          or http://${MYLOCALIP}:8080/healthcheck"
+  docker run --name dcae-proxy -p 8080:80 -v "$(pwd)/nginx.conf:/etc/nginx/conf.d/default.conf" -d nginx
+  echo "Healthcheck API available at http://${MYFLOATIP}:8080/healthcheck"
+  echo "                          or http://${MYLOCALIP}:8080/healthcheck"
+
+fi
+
+
+if [ "$DEPLOYMENT_PROFILE" == "R2MVP" ]; then
+  cd /opt/app/config
+  /opt/docker/docker-compose up -d
+fi
+
