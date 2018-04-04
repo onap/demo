@@ -100,25 +100,52 @@ chmod 777 /opt/app/config/key
 # move keystone url file
 #cp /opt/config/keystone_url.txt /opt/app/config/keystone_url.txt
 
-# download blueprint input template files
-rm -rf /opt/app/inputs-templates
-mkdir -p /opt/app/inputs-templates
-wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/inputs.yaml
-wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/cdapinputs.yaml
-wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/phinputs.yaml
-wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/dhinputs.yaml
-wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/invinputs.yaml
-wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/vesinput.yaml
-wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/tcainputs.yaml
-wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/he-ip.yaml
-wget -P /opt/app/inputs-templates https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.blueprints/releases/input-templates/hr-ip.yaml
+
+URL_ROOT='nexus.onap.org/service/local/repositories/raw/content'
+REPO_BLUEPRINTS='org.onap.dcaegen2.platform.blueprints' 
+REPO_DEPLOYMENTS='org.onap.dcaegen2.deployments' 
+
+if [ -e /opt/config/dcae_deployment_profile.txt ]; then
+  DEPLOYMENT_PROFILE=$(cat /opt/config/dcae_deployment_profile.txt)
+fi
+DEPLOYMENT_PROFILE=${DEPLOYMENT_PROFILE:-R1}
+if [ "$DEPLOYMENT_PROFILE" == "R1" ]; then
+  RELEASE_TAG='releases'
+  # download blueprint input template files
+  rm -rf /opt/app/inputs-templates
+  mkdir -p /opt/app/inputs-templates
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/inputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/cdapinputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/phinputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/dhinputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/invinputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/vesinput.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/tcainputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/he-ip.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/hr-ip.yaml
 
 
-# generate blueprint input files
-pip install --upgrade jinja2
-wget https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.deployments/releases/scripts/detemplate-bpinputs.py && (python detemplate-bpinputs.py /opt/config /opt/app/inputs-templates /opt/app/config; rm detemplate-bpinputs.py)
+  # generate blueprint input files
+  pip install --upgrade jinja2
+  wget https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/scripts/detemplate-bpinputs.py && \
+    (python detemplate-bpinputs.py /opt/config /opt/app/inputs-templates /opt/app/config; rm detemplate-bpinputs.py)
 
+  # Run docker containers
+  cd /opt
+  ./dcae2_vm_init.sh
+fi
 
-# Run docker containers
-cd /opt
-./dcae2_vm_init.sh
+if [ "$DEPLOYMENT_PROFILE" == "R2MVP" ]; then
+  RELEASE_TAG='R2'
+  rm -rf /opt/app/inputs-templates
+  mkdir -p /opt/app/inputs-templates
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/${DEPLOYMENT_PROFILE}/docker-compose.yaml
+
+  pip install --upgrade jinja2
+  wget https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/scripts/detemplate-bpinputs.py && \
+    (python detemplate-bpinputs.py /opt/config /opt/app/inputs-templates /opt/app/config; rm detemplate-bpinputs.py)
+
+  cd /opt
+  ./dcae2_vm_init.sh
+fi
+

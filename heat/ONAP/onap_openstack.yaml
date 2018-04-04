@@ -216,6 +216,10 @@ parameters:
   #                         #
   ###########################
 
+  dcae_deployment_profile:
+    type: string
+    description: DCAE deployment profile.  Currently supported profiles R1, R2MVP.
+
   dnsaas_config_enabled:
     type: string
     description: whether the DNSaaS configuration section is enabled
@@ -1677,7 +1681,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
-      flavor: { get_param: flavor_small }
+      flavor: { get_param: flavor_large }
       name:
         str_replace:
           template: base-dcae-bootstrap
@@ -1701,6 +1705,7 @@ resources:
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
             # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
+            __dcae_deployment_profile__: { get_param: dcae_deployment_profile }
             __mac_addr__: { get_attr: [dcae_c_private_port, mac_address] }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
             __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
@@ -1772,6 +1777,7 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
+            echo "__dcae_deployment_profile__" > /opt/config/dcae_deployment_profile.txt
             echo "__mac_addr__" > /opt/config/mac_addr.txt
             echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
             echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
@@ -1810,6 +1816,7 @@ resources:
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
             echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
+            echo "__openo_ip_addr__" > /opt/config/msb_ip_addr.txt
             echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
             echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
             # floating IPs
