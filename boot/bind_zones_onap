@@ -83,11 +83,11 @@ vm1.mr.simpledemo.onap.org.	IN	A	mr_ip_addr
 
 vm1.openo.simpledemo.onap.org. IN  A   openo_ip_addr
 
-vm1.music.simpledemo.openecomp.org. IN  A   music_ip_addr
+vm1.music.simpledemo.onap.org. IN  A   music_ip_addr
 
-vm1.oof.simpledemo.openecomp.org. IN  A   oof_ip_addr
+vm1.oof.simpledemo.onap.org. IN  A   oof_ip_addr
 
-vm1.nbi.simpledemo.openecomp.org. IN  A   nbi_ip_addr
+vm1.nbi.simpledemo.onap.org. IN  A   nbi_ip_addr
 
 
 ;CNAMES
