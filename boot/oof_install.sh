@@ -60,7 +60,7 @@ mv /opt/oof_serv.sh /etc/init.d
 update-rc.d oof_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
-echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | tee /etc/apt/sources.list.d/docker.list
+echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
 apt-get update
 apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
 apt-get install -y --allow-unauthenticated docker-engine
@@ -88,6 +88,18 @@ service docker restart
 # DNS IP address configuration
 echo "nameserver "$DNS_IP_ADDR >> /etc/resolvconf/resolv.conf.d/head
 resolvconf -u
+
+# Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
+if [[ $CLOUD_ENV != "rackspace" ]]
+then
+	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
+	grub-mkconfig -o /boot/grub/grub.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
+	sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
+	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+	echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
+	reboot
+fi
 
 # Clone Gerrit repository and run docker containers
 cd /opt

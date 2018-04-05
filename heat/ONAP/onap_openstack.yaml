@@ -1919,8 +1919,8 @@ resources:
   oof_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
-      flavor: { get_param: flavor_medium }
+      image: { get_param: ubuntu_1604_image }
+      flavor: { get_param: flavor_large }
       name:
         str_replace:
           template: base-oof
