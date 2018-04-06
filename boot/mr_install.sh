@@ -54,12 +54,21 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget make openjdk-8-jdk git ntp ntpdate
 
 # Download scripts from Nexus
+# a) scripts for message router (mr)
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mr_vm_init.sh -o /opt/mr_vm_init.sh
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mr_serv.sh -o /opt/mr_serv.sh
 chmod +x /opt/mr_vm_init.sh
 chmod +x /opt/mr_serv.sh
 mv /opt/mr_serv.sh /etc/init.d
 update-rc.d mr_serv.sh defaults
+
+# b) scripts for bus controller (dbcl)
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dbcl_vm_init.sh -o /opt/dbcl_vm_init.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dbcl_serv.sh -o /opt/dbcl_serv.sh
+chmod +x /opt/dbcl_vm_init.sh
+chmod +x /opt/dbcl_serv.sh
+mv /opt/dbcl_serv.sh /etc/init.d
+update-rc.d dbcl_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
 echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
