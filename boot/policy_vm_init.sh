@@ -55,12 +55,12 @@ docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 #docker tag $NEXUS_DOCKER_REPO/onap/policy-db:$DOCKER_IMAGE_VERSION onap/policy/policy-db:latest
 
 docker pull $NEXUS_DOCKER_REPO/onap/policy-pe:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/onap/policy-pe:$DOCKER_IMAGE_VERSION onap/policy/policy-pe:latest
+docker tag $NEXUS_DOCKER_REPO/onap/policy-pe:$DOCKER_IMAGE_VERSION onap/policy-pe:latest
 
 docker pull $NEXUS_DOCKER_REPO/onap/policy-drools:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/onap/policy-drools:$DOCKER_IMAGE_VERSION onap/policy/policy-drools:latest
+docker tag $NEXUS_DOCKER_REPO/onap/policy-drools:$DOCKER_IMAGE_VERSION onap/policy-drools:latest
 
 docker pull $NEXUS_DOCKER_REPO/onap/policy-nexus:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/onap/policy-nexus:$DOCKER_IMAGE_VERSION onap/policy/policy-nexus:latest
+docker tag $NEXUS_DOCKER_REPO/onap/policy-nexus:$DOCKER_IMAGE_VERSION onap/policy-nexus:latest
 
 /opt/docker/docker-compose up -d
