@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <parent>
+  <!--parent>
     <groupId>io.fd.honeycomb.common</groupId>
     <artifactId>minimal-distribution-parent</artifactId>
     <version>1.17.07</version>
+  </parent-->
+
+  <parent>
+    <artifactId>demo-aggregator</artifactId>
+    <version>1.2.0-SNAPSHOT</version>
+    <groupId>org.onap.demo.vnf</groupId>
+    <relativePath>../../../pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -83,7 +90,7 @@
           <skip>true</skip>
         </configuration>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
         <version>1.6.7</version>
@@ -93,11 +100,11 @@
           <stagingProfileId>176c31dfe190a</stagingProfileId>
           <serverId>ecomp-staging</serverId>
         </configuration>
-      </plugin>
+      </plugin-->
     </plugins>
   </build>
 
-  <distributionManagement>
+  <!--distributionManagement>
     <repository>
       <id>ecomp-releases</id>
       <name>Demo Release Repository</name>
@@ -108,7 +115,7 @@
       <name>Demo Snapshot Repository</name>
       <url>https://nexus.onap.org/content/repositories/snapshots/</url>
     </snapshotRepository>
-  </distributionManagement>
+  </distributionManagement-->
 
   <dependencies>
     <!-- Dependency on sample plugin -->
