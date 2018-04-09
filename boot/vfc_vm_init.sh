@@ -13,7 +13,7 @@ docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/wfengine-activiti:$ACTIVITI_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/wfengine-mgrservice:$MGRSERVICE_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/catalog:$CATALOG_DOCKER_VER
-docker pull $NEXUS_DOCKER_REPO/onap/vfc/multivimproxy:$MVIMPROXY_DOCKER_VER
+docker pull $NEXUS_DOCKER_REPO/onap/vfc/multivimproxy:$MULTIVIMPROXY_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/emsdriver:$EMSDRIVER_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/gvnfmdriver:$GVNFMDRIVER_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/jujudriver:$JUJUDRIVER_DOCKER_VER
@@ -24,7 +24,6 @@ docker pull $NEXUS_DOCKER_REPO/onap/vfc/vnflcm:$VNFLCM_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/vnfmgr:$VNFMGR_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/vnfres:$VNFRES_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/ztesdncdriver:$ZTESDNCDRIVER_DOCKER_VER
-docker pull $NEXUS_DOCKER_REPO/onap/vfc/ztevmanagerdriver:$ZTEVMANAGERDRIVER_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/ztevnfmdriver:$ZTEVNFMDRIVER_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokia:$NOKIA_DOCKER_VER
 docker pull $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokiav2:$NOKIAV2_DOCKER_VER
@@ -43,7 +42,6 @@ docker rm -f vfc_vnflcm
 docker rm -f vfc_vnfmgr
 docker rm -f vfc_vnfres
 docker rm -f vfc_ztesdncdriver
-docker rm -f vfc_ztevmanagerdriver
 docker rm -f vfc_ztevnfmdriver
 docker rm -f vfc_svnfm_nokia
 docker rm -f vfc_svnfm_nokiav2
@@ -64,6 +62,7 @@ docker run -i -t -d --name vfc_vnfres -p 8802:8802 -e MSB_ADDR=$OPENO_IP:80 $NEX
 docker run -i -t -d --name vfc_ztesdncdriver -p 8411:8411 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/ztesdncdriver:$ZTESDNCDRIVER_DOCKER_VER
 docker run -i -t -d --name vfc_ztevnfmdriver -p 8410:8410 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/ztevnfmdriver:$ZTEVNFMDRIVER_DOCKER_VER
 docker run -i -t -d --name vfc_svnfm_nokia -p 8486:8486 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokia:$NOKIA_DOCKER_VER
+docker run -i -t -d --name vfc_multivimproxy -p 8481:8481 -e MSB_ADDR=$MSB_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/multivimproxy:$MULTIVIMPROXY_DOCKER_VER
 
 CBAM_IP=$(cat /opt/config/cbam_ip.txt)
 VNFM_ID=vnfmUuid

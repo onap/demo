@@ -1626,6 +1626,7 @@ resources:
 
             echo "export NOKIA_DOCKER_VER=__vfc_nokia_docker__" >> /opt/config/vfc_docker.txt
             echo "export NOKIAV2_DOCKER_VER=__vfc_nokiav2_docker__" >> /opt/config/vfc_docker.txt
+            echo "export MULTIVIMPROXY_DOCKER_VER=__vfc_multivimproxy_docker__" >> /opt/config/vfc_docker.txt
             echo "export ZTEVNFMDRIVER_DOCKER_VER=__vfc_ztevnfmdriver_docker__" >> /opt/config/vfc_docker.txt
             echo "export ZTESDNCDRIVER_DOCKER_VER=__vfc_ztesdncdriver_docker__" >> /opt/config/vfc_docker.txt
             echo "export VNFRES_DOCKER_VER=__vfc_vnfres_docker__" >> /opt/config/vfc_docker.txt
