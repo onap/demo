@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_9cd8af80",
+        "filename": "boot/msb_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 197
+      },
+      "writtenOn": "2018-04-09T03:26:23Z",
+      "side": 1,
+      "message": "The port is used by the former service, see line177",
+      "range": {
+        "startLine": 178,
+        "startChar": 222,
+        "endLine": 178,
+        "endChar": 226
+      },
+      "revId": "1db22fa53ec0ed3919683ea574bb5dd59941f38b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
