@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_414ec0c2",
+        "filename": "heat/ONAP/onap_openstack.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1643,
+      "author": {
+        "id": 1337
+      },
+      "writtenOn": "2018-04-09T01:46:25Z",
+      "side": 1,
+      "message": "Suggest to remove the spare spaces here.",
+      "range": {
+        "startLine": 1643,
+        "startChar": 0,
+        "endLine": 1643,
+        "endChar": 3
+      },
+      "revId": "3e44137bcef864cee1223c044aadd8950856936e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
