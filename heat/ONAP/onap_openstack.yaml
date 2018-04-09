@@ -1640,6 +1640,7 @@ resources:
             echo "export CATALOG_DOCKER_VER=__vfc_catalog_docker__" >> /opt/config/vfc_docker.txt
             echo "export MGRSERVICE_DOCKER_VER=__vfc_wfengine_mgrservice_docker__" >> /opt/config/vfc_docker.txt
             echo "export ACTIVITI_DOCKER_VER=__vfc_wfengine_activiti_docker__" >> /opt/config/vfc_docker.txt
+			echo "export MULTIVIMPROXY_DOCKER_VER=__vfc_multivimproxy_docker__" >> /opt/config/vfc_docker.txt
 
             # Create env file with the IP address of all ONAP components
             echo "export AAI_IP1=__aai1_ip_addr__" >> /opt/config/onap_ips.txt
