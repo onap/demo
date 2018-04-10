@@ -378,8 +378,6 @@ parameters:
     type: string
   vfc_wfengine_activiti_docker:
     type: string
-  vfc_ztevmanagerdriver_docker:
-    type: string
   vfc_multivimproxy_docker:
     type: string
 
