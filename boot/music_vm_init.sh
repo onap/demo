@@ -11,3 +11,7 @@ docker pull library/tomcat:8.5
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/onap/music/Cassandra:$DOCKER_IMAGE_VERSION
 docker pull $NEXUS_DOCKER_REPO/onap/music/music:$DOCKER_IMAGE_VERSION
+
+cd /opt/music/distribution/dockermusic
+git pull
+./music.sh start
