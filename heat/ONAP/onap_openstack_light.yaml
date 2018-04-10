@@ -1576,6 +1576,7 @@ resources:
             __cbam_username__: { get_param: cbam_username }
             __cbam_password__: { get_param: cbam_password }
             __vfc_ztevnfmdriver_docker__: { get_param: vfc_ztevnfmdriver_docker }
+            __vfc_multivimproxy_docker__: { get_param: vfc_multivimproxy_docker }
             __vfc_ztesdncdriver_docker__: { get_param: vfc_ztesdncdriver_docker }
             __vfc_vnfres_docker__: { get_param: vfc_vnfres_docker }
             __vfc_vnfmgr_docker__: { get_param: vfc_vnfmgr_docker }
@@ -1615,6 +1616,7 @@ resources:
 
             echo "export NOKIA_DOCKER_VER=__vfc_nokia_docker__" >> /opt/config/vfc_docker.txt
             echo "export NOKIAV2_DOCKER_VER=__vfc_nokiav2_docker__" >> /opt/config/vfc_docker.txt
+            echo "export MULTIVIMPROXY_DOCKER_VER=__vfc_multivimproxy_docker__" >> /opt/config/vfc_docker.txt
             echo "export ZTEVNFMDRIVER_DOCKER_VER=__vfc_ztevnfmdriver_docker__" >> /opt/config/vfc_docker.txt
             echo "export ZTESDNCDRIVER_DOCKER_VER=__vfc_ztesdncdriver_docker__" >> /opt/config/vfc_docker.txt
             echo "export VNFRES_DOCKER_VER=__vfc_vnfres_docker__" >> /opt/config/vfc_docker.txt
