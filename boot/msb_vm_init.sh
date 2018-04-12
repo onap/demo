@@ -164,6 +164,8 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "nokiavnfmd
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "jujuvnfmdriver", "version": "v1", "url": "/api/jujuvnfmdriver/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8483"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multivimproxy", "version": "v1", "url": "/api/multivimproxy/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8481"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnflcm", "version": "v1", "url": "/api/vnflcm/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8801"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "vnfres", "version": "v1", "url": "/api/vnfres/v1","protocol": "REST",  "nodes": [ {"ip": "'$OPENO_IP'","port": "8802"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
