@@ -56,8 +56,10 @@ apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates w
 # Download scripts from Nexus
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_vm_init.sh -o /opt/sdc_vm_init.sh
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_serv.sh -o /opt/sdc_serv.sh
+curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_wfd_vm_init.sh -o /opt/sdc_wfd_vm_init.sh
 chmod +x /opt/sdc_vm_init.sh
 chmod +x /opt/sdc_serv.sh
+chmod +x /opt/sdc_wfd_vm_init.sh
 mv /opt/sdc_serv.sh /etc/init.d
 update-rc.d sdc_serv.sh defaults
 
@@ -141,3 +143,4 @@ fi
 
 # Run docker containers. For openstack Ubuntu 16.04 images this will run as a service after the VM has restarted
 ./sdc_vm_init.sh
+./sdc_wfd_vm_init.sh

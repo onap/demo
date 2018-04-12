@@ -317,6 +317,8 @@ parameters:
     type: string
   sdc_docker:
     type: string
+  sdc_wfd_docker:
+    type: string
   sdnc_docker:
     type: string
   vid_docker:
@@ -1192,6 +1194,7 @@ resources:
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __private_ip__: { get_param: sdc_ip_addr }
             __docker_version__: { get_param: sdc_docker }
+            __sdc_wfd_docker__: { get_param: sdc_wfd_docker }
             __gerrit_branch__: { get_param: sdc_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
@@ -1211,6 +1214,7 @@ resources:
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__sdc_wfd_docker__" > /opt/config/sdc_wfd_docker.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
