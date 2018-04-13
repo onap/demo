@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_c054f3ff",
+        "filename": "boot/vfc_vm_init.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1389
+      },
+      "writtenOn": "2018-04-13T01:27:32Z",
+      "side": 1,
+      "message": "Why use CATALOG_IP, I cannot find it in docker scripts?",
+      "range": {
+        "startLine": 52,
+        "startChar": 79,
+        "endLine": 52,
+        "endChar": 90
+      },
+      "revId": "a3fbd458f6cfdea0febadd1a3349634b311ac6af",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
