@@ -49,7 +49,7 @@ docker rm -f vfc_svnfm_nokiav2
 # Insert docker run instructions here
 docker run -i -t -d --name vfc_wfengine_activiti -p 8804:8080 -e SERVICE_IP=$OPENO_IP -e SERVICE_PORT=8804 -e OPENPALETTE_MSB_IP=$OPENO_IP -e OPENPALETTE_MSB_PORT=80 $NEXUS_DOCKER_REPO/onap/vfc/wfengine-activiti:$ACTIVITI_DOCKER_VER
 docker run -i -t -d --name vfc_wfengine_mgrservice -p 8805:10550 -e SERVICE_IP=$OPENO_IP -e SERVICE_PORT=8805 -e OPENPALETTE_MSB_IP=$OPENO_IP -e OPENPALETTE_MSB_PORT=80 $NEXUS_DOCKER_REPO/onap/vfc/wfengine-mgrservice:$MGRSERVICE_DOCKER_VER
-docker run -i -t -d --name vfc_catalog -p 8806:8806 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/catalog:$CATALOG_DOCKER_VER
+docker run -i -t -d --name vfc_catalog -p 8806:8806 -e MSB_ADDR=$OPENO_IP:80 -e SERVICE_IP=$OPENO_IP $NEXUS_DOCKER_REPO/onap/vfc/catalog:$CATALOG_DOCKER_VER
 docker run -i -t -d --name vfc_emsdriver -p 8206:8206 -e MSB_ADDR=$OPENO_IP:80 -e VES_ADDR=$DCAE_COLL_IP:8080 -e VES_AUTHINFO="":"" $NEXUS_DOCKER_REPO/onap/vfc/emsdriver:$EMSDRIVER_DOCKER_VER
 docker run -i -t -d --name vfc_gvnfmdriver -p 8484:8484 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/gvnfmdriver:$GVNFMDRIVER_DOCKER_VER
 docker run -i -t -d --name vfc_jujudriver -p 8483:8483 -e MSB_ADDR=$OPENO_IP:80 $NEXUS_DOCKER_REPO/onap/vfc/jujudriver:$JUJUDRIVER_DOCKER_VER
