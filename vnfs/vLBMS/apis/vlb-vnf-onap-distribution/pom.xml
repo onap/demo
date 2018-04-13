@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <!--parent>
-    <groupId>io.fd.honeycomb.common</groupId>
-    <artifactId>minimal-distribution-parent</artifactId>
-    <version>1.17.07</version>
-  </parent-->
-
   <parent>
     <artifactId>demo-aggregator</artifactId>
     <version>1.2.0-SNAPSHOT</version>
@@ -54,9 +48,56 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <useBaseVersion>true</useBaseVersion>
+              <useRepositoryLayout>true</useRepositoryLayout>
+              <excludeArtifactIds>yang-jmx-generator</excludeArtifactIds>
+            </configuration>
+           </execution>
+           <execution>
+             <id>unpack-configuration</id>
+             <phase>prepare-package</phase>
+             <goals>
+               <goal>unpack-dependencies</goal>
+             </goals>
+             <configuration>
+               <includes>**/honeycomb-minimal-resources/</includes>
+               <outputDirectory>${project.build.outputDirectory}/</outputDirectory>
+             </configuration>
+           </execution>
+         </executions>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>io.fd.honeycomb.common</groupId>
+            <artifactId>minimal-assembly-descriptor</artifactId>
+            <version>1.17.07</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>create-archive</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptorRefs>
+                <descriptorRef>honeycomb-minimal</descriptorRef>
+              </descriptorRefs>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -90,32 +131,8 @@
           <skip>true</skip>
         </configuration>
       </plugin>
-      <!--plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.7</version>
-        <extensions>true</extensions>
-        <configuration>
-          <nexusUrl>https://nexus.onap.org/</nexusUrl>
-          <stagingProfileId>176c31dfe190a</stagingProfileId>
-          <serverId>ecomp-staging</serverId>
-        </configuration>
-      </plugin-->
     </plugins>
   </build>
-
-  <!--distributionManagement>
-    <repository>
-      <id>ecomp-releases</id>
-      <name>Demo Release Repository</name>
-      <url>https://nexus.onap.org/content/repositories/releases/</url>
-    </repository>
-    <snapshotRepository>
-      <id>ecomp-snapshots</id>
-      <name>Demo Snapshot Repository</name>
-      <url>https://nexus.onap.org/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement-->
 
   <dependencies>
     <!-- Dependency on sample plugin -->
