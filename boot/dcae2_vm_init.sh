@@ -595,6 +595,19 @@ list_dns_zone()
     curl -v -s  -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN" -X GET "${MULTICLOUD_PLUGIN_ENDPOINT}/dns-delegate/v2/zones/${ZONEID}/recordsets"
 }
 
+################################## start of vm_init #####################################
+
+# prepare the configurations needed by DCAEGEN2 installer
+rm -rf /opt/app/config
+mkdir -p /opt/app/config
+
+
+# private key
+sed -e 's/\\n/\n/g' /opt/config/priv_key | sed -e 's/^[ \t]*//g; s/[ \t]*$//g' > /opt/app/config/key
+chmod 777 /opt/app/config/key
+
+# move keystone url file
+#cp /opt/config/keystone_url.txt /opt/app/config/keystone_url.txt
 
 
 URL_ROOT='nexus.onap.org/service/local/repositories/raw/content'
@@ -614,13 +627,39 @@ ZONE=$(cat /opt/config/rand_str.txt)
 MYFLOATIP=$(cat /opt/config/dcae_float_ip.txt)
 MYLOCALIP=$(cat /opt/config/dcae_ip_addr.txt)
 
+
 # start docker image pulling while we are waiting for A&AI to come online
 docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
 
 
-
 if [ "$DEPLOYMENT_PROFILE" == "R1" ]; then
-  docker pull "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION" && docker pull nginx &
+  RELEASE_TAG='releases'
+  # download blueprint input template files
+  rm -rf /opt/app/inputs-templates
+  mkdir -p /opt/app/inputs-templates
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/inputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/cdapinputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/phinputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/dhinputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/invinputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/vesinput.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/tcainputs.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/he-ip.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/hr-ip.yaml
+
+  # generate blueprint input files
+  pip install --upgrade jinja2
+  wget https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/scripts/detemplate-bpinputs.py \
+    && \
+    (python detemplate-bpinputs.py /opt/config /opt/app/inputs-templates /opt/app/config; \
+     rm detemplate-bpinputs.py)
+
+  # Run docker containers
+  cd /opt
+
+
+  docker pull "$NEXUS_DOCKER_REPO/onap/org.onap.dcaegen2.deployments.bootstrap:$DOCKER_VERSION" \
+    && docker pull nginx &
 
   #########################################
   # Wait for then register with A&AI
@@ -666,25 +705,40 @@ if [ "$DEPLOYMENT_PROFILE" == "R1" ]; then
   # start proxy for consul's health check
   CONSULIP=$(head -1 /opt/app/config/runtime.ip.consul | sed 's/[[:space:]]//g')
   echo "Consul is available at $CONSULIP" 
-
-  cat >./nginx.conf <<EOL
-server {
-    listen 80;
-    server_name dcae.simpledemo.onap.org;
-    location /healthcheck {
-        proxy_pass http://${CONSULIP}:8500/v1/health/state/passing;
-    }
-}
-EOL
-  docker run --name dcae-proxy -p 8080:80 -v "$(pwd)/nginx.conf:/etc/nginx/conf.d/default.conf" -d nginx
-  echo "Healthcheck API available at http://${MYFLOATIP}:8080/healthcheck"
-  echo "                          or http://${MYLOCALIP}:8080/healthcheck"
-
 fi
 
+if [[ $DEPLOYMENT_PROFILE == R2* ]]; then
+  RELEASE_TAG='R2'
+  set +e
+  rm -rf /opt/app/inputs-templates
+  mkdir -p /opt/app/inputs-templates
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/docker-compose-1.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/docker-compose-2.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/docker-compose-3.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/docker-compose-4.yaml
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/register.sh
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/setup.sh
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/build-plugins.sh
 
-if [ "$DEPLOYMENT_PROFILE" == "R2MVP" ]; then
+  pip install --upgrade jinja2
+  wget https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/scripts/detemplate-bpinputs.py \
+    && \
+    (python detemplate-bpinputs.py /opt/config /opt/app/inputs-templates /opt/app/config; \
+     rm detemplate-bpinputs.py)
+
+  if [ -e /opt/app/config/register.sh ]; then
+    chmod +x /opt/app/config/register.sh
+  fi
+  if [ -e /opt/app/config/setup.sh ]; then
+    chmod +x /opt/app/config/setup.sh
+  fi
+  if [ -e /opt/app/config/build-plugins.sh ]; then
+    chmod +x /opt/app/config/build-plugins.sh
+  fi
+  set -e
+
   cd /opt/app/config
+  # deploy essentials
   /opt/docker/docker-compose -f docker-compose-1.yaml up -d
   echo "Waiting for Consul to come up ready"
   while ! nc -z localhost 8500; do sleep 1; done
@@ -695,48 +749,116 @@ if [ "$DEPLOYMENT_PROFILE" == "R2MVP" ]; then
   echo "All dependencies are up, proceed to the next phase"
   sleep 5
 
-  NAME='config_binding_service'
-  PORT='10000'
-  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
-  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
-  REG='{"ID": "'"$NAME"'0", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
-  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
+  echo "Setup CloudifyManager and Registrator"
+  ./setup.sh
+  ./register.sh
 
-  sleep 5
-  echo "Now bring up DCAE service components"
+  echo "Bring up DCAE MIN service components for R2 use cases"
   /opt/docker/docker-compose -f docker-compose-2.yaml up -d
 
-  
-  NAME='ves'
-  PORT='8080'
-  echo "Registering for $NAME:$PORT"
-  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
-  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
-  REG='{"ID": "'"$NAME"'", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
-  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
+  if [[ "$DEPLOYMENT_PROFILE" == "R2" || "$DEPLOYMENT_PROFILE" == "R2PLUS" ]]; then
+    echo "Bring up DCAE platform components"
+    /opt/docker/docker-compose -f docker-compose-3.yaml up -d
 
-  NAME='tca'
-  PORT='11011'
-  echo "Registering for $NAME:$PORT"
-  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
-  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
-  REG='{"ID": "'"$NAME"'", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
-  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
+    if [ "$DEPLOYMENT_PROFILE" == "R2PLUS" ]; then
+      echo "Bring up additional (plus) DCAE service components"
+      /opt/docker/docker-compose -f docker-compose-4.yaml up -d
+    fi
+  fi
 
-  NAME='hr'
-  PORT='9101'
-  echo "Registering for $NAME:$PORT"
-  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
-  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
-  REG='{"ID": "'"$NAME"'", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
-  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
-
-  NAME='he'
-  PORT='9102'
-  echo "Registering for $NAME:$PORT"
-  ID=$(sudo docker ps |grep "$NAME" |cut -b1-12)
-  while [ -z "$ID" ]; do echo "Waiting for $NAME container to be deployed"; sleep 1; ID=$(sudo docker ps |grep "$NAME" |cut -b1-12); done
-  REG='{"ID": "'"$NAME"'", "Name": "'"$NAME"'", "Address": "'"$NAME"'", "Port": '"$PORT"'}'
-  curl -v -X PUT -H "Content-Type: application/json" --data "${REG}" http://localhost:8500/v1/agent/service/register
+  # start proxy for consul's health check
+  CONSULIP=$(cat /opt/config/dcae_ip_addr.txt)
+  echo "Consul is available at $CONSULIP"
 fi
+
+cat >./nginx.conf <<EOL
+server {
+    listen 80;
+    server_name dcae.simpledemo.onap.org;
+    root /www/healthcheck;
+
+    location /healthcheck {
+        try_files /services.yaml =404;
+    }
+    location /R1 {
+        proxy_pass http://${CONSULIP}:8500/v1/health/state/passing;
+    }
+    location /R2MIN{
+        try_files /r2mvp_healthy.yaml =404;
+    }
+    location /R2 {
+        try_files /r2_healthy.yaml =404;
+    }
+    location /R2PLUS {
+        try_files /r2plus_healthy.yaml =404;
+    }
+}
+EOL
+
+HEALTHPORT=8000
+docker run -d \
+--name dcae-health \
+-p ${HEALTHPORT}:80 \
+-v "$(pwd)/nginx.conf:/etc/nginx/conf.d/default.conf" \
+-v "/tmp/healthcheck:/www/healthcheck" \
+ nginx
+
+echo "Healthcheck API available at http://${MYFLOATIP}:${HEALTHPORT}/healthcheck"
+echo "                             http://${MYFLOATIP}:${HEALTHPORT}/R1"
+echo "                             http://${MYFLOATIP}:${HEALTHPORT}/R2MIN"
+echo "                             http://${MYFLOATIP}:${HEALTHPORT}/R2PLUS"
+
+# run forever for updating health status based on consul
+while :
+do
+  rm -rf /tmp/healthcheck/*
+  # all registered services
+  SERVICES=$(curl -s http://consul:8500/v1/agent/services |jq '. | to_entries[] | .value.Service')
+  # passing services
+  SERVICES=$(curl -s http://consul:8500/v1/health/state/passing | jq '.[] | .ServiceName')
+
+  # remove empty lines/entries
+  SERVICES=$(echo "$SERVICES" | sed '/^\s*\"\"\s*$/d' |sed '/^\s*$/d')
+
+  SERVICES_JSON=$(echo "$SERVICES" | sed 's/\"$/\",/g' | sed '$ s/.$//')
+
+
+  PLT_CONSUL=$(echo "$SERVICES" |grep consul)
+  PLT_CBS=$(echo "$SERVICES" |grep "config_binding_service")
+  MVP_PG_HOLMES=$(echo "$SERVICES" |grep "pgHolmes")
+  MVP_VES=$(echo "$SERVICES" |grep "mvp.*ves")
+  MVP_TCA=$(echo "$SERVICES" |grep "mvp.*tca")
+  MVP_HR=$(echo "$SERVICES" |grep "mvp.*holmes-rule")
+  MVP_HE=$(echo "$SERVICES" |grep "mvp.*holmes-engine")
+
+  PLT_CM=$(echo "$SERVICES" |grep "cloudify.*manager")
+  PLT_DH=$(echo "$SERVICES" |grep "deployment.*handler")
+  PLT_PH=$(echo "$SERVICES" |grep "policy.*handler")
+  PLT_SCH=$(echo "$SERVICES" |grep "service.*change.*handler")
+  PLT_INV=$(echo "$SERVICES" |grep "inventory")
+  PLT_PG_INVENTORY=$(echo "$SERVICES" |grep "pgInventory")
+
+  PLUS_MHB=$(echo "$SERVICES" |grep "heartbeat")
+  PLUS_PRH=$(echo "$SERVICES" |grep "prh")
+  PLUS_MPR=$(echo "$SERVICES" |grep "mapper")
+  PLUS_TRAP=$(echo "$SERVICES" |grep "snmptrap")
+
+  DATA="{\"healthy\" : \"$(date)\", \"healthy_services\": [${SERVICES_JSON}]}"
+  if [[ -n $PLT_CONSUL && -n $PLT_CBS && -n $MVP_PG_HOLMES && -n $MVP_VES && \
+        -n $MVP_TCA && -n $MVP_HR && -n $MVP_HE ]]; then
+    echo "${DATA}" > /tmp/healthcheck/r2mvp_healthy.yaml
+    echo "${DATA}" > /tmp/healthcheck/services.yaml
+  fi
+
+  if [[ -n $CONSUL && -n $CBS && -n $PLT_CM && -n $PLT_DH && \
+        -n $PLT_PH && -n $PLT_SCH && -n $PLT_INV && -n $PLT_PG_INVENTORY ]]; then
+    echo "${DATA}" > /tmp/healthcheck/r2_healthy.yaml
+
+    if [[ -n $PLUS_MHB && -n $PLUS_PRH && -n $PLUS_MPR && -n $PLUS_TRAP ]]; then
+      echo "${DATA}" > /tmp/healthcheck/r2plus_healthy.yaml
+    fi
+  fi
+
+  sleep 60
+done
 
