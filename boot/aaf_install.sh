@@ -5,7 +5,9 @@ NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
+GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+CODE_REPO=$(cat /opt/config/remote_repo.txt)
 
 # Add host name to /etc/host to avoid warnings in openstack images
 if [[ $CLOUD_ENV != "rackspace" ]]
@@ -91,4 +93,8 @@ resolvconf -u
 
 # Clone Gerrit repository and run docker containers
 cd /opt
+git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO
+chmod +x /opt/authz/auth/auth-cass/docker/dinstall.sh
+chmod +x /opt/authz/auth/docker/drun.sh
+chmod +x /opt/authz/auth/docker/d.props
 ./aaf_vm_init.sh
