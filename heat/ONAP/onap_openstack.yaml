@@ -298,6 +298,8 @@ parameters:
     type: string
   nbi_repo:
     type: string
+  aaf_repo:
+    type: string
 
   ################################
   #                              #
@@ -492,6 +494,8 @@ parameters:
   music_branch:
     type: string
   nbi_branch:
+    type: string
+  aaf_branch:
     type: string
 
 #############
@@ -1860,7 +1864,7 @@ resources:
             __dcae_ph_docker__:  { get_param: dcae_ph_docker }
             __dcae_sch_docker__:  { get_param: dcae_sch_docker }
             __dcae_heartbeat_docker__:  { get_param: dcae_heartbeat_docker }
-            __dcae_prh_docker__:  { get_param: dcaeprh_docker }
+            __dcae_prh_docker__:  { get_param: dcae_prh_docker }
             __holmes_em_docker__:  { get_param: holmes_em_docker }
             __holmes_rm_docker__:  { get_param: holmes_rm_docker }
 
@@ -2107,7 +2111,7 @@ resources:
   aaf_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_medium }
       name:
         str_replace:
