@@ -298,6 +298,8 @@ parameters:
     type: string
   nbi_repo:
     type: string
+  aaf_repo:
+    type: string
 
   ################################
   #                              #
@@ -492,6 +494,8 @@ parameters:
   music_branch:
     type: string
   nbi_branch:
+    type: string
+  aaf_branch:
     type: string
 
 #############
@@ -2107,7 +2111,7 @@ resources:
   aaf_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_medium }
       name:
         str_replace:
