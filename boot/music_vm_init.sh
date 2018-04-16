@@ -14,4 +14,11 @@ docker pull $NEXUS_DOCKER_REPO/onap/music/music:$DOCKER_IMAGE_VERSION
 
 cd /opt/music/distribution/dockermusic
 git pull
+
+#Stop existing docker containers (if any)
+if [ $(docker ps | wc -l) > 1 ]; then
+	./music.sh stop
+	sleep 2
+fi
+
 ./music.sh start
