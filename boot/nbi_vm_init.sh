@@ -5,9 +5,12 @@ NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
-# Fetch the latest docker-compose.yml
+# Create nbi directory
+mkdir /opt/nbi
 cd /opt/nbi
-wget https://git.onap.org/externalapi/nbi/tree/docker-compose.yml?h=master
+
+# Fetch the latest docker-compose.yml
+wget -o docker-compose.yml https://git.onap.org/externalapi/nbi/plain/docker-compose.yml?h=master
 
 # Pull the nbi docker image from nexus
 # MariaDB and mongoDB will be pulled automatically from docker.io during docker-compose
