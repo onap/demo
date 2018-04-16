@@ -15,8 +15,5 @@ docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
 docker pull $NEXUS_DOCKER_REPO/onap/externalapi/nbi:$DOCKER_IMAGE_VERSION
 
-# Change the Clamp docker image name in the docker-compose.yml to match the one downloaded
-sed -i "/image: onap\/nbi/c\    image: $NEXUS_DOCKER_REPO\/onap\/nbi:$DOCKER_IMAGE_VERSION" docker-compose.yml
-
 # Start nbi, MariaDB and MongoDB containers with docker compose and nbi/docker-compose.yml
 /opt/docker/docker-compose up -d
