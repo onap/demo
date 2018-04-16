@@ -46,7 +46,9 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget git ntp ntpdate python python-pip
 
 # Download scripts from Nexus
+if [ ! -e /opt/dcae2_vm_init.sh ]; then
 curl -k "$NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dcae2_vm_init.sh" -o /opt/dcae2_vm_init.sh
+fi
 curl -k "$NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dcae2_serv.sh" -o /opt/dcae2_serv.sh
 chmod +x /opt/dcae2_vm_init.sh
 chmod +x /opt/dcae2_serv.sh
@@ -75,13 +77,17 @@ if [ -s /opt/config/external_dns.txt ]
 then
 	DNS_FLAG=$DNS_FLAG"--dns $(cat /opt/config/external_dns.txt) "
 fi
-echo "DOCKER_OPTS=\"$DNS_FLAG--mtu=$MTU\"" >> /etc/default/docker
+echo "DOCKER_OPTS=\"$DNS_FLAG--mtu=$MTU --raw-logs -H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock\"" >> /etc/default/docker
 
 cp /lib/systemd/system/docker.service /etc/systemd/system
 sed -i "/ExecStart/s/$/ --mtu=$MTU/g" /etc/systemd/system/docker.service
+sed -i "/ExecStart/s/$/ -H tcp:\/\/0.0.0.0:2376 --raw-logs/g" /etc/systemd/system/docker.service
 systemctl daemon-reload
 service docker restart
 
+# add hostname aliases
+echo "$(cat /opt/config/dcae_ip_addr.txt) consul" >>/etc/hosts
+echo "$(cat /opt/config/dcae_ip_addr.txt) dockerhost" >>/etc/hosts
 
 # DNS IP address configuration
 echo "nameserver $DNS_IP_ADDR" >> /etc/resolvconf/resolv.conf.d/head
@@ -101,52 +107,5 @@ chmod 777 /opt/app/config/key
 #cp /opt/config/keystone_url.txt /opt/app/config/keystone_url.txt
 
 
-URL_ROOT='nexus.onap.org/service/local/repositories/raw/content'
-REPO_BLUEPRINTS='org.onap.dcaegen2.platform.blueprints' 
-REPO_DEPLOYMENTS='org.onap.dcaegen2.deployments' 
-
-if [ -e /opt/config/dcae_deployment_profile.txt ]; then
-  DEPLOYMENT_PROFILE=$(cat /opt/config/dcae_deployment_profile.txt)
-fi
-DEPLOYMENT_PROFILE=${DEPLOYMENT_PROFILE:-R1}
-if [ "$DEPLOYMENT_PROFILE" == "R1" ]; then
-  RELEASE_TAG='releases'
-  # download blueprint input template files
-  rm -rf /opt/app/inputs-templates
-  mkdir -p /opt/app/inputs-templates
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/inputs.yaml
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/cdapinputs.yaml
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/phinputs.yaml
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/dhinputs.yaml
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/invinputs.yaml
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/vesinput.yaml
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/tcainputs.yaml
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/he-ip.yaml
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_BLUEPRINTS}/${RELEASE_TAG}/input-templates/hr-ip.yaml
-
-
-  # generate blueprint input files
-  pip install --upgrade jinja2
-  wget https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/scripts/detemplate-bpinputs.py && \
-    (python detemplate-bpinputs.py /opt/config /opt/app/inputs-templates /opt/app/config; rm detemplate-bpinputs.py)
-
-  # Run docker containers
-  cd /opt
-  ./dcae2_vm_init.sh
-fi
-
-if [ "$DEPLOYMENT_PROFILE" == "R2MVP" ]; then
-  RELEASE_TAG='R2'
-  rm -rf /opt/app/inputs-templates
-  mkdir -p /opt/app/inputs-templates
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/${DEPLOYMENT_PROFILE}/docker-compose-1.yaml
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/${DEPLOYMENT_PROFILE}/docker-compose-2.yaml
-
-  pip install --upgrade jinja2
-  wget https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/scripts/detemplate-bpinputs.py && \
-    (python detemplate-bpinputs.py /opt/config /opt/app/inputs-templates /opt/app/config; rm detemplate-bpinputs.py)
-
-  cd /opt
-  ./dcae2_vm_init.sh
-fi
-
+cd /opt
+#./dcae2_vm_init.sh
