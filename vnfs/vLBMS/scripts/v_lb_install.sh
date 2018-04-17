@@ -57,7 +57,7 @@ fi
 echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install --allow-unauthenticated -y make gcc wget openjdk-8-jdk bridge-utils libcurl4-openssl-dev apt-transport-https ca-certificates maven
+apt-get install --allow-unauthenticated -y make gcc wget openjdk-8-jdk bridge-utils libcurl4-openssl-dev apt-transport-https ca-certificates
 sleep 1
 
 # Download vLB demo code for load balancer
@@ -77,10 +77,10 @@ tar -zmxvf ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION VESreporting_vLB
 mv VESreporting_vLB /opt/VES/evel/evel-library/code/VESreporting
 
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -DremoteRepositories=https://nexus.onap.org/content/repositories/snapshots -Dartifact=org.onap.demo.vnf.vlb:vlb-vnf-onap-distribution:$DEMO_ARTIFACTS_VERSION-SNAPSHOT:tar.gz:hc -Dtransitive=false -Ddest=.
-tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT-hc.tar.gz
-sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT/config/honeycomb.json
-sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT/config/honeycomb.json
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb-vnf-onap-distribution/$DEMO_ARTIFACTS_VERSION/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
 
 rm *.tar.gz
 

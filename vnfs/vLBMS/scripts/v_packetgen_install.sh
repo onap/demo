@@ -48,7 +48,7 @@ fi
 echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install --allow-unauthenticated -y make wget openjdk-8-jdk gcc libcurl4-openssl-dev python-pip bridge-utils apt-transport-https ca-certificates maven
+apt-get install --allow-unauthenticated -y make wget openjdk-8-jdk gcc libcurl4-openssl-dev python-pip bridge-utils apt-transport-https ca-certificates
 pip install jsonschema
 
 # Download vFirewall demo code for packet generator
@@ -66,10 +66,10 @@ sed -i 's/vnfc=.*/vnfc=vPacketGen/g' /opt/config/properties.conf
 tar -zmxvf vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv vlb_dns_streams-$DEMO_ARTIFACTS_VERSION dns_streams
 
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -DremoteRepositories=https://nexus.onap.org/content/repositories/snapshots -Dartifact=org.onap.demo.vnf.vlb:vlb-vnf-onap-distribution:$DEMO_ARTIFACTS_VERSION-SNAPSHOT:tar.gz:hc -Dtransitive=false -Ddest=.
-tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT-hc.tar.gz
-sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT/config/honeycomb.json
-sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT/config/honeycomb.json
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb-vnf-onap-distribution/$DEMO_ARTIFACTS_VERSION/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
 
 rm *.tar.gz
 chmod +x v_packetgen_init.sh
