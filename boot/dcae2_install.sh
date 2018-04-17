@@ -46,9 +46,7 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget git ntp ntpdate python python-pip
 
 # Download scripts from Nexus
-if [ ! -e /opt/dcae2_vm_init.sh ]; then
 curl -k "$NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dcae2_vm_init.sh" -o /opt/dcae2_vm_init.sh
-fi
 curl -k "$NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dcae2_serv.sh" -o /opt/dcae2_serv.sh
 chmod +x /opt/dcae2_vm_init.sh
 chmod +x /opt/dcae2_serv.sh
@@ -108,4 +106,4 @@ chmod 777 /opt/app/config/key
 
 
 cd /opt
-#./dcae2_vm_init.sh
+./dcae2_vm_init.sh

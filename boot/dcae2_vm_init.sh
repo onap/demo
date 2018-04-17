@@ -718,7 +718,7 @@ if [[ $DEPLOYMENT_PROFILE == R2* ]]; then
   wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/docker-compose-4.yaml
   wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/register.sh
   wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/setup.sh
-  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/build-plugins.sh
+  wget -P /opt/app/inputs-templates https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/heat/teardown.sh
 
   pip install --upgrade jinja2
   wget https://${URL_ROOT}/${REPO_DEPLOYMENTS}/${RELEASE_TAG}/scripts/detemplate-bpinputs.py \
@@ -747,10 +747,11 @@ if [[ $DEPLOYMENT_PROFILE == R2* ]]; then
   echo "Waiting for CBS to come up ready"
   while ! nc -z localhost 10000; do sleep 1; done
   echo "All dependencies are up, proceed to the next phase"
-  sleep 5
+  sleep 30
 
   echo "Setup CloudifyManager and Registrator"
   ./setup.sh
+  sleep 10
   ./register.sh
 
   echo "Bring up DCAE MIN service components for R2 use cases"
@@ -801,6 +802,10 @@ docker run -d \
 -p ${HEALTHPORT}:80 \
 -v "$(pwd)/nginx.conf:/etc/nginx/conf.d/default.conf" \
 -v "/tmp/healthcheck:/www/healthcheck" \
+--label "SERVICE_80_NAME=dcae-health" \
+--label "SERVICE_80_CHECK_HTTP=/healthcheck" \
+--label "SERVICE_80_CHECK_INTERVAL=15s" \
+--label "SERVICE_80_CHECK_INITIAL_STATUS=passing" \
  nginx
 
 echo "Healthcheck API available at http://${MYFLOATIP}:${HEALTHPORT}/healthcheck"
@@ -809,6 +814,7 @@ echo "                             http://${MYFLOATIP}:${HEALTHPORT}/R2MIN"
 echo "                             http://${MYFLOATIP}:${HEALTHPORT}/R2PLUS"
 
 # run forever for updating health status based on consul
+set +e
 while :
 do
   rm -rf /tmp/healthcheck/*
@@ -822,7 +828,8 @@ do
 
   SERVICES_JSON=$(echo "$SERVICES" | sed 's/\"$/\",/g' | sed '$ s/.$//')
 
-
+  echo "$(date): running healthy services:"
+  echo ">>> " $SERVICES
   PLT_CONSUL=$(echo "$SERVICES" |grep consul)
   PLT_CBS=$(echo "$SERVICES" |grep "config_binding_service")
   MVP_PG_HOLMES=$(echo "$SERVICES" |grep "pgHolmes")
@@ -844,21 +851,29 @@ do
   PLUS_TRAP=$(echo "$SERVICES" |grep "snmptrap")
 
   DATA="{\"healthy\" : \"$(date)\", \"healthy_services\": [${SERVICES_JSON}]}"
-  if [[ -n $PLT_CONSUL && -n $PLT_CBS && -n $MVP_PG_HOLMES && -n $MVP_VES && \
-        -n $MVP_TCA && -n $MVP_HR && -n $MVP_HE ]]; then
+  if [[ -n "$PLT_CONSUL" && -n "$PLT_CBS" && -n "$MVP_PG_HOLMES" && -n "$MVP_VES" && \
+        -n "$MVP_TCA" && -n "$MVP_HR" && -n "$MVP_HE" ]]; then
     echo "${DATA}" > /tmp/healthcheck/r2mvp_healthy.yaml
     echo "${DATA}" > /tmp/healthcheck/services.yaml
+    echo ">>>>>> enough services satisfying R2MIN service deployment"
+  else
+    echo ">>>>>> not enough services satisfying R2MIN service deployment"
   fi
 
-  if [[ -n $CONSUL && -n $CBS && -n $PLT_CM && -n $PLT_DH && \
-        -n $PLT_PH && -n $PLT_SCH && -n $PLT_INV && -n $PLT_PG_INVENTORY ]]; then
+  if [[ -n "$PLT_CONSUL" && -n "$PLT_CBS" && -n "$PLT_CM" && -n "$PLT_DH" && \
+        -n "$PLT_PH" && -n "$PLT_SCH" && -n "$PLT_INV" && -n "$PLT_PG_INVENTORY" ]]; then
+    echo ">>>>>> enough services satisfying R2 platform deployment"
     echo "${DATA}" > /tmp/healthcheck/r2_healthy.yaml
 
-    if [[ -n $PLUS_MHB && -n $PLUS_PRH && -n $PLUS_MPR && -n $PLUS_TRAP ]]; then
+    if [[ -n "$PLUS_MHB" && -n "$PLUS_PRH" && -n "$PLUS_MPR" && -n "$PLUS_TRAP" ]]; then
+      echo ">>>>>> enough services satisfying R2PLUS deployment"
       echo "${DATA}" > /tmp/healthcheck/r2plus_healthy.yaml
+    else
+      echo ">>>>>> not enough services satisfying R2PLUS service deployment"
     fi
+  else
+    echo ">>>>>> not enough services satisfying R2 platform or R2PLUS service deployment"
   fi
-
   sleep 60
 done
 
