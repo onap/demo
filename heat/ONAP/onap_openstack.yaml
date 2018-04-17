@@ -958,6 +958,7 @@ resources:
             __music_ip_addr__: { get_param: music_ip_addr }
             __oof_ip_addr__: { get_param: oof_ip_addr }
             __aaf_ip_addr__: { get_param: aaf_ip_addr }
+            __nbi_ip_addr__: { get_param: nbi_ip_addr }
             __external_dns__: { get_param: external_dns }
             __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
             __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
@@ -1003,6 +1004,7 @@ resources:
             echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
             echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
             echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
+            echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__vm_flavor__" > /opt/config/vm_flavor.txt
