@@ -47,11 +47,8 @@ then
 	ifup eth1
 fi
 
-# Download dependencies
-echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make
+apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates curl git ntp ntpdate make software-properties-common
 
 # Download scripts from Nexus
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/nbi_vm_init.sh -o /opt/nbi_vm_init.sh
@@ -62,10 +59,13 @@ mv /opt/nbi_serv.sh /etc/init.d
 update-rc.d nbi_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
-echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
 apt-get update
-apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-apt-get install -y --allow-unauthenticated docker-engine
+apt-get install -y docker-ce
 
 mkdir /opt/docker
 curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
