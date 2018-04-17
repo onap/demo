@@ -48,7 +48,7 @@ fi
 echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install --allow-unauthenticated -y wget openjdk-8-jdk bind9 bind9utils bind9-doc apt-transport-https ca-certificates maven
+apt-get install --allow-unauthenticated -y wget openjdk-8-jdk bind9 bind9utils bind9-doc apt-transport-https ca-certificates
 sleep 1
 
 # Download vDNS demo code for DNS Server
@@ -62,11 +62,11 @@ wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/run_health_
 sed -i 's/primary=.*/primary=false/g' /opt/config/properties.conf
 sed -i 's/vnfc=.*/vnfc=vDNS/g' /opt/config/properties.conf
 
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get -DremoteRepositories=https://nexus.onap.org/content/repositories/snapshots -Dartifact=org.onap.demo.vnf.vlb:vlb-vnf-onap-distribution:$DEMO_ARTIFACTS_VERSION-SNAPSHOT:tar.gz:hc -Dtransitive=false -Ddest=.
-tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT-hc.tar.gz
-rm vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT-hc.tar.gz
-sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT/config/honeycomb.json
-sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-SNAPSHOT/config/honeycomb.json
+wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb-vnf-onap-distribution/$DEMO_ARTIFACTS_VERSION/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+rm vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
 
 chmod +x v_dns_init.sh
 chmod +x vdns.sh
