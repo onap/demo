@@ -989,6 +989,7 @@ resources:
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
             echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
+            echo "__portal_ip_addr__" > /opt/config/cli_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_be_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_fe_ip_addr.txt
