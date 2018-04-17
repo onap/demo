@@ -954,6 +954,7 @@ resources:
             __clamp_ip_addr__: { get_param: clamp_ip_addr }
             __openo_ip_addr__: { get_param: openo_ip_addr }
             __music_ip_addr__: { get_param: music_ip_addr }
+            __nbi_ip_addr__: { get_param: nbi_ip_addr }
             __external_dns__: { get_param: external_dns }
             __vm_image_name__: { get_param: ubuntu_1404_image }
             __vm_flavor__: { get_param: flavor_medium }
@@ -996,6 +997,7 @@ resources:
             echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
             echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
             echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
+            echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
             echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
             echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
