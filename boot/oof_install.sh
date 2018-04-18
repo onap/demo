@@ -103,4 +103,5 @@ fi
 
 # Clone Gerrit repository and run docker containers
 cd /opt
+git clone https://gerrit.onap.org/r/optf/has optf-has
 ./oof_vm_init.sh
