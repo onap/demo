@@ -300,6 +300,8 @@ parameters:
     type: string
   aaf_repo:
     type: string
+  oof_repo:
+    type: string
 
   ################################
   #                              #
@@ -496,6 +498,8 @@ parameters:
   nbi_branch:
     type: string
   aaf_branch:
+    type: string
+  oof_branch:
     type: string
 
 #############
@@ -2072,6 +2076,8 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
             __docker_version__: { get_param: oof_docker }
+            __oof_repo__: { get_param: oof_repo }
+            __gerrit_branch__: { get_param: oof_branch }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
           template: |
@@ -2086,6 +2092,8 @@ resources:
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__oof_repo__" > /opt/config/remote_repo.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
 
