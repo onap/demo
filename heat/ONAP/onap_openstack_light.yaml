@@ -1699,7 +1699,7 @@ resources:
       flavor: { get_param: flavor_small }
       name:
         str_replace:
-          template: base-dcae-bootstrap
+          template: base-dcae
           params:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
