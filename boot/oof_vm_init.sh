@@ -1,17 +1,21 @@
 #!/bin/bash
 
+CERT=/opt/optf-has/aai.cer
+KEY=/opt/optf-has/aai.key
+BUNDLE=/opt/optf-has/aai_bundle.pem
+
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 cd /opt/optf-has
-git pull
+#git pull
 
 COND_CONF=/opt/optf-has/conductor.conf
 LOG_CONF=/opt/optf-has/log.conf
 
-#THE FOLLOWING LINE IS A PLACEHOLDER
+#!!! THE FOLLOWING LINE IS A PLACEHOLDER !!!
 AAI_cert=/opt/optf-has/aai_cert.cer
 
 IMAGE_NAME="$NEXUS_DOCKER_REPO/onap/optf-has"
@@ -39,7 +43,7 @@ mkdir -p /opt/optf-has/music/properties
 mkdir -p /opt/optf-has/music/logs
 
 # add music.properties file
-cat >> /opt/optf-has/music/properties/music.properties << NEWFILE
+cat > /opt/optf-has/music/properties/music.properties<<NEWFILE
 my.id=0
 all.ids=0
 my.public.ip=localhost
@@ -88,19 +92,30 @@ docker run -d --rm --name music-tomcat --network music-net -p "8080:8080" -v mus
 docker network connect bridge music-tomcat;
 
 # Get MUSIC url
-MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddress}}' music-tomcat)
+#MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddress}}' music-tomcat)
+MUSIC_URL=localhost
 
 # Set A&AI and MUSIC url inside OOF-HAS conductor.conf
 sed -i "138 s%.*%server_url = https://aai.api.simpledemo.onap.org:8443/aai%" $COND_CONF
 sed -i "141 s%.*%server_url_version = v13%" $COND_CONF
-sed -i "250 s%.*%server_url = $MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
+#sed -i "250 s%.*%server_url = $MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
 
 # Set A&AI authentication file locations inside OOF-HAS conductor.conf
 sed -i "153 s%.*%certificate_authority_bundle_file = $AAI_cert%" $COND_CONF
 
+
+echo "Values to data component"
+echo $CERT
+echo $KEY
+echo $BUNDLE
+
 # run optf-has
 docker run -d --name controller -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-controller --config-file=/usr/local/bin/conductor.conf
+
 docker run -d --name api -p "8091:8091" -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-api --port=8091 -- --config-file=/usr/local/bin/conductor.conf
+
 docker run -d --name solver -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-solver --config-file=/usr/local/bin/conductor.conf
+
 docker run -d --name reservation -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-reservation --config-file=/usr/local/bin/conductor.conf
+
 docker run -d --name data -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf -v $CERT:/usr/local/bin/aai_cert.cer -v $KEY:/usr/local/bin/aai_key.key -v $BUNDLE:/usr/local/bin/bundle.pem ${IMAGE_NAME}:latest python /usr/local/bin/conductor-data --config-file=/usr/local/bin/conductor.conf
