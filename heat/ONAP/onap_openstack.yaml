@@ -2148,6 +2148,7 @@ resources:
             __external_dns__: { get_param: external_dns }
             __aaf_repo__: { get_param: aaf_repo }
             __gerrit_branch__: { get_param: aaf_branch }
+            __local_ip__: { get_param: aaf_ip_addr }
           template: |
             #!/bin/bash
 
@@ -2164,6 +2165,7 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__aaf_repo__" > /opt/config/remote_repo.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__local_ip__" > /opt/config/local_ip.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aaf_install.sh -o /opt/aaf_install.sh
