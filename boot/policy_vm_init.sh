@@ -71,7 +71,7 @@ docker tag $NEXUS_DOCKER_REPO/onap/policy-pe:$DOCKER_IMAGE_VERSION onap/policy-p
 docker pull $NEXUS_DOCKER_REPO/onap/policy-drools:$DOCKER_IMAGE_VERSION
 docker tag $NEXUS_DOCKER_REPO/onap/policy-drools:$DOCKER_IMAGE_VERSION onap/policy-drools:latest
 
-docker pull $NEXUS_DOCKER_REPO/onap/policy-nexus:$DOCKER_IMAGE_VERSION
-docker tag $NEXUS_DOCKER_REPO/onap/policy-nexus:$DOCKER_IMAGE_VERSION onap/policy-nexus:latest
+#docker pull $NEXUS_DOCKER_REPO/onap/policy-nexus:$DOCKER_IMAGE_VERSION
+#docker tag $NEXUS_DOCKER_REPO/onap/policy-nexus:$DOCKER_IMAGE_VERSION onap/policy-nexus:latest
 
 /opt/docker/docker-compose up -d
