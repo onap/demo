@@ -31,11 +31,61 @@ CASS_PASSWORD=cassandra1
 
 # pull images from repo
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
+docker pull $NEXUS_DOCKER_REPO/onap/optf-osdf:$DOCKER_IMAGE_VERSION
 docker pull ${ZK_IMG}
 docker pull ${TOMCAT_IMG}
 docker pull ${CASS_IMG}
 docker pull ${MUSIC_IMG}
 docker pull $NEXUS_DOCKER_REPO/onap/optf-has:$DOCKER_IMAGE_VERSION
+
+
+#run optf-osdf
+
+OSDF_IMAGE_NAME="$NEXUS_DOCKER_REPO/onap/optf-osdf"
+OSDF_CONFIG=/opt/optf-osdf/config/osdf_config.yaml
+
+mkdir -p /opt/optf-osdf/config
+
+cat > $OSDF_CONFIG<<NEWFILE
+
+osdfUserNameForSO: ""   # The OSDF Manager username for MSO.
+osdfPasswordForSO: ""   # The OSDF Manager password for MSO.
+
+# msoUrl: ""   # The SO url for call back. This will be part of the request, so no need
+soUsername: ""   # SO username for call back.
+soPassword: ""   # SO password for call back.
+
+conductorUrl: "https://localhost:8091"
+conductorUsername: admin1
+conductorPassword: plan.15
+conductorPingWaitTime: 60  # seconds to wait before calling the conductor retry URL
+conductorMaxRetries: 30  # if we don't get something in 30 minutes, give up
+
+# Policy Platform -- requires ClientAuth, Authorization, and Environment
+policyPlatformUrl: https://POLICY-URL:8081/pdp/getConfig # Policy Dev platform URL
+policyPlatformEnv: TEST  # Environment for policy platform
+policyPlatformUsername: POLICY-USER   # Policy platform username.
+policyPlatformPassword: POLICY-PASSWD   # Policy platform password.
+policyClientUsername: POLICY-CLIENT-USER   # For use with ClientAuth
+policyClientPassword: POLICY-CLIENT-PASSWD   # For use with ClientAuth
+
+messageReaderHosts: https://mr.api.simpledemo.onap.org:3905
+messageReaderTopic: org.onap.oof.osdf.multicloud
+messageReaderAafUserId: DMAAP-OSDF-MC-USER
+messageReaderAafPassword: DMAAP-OSDF-MC-PASSWD
+
+sdcUrl: "SDC-URL"
+sdcUsername: SDC-OSDF-USER
+sdcPassword: SDC-OSDF-PASSWD
+sdcONAPInstanceID: ONAP-OSDF
+
+osdfPlacementUrl: "http://127.0.0.1:8698/api/oof/v1/placement"
+osdfPlacementUsername: "test"
+osdfPlacementPassword: "testpwd"
+
+NEWFILE
+
+docker run -d --name osdf -v $OSDF_CONFIG:/optf/config/osdf_config.yaml -p 8698:8699 ${OSDF_IMAGE_NAME}:latest
 
 # install MUSIC
 # create directory for music properties and logs
@@ -119,3 +169,5 @@ docker run -d --name solver -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_
 docker run -d --name reservation -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-reservation --config-file=/usr/local/bin/conductor.conf
 
 docker run -d --name data -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf -v $CERT:/usr/local/bin/aai_cert.cer -v $KEY:/usr/local/bin/aai_key.key -v $BUNDLE:/usr/local/bin/bundle.pem ${IMAGE_NAME}:latest python /usr/local/bin/conductor-data --config-file=/usr/local/bin/conductor.conf
+
+
