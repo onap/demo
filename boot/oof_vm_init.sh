@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CERT=/opt/optf-has/aai.cer
-KEY=/opt/optf-has/aai.key
+CERT=/opt/optf-has/aai_cert.cer
+KEY=/opt/optf-has/aai_key.key
 BUNDLE=/opt/optf-has/aai_bundle.pem
 
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
