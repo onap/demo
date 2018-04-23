@@ -22,8 +22,8 @@ source .env
 
 # Refresh images
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
-docker pull $NEXUS_DOCKER_REPO/onap/refrepo:${REFREPO_TAG}
-docker pull $NEXUS_DOCKER_REPO/onap/refrepo:${POSTGRES_TAG}
+docker pull $NEXUS_DOCKER_REPO/onap/vnfsdk/refrepo:${REFREPO_TAG}
+docker pull $NEXUS_DOCKER_REPO/onap/vnfsdk/refrepo/postgres:${POSTGRES_TAG}
 
 # docker-compose is not in /usr/bin
 /opt/docker/docker-compose down
