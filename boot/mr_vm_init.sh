@@ -9,7 +9,7 @@ DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
-cd /opt/dcae-startup-vm-message-router
+cd /opt/startup-vm-message-router/demo
 sed -i 's|wget .*|wget -q \"http://archive.apache.org/dist/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz\" \\|g' deploy.sh
 bash deploy.sh &
 
