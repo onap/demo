@@ -15,7 +15,7 @@ docker rm -f dmaap-buscontroller
 
 TMP_CFG=/tmp/docker-dmaap-buscontroller.conf
 cat >> $TMP_CFG <<!EOF
-DMAAPBC_INT_HTTPS_PORT=0
+DMAAPBC_INT_HTTPS_PORT=8443
 DMAAPBC_PG_ENABLED=false
 DMAAPBC_INSTANCE_NAME=ONAP-CSIT
 DMAAPBC_AAF_URL=https://aaf.api.simpledemo.onap.org:8095/proxy/
