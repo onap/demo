@@ -102,5 +102,5 @@ resolvconf -u
 
 # Clone Gerrit repository and run docker containers
 cd /opt
-git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO dcae-startup-vm-message-router
+git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO /opt/startup-vm-message-router/demo
 ./mr_vm_init.sh
