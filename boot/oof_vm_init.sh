@@ -16,7 +16,7 @@ COND_CONF=/opt/optf-has/conductor.conf
 LOG_CONF=/opt/optf-has/log.conf
 
 #!!! THE FOLLOWING LINE IS A PLACEHOLDER !!!
-AAI_cert=/opt/optf-has/aai_cert.cer
+AAI_cert=/usr/local/bin/aai_cert.cer
 
 IMAGE_NAME="$NEXUS_DOCKER_REPO/onap/optf-has"
 
