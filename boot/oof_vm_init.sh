@@ -10,7 +10,7 @@ NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 cd /opt/optf-has
-#git pull
+git pull
 
 COND_CONF=/opt/optf-has/conductor.conf
 LOG_CONF=/opt/optf-has/log.conf
