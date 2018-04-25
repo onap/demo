@@ -426,6 +426,8 @@ parameters:
     type: string
   nbi_docker:
     type: string
+  dbcl_docker:
+    type: string
 
   vfc_nokia_docker:
     type: string
@@ -952,6 +954,7 @@ resources:
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
             __mr_repo__: { get_param: mr_repo }
+            __dbcl_docker__: { get_param: dbcl_docker }
           template: |
             #!/bin/bash
 
@@ -967,6 +970,7 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__mr_repo__" > /opt/config/remote_repo.txt
+            echo "__dbcl_docker__" > /opt/config/docker_version.txt
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/mr_install.sh -o /opt/mr_install.sh

@@ -5,12 +5,12 @@ export MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
-DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
 cd /opt/startup-vm-message-router/demo
 sed -i 's|wget .*|wget -q \"http://archive.apache.org/dist/kafka/${KAFKA_VERSION}/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz\" \\|g' deploy.sh
-bash deploy.sh &
+bash deploy.sh &>/dev/null &disown
 
-bash dbcl_vm_init.sh &
+cd /opt
+bash dbcl_vm_init.sh &>/dev/null &disown
