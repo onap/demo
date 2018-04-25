@@ -95,8 +95,13 @@ resolvconf -u
 cd /opt
 git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO
 chmod +x /opt/authz/auth/auth-cass/docker/dinstall.sh
+chmod +x /opt/authz/auth/auth-cass/docker/backup/backup.sh
+chmod +x /opt/authz/auth/docker/dbuild.sh
 chmod +x /opt/authz/auth/docker/drun.sh
-chmod +x /opt/authz/auth/docker/d.props
+chmod +x /opt/authz/auth/docker/dstart.sh
+chmod +x /opt/authz/auth/docker/dstop.sh
+# d.props is not a startable shell
+# chmod +x /opt/authz/auth/docker/d.props
 
 #Update maven settings
 cat > /usr/share/maven/conf/settings.xml << EOF
