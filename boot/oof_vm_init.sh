@@ -48,40 +48,48 @@ mkdir -p /opt/optf-osdf/config
 
 cat > $OSDF_CONFIG<<NEWFILE
 
-osdfUserNameForSO: ""   # The OSDF Manager username for MSO.
-osdfPasswordForSO: ""   # The OSDF Manager password for MSO.
-
-# msoUrl: ""   # The SO url for call back. This will be part of the request, so no need
+# Credentials for SO
 soUsername: ""   # SO username for call back.
 soPassword: ""   # SO password for call back.
 
-conductorUrl: "https://localhost:8091"
+# Credentials for Conductor
+conductorUrl: https://localhost:8091/v1/plans/
 conductorUsername: admin1
 conductorPassword: plan.15
 conductorPingWaitTime: 60  # seconds to wait before calling the conductor retry URL
 conductorMaxRetries: 30  # if we don't get something in 30 minutes, give up
 
 # Policy Platform -- requires ClientAuth, Authorization, and Environment
-policyPlatformUrl: https://POLICY-URL:8081/pdp/getConfig # Policy Dev platform URL
+policyPlatformUrl: http://onap-pdp:8081/pdp/api/getConfig # Policy Dev platform URL
 policyPlatformEnv: TEST  # Environment for policy platform
-policyPlatformUsername: POLICY-USER   # Policy platform username.
-policyPlatformPassword: POLICY-PASSWD   # Policy platform password.
-policyClientUsername: POLICY-CLIENT-USER   # For use with ClientAuth
-policyClientPassword: POLICY-CLIENT-PASSWD   # For use with ClientAuth
+policyPlatformUsername: testpdp   # Policy platform username.
+policyPlatformPassword: alpha123   # Policy platform password.
+policyClientUsername: python   # For use with ClientAuth
+policyClientPassword: test   # For use with ClientAuth
 
-messageReaderHosts: https://mr.api.simpledemo.onap.org:3905
-messageReaderTopic: org.onap.oof.osdf.multicloud
-messageReaderAafUserId: DMAAP-OSDF-MC-USER
-messageReaderAafPassword: DMAAP-OSDF-MC-PASSWD
+# Credentials for DMaaP
+messageReaderHosts: NA
+messageReaderTopic: NA
+messageReaderAafUserId: NA
+messageReaderAafPassword: NA
 
-sdcUrl: "SDC-URL"
-sdcUsername: SDC-OSDF-USER
-sdcPassword: SDC-OSDF-PASSWD
-sdcONAPInstanceID: ONAP-OSDF
+# Credentials for SDC
+sdcUrl: NA
+sdcUsername: NA
+sdcPassword: NA
+sdcONAPInstanceID: NA
 
-osdfPlacementUrl: "http://127.0.0.1:8698/api/oof/v1/placement"
-osdfPlacementUsername: "test"
-osdfPlacementPassword: "testpwd"
+# Credentials for the OOF placement service - Generic
+osdfPlacementUsername: test
+osdfPlacementPassword: testpwd
+
+# Credentials for the OOF placement service - SO
+osdfPlacementSOUsername: so_test
+osdfPlacementSOPassword: so_testpwd
+
+# Credentials for the OOF CM scheduling service - Generic
+osdfCMSchedulerUsername: test1
+osdfCMSchedulerPassword: testpwd1
 
 NEWFILE
 
