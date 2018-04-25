@@ -91,6 +91,10 @@ service docker restart
 echo "nameserver "$DNS_IP_ADDR >> /etc/resolvconf/resolv.conf.d/head
 resolvconf -u
 
+# Clone Gerrit repository
+cd /opt
+git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO optf-has
+
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
 then
@@ -103,7 +107,5 @@ then
 	reboot
 fi
 
-# Clone Gerrit repository and run docker containers
-cd /opt
-git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO optf-has
+# Run docker containers
 ./oof_vm_init.sh
