@@ -172,6 +172,7 @@ MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddre
 sed -i "138 s%.*%server_url = https://aai.api.simpledemo.onap.org:8443/aai%" $COND_CONF
 sed -i "141 s%.*%server_url_version = v13%" $COND_CONF
 sed -i "250 s%.*%server_url = http://$MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
+sed -i "277 s%.*%replication_factor = 1" $COND_CONF
 
 # Set A&AI authentication file locations inside OOF-HAS conductor.conf
 sed -i "153 s%.*%certificate_authority_bundle_file = $AAI_cert%" $COND_CONF
@@ -193,3 +194,38 @@ docker run -d --name reservation -v $COND_CONF:/usr/local/bin/conductor.conf -v 
 
 docker run -d --name data -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf -v $CERT:/usr/local/bin/aai_cert.cer -v $KEY:/usr/local/bin/aai_key.key -v $BUNDLE:/usr/local/bin/bundle.pem ${IMAGE_NAME}:latest python /usr/local/bin/conductor-data --config-file=/usr/local/bin/conductor.conf
 
+sleep 10
+
+echo "Inserting healthcheck plan"
+
+curl -X POST \
+  http://localhost:8080/MUSIC/rest/v2/keyspaces/conductor/tables/plans/rows/ \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: application/json' \
+  -H 'Postman-Token: 502781e8-d588-475d-b181-c2e26625ac95' \
+  -H 'X-minorVersion: 3' \
+  -H 'X-patchVersion: 0' \
+  -H 'ns: conductor' \
+  -H 'password: c0nduct0r' \
+  -H 'userId: conductor' \
+  -d '{
+    "consistencyInfo": {
+        "type": "eventual"
+    },
+    "values": {
+        "id" : "healthcheck",
+        "created": 1479482603641,
+        "message": "",
+        "name": "foo",
+        "recommend_max": 1,
+        "solution": "{\"healthcheck\": \" healthcheck\"}",
+        "status": "solved",
+        "template": "{\"healthcheck\": \"healthcheck\"}",
+        "timeout": 3600,
+        "translation": "{\"healthcheck\": \" healthcheck\"}",
+        "updated": 1484324150629
+    }
+}
+'
+
+echo "Healthcheck plan inserted"
