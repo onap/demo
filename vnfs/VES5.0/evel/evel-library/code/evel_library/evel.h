@@ -703,6 +703,37 @@ typedef struct event_measurement {
 
 } EVENT_MEASUREMENT;
 
+
+
+/**************************************************************************//**
+ * Add an additional value name/value pair to the Measurement.
+ *
+ * The name and value are null delimited ASCII strings.  The library takes
+ * a copy so the caller does not have to preserve values after the function
+ * returns.
+ *
+ * @param measurement     Pointer to the measurement.
+ * @param name      ASCIIZ string with the attribute's name.  The caller
+ *                  does not need to preserve the value once the function
+ *                  returns.
+ * @param value     ASCIIZ string with the attribute's value.  The caller
+ *                  does not need to preserve the value once the function
+ *                  returns.
+ *****************************************************************************/
+void evel_measurement_addl_info_add(EVENT_MEASUREMENT * measurement, char * name, char * value);
+
+/**************************************************************************//**
+ * Add a json object to jsonObject list.
+ *
+ * The name and value are null delimited ASCII strings.  The library takes
+ * a copy so the caller does not have to preserve values after the function
+ * returns.
+ *
+ * @param measurement     Pointer to the ScalingMeasurement
+ * @param jsonobj   Pointer to json object
+ *****************************************************************************/
+void evel_measurement_addl_object_add(EVENT_MEASUREMENT * measurement, EVEL_JSON_OBJECT *jsonobj);
+
 /**************************************************************************//**
  * CPU Usage.
  * JSON equivalent field: cpuUsage

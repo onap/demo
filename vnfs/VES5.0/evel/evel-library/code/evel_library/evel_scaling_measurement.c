@@ -170,6 +170,35 @@ void evel_measurement_addl_info_add(EVENT_MEASUREMENT * measurement, char * name
 }
 
 /**************************************************************************//**
+ * Add a json object to jsonObject list.
+ *
+ * The name and value are null delimited ASCII strings.  The library takes
+ * a copy so the caller does not have to preserve values after the function
+ * returns.
+ *
+ * @param measurement     Pointer to the ScalingMeasurement
+ * @param jsonobj   Pointer to json object
+ *****************************************************************************/
+void evel_measurement_addl_object_add(EVENT_MEASUREMENT * measurement, EVEL_JSON_OBJECT *jsonobj)
+{
+  EVEL_ENTER();
+
+  /***************************************************************************/
+  /* Check preconditions.                                                    */
+  /***************************************************************************/
+  assert(measurement != NULL);
+  assert(measurement->header.event_domain == EVEL_DOMAIN_MEASUREMENT);
+  assert(jsonobj != NULL);
+
+  EVEL_DEBUG("Adding jsonObject %p",jsonobj);
+
+  dlist_push_last(&measurement->additional_objects, jsonobj);
+
+  EVEL_EXIT();
+}
+
+
+/**************************************************************************//**
  * Set the Concurrent Sessions property of the Measurement.
  *
  * @note  The property is treated as immutable: it is only valid to call
@@ -2820,17 +2849,17 @@ void evel_vnic_performance_tx_total_pkt_delta_set(MEASUREMENT_VNIC_PERFORMANCE *
  * @param tx_ucast_packets_acc
  *****************************************************************************/
 void evel_vnic_performance_tx_ucast_pkt_acc_set(MEASUREMENT_VNIC_PERFORMANCE * const vnic_performance,
-                                    const double tx_ucast_packets_acc)
+                                    const double mtx_ucast_packets_acc)
 {
   EVEL_ENTER();
 
   /***************************************************************************/
   /* Check preconditions.                                                    */
   /***************************************************************************/
-  assert(tx_ucast_packets_acc >= 0.0);
+  assert(mtx_ucast_packets_acc >= 0.0);
 
   evel_set_option_double(&vnic_performance->tx_ucast_packets_acc,
-                      tx_ucast_packets_acc,
+                      mtx_ucast_packets_acc,
                       "Transmitted Unicast Packets accumulated");
 
   EVEL_EXIT();
@@ -3023,6 +3052,13 @@ void evel_json_encode_measurement(EVEL_JSON_BUFFER * jbuf,
   DLIST_ITEM * nested_item = NULL;
   DLIST_ITEM * addl_info_item = NULL;
   OTHER_FIELD *addl_info = NULL;
+  DLIST_ITEM * other_field_item = NULL;
+  EVEL_JSON_OBJECT_INSTANCE * jsonobjinst = NULL;
+  EVEL_JSON_OBJECT * jsonobjp = NULL;
+  DLIST_ITEM * jsobj_field_item = NULL;
+  EVEL_INTERNAL_KEY * keyinst = NULL;
+  DLIST_ITEM * keyinst_field_item = NULL;
+
 
   EVEL_ENTER();
 
@@ -3077,6 +3113,92 @@ void evel_json_encode_measurement(EVEL_JSON_BUFFER * jbuf,
       evel_json_rewind(jbuf);
     }
   }
+
+
+  evel_json_checkpoint(jbuf);
+  if(evel_json_open_opt_named_list(jbuf, "additionalObjects"))
+  {
+  bool item_added = false;
+  other_field_item = dlist_get_first(&event->additional_objects);
+  while (other_field_item != NULL)
+  {
+    jsonobjp = (EVEL_JSON_OBJECT *) other_field_item->item;
+    if(jsonobjp != NULL)
+    {
+     evel_json_open_object(jbuf);
+
+       if( evel_json_open_opt_named_list(jbuf, "objectInstances"))
+       {
+        bool item_added2 = false;
+        jsobj_field_item = dlist_get_first(&jsonobjp->jsonobjectinstances);
+        while (jsobj_field_item != NULL)
+        {
+           jsonobjinst = (EVEL_JSON_OBJECT_INSTANCE *) jsobj_field_item->item;
+           if( jsonobjinst != NULL )
+           {
+              evel_json_open_object(jbuf);
+              evel_enc_kv_object(jbuf, "objectInstance", jsonobjinst->jsonstring);
+              evel_enc_kv_ull(jbuf, "objectInstanceEpochMicrosec", jsonobjinst->objinst_epoch_microsec);
+  //evel_json_checkpoint(jbuf);
+  if (evel_json_open_opt_named_list(jbuf, "objectKeys"))
+  {
+    bool item_added3 = false;
+
+    keyinst_field_item = dlist_get_first(&jsonobjinst->object_keys);
+    while (keyinst_field_item != NULL)
+    {
+      keyinst = (EVEL_INTERNAL_KEY *)keyinst_field_item->item;
+      if(keyinst != NULL)
+      {
+        evel_json_open_object(jbuf);
+        evel_enc_kv_string(jbuf, "keyName", keyinst->keyname);
+        evel_enc_kv_opt_int(jbuf, "keyOrder", &keyinst->keyorder);
+        evel_enc_kv_opt_string(jbuf, "keyValue", &keyinst->keyvalue);
+        evel_json_close_object(jbuf);
+        item_added3 = true;
+      }
+      keyinst_field_item = dlist_get_next(keyinst_field_item);
+    }
+    evel_json_close_list(jbuf);
+
+    /*************************************************************************/
+    /* If we've not written anything, rewind to before we opened the list.   */
+    /*************************************************************************/
+    //if (!item_added3)
+    //{
+    //  evel_json_rewind(jbuf);
+    //}
+  }
+               evel_json_close_object(jbuf);
+            }
+            item_added2 = true;
+            jsobj_field_item = dlist_get_next(jsobj_field_item);
+        }
+        evel_json_close_list(jbuf);
+        if( !item_added2 )
+        {
+          evel_json_rewind(jbuf);
+        }
+       }
+
+    evel_enc_kv_string(jbuf, "objectName", jsonobjp->object_name);
+    evel_enc_kv_opt_string(jbuf, "objectSchema", &jsonobjp->objectschema);
+    evel_enc_kv_opt_string(jbuf, "objectSchemaUrl", &jsonobjp->objectschemaurl);
+    evel_enc_kv_opt_string(jbuf, "nfSubscribedObjectName", &jsonobjp->nfsubscribedobjname);
+    evel_enc_kv_opt_string(jbuf, "nfSubscriptionId", &jsonobjp->nfsubscriptionid);
+    evel_json_close_object(jbuf);
+    item_added = true;
+  }
+  other_field_item = dlist_get_next(other_field_item);
+  }
+  evel_json_close_list(jbuf);
+
+  if (!item_added)
+  {
+     evel_json_rewind(jbuf);
+  }
+  }
+
 
   // TBD additional json objects
   evel_enc_kv_opt_int(jbuf, "concurrentSessions", &event->concurrent_sessions);
@@ -3607,6 +3729,7 @@ void evel_free_measurement(EVENT_MEASUREMENT * event)
   MEASUREMENT_GROUP * measurement_group = NULL;
   CUSTOM_MEASUREMENT * measurement = NULL;
   OTHER_FIELD *addl_info = NULL;
+  EVEL_JSON_OBJECT * jsonobjp = NULL;
 
   EVEL_ENTER();
 
@@ -3632,7 +3755,13 @@ void evel_free_measurement(EVENT_MEASUREMENT * event)
     addl_info = dlist_pop_last(&event->additional_info);
   }
 
-
+  jsonobjp = dlist_pop_last(&event->additional_objects);
+  while (jsonobjp != NULL)
+  {
+    EVEL_DEBUG("Freeing jsonObject %p",jsonobjp);
+    evel_free_jsonobject( jsonobjp );
+    jsonobjp = dlist_pop_last(&event->additional_objects);
+  }
 
   cpu_use = dlist_pop_last(&event->cpu_usage);
   while (cpu_use != NULL)
