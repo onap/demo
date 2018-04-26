@@ -22,4 +22,7 @@ docker tag $NEXUS_DOCKER_REPO/onap/appc-image:$DOCKER_IMAGE_VERSION onap/appc-im
 docker pull $NEXUS_DOCKER_REPO/onap/ccsdk-dgbuilder-image:$DGBUILDER_IMAGE_VERSION
 docker tag $NEXUS_DOCKER_REPO/onap/ccsdk-dgbuilder-image:$DGBUILDER_IMAGE_VERSION onap/ccsdk-dgbuilder-image:latest
 
+docker pull $NEXUS_DOCKER_REPO/onap/appc-cdt-image:$DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/onap/appc-cdt-image:$DOCKER_IMAGE_VERSION onap/appc-cdt-image:latest
+
 /opt/docker/docker-compose up -d
