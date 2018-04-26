@@ -148,15 +148,30 @@ docker run -d --rm --name music-tomcat --network music-net -p "8080:8080" -v mus
 
 # Connect tomcat to host bridge network so that its port can be seen.
 docker network connect bridge music-tomcat;
+sleep 6;
+echo "Running onboarding curl command"
+curl -X POST \
+  http://localhost:8080/MUSIC/rest/v2/admin/onboardAppWithMusic \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: application/json' \
+  -H 'Postman-Token: 7d2839f4-b032-487a-8998-4d1b27a932d7' \
+  -d '{
+"appname": "conductor",
+"userId" : "conductor",
+"isAAF"  : false,
+"password" : "c0nduct0r"
+}
+'
+echo "Onboarding curl complete"
 
 # Get MUSIC url
-#MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddress}}' music-tomcat)
-MUSIC_URL=localhost
+MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddress}}' music-tomcat)
+#MUSIC_URL=localhost
 
 # Set A&AI and MUSIC url inside OOF-HAS conductor.conf
 sed -i "138 s%.*%server_url = https://aai.api.simpledemo.onap.org:8443/aai%" $COND_CONF
 sed -i "141 s%.*%server_url_version = v13%" $COND_CONF
-#sed -i "250 s%.*%server_url = $MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
+sed -i "250 s%.*%server_url = http://$MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
 
 # Set A&AI authentication file locations inside OOF-HAS conductor.conf
 sed -i "153 s%.*%certificate_authority_bundle_file = $AAI_cert%" $COND_CONF
@@ -177,5 +192,4 @@ docker run -d --name solver -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_
 docker run -d --name reservation -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-reservation --config-file=/usr/local/bin/conductor.conf
 
 docker run -d --name data -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf -v $CERT:/usr/local/bin/aai_cert.cer -v $KEY:/usr/local/bin/aai_key.key -v $BUNDLE:/usr/local/bin/bundle.pem ${IMAGE_NAME}:latest python /usr/local/bin/conductor-data --config-file=/usr/local/bin/conductor.conf
-
 
