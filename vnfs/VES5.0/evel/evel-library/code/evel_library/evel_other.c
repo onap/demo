@@ -200,7 +200,6 @@ void evel_other_field_add_namedarray(EVENT_OTHER * other, const char *hashname, 
  *****************************************************************************/
 void evel_other_field_add_jsonobj(EVENT_OTHER * other, EVEL_JSON_OBJECT *jsonobj)
 {
-  OTHER_FIELD * other_field = NULL;
   EVEL_ENTER();
 
   /***************************************************************************/
@@ -471,6 +470,8 @@ void evel_json_encode_other(EVEL_JSON_BUFFER * jbuf,
 void evel_free_other(EVENT_OTHER * event)
 {
   OTHER_FIELD * other_field = NULL;
+  EVEL_JSON_OBJECT * jsonobjp = NULL;
+  DLIST_ITEM * other_field_item = NULL;
 
   EVEL_ENTER();
 
@@ -495,6 +496,15 @@ void evel_free_other(EVENT_OTHER * event)
     free(other_field);
     other_field = dlist_pop_last(&event->namedvalues);
   }
+
+  jsonobjp = dlist_pop_last(&event->jsonobjects);
+  while (jsonobjp != NULL)
+  {
+    evel_free_jsonobject( jsonobjp );
+
+    jsonobjp = dlist_pop_last(&event->jsonobjects);
+  }
+
   evel_free_header(&event->header);
 
   EVEL_EXIT();
