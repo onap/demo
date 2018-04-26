@@ -26,6 +26,8 @@ DMAAPBC_DRPROV_FQDN=drprov.simpledemo.onap.org
 # Insert docker run instructions here
 docker run -i -t -d --name dmaap-buscontroller -p 8080:8080 -p 8443:8443 -v $TMP_CFG:/opt/app/config/conf $NEXUS_DOCKER_REPO/onap/dmaap/buscontroller:$DOCKER_IMAGE_VERSION
 
+sleep 15
+
 DBCL_FQDN=dbc.api.simpledemo.onap.org
 DRPS_FQDN=drprov.simpledemo.onap.org
 MR_FQDN=mr.api.simpledemo.onap.org
