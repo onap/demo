@@ -48,40 +48,48 @@ mkdir -p /opt/optf-osdf/config
 
 cat > $OSDF_CONFIG<<NEWFILE
 
-osdfUserNameForSO: ""   # The OSDF Manager username for MSO.
-osdfPasswordForSO: ""   # The OSDF Manager password for MSO.
-
-# msoUrl: ""   # The SO url for call back. This will be part of the request, so no need
+# Credentials for SO
 soUsername: ""   # SO username for call back.
 soPassword: ""   # SO password for call back.
 
-conductorUrl: "https://localhost:8091"
+# Credentials for Conductor
+conductorUrl: https://localhost:8091/v1/plans/
 conductorUsername: admin1
 conductorPassword: plan.15
 conductorPingWaitTime: 60  # seconds to wait before calling the conductor retry URL
 conductorMaxRetries: 30  # if we don't get something in 30 minutes, give up
 
 # Policy Platform -- requires ClientAuth, Authorization, and Environment
-policyPlatformUrl: https://POLICY-URL:8081/pdp/getConfig # Policy Dev platform URL
+policyPlatformUrl: http://policy.api.simpledemo.onap.org:8081/pdp/api/getConfig # Policy Dev platform URL
 policyPlatformEnv: TEST  # Environment for policy platform
-policyPlatformUsername: POLICY-USER   # Policy platform username.
-policyPlatformPassword: POLICY-PASSWD   # Policy platform password.
-policyClientUsername: POLICY-CLIENT-USER   # For use with ClientAuth
-policyClientPassword: POLICY-CLIENT-PASSWD   # For use with ClientAuth
+policyPlatformUsername: testpdp   # Policy platform username.
+policyPlatformPassword: alpha123   # Policy platform password.
+policyClientUsername: python   # For use with ClientAuth
+policyClientPassword: test   # For use with ClientAuth
 
-messageReaderHosts: https://mr.api.simpledemo.onap.org:3905
-messageReaderTopic: org.onap.oof.osdf.multicloud
-messageReaderAafUserId: DMAAP-OSDF-MC-USER
-messageReaderAafPassword: DMAAP-OSDF-MC-PASSWD
+# Credentials for DMaaP
+messageReaderHosts: NA
+messageReaderTopic: NA
+messageReaderAafUserId: NA
+messageReaderAafPassword: NA
 
-sdcUrl: "SDC-URL"
-sdcUsername: SDC-OSDF-USER
-sdcPassword: SDC-OSDF-PASSWD
-sdcONAPInstanceID: ONAP-OSDF
+# Credentials for SDC
+sdcUrl: NA
+sdcUsername: NA
+sdcPassword: NA
+sdcONAPInstanceID: NA
 
-osdfPlacementUrl: "http://127.0.0.1:8698/api/oof/v1/placement"
-osdfPlacementUsername: "test"
-osdfPlacementPassword: "testpwd"
+# Credentials for the OOF placement service - Generic
+osdfPlacementUsername: test
+osdfPlacementPassword: testpwd
+
+# Credentials for the OOF placement service - SO
+osdfPlacementSOUsername: so_test
+osdfPlacementSOPassword: so_testpwd
+
+# Credentials for the OOF CM scheduling service - Generic
+osdfCMSchedulerUsername: test1
+osdfCMSchedulerPassword: testpwd1
 
 NEWFILE
 
@@ -140,15 +148,30 @@ docker run -d --rm --name music-tomcat --network music-net -p "8080:8080" -v mus
 
 # Connect tomcat to host bridge network so that its port can be seen.
 docker network connect bridge music-tomcat;
+sleep 6;
+echo "Running onboarding curl command"
+curl -X POST \
+  http://localhost:8080/MUSIC/rest/v2/admin/onboardAppWithMusic \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: application/json' \
+  -H 'Postman-Token: 7d2839f4-b032-487a-8998-4d1b27a932d7' \
+  -d '{
+"appname": "conductor",
+"userId" : "conductor",
+"isAAF"  : false,
+"password" : "c0nduct0r"
+}
+'
+echo "Onboarding curl complete"
 
 # Get MUSIC url
-#MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddress}}' music-tomcat)
-MUSIC_URL=localhost
+MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddress}}' music-tomcat)
+#MUSIC_URL=localhost
 
 # Set A&AI and MUSIC url inside OOF-HAS conductor.conf
 sed -i "138 s%.*%server_url = https://aai.api.simpledemo.onap.org:8443/aai%" $COND_CONF
 sed -i "141 s%.*%server_url_version = v13%" $COND_CONF
-#sed -i "250 s%.*%server_url = $MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
+sed -i "250 s%.*%server_url = http://$MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
 
 # Set A&AI authentication file locations inside OOF-HAS conductor.conf
 sed -i "153 s%.*%certificate_authority_bundle_file = $AAI_cert%" $COND_CONF
@@ -169,5 +192,4 @@ docker run -d --name solver -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_
 docker run -d --name reservation -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-reservation --config-file=/usr/local/bin/conductor.conf
 
 docker run -d --name data -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf -v $CERT:/usr/local/bin/aai_cert.cer -v $KEY:/usr/local/bin/aai_key.key -v $BUNDLE:/usr/local/bin/bundle.pem ${IMAGE_NAME}:latest python /usr/local/bin/conductor-data --config-file=/usr/local/bin/conductor.conf
-
 
