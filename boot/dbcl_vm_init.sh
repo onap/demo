@@ -21,6 +21,8 @@ DMAAPBC_INSTANCE_NAME=ONAP-CSIT
 DMAAPBC_AAF_URL=https://aaf.api.simpledemo.onap.org:8095/proxy/
 DMAAPBC_MR_CNAME=mr.api.simpledemo.onap.org
 DMAAPBC_DRPROV_FQDN=drprov.simpledemo.onap.org
+DMAAPBC_KSTOREPASS="Perish the thought"
+DMAAPBC_PVTKEYPASS="Perish the thought"
 !EOF
 
 # Insert docker run instructions here
