@@ -410,6 +410,8 @@ parameters:
     type: string
   mvim_docker:
     type: string
+  mvim_openstack_docker:
+    type: string
   uui_docker:
     type: string
   esr_docker:
@@ -1674,6 +1676,7 @@ resources:
             __vnfsdk_branch__: { get_param: vnfsdk_branch }
             __msb_docker__: { get_param: msb_docker }
             __mvim_docker__: { get_param: mvim_docker }
+            __mvim_openstack_docker__: { get_param: mvim_openstack_docker }
             __uui_docker__: { get_param: uui_docker }
             __esr_docker__: { get_param: esr_docker }
             __vnfsdk_repo__: { get_param: vnfsdk_repo }
@@ -1714,6 +1717,7 @@ resources:
             echo "__vnfsdk_branch__" > /opt/config/vnfsdk_branch.txt
             echo "__msb_docker__" > /opt/config/msb_docker.txt
             echo "__mvim_docker__" > /opt/config/mvim_docker.txt
+            echo "__mvim_openstack_docker__" > /opt/config/mvim_openstack_docker.txt
             echo "__uui_docker__" > /opt/config/uui_docker.txt
             echo "__esr_docker__" > /opt/config/esr_docker.txt
             echo "__vnfsdk_repo__" > /opt/config/vnfsdk_repo.txt
