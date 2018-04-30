@@ -207,6 +207,8 @@ parameters:
     type: string
   aaf_ip_addr:
     type: string
+  sms_ip_addr:
+    type: string
   nbi_ip_addr:
     type: string
 
@@ -299,6 +301,8 @@ parameters:
   nbi_repo:
     type: string
   aaf_repo:
+    type: string
+  sms_repo:
     type: string
   oof_repo:
     type: string
@@ -426,6 +430,8 @@ parameters:
     type: string
   aaf_docker:
     type: string
+  sms_docker:
+    type: string
   nbi_docker:
     type: string
   dbcl_docker:
@@ -495,6 +501,8 @@ parameters:
   nbi_branch:
     type: string
   aaf_branch:
+    type: string
+  sms_branch:
     type: string
   oof_branch:
     type: string
@@ -642,6 +650,7 @@ resources:
             __music_ip_addr__: { get_param: music_ip_addr }
             __oof_ip_addr__: { get_param: oof_ip_addr }
             __aaf_ip_addr__: { get_param: aaf_ip_addr }
+            __sms_ip_addr__: { get_param: sms_ip_addr }
             __nbi_ip_addr__: { get_param: nbi_ip_addr }
             __cloud_env__: { get_param: cloud_env }
             __external_dns__: { get_param: external_dns }
@@ -673,6 +682,7 @@ resources:
             echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
             echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
             echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
+            echo "__sms_ip_addr__" > /opt/config/sms_ip_addr.txt
             echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
@@ -2167,6 +2177,74 @@ resources:
             cd /opt
             chmod +x aaf_install.sh
             ./aaf_install.sh
+
+  # SMS instantiation
+  sms_private_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: oam_onap }
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: sms_ip_addr }}]
+      security_groups:
+      - { get_resource: onap_sg }
+
+  sms_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: sms_private_port }
+
+  sms_vm:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: ubuntu_1604_image }
+      flavor: { get_param: flavor_medium }
+      name:
+        str_replace:
+          template: base-sms
+          params:
+            base: { get_param: vm_base_name }
+      key_name: { get_resource: vm_key }
+      networks:
+        - port: { get_resource: sms_private_port }
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __artifacts_version__: { get_param: artifacts_version }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __docker_version__: { get_param: sms_docker }
+            __cloud_env__: { get_param: cloud_env }
+            __external_dns__: { get_param: external_dns }
+            __sms_repo__: { get_param: sms_repo }
+            __gerrit_branch__: { get_param: sms_branch }
+            __local_ip__: { get_param: sms_ip_addr }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__sms_repo__" > /opt/config/remote_repo.txt
+            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+            echo "__local_ip__" > /opt/config/local_ip.txt
+
+            # Download and run install script
+            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/sms_install.sh -o /opt/sms_install.sh
+            cd /opt
+            chmod +x sms_install.sh
+            ./sms_install.sh
 
   # NBI instantiation
   nbi_private_port:

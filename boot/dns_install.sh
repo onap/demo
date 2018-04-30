@@ -91,6 +91,7 @@ then
 	sed -i "s/music_ip_addr/"$(cat /opt/config/music_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/oof_ip_addr/"$(cat /opt/config/oof_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/aaf_ip_addr/"$(cat /opt/config/aaf_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+	sed -i "s/sms_ip_addr/"$(cat /opt/config/sms_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/nbi_ip_addr/"$(cat /opt/config/nbi_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 
 	sed -i "s/aai1_ip_addr/"$(cat /opt/config/aai1_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
@@ -111,6 +112,7 @@ then
 	sed -i "s/music_ip_addr/"$(cat /opt/config/music_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 	sed -i "s/oof_ip_addr/"$(cat /opt/config/oof_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 	sed -i "s/aaf_ip_addr/"$(cat /opt/config/aaf_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/sms_ip_addr/"$(cat /opt/config/sms_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 	sed -i "s/nbi_ip_addr/"$(cat /opt/config/nbi_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 fi
 
