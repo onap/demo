@@ -1,0 +1,17 @@
+heat_template_version: 2013-05-23
+
+resources:
+
+  # ONAP management private network
+  oam_onap:
+    type: OS::Neutron::Net
+    properties:
+      name: oam_onap_vnf_test
+
+  oam_onap_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: oam_onap_vnf_test
+      network_id: { get_resource: oam_onap }
+      cidr: 10.0.0.0/16
+      enable_dhcp: false
