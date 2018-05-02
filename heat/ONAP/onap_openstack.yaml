@@ -466,13 +466,6 @@ parameters:
   vfc_multivimproxy_docker:
     type: string
 
-  cbam_username:
-    type: string
-  cbam_password:
-    type: string
-  cbam_ip:
-    type: string
-
   aai_branch:
     type: string
   appc_branch:
@@ -1682,9 +1675,6 @@ resources:
             __vnfsdk_repo__: { get_param: vnfsdk_repo }
             __vfc_nokia_docker__: { get_param: vfc_nokia_docker }
             __vfc_nokiav2_docker__: { get_param: vfc_nokiav2_docker }
-            __cbam_ip__: { get_param: cbam_ip }
-            __cbam_username__: { get_param: cbam_username }
-            __cbam_password__: { get_param: cbam_password }
             __vfc_ztevnfmdriver_docker__: { get_param: vfc_ztevnfmdriver_docker }
             __vfc_multivimproxy_docker__: { get_param: vfc_multivimproxy_docker }
             __vfc_ztesdncdriver_docker__: { get_param: vfc_ztesdncdriver_docker }
@@ -1721,9 +1711,6 @@ resources:
             echo "__uui_docker__" > /opt/config/uui_docker.txt
             echo "__esr_docker__" > /opt/config/esr_docker.txt
             echo "__vnfsdk_repo__" > /opt/config/vnfsdk_repo.txt
-            echo "__cbam_ip__" > /opt/config/cbam_ip.txt
-            echo "__cbam_username__" > /opt/config/cbam_username.txt
-            echo "__cbam_password__" > /opt/config/cbam_password.txt
 
             echo "export NOKIA_DOCKER_VER=__vfc_nokia_docker__" >> /opt/config/vfc_docker.txt
             echo "export NOKIAV2_DOCKER_VER=__vfc_nokiav2_docker__" >> /opt/config/vfc_docker.txt

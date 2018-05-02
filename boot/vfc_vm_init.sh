@@ -64,8 +64,5 @@ docker run -i -t -d --name vfc_ztevnfmdriver -p 8410:8410 -e MSB_ADDR=$OPENO_IP:
 docker run -i -t -d --name vfc_svnfm_nokia -p 8486:8486 -e MSB_ADDR=$OPENO_IP:80 -e SERVICE_IP=$OPENO_IP $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokia:$NOKIA_DOCKER_VER
 docker run -i -t -d --name vfc_multivimproxy -p 8481:8481 -e MSB_ADDR=$MSB_IP:80 -e SERVICE_IP=$OPENO_IP $NEXUS_DOCKER_REPO/onap/vfc/multivimproxy:$MULTIVIMPROXY_DOCKER_VER
 
-CBAM_IP=$(cat /opt/config/cbam_ip.txt)
 VNFM_ID=vnfmUuid
-CBAM_PASSWORD=$(cat /opt/config/cbam_password.txt)
-CBAM_USERNAME=$(cat /opt/config/cbam_username.txt)
-docker run -i -t -d --name vfc_svnfm_nokiav2 -p 8089:8089 -e MSB_IP=$OPENO_IP -e CONFIGURE=kuku -e EXTERNAL_IP=$OPENO_IP -e "CBAM_CATALOG_URL=https://$CBAM_IP:443/api/catalog/adapter/" -e "CBAM_LCN_URL=https://$CBAM_IP:443/vnfm/lcn/v3/" -e "CBAM_KEYCLOAK_URL=https://$CBAM_IP:443/auth/" -e "CBAM_USERNAME=$CBAM_USERNAME" -e "CBAM_PASSWORD=$CBAM_PASSWORD" -e "VNFM_ID=$VNFM_ID" -d --stop-timeout 300 $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokiav2:$NOKIAV2_DOCKER_VER
+docker run -i -t -d --name vfc_svnfm_nokiav2 -p 8089:8089 -e MSB_IP=$OPENO_IP -e CONFIGURE=kuku -e EXTERNAL_IP=$OPENO_IP -e "VNFM_ID=$VNFM_ID" -d --stop-timeout 300 $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokiav2:$NOKIAV2_DOCKER_VER
