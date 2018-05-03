@@ -78,6 +78,7 @@ c1.vm1.clamp.simpledemo.onap.org.        IN      A       clamp_ip_addr
 c2.vm1.clamp.simpledemo.onap.org.        IN      A       clamp_ip_addr
 
 vm1.aaf.simpledemo.onap.org.	IN	A	aaf_ip_addr
+vm1.aaf-sms.simpledemo.onap.org.	IN	A	sms_ip_addr
 
 vm1.mr.simpledemo.onap.org.	IN	A	mr_ip_addr
 
@@ -103,7 +104,7 @@ aai.elasticsearch.simpledemo.onap.org.	IN 	CNAME 	vm2.aai.simpledemo.onap.org.
 appc.api.simpledemo.onap.org.	IN	CNAME	vm1.appc.simpledemo.onap.org.
 
 ;ASDC
-sdc.api.simpledemo.onap.org.	IN	CNAME	vm1.sdc.simpledemo.onap.org.	
+sdc.api.simpledemo.onap.org.	IN	CNAME	vm1.sdc.simpledemo.onap.org.
 
 ;DCAE
 dcae.api.simpledemo.onap.org.	IN	CNAME	vm1.dcae.simpledemo.onap.org.
@@ -118,13 +119,13 @@ policy.api.simpledemo.onap.org. 	IN	CNAME	vm1.policy.simpledemo.onap.org.
 sdnc.api.simpledemo.onap.org. 	IN	CNAME    vm1.sdnc.simpledemo.onap.org.
 
 ;VID
-vid.api.simpledemo.onap.org.	IN	CNAME	vm1.vid.simpledemo.onap.org.	
+vid.api.simpledemo.onap.org.	IN	CNAME	vm1.vid.simpledemo.onap.org.
 
 ;PORTAL
 portal.api.simpledemo.onap.org.	IN	CNAME	vm1.portal.simpledemo.onap.org.
 
 ;Message Router
-mr.api.simpledemo.onap.org.	IN	CNAME	vm1.mr.simpledemo.onap.org.	
+mr.api.simpledemo.onap.org.	IN	CNAME	vm1.mr.simpledemo.onap.org.
 ueb.api.simpledemo.onap.org.	IN	CNAME	vm1.mr.simpledemo.onap.org.
 dbc.api.simpledemo.onap.org.	IN	CNAME  	vm1.mr.simpledemo.onap.org.
 ;drprov.api.simpledemo.onap.org.	IN	CNAME  	vm1.mr.simpledemo.onap.org.
@@ -138,6 +139,7 @@ sniro.api.simpledemo.onap.org.	IN	CNAME	vm1.robot.simpledemo.onap.org.
 
 ;AAF
 aaf.api.simpledemo.onap.org.	IN	CNAME	vm1.aaf.simpledemo.onap.org.
+aaf-sms.api.simpledemo.onap.org.	IN	CNAME	vm1.aaf-sms.simpledemo.onap.org.
 
 ;OPEN-O
 msb.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
