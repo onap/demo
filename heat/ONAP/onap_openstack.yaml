@@ -1107,6 +1107,9 @@ resources:
             echo "__script_version__" > /opt/config/script_version.txt
             echo "__public_net_id__" > /opt/config/public_net_id.txt
             echo "__robot_repo__" > /opt/config/remote_repo.txt
+            echo "localhost" > /opt/config/log_elasticsearch_ip_addr.txt # these tests will be skipped by robot
+            echo "localhost" > /opt/config/log_logstash_ip_addr.txt # these tests will be skipped by robot
+            echo "localhost" > /opt/config/log_kibana_ip_addr.txt # these tests will be skipped by robot
 
             # Download and run install script
             curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/robot_install.sh -o /opt/robot_install.sh
