@@ -957,6 +957,9 @@ resources:
             __policy_ip_addr__: { get_param: policy_ip_addr }
             __portal_ip_addr__: { get_param: portal_ip_addr }
             __sdc_ip_addr__: { get_param: sdc_ip_addr }
+            __sdc_fe_ip_addr__: { get_param: sdc_ip_addr }
+            __sdc_be_ip_addr__: { get_param: sdc_ip_addr }
+            __sdc_be_onboard_ip_addr__: { get_param: sdc_ip_addr }
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
             __vid_ip_addr__: { get_param: vid_ip_addr }
             __clamp_ip_addr__: { get_param: clamp_ip_addr }
@@ -1001,8 +1004,9 @@ resources:
             echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
             echo "__portal_ip_addr__" > /opt/config/cli_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
-            echo "__sdc_ip_addr__" > /opt/config/sdc_be_ip_addr.txt
-            echo "__sdc_ip_addr__" > /opt/config/sdc_fe_ip_addr.txt
+            echo "__sdc_fe_ip_addr__" > /opt/config/sdc_fe_ip_addr.txt
+            echo "__sdc_be_ip_addr__" > /opt/config/sdc_be_ip_addr.txt
+            echo "__sdc_be_onboard_ip_addr__" > /opt/config/sdc_be_onboard_ip_addr.txt
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
             echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
