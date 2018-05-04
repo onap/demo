@@ -1786,7 +1786,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
-      flavor: { get_param: flavor_large }
+      flavor: { get_param: flavor_xlarge }
       name:
         str_replace:
           template: base-dcae
