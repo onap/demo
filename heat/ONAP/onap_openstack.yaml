@@ -1648,7 +1648,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
-      flavor: { get_param: flavor_xxlarge }
+      flavor: { get_param: flavor_xlarge }
       name:
         str_replace:
           template: base-multi-service
