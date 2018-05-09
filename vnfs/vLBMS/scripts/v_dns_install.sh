@@ -48,7 +48,7 @@ fi
 echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install --allow-unauthenticated -y wget openjdk-8-jdk bind9 bind9utils bind9-doc apt-transport-https ca-certificates
+apt-get install --allow-unauthenticated -y wget openjdk-8-jdk bind9 bind9utils bind9-doc apt-transport-https ca-certificates git maven
 sleep 1
 
 # Download vDNS demo code for DNS Server
@@ -62,12 +62,133 @@ wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/run_health_
 sed -i 's/primary=.*/primary=false/g' /opt/config/properties.conf
 sed -i 's/vnfc=.*/vnfc=vDNS/g' /opt/config/properties.conf
 
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb-vnf-onap-distribution/$DEMO_ARTIFACTS_VERSION/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-rm vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
-sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+# Clone Honeycomb interface for the VNF component
+mkdir honeycomb-api
+git init honeycomb-api
+cd honeycomb-api
+git remote add origin https://gerrit.onap.org/r/p/demo.git
+git config core.sparsecheckout true
+echo "vnfs/vLBMS/apis" >> .git/info/sparse-checkout
+git pull --depth=1 origin master
 
+cat > ~/.m2/settings.xml << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vi: set et smarttab sw=2 tabstop=2: -->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+ 
+  <profiles>
+    <profile>
+      <id>fd.io-release</id>
+      <repositories>
+        <repository>
+          <id>fd.io-mirror</id>
+          <name>fd.io-mirror</name>
+          <url>https://nexus.fd.io/content/groups/public/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>fd.io-mirror</id>
+          <name>fd.io-mirror</name>
+          <url>https://nexus.fd.io/content/repositories/public/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+ 
+    <profile>
+      <id>fd.io-snapshots</id>
+      <repositories>
+        <repository>
+          <id>fd.io-snapshot</id>
+          <name>fd.io-snapshot</name>
+          <url>https://nexus.fd.io/content/repositories/fd.io.snapshot/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>fd.io-snapshot</id>
+          <name>fd.io-snapshot</name>
+          <url>https://nexus.fd.io/content/repositories/fd.io.snapshot/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+    <profile>
+      <id>opendaylight-snapshots</id>
+      <repositories>
+        <repository>
+          <id>opendaylight-snapshot</id>
+          <name>opendaylight-snapshot</name>
+          <url>https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>opendaylight-shapshot</id>
+          <name>opendaylight-snapshot</name>
+          <url>https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/</url>
+          <releases>
+            <enabled>false</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+ 
+  <activeProfiles>
+    <activeProfile>fd.io-release</activeProfile>
+    <activeProfile>fd.io-snapshots</activeProfile>
+    <activeProfile>opendaylight-snapshots</activeProfile>
+  </activeProfiles>
+</settings>
+EOF
+
+cd /opt/honeycomb-api/vnfs/vLBMS/apis
+mvn clean install
+
+#wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb-vnf-onap-distribution/$DEMO_ARTIFACTS_VERSION/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+#tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' /opt/honeycomb-api/vnfs/vLBMS/apis/vlb-vnf-onap-distribution/target/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' /opt/honeycomb-api/vnfs/vLBMS/apis/vlb-vnf-onap-distribution/target/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+#rm *.tar.gz
+
+cd /opt
 chmod +x v_dns_init.sh
 chmod +x vdns.sh
 chmod +x set_gre_tunnel.sh
