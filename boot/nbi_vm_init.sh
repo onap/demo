@@ -1,9 +1,10 @@
 #!/bin/bash
 
+# Set environment variables
+DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
-NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
-DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
+export NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 export SDC_IP=$(cat /opt/config/sdc_ip_addr.txt)
 export AAI_IP=$(cat /opt/config/aai_ip_addr.txt)
 export SO_IP=$(cat /opt/config/so_ip_addr.txt)
@@ -12,9 +13,11 @@ export SO_IP=$(cat /opt/config/so_ip_addr.txt)
 mkdir -p /opt/nbi
 cd /opt/nbi
 
+# Create .env file to access env variables for docker-compose
 echo "SDC_IP=${SDC_IP}" > .env
 echo "SO_IP=${SO_IP}" >> .env
 echo "AAI_IP=${AAI_IP}" >> .env
+echo "NEXUS_DOCKER_REPO=${NEXUS_DOCKER_REPO}" >> .env
 
 # Fetch the latest docker-compose.yml
 curl -o docker-compose.yml https://git.onap.org/externalapi/nbi/plain/docker-compose.yml?h=master
