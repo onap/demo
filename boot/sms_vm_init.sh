@@ -12,7 +12,7 @@ docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 docker pull $NEXUS_DOCKER_REPO/onap/aaf/sms:$DOCKER_IMAGE_VERSION
 docker pull $NEXUS_DOCKER_REPO/onap/aaf/smsquorumclient:$DOCKER_IMAGE_VERSION
 
-cd /opt/sms-service/bin/deploy
+cd /opt/sms/sms-service/bin/deploy
 
 #Stop existing docker containers (if any)
 if [ $(docker ps | wc -l) > 1 ]; then
