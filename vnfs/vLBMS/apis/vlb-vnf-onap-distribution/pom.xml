@@ -2,18 +2,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <artifactId>demo-aggregator</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
-    <groupId>org.onap.demo.vnf</groupId>
-    <relativePath>../../../../pom.xml</relativePath>
+    <groupId>io.fd.honeycomb.common</groupId>
+    <artifactId>minimal-distribution-parent</artifactId>
+    <version>1.17.07</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.onap.demo.vnf.vlb</groupId>
   <artifactId>vlb-vnf-onap-distribution</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.2.0</version>
 
   <properties>
+    <nexusproxy>http://nexus.fd.io/content</nexusproxy>
+    <start.script.template>
+#!/bin/sh -
+%s
+    </start.script.template>
+
     <exec.parameters>-Xms128m -Xmx128m</exec.parameters>
     <main.class>io.fd.honeycomb.infra.distro.Main</main.class>
     <interfaces.mapping.version>1.17.07</interfaces.mapping.version>
@@ -35,15 +40,49 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.gmaven</groupId>
-        <artifactId>groovy-maven-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <!-- Use google's error-prone static analysis-->
+          <compilerId>javac-with-errorprone</compilerId>
+          <forceJavacCompilerUse>true</forceJavacCompilerUse>
+          <showWarnings>true</showWarnings>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-javac-errorprone</artifactId>
+            <version>2.5</version>
+          </dependency>
+          <!-- override plexus-compiler-javac-errorprone's dependency on
+               Error Prone with the latest version -->
+          <dependency>
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_core</artifactId>
+            <version>2.0.9</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>${main.class}</mainClass>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <useUniqueVersions>false</useUniqueVersions>
+              <classpathMavenRepositoryLayout>true</classpathMavenRepositoryLayout>
+            </manifest>
+            <manifestEntries>
+              <Class-Path>config/ cert/ modules/ yang-mapping/</Class-Path>
+            </manifestEntries>
+          </archive>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -74,6 +113,53 @@
              </configuration>
            </execution>
          </executions>
+      </plugin>
+
+      <!-- Generate shell script -->
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
+        <version>2.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <source>
+                import java.nio.file.Paths
+
+                log.info "Generating shell exec script"
+                def scriptTemplate = properties.getOrDefault("start.script.template", "")
+                def args = properties.getOrDefault("exec.parameters", "")
+                log.debug "Additional shell exec script properties: ${args}"
+                def javaArgs = "${args} -jar \$(dirname \$0)/${project.artifactId}-${project.version}.jar"
+                def scriptParent = Paths.get(project.build.outputDirectory, "honeycomb-minimal-resources")
+                scriptParent.toFile().mkdirs()
+                def scriptContent = "java " + javaArgs
+                log.info "Generating shell exec script as ${scriptContent}"
+                def scriptPath = Paths.get(scriptParent.toString(), "honeycomb")
+                log.info "Writing shell exec script to ${scriptPath}"
+                scriptPath.toFile().text = String.format(scriptTemplate, scriptContent)
+                scriptPath.toFile().setExecutable(true)
+
+                scriptPath = Paths.get(scriptParent.toString(), "honeycomb-start")
+                log.info "Writing shell exec script to ${scriptPath}"
+                scriptPath.toFile().text = "\$(dirname \$0)/honeycomb &amp;"
+                scriptPath.toFile().setExecutable(true)
+
+                def debug_args = properties.getOrDefault("debug.parameters", "")
+                def debugScriptContent = "java" + " ${debug_args} " + javaArgs
+                log.info "Generating shell debug script as ${debugScriptContent}"
+                scriptPath = Paths.get(scriptParent.toString(), "honeycomb-debug")
+                log.info "Writing shell debug script to ${scriptPath}"
+                scriptPath.toFile().text = String.format(scriptTemplate, debugScriptContent)
+                scriptPath.toFile().setExecutable(true)
+              </source>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -152,6 +238,5 @@
       <artifactId>minimal-distribution</artifactId>
       <version>${honeycomb.min.distro.version}</version>
     </dependency>
-
   </dependencies>
 </project>

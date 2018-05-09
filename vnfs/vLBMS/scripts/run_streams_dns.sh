@@ -7,7 +7,7 @@ vppctl packet-gen disable
 vppctl packet-gen enable-stream dns1
 vppctl packet-gen enable-stream dns2
 
-sleep 180
+sleep 60
 
 #Rehash port numbers and re-run five streams every minute
 while true; do

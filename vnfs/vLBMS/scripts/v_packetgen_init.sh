@@ -96,7 +96,7 @@ sleep 1
 
 # Start Honeycomb and enable traffic flows
 cd /opt
-./vlb-vnf-onap-distribution-$(cat /opt/config/demo_artifacts_version.txt)-SNAPSHOT/honeycomb &>/var/log/honeycomb.log &disown
+./vlb-vnf-onap-distribution-$(cat /opt/config/demo_artifacts_version.txt)/honeycomb &>/var/log/honeycomb.log &disown
 
 chmod +x run_streams_dns.sh
 ./run_streams_dns.sh &>/dev/null &disown

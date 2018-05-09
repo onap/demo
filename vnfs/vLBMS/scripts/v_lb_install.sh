@@ -68,8 +68,8 @@ wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/add_dns.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/remove_dns.sh
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/properties.conf -O /opt/config/properties.conf
 wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/run_health.sh
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves_vlb_reporting/$DEMO_ARTIFACTS_VERSION/ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+#wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+#wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves_vlb_reporting/$DEMO_ARTIFACTS_VERSION/ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 
 tar -zmxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves-$DEMO_ARTIFACTS_VERSION VES
@@ -103,10 +103,10 @@ apt-get install -y vpp vpp-dpdk-dkms vpp-lib vpp-dbg vpp-plugins vpp-dev
 sleep 1
 
 # Install VES
-cd /opt/VES/evel/evel-library/bldjobs/
-make clean
-make
-sleep 1
+#cd /opt/VES/evel/evel-library/bldjobs/
+#make clean
+#make
+#sleep 1
 
 # Run instantiation script
 cd /opt
