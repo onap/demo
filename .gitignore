@@ -2,3 +2,4 @@
 /.pydevproject
 .*.sw?
 .DS_Store
+target/
