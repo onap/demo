@@ -86,6 +86,7 @@ git config core.sparsecheckout true
 echo "vnfs/vLBMS/apis" >> .git/info/sparse-checkout
 git pull --depth=1 origin master
 
+mkdir ~/.m2
 cat > ~/.m2/settings.xml << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- vi: set et smarttab sw=2 tabstop=2: -->
