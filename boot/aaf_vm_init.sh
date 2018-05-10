@@ -13,20 +13,24 @@ docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 cd /opt/authz
 git pull
 
+
 if [ "`docker container ls | grep aaf_cass`" = "" ]; then
   # Cassandra Install
   cd /opt/authz/auth/auth-cass/docker
-  # Phase 1
+  echo Phase 1 Cassandra Install
   ./dinstall.sh
-  echo "Waiting for Cassandra to startup"
-  sleep 15
-  # Phase 2
-  if [ "`docker container ls | grep aaf_cass`" = "" ]; then
-      echo "Error on Cassandra install"
-      exit
-  else
-      ./dinstall.sh
-  fi
+  for I in 1 2 3 4 5 6 7 8 9; do
+    echo "Waiting for Cassandra to startup"
+    sleep 20
+
+    if [ "`docker container ls | grep aaf_cass`" = "" ]; then
+        echo "Still waiting ..."
+    else
+        echo "Phase 2 Cassandra Instail"
+        ./dinstall.sh
+        break
+    fi
+  done
 fi
 
 CASS_IP=`docker inspect aaf_cass | grep '"IPAddress' | head -1 | cut -d '"' -f 4`
