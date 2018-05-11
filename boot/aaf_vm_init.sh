@@ -14,9 +14,9 @@ cd /opt/authz
 git pull
 
 
+cd /opt/authz/auth/auth-cass/docker
 if [ "`docker container ls | grep aaf_cass`" = "" ]; then
   # Cassandra Install
-  cd /opt/authz/auth/auth-cass/docker
   echo Phase 1 Cassandra Install
   ./dinstall.sh
 fi
