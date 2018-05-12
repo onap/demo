@@ -51,7 +51,7 @@ fi
 echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make
+apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make jq
 
 # Download scripts from Nexus
 curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdnc_vm_init.sh -o /opt/sdnc_vm_init.sh
