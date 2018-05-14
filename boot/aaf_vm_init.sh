@@ -6,7 +6,7 @@ NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 HOSTNAME=`hostname`
 FQDN=aaf.api.simpledemo.onap.org
-HOST_IP=$(cat /opt/config/dns_ip_addr.txt)
+HOST_IP=$(cat /opt/config/local_ip_addr.txt)
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
