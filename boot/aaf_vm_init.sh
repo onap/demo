@@ -20,8 +20,6 @@ if [ "`docker container ls | grep aaf_cass`" = "" ]; then
   echo Phase 1 Cassandra Install
   ./dinstall.sh
 fi
-echo "Phase 2 Cassandra Install"
-./dinstall.sh
 
 CASS_IP=`docker inspect aaf_cass | grep '"IPAddress' | head -1 | cut -d '"' -f 4`
 CASS_HOST="cass.aaf.osaaf.org:"$CASS_IP
