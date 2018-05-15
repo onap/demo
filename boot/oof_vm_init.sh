@@ -171,8 +171,8 @@ MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddre
 # Set A&AI and MUSIC url inside OOF-HAS conductor.conf
 sed -i "138 s%.*%server_url = https://aai.api.simpledemo.onap.org:8443/aai%" $COND_CONF
 sed -i "141 s%.*%server_url_version = v13%" $COND_CONF
-sed -i "250 s%.*%server_url = http://$MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
-sed -i "277 s%.*%replication_factor = 1%" $COND_CONF
+sed -i "257 s%.*%server_url = http://$MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
+sed -i "284 s%.*%replication_factor = 1%" $COND_CONF
 
 # Set A&AI authentication file locations inside OOF-HAS conductor.conf
 sed -i "153 s%.*%certificate_authority_bundle_file = $AAI_cert%" $COND_CONF
@@ -219,7 +219,7 @@ curl -X POST \
         "name": "foo",
         "recommend_max": 1,
         "solution": "{\"healthcheck\": \" healthcheck\"}",
-        "status": "solved",
+        "status": "done",
         "template": "{\"healthcheck\": \"healthcheck\"}",
         "timeout": 3600,
         "translation": "{\"healthcheck\": \" healthcheck\"}",
