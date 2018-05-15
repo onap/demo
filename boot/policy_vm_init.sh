@@ -38,18 +38,19 @@ export DOCKER_REPOSITORY=${NEXUS_DOCKER_REPO}
 cd /opt/policy
 git pull
 
-# download controlloop application
-
-export ARTIFACT_VERSION=$(cat /opt/config/artifacts_version.txt)
-
-chmod +x /opt/policy/config/drools/apps-install.sh
-/opt/policy/config/drools/apps-install.sh controlloop ${ARTIFACT_VERSION} /opt/policy/config/drools
+chmod +x config/pe/brmsgw-tweaks.sh
+chmod +x config/pe/pap-tweaks.sh
+chmod +x config/pe/pdp-tweaks.sh
+chmod +x config/pe/push-policies.sh
+chmod +x config/drools/apps-install.sh
+chmod +x config/drools/drools-preinstall.sh
+chmod +x config/drools/drools-tweaks.sh
+chmod +x config/db/db.sh
 
 # ensure brmsgw dependency configuration is set up correctly
 
 sed -i -e "s/^BRMS_DEPENDENCY_VERSION=.*$/BRMS_DEPENDENCY_VERSION=${ARTIFACT_VERSION}/g" /opt/policy/config/pe/brmsgw.conf
 
-chmod +x config/drools/drools-tweaks.sh
 
 if [ -e /opt/config/public_ip.txt ]
 then
