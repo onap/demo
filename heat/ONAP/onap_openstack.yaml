@@ -1034,6 +1034,7 @@ resources:
             __aai2_ip_addr__: { get_param: aai2_ip_addr }
             __appc_ip_addr__: { get_param: appc_ip_addr }
             __dcae_ip_addr__: { get_param: dcae_ip_addr }
+            __dcae_collector_ip__: { get_param: dcae_ip_addr }
             __so_ip_addr__: { get_param: so_ip_addr }
             __mr_ip_addr__: { get_param: mr_ip_addr }
             __policy_ip_addr__: { get_param: policy_ip_addr }
@@ -1053,11 +1054,13 @@ resources:
             __external_dns__: { get_param: external_dns }
             __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
             __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
+            __vm_image_name__: { get_param: ubuntu_1404_image }
             __vm_flavor__: { get_param: flavor_medium }
             __public_net_id__: { get_param: public_net_id }
             __script_version__: { get_param: artifacts_version }
             __robot_repo__: { get_param: robot_repo }
             __docker_version__: { get_param: robot_docker }
+            __vnf_pub_key__: { get_param: pub_key }
           template: |
             #!/bin/bash
 
@@ -1081,6 +1084,7 @@ resources:
             echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
             echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
             echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
+            echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
             echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
@@ -1101,12 +1105,13 @@ resources:
             echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__ubuntu_1404_image__" > /opt/config/vm_image_name.txt
             echo "__vm_flavor__" > /opt/config/vm_flavor.txt
             echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
             echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
+            echo "__vm_image_name__" > /opt/config/vm_image_name.txt
             echo "__script_version__" > /opt/config/script_version.txt
             echo "__public_net_id__" > /opt/config/public_net_id.txt
+            echo "__vnf_pub_key__" > /opt/config/vnf_pub_key.txt
             echo "__robot_repo__" > /opt/config/remote_repo.txt
             echo "localhost" > /opt/config/log_elasticsearch_ip_addr.txt # these tests will be skipped by robot
             echo "localhost" > /opt/config/log_logstash_ip_addr.txt # these tests will be skipped by robot
