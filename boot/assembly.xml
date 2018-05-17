@@ -5,6 +5,7 @@
   <formats>
     <format>zip</format>
   </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
       <directory>${basedir}</directory>
@@ -15,6 +16,7 @@
         <exclude>assembly.xml</exclude>
         <exclude>pom.xml</exclude>
         <exclude>target</exclude>
+        <exclude>.*</exclude>
       </excludes>
     </fileSet>
   </fileSets>
