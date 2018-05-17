@@ -688,7 +688,10 @@ resources:
             echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dns_install.sh -o /opt/dns_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt dns_install.sh
             cd /opt
             chmod +x dns_install.sh
             ./dns_install.sh
@@ -761,7 +764,10 @@ resources:
             echo "__aai_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt aai_install.sh
             cd /opt
             chmod +x aai_install.sh
             ./aai_install.sh
@@ -830,7 +836,10 @@ resources:
             echo "__aai_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aai_install.sh -o /opt/aai_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt aai_install.sh
             cd /opt
             chmod +x aai_install.sh
             ./aai_install.sh
@@ -911,7 +920,10 @@ resources:
             echo "__so_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/so_install.sh -o /opt/so_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt so_install.sh
             cd /opt
             chmod +x so_install.sh
             ./so_install.sh
@@ -978,7 +990,10 @@ resources:
             echo "__dbcl_docker__" > /opt/config/docker_version.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/mr_install.sh -o /opt/mr_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt mr_install.sh
             cd /opt
             chmod +x mr_install.sh
             ./mr_install.sh
@@ -1118,7 +1133,10 @@ resources:
             echo "localhost" > /opt/config/log_kibana_ip_addr.txt # these tests will be skipped by robot
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/robot_install.sh -o /opt/robot_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt robot_install.sh
             cd /opt
             chmod +x robot_install.sh
             ./robot_install.sh
@@ -1185,7 +1203,10 @@ resources:
             echo "__vid_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/vid_install.sh -o /opt/vid_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt vid_install.sh
             cd /opt
             chmod +x vid_install.sh
             ./vid_install.sh
@@ -1254,7 +1275,10 @@ resources:
             echo "__sdnc_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/sdnc_install.sh -o /opt/sdnc_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt sdnc_install.sh
             cd /opt
             chmod +x sdnc_install.sh
             ./sdnc_install.sh
@@ -1338,7 +1362,10 @@ resources:
             echo "__sdc_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/sdc_install.sh -o /opt/sdc_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt sdc_install.sh
             cd /opt
             chmod +x sdc_install.sh
             ./sdc_install.sh
@@ -1409,7 +1436,10 @@ resources:
             echo "__portal_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/portal_install.sh -o /opt/portal_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt portal_install.sh
             cd /opt
             chmod +x portal_install.sh
             ./portal_install.sh
@@ -1478,7 +1508,10 @@ resources:
             echo "__policy_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/policy_install.sh -o /opt/policy_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt policy_install.sh
             cd /opt
             chmod +x policy_install.sh
             ./policy_install.sh
@@ -1549,7 +1582,10 @@ resources:
             echo "__appc_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/appc_install.sh -o /opt/appc_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt appc_install.sh
             cd /opt
             chmod +x appc_install.sh
             ./appc_install.sh
@@ -1628,7 +1664,10 @@ resources:
             echo "__clamp_repo__" > /opt/config/remote_repo.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/clamp_install.sh -o /opt/clamp_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt clamp_install.sh
             cd /opt
             chmod +x clamp_install.sh
             ./clamp_install.sh
@@ -1770,7 +1809,10 @@ resources:
             echo "export OPENO_IP=__openo_ip_addr__" >> /opt/config/onap_ips.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/openo_install.sh -o /opt/openo_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt openo_install.sh
             cd /opt
             chmod +x openo_install.sh
             ./openo_install.sh
@@ -1983,7 +2025,10 @@ resources:
             echo "__holmes_rm_docker__" > /opt/config/holmes_docker_rm.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/dcae2_install.sh -o /opt/dcae2_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt dcae2_install.sh
             cd /opt
             chmod +x dcae2_install.sh
             ./dcae2_install.sh > /tmp/dcae2_install.log 2>&1
@@ -2050,7 +2095,10 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/music_install.sh -o /opt/music_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt music_install.sh
             cd /opt
             chmod +x music_install.sh
             ./music_install.sh
@@ -2117,7 +2165,10 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/oof_install.sh -o /opt/oof_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt oof_install.sh
             cd /opt
             chmod +x oof_install.sh
             ./oof_install.sh
@@ -2186,7 +2237,10 @@ resources:
             echo "__local_ip__" > /opt/config/local_ip.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/aaf_install.sh -o /opt/aaf_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt aaf_install.sh
             cd /opt
             chmod +x aaf_install.sh
             ./aaf_install.sh
@@ -2254,7 +2308,10 @@ resources:
             echo "__local_ip__" > /opt/config/local_ip.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/sms_install.sh -o /opt/sms_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt sms_install.sh
             cd /opt
             chmod +x sms_install.sh
             ./sms_install.sh
@@ -2326,7 +2383,10 @@ resources:
             echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
 
             # Download and run install script
-            curl -k __nexus_repo__/org.onap.demo/boot/__artifacts_version__/nbi_install.sh -o /opt/nbi_install.sh
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            unzip -j /opt/boot-__artifacts_version__.zip -d /opt nbi_install.sh
             cd /opt
             chmod +x nbi_install.sh
             ./nbi_install.sh
