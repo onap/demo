@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Read configuration files
-NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -54,9 +53,9 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_vm_init.sh -o /opt/sdc_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_serv.sh -o /opt/sdc_serv.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_wfd_vm_init.sh -o /opt/sdc_wfd_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip sdc_vm_init.sh > /opt/sdc_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip sdc_serv.sh > /opt/sdc_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip sdc_wfd_vm_init.sh > /opt/sdc_wfd_vm_init.sh
 chmod +x /opt/sdc_vm_init.sh
 chmod +x /opt/sdc_serv.sh
 chmod +x /opt/sdc_wfd_vm_init.sh
@@ -74,7 +73,7 @@ curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose
 chmod +x /opt/docker/docker-compose
 
 # Create partition and mount the external volume
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/sdc_ext_volume_partitions.txt -o /opt/sdc_ext_volume_partitions.txt
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip sdc_ext_volume_partitions.txt > /opt/sdc_ext_volume_partitions.txt
 
 if [[ $CLOUD_ENV == "rackspace" ]]
 then

@@ -88,9 +88,10 @@ parameters:
     type: string
     description: Public key to be installed on the compute instance
 
-  nexus_repo:
+  nexus_artifact_repo:
     type: string
-    description: Complete URL for the Nexus repository.
+    description: Complete URL for the Nexus repository for Maven artifacts.
+    default: "https://nexus.onap.org"
 
   nexus_docker_repo:
     type: string
@@ -634,7 +635,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __artifacts_version__: { get_param: artifacts_version }
             __oam_network_cidr__: { get_attr: [oam_onap_subnet, cidr] }
             __dns_ip_addr__: { get_param: dns_ip_addr }
@@ -665,7 +666,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
@@ -695,7 +696,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt dns_install.sh
             cd /opt
             chmod +x dns_install.sh
@@ -735,7 +736,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -753,7 +754,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -771,7 +772,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt aai_install.sh
             cd /opt
             chmod +x aai_install.sh
@@ -809,7 +810,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -826,7 +827,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -843,7 +844,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt aai_install.sh
             cd /opt
             chmod +x aai_install.sh
@@ -882,7 +883,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -905,7 +906,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -927,7 +928,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt so_install.sh
             cd /opt
             chmod +x so_install.sh
@@ -966,7 +967,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -982,7 +983,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -997,7 +998,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt mr_install.sh
             cd /opt
             chmod +x mr_install.sh
@@ -1036,7 +1037,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1089,7 +1090,7 @@ resources:
             # Create configuration files
             mkdir -p /opt/config
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__network_name__" > /opt/config/network.txt
@@ -1148,7 +1149,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt robot_install.sh
             cd /opt
             chmod +x robot_install.sh
@@ -1187,7 +1188,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1203,7 +1204,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -1218,7 +1219,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt vid_install.sh
             cd /opt
             chmod +x vid_install.sh
@@ -1257,7 +1258,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1274,7 +1275,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -1290,7 +1291,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt sdnc_install.sh
             cd /opt
             chmod +x sdnc_install.sh
@@ -1338,7 +1339,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1358,7 +1359,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -1377,7 +1378,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt sdc_install.sh
             cd /opt
             chmod +x sdc_install.sh
@@ -1416,7 +1417,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1434,7 +1435,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -1451,7 +1452,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt portal_install.sh
             cd /opt
             chmod +x portal_install.sh
@@ -1490,7 +1491,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1507,7 +1508,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -1523,7 +1524,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt policy_install.sh
             cd /opt
             chmod +x policy_install.sh
@@ -1562,7 +1563,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1580,7 +1581,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -1597,7 +1598,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt appc_install.sh
             cd /opt
             chmod +x appc_install.sh
@@ -1636,7 +1637,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1658,7 +1659,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -1679,7 +1680,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt clamp_install.sh
             cd /opt
             chmod +x clamp_install.sh
@@ -1718,7 +1719,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1770,7 +1771,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -1824,7 +1825,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt openo_install.sh
             cd /opt
             chmod +x openo_install.sh
@@ -1869,7 +1870,7 @@ resources:
             # repo related
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: dcae_docker }
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -1960,7 +1961,7 @@ resources:
             # repo related
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -2040,7 +2041,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt dcae2_install.sh
             cd /opt
             chmod +x dcae2_install.sh
@@ -2079,7 +2080,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -2095,7 +2096,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -2110,7 +2111,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt music_install.sh
             cd /opt
             chmod +x music_install.sh
@@ -2149,7 +2150,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -2165,7 +2166,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -2180,7 +2181,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt oof_install.sh
             cd /opt
             chmod +x oof_install.sh
@@ -2219,7 +2220,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -2236,7 +2237,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -2252,7 +2253,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt aaf_install.sh
             cd /opt
             chmod +x aaf_install.sh
@@ -2290,7 +2291,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -2307,7 +2308,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -2323,7 +2324,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt sms_install.sh
             cd /opt
             chmod +x sms_install.sh
@@ -2361,7 +2362,7 @@ resources:
       user_data:
         str_replace:
           params:
-            __nexus_repo__: { get_param: nexus_repo }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
             __nexus_password__: { get_param: nexus_password }
@@ -2380,7 +2381,7 @@ resources:
 
             # Create configuration files
             mkdir -p /opt/config
-            echo "__nexus_repo__" > /opt/config/nexus_repo.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
             echo "__nexus_username__" > /opt/config/nexus_username.txt
             echo "__nexus_password__" > /opt/config/nexus_password.txt
@@ -2398,7 +2399,7 @@ resources:
             # Download and run install script
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "https://nexus.onap.org/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
             unzip -j /opt/boot-__artifacts_version__.zip -d /opt nbi_install.sh
             cd /opt
             chmod +x nbi_install.sh

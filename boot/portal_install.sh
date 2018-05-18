@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Read configuration files
-NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -54,8 +53,8 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git unzip mysql-client-core-5.6 ntp ntpdate make
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/portal_vm_init.sh -o /opt/portal_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/portal_serv.sh -o /opt/portal_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip portal_vm_init.sh > /opt/portal_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip portal_serv.sh > /opt/portal_serv.sh
 chmod +x /opt/portal_vm_init.sh
 chmod +x /opt/portal_serv.sh
 mv /opt/portal_serv.sh /etc/init.d
