@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Read configuration files
-NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -55,15 +54,15 @@ apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates w
 
 # Download scripts from Nexus
 # a) scripts for message router (mr)
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mr_vm_init.sh -o /opt/mr_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mr_serv.sh -o /opt/mr_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip mr_vm_init.sh > /opt/mr_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip mr_serv.sh > /opt/mr_serv.sh
 chmod +x /opt/mr_vm_init.sh
 chmod +x /opt/mr_serv.sh
 mv /opt/mr_serv.sh /etc/init.d
 update-rc.d mr_serv.sh defaults
 
 # b) scripts for bus controller (dbcl)
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dbcl_vm_init.sh -o /opt/dbcl_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip dbcl_vm_init.sh > /opt/dbcl_vm_init.sh
 chmod +x /opt/dbcl_vm_init.sh
 
 # Download and install docker-engine and docker-compose

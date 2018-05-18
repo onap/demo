@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Read configuration files
-NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -54,15 +53,15 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git unzip mysql-client-core-5.6 ntp ntpdate make
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/vnfsdk_vm_init.sh -o /opt/vnfsdk_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/msb_vm_init.sh -o /opt/msb_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/mvim_vm_init.sh -o /opt/mvim_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/vfc_vm_init.sh -o /opt/vfc_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/uui_vm_init.sh -o /opt/uui_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/openo_all_serv.sh -o /opt/openo_all_serv.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/openo_serv.sh -o /opt/openo_serv.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/cli_install.sh -o /opt/cli_install.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/esr_vm_init.sh -o /opt/esr_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip vnfsdk_vm_init.sh > /opt/vnfsdk_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip msb_vm_init.sh > /opt/msb_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip mvim_vm_init.sh > /opt/mvim_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip vfc_vm_init.sh > /opt/vfc_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip uui_vm_init.sh > /opt/uui_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip openo_all_serv.sh > /opt/openo_all_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip openo_serv.sh > /opt/openo_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip cli_install.sh > /opt/cli_install.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip esr_vm_init.sh > /opt/esr_vm_init.sh
 chmod +x /opt/vnfsdk_vm_init.sh
 chmod +x /opt/msb_vm_init.sh
 chmod +x /opt/mvim_vm_init.sh

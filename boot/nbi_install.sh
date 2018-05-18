@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Read configuration files
-NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -51,8 +50,8 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates curl git ntp ntpdate make software-properties-common
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/nbi_vm_init.sh -o /opt/nbi_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/nbi_serv.sh -o /opt/nbi_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip nbi_vm_init.sh > /opt/nbi_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip nbi_serv.sh > /opt/nbi_serv.sh
 chmod +x /opt/nbi_vm_init.sh
 chmod +x /opt/nbi_serv.sh
 mv /opt/nbi_serv.sh /etc/init.d

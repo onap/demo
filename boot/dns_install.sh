@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Read configuration files
-NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
@@ -60,10 +59,10 @@ apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates w
 
 # Download script
 mkdir /etc/bind/zones
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$ZONE_FILE -o /etc/bind/zones/db.simpledemo.openecomp.org
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$ZONE_ONAP -o /etc/bind/zones/db.simpledemo.onap.org
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/$OPTIONS_FILE -o /etc/bind/named.conf.options
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/named.conf.local -o /etc/bind/named.conf.local
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip $ZONE_FILE > /etc/bind/zones/db.simpledemo.openecomp.org
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip $ZONE_ONAP > /etc/bind/zones/db.simpledemo.onap.org
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip $OPTIONS_FILE > /etc/bind/named.conf.options
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip named.conf.local > /etc/bind/named.conf.local
 
 
 

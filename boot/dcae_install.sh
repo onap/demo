@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Read configuration files
-NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -25,7 +24,6 @@ OPENSTACK_TENANT_NAME=OPEN-ECOMP
 OPENSTACK_REGION=$(cat /opt/config/openstack_region.txt)
 OPENSTACK_PRIVATE_NETWORK=$(cat /opt/config/openstack_private_network_name.txt)
 
-NEXUS_URL_ROOT=$(cat /opt/config/nexus_repo_root.txt)
 NEXUS_USER=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWORD=$(cat /opt/config/nexus_password.txt)
 NEXUS_URL_SNAPSHOTS=$(cat /opt/config/nexus_url_snapshots.txt)
@@ -86,8 +84,8 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget make openjdk-8-jdk git ntp ntpdate
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dcae_vm_init.sh -o /opt/dcae_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/dcae_serv.sh -o /opt/dcae_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip dcae_vm_init.sh > /opt/dcae_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip dcae_serv.sh > /opt/dcae_serv.sh
 chmod +x /opt/dcae_vm_init.sh
 chmod +x /opt/dcae_serv.sh
 mv /opt/dcae_serv.sh /etc/init.d
@@ -152,7 +150,6 @@ NEXUS-URL-ROOT: $NEXUS_URL_ROOT
 NEXUS-USER: $NEXUS_USER
 NEXUS-PASSWORD: $NEXUS_PASSWORD
 NEXUS-URL-SNAPSHOTS: $NEXUS_URL_SNAPSHOTS
-NEXUS-RAWURL: $NEXUS_REPO
 
 DOCKER-REGISTRY: $DOCKER_REGISTRY
 DOCKER-VERSION: $DOCKER_VERSION

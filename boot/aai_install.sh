@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Read configuration files
-NEXUS_REPO=$(cat /opt/config/nexus_repo.txt)
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -55,8 +54,8 @@ apt-get update
 apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make
 
 # Download scripts from Nexus
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/aai_vm_init.sh -o /opt/aai_vm_init.sh
-curl -k $NEXUS_REPO/org.onap.demo/boot/$ARTIFACTS_VERSION/aai_serv.sh -o /opt/aai_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip aai_vm_init.sh > /opt/aai_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip aai_serv.sh > /opt/aai_serv.sh
 chmod +x /opt/aai_vm_init.sh
 chmod +x /opt/aai_serv.sh
 mv /opt/aai_serv.sh /etc/init.d
