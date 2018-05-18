@@ -170,6 +170,11 @@ parameters:
     type: string
     description: CIDR of the OAM ONAP network
 
+  use_oam_net_for_robot:
+    type: boolean
+    description: Whether to use oam_network for Robot VNFs or not.  The default is false, which uses public_net_id.  Set to true if the Robot VNFs are unable to bind to the public network (needed by TLAB).
+    default: false
+
   ### Private IP addresses ###
   aai1_ip_addr:
     type: string
@@ -1057,10 +1062,12 @@ resources:
             __vm_image_name__: { get_param: ubuntu_1404_image }
             __vm_flavor__: { get_param: flavor_medium }
             __public_net_id__: { get_param: public_net_id }
+            __oam_network_id__: { get_resource: oam_onap }
             __script_version__: { get_param: artifacts_version }
             __robot_repo__: { get_param: robot_repo }
             __docker_version__: { get_param: robot_docker }
             __vnf_pub_key__: { get_param: pub_key }
+            __use_oam_net_for_robot__: { get_param: use_oam_net_for_robot }
           template: |
             #!/bin/bash
 
@@ -1110,7 +1117,13 @@ resources:
             echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
             echo "__vm_image_name__" > /opt/config/vm_image_name.txt
             echo "__script_version__" > /opt/config/script_version.txt
-            echo "__public_net_id__" > /opt/config/public_net_id.txt
+            if [ "__use_oam_net_for_robot__" != "False" ] && [ "__use_oam_net_for_robot__" != "false" ]; then
+              echo "__oam_network_id__" > /opt/config/public_net_id.txt
+            else
+              echo "__public_net_id__" > /opt/config/public_net_id.txt
+            fi
+            echo "__oam_network_id__" > /opt/config/oam_network_id.txt
+            echo "__use_oam_net_for_robot__" > /opt/config/use_oam_net_for_robot.txt
             echo "__vnf_pub_key__" > /opt/config/vnf_pub_key.txt
             echo "__robot_repo__" > /opt/config/remote_repo.txt
             echo "localhost" > /opt/config/log_elasticsearch_ip_addr.txt # these tests will be skipped by robot
