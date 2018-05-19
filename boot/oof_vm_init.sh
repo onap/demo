@@ -43,6 +43,7 @@ docker pull $NEXUS_DOCKER_REPO/onap/optf-has:$DOCKER_IMAGE_VERSION
 
 OSDF_IMAGE_NAME="$NEXUS_DOCKER_REPO/onap/optf-osdf"
 OSDF_CONFIG=/opt/optf-osdf/config/osdf_config.yaml
+HAS_HOST=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddress}}' api)
 
 mkdir -p /opt/optf-osdf/config
 
@@ -53,7 +54,7 @@ soUsername: ""   # SO username for call back.
 soPassword: ""   # SO password for call back.
 
 # Credentials for Conductor
-conductorUrl: https://localhost:8091/v1/plans/
+conductorUrl: https://$HAS_HOST:8091/v1/plans/
 conductorUsername: admin1
 conductorPassword: plan.15
 conductorPingWaitTime: 60  # seconds to wait before calling the conductor retry URL
