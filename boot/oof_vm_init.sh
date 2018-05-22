@@ -54,7 +54,7 @@ soUsername: ""   # SO username for call back.
 soPassword: ""   # SO password for call back.
 
 # Credentials for Conductor
-conductorUrl: https://$HAS_HOST:8091/v1/plans/
+conductorUrl: http://$HAS_HOST:8091/v1/plans/
 conductorUsername: admin1
 conductorPassword: plan.15
 conductorPingWaitTime: 60  # seconds to wait before calling the conductor retry URL
