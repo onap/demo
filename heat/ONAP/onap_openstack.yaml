@@ -72,10 +72,6 @@ parameters:
     type: string
     description: Name of the Extra Large Flavor supported by the cloud provider
 
-  flavor_xxlarge:
-    type: string
-    description: Name of the Extra Extra Large Flavor supported by the cloud provider
-
   vm_base_name:
     type: string
     description: Base name of ONAP VMs
@@ -132,10 +128,6 @@ parameters:
   openstack_api_key:
     type: string
     description: OpenStack password or API Key
-
-  horizon_url:
-    type: string
-    description: URL of OpenStack Horizon
 
   keystone_url:
     type: string
