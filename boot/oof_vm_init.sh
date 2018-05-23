@@ -2,7 +2,7 @@
 
 CERT=/opt/optf-has/aai_cert.cer
 KEY=/opt/optf-has/aai_key.key
-BUNDLE=/opt/optf-has/aai_bundle.pem
+BUNDLE=/opt/optf-has/AAF_RootCA.cer
 
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
@@ -16,7 +16,7 @@ COND_CONF=/opt/optf-has/conductor.conf
 LOG_CONF=/opt/optf-has/log.conf
 
 #!!! THE FOLLOWING LINE IS A PLACEHOLDER !!!
-AAI_cert=/usr/local/bin/aai_cert.cer
+AAI_cert=/usr/local/bin/AAF_RootCA.cer
 
 IMAGE_NAME="$NEXUS_DOCKER_REPO/onap/optf-has"
 
@@ -193,7 +193,7 @@ docker run -d --name solver -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_
 
 docker run -d --name reservation -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-reservation --config-file=/usr/local/bin/conductor.conf
 
-docker run -d --name data -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf -v $CERT:/usr/local/bin/aai_cert.cer -v $KEY:/usr/local/bin/aai_key.key -v $BUNDLE:/usr/local/bin/bundle.pem ${IMAGE_NAME}:latest python /usr/local/bin/conductor-data --config-file=/usr/local/bin/conductor.conf
+docker run -d --name data -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf -v $CERT:/usr/local/bin/aai_cert.cer -v $KEY:/usr/local/bin/aai_key.key -v $BUNDLE:/usr/local/bin/AAF_RootCA.cer ${IMAGE_NAME}:latest python /usr/local/bin/conductor-data --config-file=/usr/local/bin/conductor.conf
 
 sleep 10
 
