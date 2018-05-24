@@ -218,51 +218,63 @@ parameters:
 
   dcae_deployment_profile:
     type: string
-    description: DCAE deployment profile.  Currently supported profiles R1, R2MVP.
+    default: R2
+    description: DCAE deployment profile.  Currently supported profiles R2, R2MVP, and R2PLUS.
 
   dnsaas_config_enabled:
     type: string
-    description: whether the DNSaaS configuration section is enabled
+    default: ""
+    description: (deprecated in R2) whether the DNSaaS configuration section is enabled
 
   dnsaas_region:
     type: string
-    description: the region of the cloud instance providing the Designate DNS as a Service
+    default: ""
+    description: (deprecated in R2) the region of the cloud instance providing the Designate DNS as a Service
 
   dnsaas_keystone_url:
     type: string
-    description: the keystone URL of the cloud instance providing the Designate DNS as a Service
+    default: ""
+    description: (deprecated in R2) the keystone URL of the cloud instance providing the Designate DNS as a Service
 
   dnsaas_username:
     type: string
-    description: the username of the cloud instance providing the Designate DNS as a Service
+    default: ""
+    description: (deprecated in R2) the username of the cloud instance providing the Designate DNS as a Service
 
   dnsaas_password:
     type: string
-    description: the password of the cloud instance providing the Designate DNS as a Service
+    default: ""
+    description: (deprecated in R2) the password of the cloud instance providing the Designate DNS as a Service
 
   dnsaas_tenant_name:
     type: string
-    description: the name of the tenant in the cloud instance providing the Designate DNS as a Service
+    default: ""
+    description: (deprecated in R2) the name of the tenant in the cloud instance providing the Designate DNS as a Service
 
   dcae_keystone_url:
     type: string
-    description: the keystone URL for DCAE to use (via MultiCloud)
+    default: ""
+    description: (deprecated in R2) the keystone URL for DCAE to use (via MultiCloud)
 
   dcae_private_key:
     type: string
-    description: the private key of the key-apir used between the DCAE bootstrap container and DCAE VMs
+    default: ""
+    description: (deprecated in R2) the private key of the key-apir used between the DCAE bootstrap container and DCAE VMs
 
   dcae_public_key:
     type: string
-    description: the prublic key of the key-apir used between the DCAE bootstrap container and DCAE VMs
+    default: ""
+    description: (deprecated in R2) the prublic key of the key-apir used between the DCAE bootstrap container and DCAE VMs
 
   dcae_centos_7_image:
     type: string
-    description: the id/name of the CentOS 7 VM imange
+    default: ""
+    description: (deprecated in R2) the id/name of the CentOS 7 VM imange
 
   dcae_domain:
     type: string
-    description: the top level domain to register DCAE VMs (the zone will be random-str.dcae_domain)
+    default: ""
+    description: (deprecated in R2) the top level domain to register DCAE VMs (the zone will be random-str.dcae_domain)
 
   #####################
   #                   #
