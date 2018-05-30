@@ -94,7 +94,7 @@ osdfCMSchedulerPassword: testpwd1
 
 NEWFILE
 
-docker run -d --name osdf -v $OSDF_CONFIG:/optf/config/osdf_config.yaml -p 8698:8699 ${OSDF_IMAGE_NAME}:latest
+docker run -d --name osdf -v $OSDF_CONFIG:/opt/app/config/osdf_config.yaml -p 8698:8699 ${OSDF_IMAGE_NAME}:latest
 
 # install MUSIC
 # create directory for music properties and logs
