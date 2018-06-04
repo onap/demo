@@ -88,7 +88,10 @@ read -d '' MSO_CONFIG_UPDATES <<-EOF
 	                
 	            }
 	        ]
-	  }
+	},
+	"mso-bpmn-urn-config": {
+		"msoDefaultCloudOwnerId": "CloudOwner"
+	}
   }
 }
 EOF
