@@ -149,6 +149,10 @@ parameters:
     type: string
     label: Message Router IP address
     description: IP address of the Message Router that for vDHCP configuration 
+  mr_ip_port:
+    type: string
+    label: Message Router Port 
+    description: IP port of the Message Router that for vDHCP configuration 
   key_name:
     type: string
     label: Key pair name
@@ -362,6 +366,7 @@ resources:
             __oam_cidr__ : { get_param: onap_private_net_cidr }
             __cpe_signal_net_cidr__ : { get_param: cpe_signal_net_cidr }
             __mr_ip_addr__ : { get_param: mr_ip_addr }
+            __mr_ip_port__ : { get_param: mr_ip_port }
             __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
@@ -377,6 +382,7 @@ resources:
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__cpe_signal_net_cidr__" > /opt/config/cpe_signal_net_cidr.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
+            echo "__mr_ip_port__" > /opt/config/mr_ip_port.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
