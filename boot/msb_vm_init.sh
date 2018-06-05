@@ -105,6 +105,8 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "_aai-query
 #named-query
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-named-query", "url": "/aai/search","protocol": "REST", "enable_ssl":"true", "lb_policy":"ip_hash", "nodes": [ {"ip": "'$AAI_IP1'","port": "8446"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "_aai-named-query", "url": "/aai/search","path": "/aai/search","protocol": "REST", "enable_ssl":"true", "lb_policy":"ip_hash", "nodes": [ {"ip": "'$AAI_IP1'","port": "8446"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
+#search
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "aai-search", "version": "v11", "url": "/aai/v11/search","protocol": "REST", "enable_ssl":"True", "lb_policy":"round-robin","nodes": [ {"ip": "'$AAI_IP1'","port": "8443"}]}' "http://$OPENO_IP:10081/api/microservices/v1/services"
 
 
 # esr (not deployed together with AAI
