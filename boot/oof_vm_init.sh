@@ -7,7 +7,10 @@ BUNDLE=/opt/optf-has/AAF_RootCA.cer
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
-DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
+CASS_MUSIC_IMAGE_VERSION=$(cat /opt/config/cass_version.txt)
+MUSIC_IMAGE_VERSION=$(cat /opt/config/music_version.txt)
+HAS_IMAGE_VERSION=$(cat /opt/config/has_docker_version.txt)
+OSDF_IMAGE_VERSION=$(cat /opt/config/osdf_docker_version.txt)
 
 cd /opt/optf-has
 git pull
@@ -18,11 +21,12 @@ LOG_CONF=/opt/optf-has/log.conf
 #!!! THE FOLLOWING LINE IS A PLACEHOLDER !!!
 AAI_cert=/usr/local/bin/AAF_RootCA.cer
 
-IMAGE_NAME="$NEXUS_DOCKER_REPO/onap/optf-has"
+OSDF_IMG=${NEXUS_DOCKER_REPO}/onap/optf-osdf:${OSDF_IMAGE_VERSION}
+HAS_IMG=${NEXUS_DOCKER_REPO}/onap/optf-has:${HAS_IMAGE_VERSION}
 
 # MUSIC parameters
-CASS_IMG=${NEXUS_DOCKER_REPO}/onap/music/cassandra_music:latest
-MUSIC_IMG=${NEXUS_DOCKER_REPO}/onap/music/music:latest
+CASS_IMG=${NEXUS_DOCKER_REPO}/onap/music/cassandra_music:$CASS_MUSIC_IMAGE_VERSION
+MUSIC_IMG=${NEXUS_DOCKER_REPO}/onap/music/music:$MUSIC_IMAGE_VERSION
 TOMCAT_IMG=library/tomcat:8.5
 ZK_IMG=library/zookeeper:3.4
 WORK_DIR=/opt/optf-has
@@ -31,17 +35,16 @@ CASS_PASSWORD=cassandra1
 
 # pull images from repo
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
-docker pull $NEXUS_DOCKER_REPO/onap/optf-osdf:$DOCKER_IMAGE_VERSION
+docker pull ${OSDF_IMG}
 docker pull ${ZK_IMG}
 docker pull ${TOMCAT_IMG}
 docker pull ${CASS_IMG}
 docker pull ${MUSIC_IMG}
-docker pull $NEXUS_DOCKER_REPO/onap/optf-has:$DOCKER_IMAGE_VERSION
+docker pull ${HAS_IMG}
 
 
 #run optf-osdf
 
-OSDF_IMAGE_NAME="$NEXUS_DOCKER_REPO/onap/optf-osdf"
 OSDF_CONFIG=/opt/optf-osdf/config/osdf_config.yaml
 HAS_HOST=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddress}}' api)
 
@@ -94,7 +97,7 @@ osdfCMSchedulerPassword: testpwd1
 
 NEWFILE
 
-docker run -d --name osdf -v $OSDF_CONFIG:/opt/app/config/osdf_config.yaml -p 8698:8699 ${OSDF_IMAGE_NAME}:latest
+docker run -d --name osdf -v $OSDF_CONFIG:/opt/app/config/osdf_config.yaml -p 8698:8699 ${OSDF_IMG}
 
 # install MUSIC
 # create directory for music properties and logs
@@ -186,15 +189,15 @@ echo $KEY
 echo $BUNDLE
 
 # run optf-has
-docker run -d --name controller -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-controller --config-file=/usr/local/bin/conductor.conf
+docker run -d --name controller -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${HAS_IMG} python /usr/local/bin/conductor-controller --config-file=/usr/local/bin/conductor.conf
 
-docker run -d --name api -p "8091:8091" -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-api --port=8091 -- --config-file=/usr/local/bin/conductor.conf
+docker run -d --name api -p "8091:8091" -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${HAS_IMG} python /usr/local/bin/conductor-api --port=8091 -- --config-file=/usr/local/bin/conductor.conf
 
-docker run -d --name solver -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-solver --config-file=/usr/local/bin/conductor.conf
+docker run -d --name solver -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${HAS_IMG} python /usr/local/bin/conductor-solver --config-file=/usr/local/bin/conductor.conf
 
-docker run -d --name reservation -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${IMAGE_NAME}:latest python /usr/local/bin/conductor-reservation --config-file=/usr/local/bin/conductor.conf
+docker run -d --name reservation -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf ${HAS_IMG} python /usr/local/bin/conductor-reservation --config-file=/usr/local/bin/conductor.conf
 
-docker run -d --name data -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf -v $CERT:/usr/local/bin/aai_cert.cer -v $KEY:/usr/local/bin/aai_key.key -v $BUNDLE:/usr/local/bin/AAF_RootCA.cer ${IMAGE_NAME}:latest python /usr/local/bin/conductor-data --config-file=/usr/local/bin/conductor.conf
+docker run -d --name data -v $COND_CONF:/usr/local/bin/conductor.conf -v $LOG_CONF:/usr/local/bin/log.conf -v $CERT:/usr/local/bin/aai_cert.cer -v $KEY:/usr/local/bin/aai_key.key -v $BUNDLE:/usr/local/bin/AAF_RootCA.cer ${HAS_IMG} python /usr/local/bin/conductor-data --config-file=/usr/local/bin/conductor.conf
 
 sleep 10
 
