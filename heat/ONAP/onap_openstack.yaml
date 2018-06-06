@@ -410,6 +410,8 @@ parameters:
     type: string
   robot_docker:
     type: string
+  sniro_docker:
+    type: string
   sdc_docker:
     type: string
   sdc_wfd_docker:
@@ -1086,6 +1088,7 @@ resources:
             __script_version__: { get_param: artifacts_version }
             __robot_repo__: { get_param: robot_repo }
             __docker_version__: { get_param: robot_docker }
+            __sniro_docker_version__: { get_param: sniro_docker }
             __vnf_pub_key__: { get_param: pub_key }
             __use_oam_net_for_robot__: { get_param: use_oam_net_for_robot }
           template: |
@@ -1104,6 +1107,7 @@ resources:
             echo "__openstack_region__" > /opt/config/region.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__sniro_docker_version__" > /opt/config/sniro_docker_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__keystone_url__" > /opt/config/keystone.txt
