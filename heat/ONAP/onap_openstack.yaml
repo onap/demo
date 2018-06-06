@@ -438,7 +438,11 @@ parameters:
     type: string
   music_docker:
     type: string
-  oof_docker:
+  cassandra_music_docker:
+    type: string
+  optf_has_docker:
+    type: string
+  optf_osdf_docker:
     type: string
   aaf_docker:
     type: string
@@ -2164,7 +2168,10 @@ resources:
             __nexus_password__: { get_param: nexus_password }
             __artifacts_version__: { get_param: artifacts_version }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: oof_docker }
+            __has_docker_version__: { get_param: optf_has_docker }
+            __osdf_docker_version__: { get_param: optf_osdf_docker }
+            __music_docker_version__: { get_param: music_docker }
+            __cass_music_docker_version__: { get_param: cassandra_music_docker }
             __oof_repo__: { get_param: oof_repo }
             __gerrit_branch__: { get_param: oof_branch }
             __cloud_env__: { get_param: cloud_env }
@@ -2180,7 +2187,10 @@ resources:
             echo "__nexus_password__" > /opt/config/nexus_password.txt
             echo "__artifacts_version__" > /opt/config/artifacts_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
+            echo "__has_docker_version__" > /opt/config/has_docker_version.txt
+            echo "__osdf_docker_version__" > /opt/config/osdf_docker_version.txt
+            echo "__music_docker_version__" > /opt/config/music_version.txt
+            echo "__cass_music_docker_version__" > /opt/config/cass_version.txt
             echo "__oof_repo__" > /opt/config/remote_repo.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
