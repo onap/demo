@@ -450,3 +450,25 @@ Each VNF has a MANIFEST.json file associated with the HEAT templates. During VNF
     zip ZIP_FILE_NAME.zip *
     
 For information about VNF onboarding via the SDC portal, please refer to the wiki page: https://wiki.onap.org/display/DW/Design
+
+NF Change Management use case
+---
+
+For the Beijing release, we focused on in-place software upgrades, with vendor-specific details encapsulated in Ansible scripts provided by NF vendors. In-place software upgrades use direct communication between the controller (SDNC or APPC) and the NF instance to trigger the software upgrade, with the upgrade executing on the instance without relinquishing any of the physical resources. Both L1 - L3 and L4+ NFs are supported in the ONAP release via SDN-C and APP-C respectively. 
+The change management workflow is defined as a composition of building blocks that include locking and unlocking the NF instance, executing health checks, and executing the software upgrade. 
+
+ - The CM workflow for the in-place software upgrade is defined and executed by the service orchestrator (SO). 
+ - A&AI is used to lock/unlock the NF instance 
+ - The pre/post health checks and software upgrade execution are implemented in App-C (L4+ NFs) and SDN-C (L1-L3 NFs) by leveraging Ansible services to communicate with the NF instances. 
+ - The user (or, operator) interfaces with the CM workflow using ONAP's VID. SO communicates with A&AI using a REST API and with the controllers SDNC/APPC via DMaaP. 
+
+We setup the use case demonstration for the software upgrade on the virtual gateway (vGW) as part of the vCPE use case in ONAP's Beijing release.
+The main script for invoking SO in-place software upgrade workflow is in [demo.git]/vnfs/vCPE/scripts/inPlaceSoftwareUpgrade\_vGW.txt . The workflow can be tested without VID by using this script.
+To execute the script, the user/operator would login to the SO container and copy/paste the script. One would have to install vim to edit the script and curl to execute commands within the script:
+
+ - apt-get update 
+ - apt-get install vim 
+ - apt-get install curl 
+
+Check in VID for the available instances - service ID and instance ID - and replace those IDs in the script. Since the use case is for vGW, the controller type is SDNC.
+
