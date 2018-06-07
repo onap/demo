@@ -413,7 +413,7 @@ To create the VNF template in CDT, the following steps are required:
  - Click "Reference Data" Tab
  - Click "Save All to APPC"
 
-Finally, log into the APPC controller container and set the VNF password in /opt/onap/appc/data/properties/appc_southbound.properties to admin.
+Finally, log into the APPC controller container and set the VNF password (ConfigScaleOut.password) in /opt/onap/appc/data/properties/appc_southbound.properties to admin. Note that in an ONAP instance created with OOM, APPC may use redundancy to make the controller resilient to failures. For Beijing, CDT only updates one replica of APPC. As such, in a multi-replica environment, the property file should be copied over to the other replicas. If redundancy is used, APPC has 3 replicas. CDT typically updates APPC-0 only, so the property file should be copied over to APPC-1 and APPC-2. This will be addressed in future ONAP releases.
 
 To trigger the scale out workflow, the user/network operator can log into VID from the ONAP Portal (demo/demo123456! as username/password), select "VNF Changes" and then the "New (+)" button. The user/network operator needs to fill in the "VNF Change Form" by selecting Subscriber, Service Type, NF Role, Model Version, VNF, Scale Out from the Workflow drop down window, and APPC from the Controller drop down window. After clicking "Next", in the following window the user/network operator has to select the VF Module to scale by clicking on the VNF and then on the appropriate VF Module checkbox. Finally, by clicking on the "Schedule" button, the scale out use case will run as described above.
 
