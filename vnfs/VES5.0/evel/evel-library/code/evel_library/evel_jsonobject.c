@@ -298,7 +298,7 @@ void evel_jsonobject_nfsubscriptionid_set(EVEL_JSON_OBJECT * pinst, const char *
 void evel_epoch_microsec_set(EVEL_JSON_OBJECT_INSTANCE * pinst, const unsigned long long epmicrosec)
 {
   assert(epmicrosec != 0 );
-  pinst->objinst_epoch_microsec = epmicrosec;
+  evel_set_option_ull(&pinst->objinst_epoch_microsec , epmicrosec, "Json object instance microsec set");
 }
 
 /**************************************************************************//**

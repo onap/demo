@@ -359,7 +359,7 @@ void evel_json_encode_other(EVEL_JSON_BUFFER * jbuf,
 	   {
               evel_json_open_object(jbuf);
               evel_enc_kv_object(jbuf, "objectInstance", jsonobjinst->jsonstring);
-              evel_enc_kv_ull(jbuf, "objectInstanceEpochMicrosec", jsonobjinst->objinst_epoch_microsec);
+              evel_enc_kv_opt_ull(jbuf, "objectInstanceEpochMicrosec", &jsonobjinst->objinst_epoch_microsec);
   //evel_json_checkpoint(jbuf);
   if (evel_json_open_opt_named_list(jbuf, "objectKeys"))
   {
