@@ -160,11 +160,15 @@ parameters:
   demo_artifacts_version:
     type: string
     label: Artifacts version used in demo vnfs
-    description: Artifacts (jar, tar.gz) version used in demo vnfs
+    description: Version number for downloading the vPacketGen streams for VPP and VES
+  nb_api_version:
+    type: string
+    label: Northbound API version
+    description: Version number of the health check and config APIs
   install_script_version:
     type: string
     label: Installation script version number
-    description: Version number of the scripts that install the vFW demo app
+    description: Version number of the scripts that install the vLB demo app
   cloud_env:
     type: string
     label: Cloud environment
@@ -268,6 +272,7 @@ resources:
             __repo_url_blob__: { get_param: repo_url_blob }
             __repo_url_artifacts__: { get_param: repo_url_artifacts }
             __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __nb_api_version__: { get_param: nb_api_version }
             __install_script_version__: { get_param: install_script_version }
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
@@ -293,6 +298,7 @@ resources:
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__nb_api_version__" > /opt/config/nb_api_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
             echo "__pktgen_private_net_cidr__" > /opt/config/pktgen_private_net_cidr.txt
@@ -342,7 +348,7 @@ resources:
             __oam_private_ipaddr__: { get_param: vdns_private_ip_1 }
             __repo_url_blob__: { get_param: repo_url_blob }
             __repo_url_artifacts__: { get_param: repo_url_artifacts }
-            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __nb_api_version__: { get_param: nb_api_version }
             __install_script_version__: { get_param: install_script_version }
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
@@ -359,7 +365,7 @@ resources:
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
-            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__nb_api_version__" > /opt/config/nb_api_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
@@ -407,6 +413,7 @@ resources:
             __pktgen_private_net_cidr__: { get_param: pktgen_private_net_cidr }
             __vlb_ipaddr__: { get_param: vlb_private_ip_2 }
             __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __nb_api_version__: { get_param: nb_api_version }
             __install_script_version__: { get_param: install_script_version }
             __pg_int__: { get_param: pg_int }
             __vlb_mac__: { get_attr: [vlb_private_2_port, mac_address] }
@@ -424,6 +431,7 @@ resources:
             echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__nb_api_version__" > /opt/config/nb_api_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__pg_int__" > /opt/config/pg_int.txt
             echo "__vlb_mac__" > /opt/config/vlb_mac.txt
