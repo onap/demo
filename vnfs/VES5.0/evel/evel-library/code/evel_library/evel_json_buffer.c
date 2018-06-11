@@ -521,6 +521,7 @@ void evel_enc_version(EVEL_JSON_BUFFER * jbuf,
                       const int major_version,
                       const int minor_version)
 {
+  float ver;
   EVEL_ENTER();
 
   /***************************************************************************/
@@ -529,14 +530,14 @@ void evel_enc_version(EVEL_JSON_BUFFER * jbuf,
   assert(jbuf != NULL);
   assert(key != NULL);
 
-  evel_enc_kv_int(jbuf, key, major_version);
-  if (minor_version != 0)
-  {
+  ver = (float)major_version + (float)minor_version/10.0;
+
     jbuf->offset += snprintf(jbuf->json + jbuf->offset,
-                             jbuf->max_size - jbuf->offset,
-                             ".%d",
-                             minor_version);
-  }
+                           jbuf->max_size - jbuf->offset,
+                           "%s\"%s\": %.1f",
+                           evel_json_kv_comma(jbuf),
+                           key,
+                           ver);
 
   EVEL_EXIT();
 }

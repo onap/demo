@@ -495,7 +495,7 @@ void evel_free_batch(EVENT_HEADER * event);
 /* Supported Fault version.                                                  */
 /*****************************************************************************/
 #define EVEL_FAULT_MAJOR_VERSION 2
-#define EVEL_FAULT_MINOR_VERSION 1
+#define EVEL_FAULT_MINOR_VERSION 0
 
 /**************************************************************************//**
  * Fault.
@@ -581,7 +581,7 @@ typedef struct json_object_instance
 {
 
   char *jsonstring;
-  unsigned long long objinst_epoch_microsec;
+  EVEL_OPTION_ULL objinst_epoch_microsec;
   DLIST object_keys; /*EVEL_INTERNAL_KEY list */
 
 } EVEL_JSON_OBJECT_INSTANCE;
@@ -649,7 +649,7 @@ void evel_free_jsonobject(EVEL_JSON_OBJECT * jsobj);
 /* Supported Measurement version.                                            */
 /*****************************************************************************/
 #define EVEL_MEASUREMENT_MAJOR_VERSION 2
-#define EVEL_MEASUREMENT_MINOR_VERSION 1
+#define EVEL_MEASUREMENT_MINOR_VERSION 0
 
 /**************************************************************************//**
  * Errors.
@@ -1073,7 +1073,7 @@ typedef struct custom_measurement {
 /* Supported Report version.                                                 */
 /*****************************************************************************/
 #define EVEL_REPORT_MAJOR_VERSION 1
-#define EVEL_REPORT_MINOR_VERSION 1
+#define EVEL_REPORT_MINOR_VERSION 0
 
 /**************************************************************************//**
  * Report.
@@ -1226,7 +1226,7 @@ typedef struct event_mobile_flow {
 /* Supported Other field version.                                            */
 /*****************************************************************************/
 #define EVEL_OTHER_EVENT_MAJOR_VERSION 1
-#define EVEL_OTHER_EVENT_MINOR_VERSION 1
+#define EVEL_OTHER_EVENT_MINOR_VERSION 0
 
 /**************************************************************************//**
  * Other.
@@ -1256,7 +1256,7 @@ typedef struct other_field {
 /* Supported Service Events version.                                         */
 /*****************************************************************************/
 #define EVEL_HEARTBEAT_FIELD_MAJOR_VERSION 1
-#define EVEL_HEARTBEAT_FIELD_MINOR_VERSION 1
+#define EVEL_HEARTBEAT_FIELD_MINOR_VERSION 0
 
 
 /*****************************************************************************/
@@ -1318,8 +1318,8 @@ typedef struct signaling_additional_field {
 /*****************************************************************************/
 /* Supported State Change version.                                           */
 /*****************************************************************************/
-#define EVEL_STATE_CHANGE_MAJOR_VERSION 1
-#define EVEL_STATE_CHANGE_MINOR_VERSION 2
+#define EVEL_STATE_CHANGE_MAJOR_VERSION 2
+#define EVEL_STATE_CHANGE_MINOR_VERSION 0
 
 /**************************************************************************//**
  * State Change.
@@ -1641,6 +1641,24 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname);
  *****************************************************************************/
 void evel_header_type_set(EVENT_HEADER * const header,
                           const char * const type);
+
+/**************************************************************************//**
+ * Set the next event_sequence to use.
+ *
+ * @param sequence      The next sequence number to use.
+ *****************************************************************************/
+void evel_set_global_event_sequence(const int sequence);
+
+/**************************************************************************//**
+ * Set the Event Sequence property of the event header.
+ *
+ * @note This is mainly for tracking fault event sequence numbers
+ *
+ * @param header        Pointer to the ::EVENT_HEADER.
+ * @param sequence_number
+ * 
+ *****************************************************************************/
+void evel_event_sequence_set(EVENT_HEADER * const header,const int sequence_number);
 
 /**************************************************************************//**
  * Set the Start Epoch property of the event header.
@@ -4068,7 +4086,7 @@ int evel_get_measurement_interval();
 /* Supported Report version.                                                 */
 /*****************************************************************************/
 #define EVEL_VOICEQ_MAJOR_VERSION 1
-#define EVEL_VOICEQ_MINOR_VERSION 1
+#define EVEL_VOICEQ_MINOR_VERSION 0
 
 /**************************************************************************//**
  * End of Call Voice Quality Metrices

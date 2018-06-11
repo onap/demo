@@ -92,6 +92,10 @@ EVENT_FAULT * evel_new_fault(const char * ev_name,
   fault->major_version = EVEL_FAULT_MAJOR_VERSION;
   fault->minor_version = EVEL_FAULT_MINOR_VERSION;
   fault->event_severity = severity;
+  if( severity == EVEL_SEVERITY_NORMAL )
+     evel_event_sequence_set(&fault->header,0);
+  else
+     evel_event_sequence_set(&fault->header,1);
   fault->event_source_type = ev_source_type;
   fault->vf_status = status;
   fault->alarm_condition = strdup(condition);

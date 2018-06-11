@@ -43,7 +43,7 @@ static int event_sequence = 1;
  *
  * @param sequence      The next sequence number to use.
  *****************************************************************************/
-void evel_set_next_event_sequence(const int sequence)
+void evel_set_global_event_sequence(const int sequence)
 {
   EVEL_ENTER();
 
@@ -168,7 +168,7 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
   header->priority = EVEL_PRIORITY_NORMAL;
   header->reporting_entity_name = strdup(openstack_vm_name());
   header->source_name = strdup(openstack_vm_name());
-  header->sequence = event_sequence;
+  header->sequence = 0;
   header->start_epoch_microsec = header->last_epoch_microsec;
   header->major_version = EVEL_HEADER_MAJOR_VERSION;
   header->minor_version = EVEL_HEADER_MINOR_VERSION;
@@ -180,8 +180,8 @@ void evel_init_header(EVENT_HEADER * const header,const char *const eventname)
   evel_init_option_string(&header->event_type);
   evel_init_option_string(&header->nfcnaming_code);
   evel_init_option_string(&header->nfnaming_code);
-  evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
-  evel_force_option_string(&header->source_id, openstack_vm_uuid());
+  evel_init_option_string(&header->reporting_entity_id);
+  evel_init_option_string(&header->source_id);
   evel_init_option_intheader(&header->internal_field);
   dlist_initialize(&header->batch_events);
 
@@ -210,7 +210,7 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
   gettimeofday(&tv, NULL);
 
   /***************************************************************************/
-  /* Initialize the header.  Get a new event sequence number.  Note that if  */
+  /* Initialize the header.  Reset event sequence number.  Note that if      */
   /* any memory allocation fails in here we will fail gracefully because     */
   /* everything downstream can cope with NULLs.                              */
   /***************************************************************************/
@@ -221,11 +221,10 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
   header->priority = EVEL_PRIORITY_NORMAL;
   header->reporting_entity_name = strdup(openstack_vm_name());
   header->source_name = strdup(openstack_vm_name());
-  header->sequence = event_sequence;
+  header->sequence = 0;
   header->start_epoch_microsec = header->last_epoch_microsec;
   header->major_version = EVEL_HEADER_MAJOR_VERSION;
   header->minor_version = EVEL_HEADER_MINOR_VERSION;
-  event_sequence++;
 
   /***************************************************************************/
   /* Optional parameters.                                                    */
@@ -233,8 +232,8 @@ void evel_init_header_nameid(EVENT_HEADER * const header,const char *const event
   evel_init_option_string(&header->event_type);
   evel_init_option_string(&header->nfcnaming_code);
   evel_init_option_string(&header->nfnaming_code);
-  evel_force_option_string(&header->reporting_entity_id, openstack_vm_uuid());
-  evel_force_option_string(&header->source_id, openstack_vm_uuid());
+  evel_init_option_string(&header->reporting_entity_id);
+  evel_init_option_string(&header->source_id);
   evel_init_option_intheader(&header->internal_field);
   dlist_initialize(&header->batch_events);
 
@@ -268,6 +267,29 @@ void evel_header_type_set(EVENT_HEADER * const header,
 
   EVEL_EXIT();
 }
+
+/**************************************************************************//**
+ * Set the Event Sequence property of the event header.
+ *
+ * @note The Start Epoch defaults to the time of event creation.
+ *
+ * @param header        Pointer to the ::EVENT_HEADER.
+ * @param start_epoch_microsec
+ *                      The start epoch to set, in microseconds.
+ *****************************************************************************/
+void evel_event_sequence_set(EVENT_HEADER * const header,const int sequence_number)
+{
+  EVEL_ENTER();
+
+  /***************************************************************************/
+  /* Check preconditions and assign the new value.                           */
+  /***************************************************************************/
+  assert(header != NULL);
+  header->sequence = sequence_number;
+
+  EVEL_EXIT();
+}
+
 
 /**************************************************************************//**
  * Set the Start Epoch property of the event header.
