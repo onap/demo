@@ -2,7 +2,7 @@
 
 REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
-DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+NB_API_VERSION=$(cat /opt/config/nb_api_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
@@ -183,11 +183,8 @@ EOF
 cd /opt/honeycomb-api/vnfs/vLBMS/apis
 mvn clean install
 
-#wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb-vnf-onap-distribution/$DEMO_ARTIFACTS_VERSION/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-#tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' /opt/honeycomb-api/vnfs/vLBMS/apis/vlb-vnf-onap-distribution/target/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
-sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' /opt/honeycomb-api/vnfs/vLBMS/apis/vlb-vnf-onap-distribution/target/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
-#rm *.tar.gz
+sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' /opt/honeycomb-api/vnfs/vLBMS/apis/vlb-vnf-onap-distribution/target/vlb-vnf-onap-distribution-$NB_API_VERSION-hc/vlb-vnf-onap-distribution-$NB_API_VERSION/config/honeycomb.json
+sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' /opt/honeycomb-api/vnfs/vLBMS/apis/vlb-vnf-onap-distribution/target/vlb-vnf-onap-distribution-$NB_API_VERSION-hc/vlb-vnf-onap-distribution-$NB_API_VERSION/config/honeycomb.json
 
 cd /opt
 chmod +x v_dns_init.sh
