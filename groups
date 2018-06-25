@@ -2,3 +2,4 @@
 #
 daebbf523be390041a1a9c0e340a6d833aae5043                             	GitHub Replication
 ldap:cn=onap-gerrit-demo-committers,ou=Groups,dc=freestandards,dc=org	ldap/onap-gerrit-demo-committers
+ldap:cn=onap-jenkins-labs,ou=Groups,dc=freestandards,dc=org          	ldap/onap-jenkins-labs
