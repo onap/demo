@@ -9,6 +9,15 @@
 # Description:       Enable service provided by daemon.
 ### END INIT INFO
 
+HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
+HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
+
+if [ $HTTP_PROXY != " " ]
+then
+    export http_proxy=$HTTP_PROXY
+    export https_proxy=$HTTPS_PROXY
+fi
+
 dir="/opt"
 cmd="./aaf_vm_init.sh"
 user="root"

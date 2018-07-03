@@ -24,6 +24,34 @@ DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 EXTERNAL_DNS=$(cat /opt/config/external_dns.txt)
 MAC_ADDR=$(cat /opt/config/mac_addr.txt)
+HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
+HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
+
+imagetest()
+{
+image=$(cat /etc/issue | cut -d' ' -f2 | cut -c1-5)
+echo $image
+if [ ${image} == '16.04' ]
+then
+    mkdir -p /etc/systemd/system/docker.service.d
+    echo "[Service]" > /etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"http_proxy=http://\"$HTTP_PROXY\"" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"https_proxy=https://\"$HTTPS_PROXY\"" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"HTTP_PROXY=HTTP://\"$HTTP_PROXY\"" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"HTTPS_PROXY=HTTPS://\"$HTTPS_PROXY\"" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+elif [ $image == '14.04' ]
+then
+    echo " export http_proxy=$HTTP_PROXY " > /etc/default/docker
+    echo " export https_proxy=$HTTPS_PROXY " >> /etc/default/docker
+else echo " It's not a 16 nor a 14 ubunto image"
+fi
+}
+
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+    export http_proxy=$HTTP_PROXY
+    export https_proxy=$HTTPS_PROXY
+fi
 
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
@@ -79,6 +107,10 @@ echo "DOCKER_OPTS=\"$DNS_FLAG--mtu=$MTU --raw-logs -H tcp://0.0.0.0:2376 -H unix
 cp /lib/systemd/system/docker.service /etc/systemd/system
 sed -i "/ExecStart/s/$/ --mtu=$MTU/g" /etc/systemd/system/docker.service
 sed -i "/ExecStart/s/$/ -H tcp:\/\/0.0.0.0:2376 --raw-logs/g" /etc/systemd/system/docker.service
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+imagetest
+fi
 systemctl daemon-reload
 service docker restart
 
