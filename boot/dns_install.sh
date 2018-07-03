@@ -3,6 +3,33 @@
 # Read configuration files
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
+HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
+HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
+
+imagetest()
+{
+image=$(cat /etc/issue | cut -d' ' -f2)
+echo $image
+if [ ${image} == '16.04.4' ]
+then
+    echo "[Service]" > /etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"http_proxy=http://\"$HTTP_PROXY\"" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"https_proxy=https://\"$HTTPS_PROXY\"" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"HTTP_PROXY=HTTP://\"$HTTP_PROXY\"" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"HTTPS_PROXY=HTTPS://\"$HTTPS_PROXY\"" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+elif [ $image == '14.04' ]
+then
+    echo " export http_proxy=$HTTP_PROXY " > /etc/default/docker
+    echo " export https_proxy=$HTTPS_PROXY " >> /etc/default/docker
+else echo " It's not a 16 nor a 14 ubunto image"
+fi
+}
+
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+    export http_proxy=$HTTP_PROXY
+    export https_proxy=$HTTPS_PROXY
+fi
 
 
 if [[ $CLOUD_ENV != "rackspace" ]]

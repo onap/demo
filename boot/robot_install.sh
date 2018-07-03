@@ -8,6 +8,33 @@ GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 CODE_REPO=$(cat /opt/config/remote_repo.txt)
 HEAT_CODE_REPO=http://gerrit.onap.org/r/demo.git
+HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
+HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
+
+imagetest()
+{
+image=$(cat /etc/issue | cut -d' ' -f2)
+echo $image
+if [ ${image} == '16.04.4' ]
+then
+    echo "[Service]" > /etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"http_proxy=http://\"$HTTP_PROXY\"" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"https_proxy=https://\"$HTTPS_PROXY\"" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"HTTP_PROXY=HTTP://\"$HTTP_PROXY\"" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+    echo "Environment=\"HTTPS_PROXY=HTTPS://\"$HTTPS_PROXY\"" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+elif [ $image == '14.04' ]
+then
+    echo " export http_proxy=$HTTP_PROXY " > /etc/default/docker
+    echo " export https_proxy=$HTTPS_PROXY " >> /etc/default/docker
+else echo " It's not a 16 nor a 14 ubunto image"
+fi
+}
+
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+    export http_proxy=$HTTP_PROXY
+    export https_proxy=$HTTPS_PROXY
+fi
 
 # Short-term fix to get around MSO to SO name change
 cp /opt/config/so_ip_addr.txt /opt/config/mso_ip_addr.txt
@@ -88,6 +115,11 @@ echo "DOCKER_OPTS=\"$DNS_FLAG--mtu=$MTU\"" >> /etc/default/docker
 
 cp /lib/systemd/system/docker.service /etc/systemd/system
 sed -i "/ExecStart/s/$/ --mtu=$MTU/g" /etc/systemd/system/docker.service
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+imagetest
+fi
+
 service docker restart
 
 # DNS IP address configuration
