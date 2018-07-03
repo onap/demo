@@ -20,6 +20,15 @@ CLI_LATEST_BINARY="https://nexus.onap.org/content/repositories/releases/org/onap
 CLI_INSTALL_DIR=/opt/onap/cli
 CLI_ZIP=cli.zip
 CLI_BIN=/usr/bin/onap
+HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
+HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
+
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+    export http_proxy=$HTTP_PROXY
+    export https_proxy=$HTTPS_PROXY
+fi
+
 export ONAP_CLI_HOME=$CLI_INSTALL_DIR
 export CLI_PRODUCT_VERSION=onap-1.1
 

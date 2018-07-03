@@ -141,6 +141,14 @@ parameters:
     type: string
     description: Region where the DCAE controller will spin the VMs
 
+  http_proxy:
+    type: string
+    description: http proxy address
+
+  https_proxy:
+    type: string
+    description: https proxy address
+
   ######################
   #                    #
   # Network parameters #
@@ -643,6 +651,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __artifacts_version__: { get_param: artifacts_version }
             __oam_network_cidr__: { get_attr: [oam_onap_subnet, cidr] }
@@ -700,8 +710,21 @@ resources:
             echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -744,6 +767,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -774,8 +799,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__aai_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -816,6 +854,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -846,8 +886,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__aai_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -889,6 +942,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -930,8 +985,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__so_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -973,6 +1041,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1000,8 +1070,21 @@ resources:
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__mr_repo__" > /opt/config/remote_repo.txt
             echo "__dbcl_docker__" > /opt/config/docker_version.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1043,6 +1126,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1153,8 +1238,21 @@ resources:
             echo "localhost" > /opt/config/log_elasticsearch_ip_addr.txt # these tests will be skipped by robot
             echo "localhost" > /opt/config/log_logstash_ip_addr.txt # these tests will be skipped by robot
             echo "localhost" > /opt/config/log_kibana_ip_addr.txt # these tests will be skipped by robot
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1196,6 +1294,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1223,8 +1323,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__vid_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1266,6 +1379,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1295,8 +1410,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__sdnc_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1347,6 +1475,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1382,8 +1512,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__sdc_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1425,6 +1568,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1456,8 +1601,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__portal_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1465,7 +1623,6 @@ resources:
             cd /opt
             chmod +x portal_install.sh
             ./portal_install.sh
-
 
   # Policy Engine instantiation
   policy_private_port:
@@ -1499,6 +1656,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1528,8 +1687,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__policy_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1571,6 +1743,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1602,8 +1776,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__appc_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1645,6 +1832,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1684,8 +1873,21 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
             echo "__clamp_repo__" > /opt/config/remote_repo.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1727,6 +1929,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -1829,8 +2033,21 @@ resources:
             echo "export VID_IP=__vid_ip_addr__" >> /opt/config/onap_ips.txt
             echo "export CLAMP_IP=__clamp_ip_addr__" >> /opt/config/onap_ips.txt
             echo "export OPENO_IP=__openo_ip_addr__" >> /opt/config/onap_ips.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -1876,6 +2093,8 @@ resources:
           params:
             __rand_str__: { get_resource: random-str }
             # repo related
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __artifacts_version__: { get_param: artifacts_version }
             __docker_version__: { get_param: dcae_docker }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
@@ -2045,8 +2264,21 @@ resources:
             echo "__dcae_prh_docker__" > /opt/config/dcae_docker_prh.txt
             echo "__holmes_em_docker__" > /opt/config/holmes_docker_em.txt
             echo "__holmes_rm_docker__" > /opt/config/holmes_docker_rm.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -2088,6 +2320,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -2115,8 +2349,21 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -2158,6 +2405,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -2191,8 +2440,21 @@ resources:
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -2234,6 +2496,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -2263,8 +2527,21 @@ resources:
             echo "__aaf_repo__" > /opt/config/remote_repo.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__local_ip__" > /opt/config/local_ip.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -2305,6 +2582,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -2334,8 +2613,21 @@ resources:
             echo "__sms_repo__" > /opt/config/remote_repo.txt
             echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__local_ip__" > /opt/config/local_ip.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
@@ -2376,6 +2668,8 @@ resources:
       user_data:
         str_replace:
           params:
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __nexus_docker_repo__: { get_param: nexus_docker_repo }
             __nexus_username__: { get_param: nexus_username }
@@ -2409,8 +2703,21 @@ resources:
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
             echo "__aai1_ip_addr__" > /opt/config/aai_ip_addr.txt
             echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+            echo "{" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+            echo "};" >> /etc/apt/apt.conf.d/apt.conf
 
             # Download and run install script
+            export http_proxy=__http_proxy__
+            export https_proxy=__https_proxy__
+            fi
             apt-get -y install unzip
             if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
