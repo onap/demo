@@ -5,9 +5,9 @@ REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 VPP_SOURCE_REPO_URL=$(cat /opt/config/vpp_source_repo_url.txt)
-VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/vpp_source_repo_branch.txt)
+VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/vpp_source_repo_release_tag.txt)
 HC2VPP_SOURCE_REPO_URL=$(cat /opt/config/hc2vpp_source_repo_url.txt)
-HC2VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/hc2vpp_source_repo_branch.txt)
+HC2VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/hc2vpp_source_repo_release_tag.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 MUX_GW_IP=$(cat /opt/config/mux_gw_private_net_ipaddr.txt)
 MUX_GW_CIDR=$(cat /opt/config/mux_gw_private_net_cidr.txt)
@@ -75,7 +75,7 @@ then
 
     #Download and build the VPP codes
     cd /opt
-    git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
+    git clone --verbose ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_RELEASE_TAG} vpp
 
     cd vpp
     make install-dep
@@ -239,7 +239,7 @@ then
 
     # Download and install HC2VPP from source
     cd /opt
-    git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
+    git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_RELEASE_TAG} hc2vpp
 
     apt --allow-unauthenticated install -y python-ply-lex-3.5 python-ply-yacc-3.5 python-pycparser python-cffi
     apt-get install -y maven
@@ -251,7 +251,7 @@ then
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
 
-  <profiles>
+ <profiles>
     <profile>
       <id>fd.io-release</id>
       <repositories>
@@ -353,6 +353,7 @@ then
 EOF
 
     cd hc2vpp
+	
     mvn clean install
     l_version=$(cat pom.xml | grep "<version>" | head -1)
     l_version=$(echo "${l_version%<*}")
@@ -447,7 +448,7 @@ EOF
 	sed -i "s/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g" /etc/default/grub
 	grub-mkconfig -o /boot/grub/grub.cfg
 	sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
-	sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
+	#sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
 	echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
 	reboot
 fi
