@@ -60,13 +60,13 @@ index 0000000..1ded010
 +  <parent>
 +    <groupId>io.fd.hc2vpp.common</groupId>
 +    <artifactId>hc2vpp-parent</artifactId>
-+    <version>1.17.04.1-SNAPSHOT</version>
++    <version>1.17.04</version>
 +    <relativePath>../common/hc2vpp-parent</relativePath>
 +  </parent>
 +
 +  <groupId>io.fd.hc2vpp.ves</groupId>
 +  <artifactId>ves-agent</artifactId>
-+  <version>1.17.04.1-SNAPSHOT</version>
++  <version>1.17.04</version>
 +  <name>ves-agent</name>
 +  <packaging>pom</packaging>
 +  <modelVersion>4.0.0</modelVersion>
@@ -131,7 +131,7 @@ index 0000000..78bf47b
 +  <parent>
 +    <groupId>io.fd.hc2vpp.common</groupId>
 +    <artifactId>api-parent</artifactId>
-+    <version>1.17.04.1-SNAPSHOT</version>
++    <version>1.17.04</version>
 +    <relativePath>../../common/api-parent</relativePath>
 +  </parent>
 +
@@ -139,7 +139,7 @@ index 0000000..78bf47b
 +  <groupId>io.fd.hc2vpp.ves</groupId>
 +  <artifactId>ves-api</artifactId>
 +  <name>ves-api</name>
-+  <version>1.17.04.1-SNAPSHOT</version>
++  <version>1.17.04</version>
 +  <packaging>bundle</packaging>
 +
 +  <dependencies>
@@ -282,7 +282,7 @@ index 0000000..5ed2c1b
 +    <parent>
 +        <groupId>io.fd.hc2vpp.common</groupId>
 +        <artifactId>vpp-impl-parent</artifactId>
-+        <version>1.17.04.1-SNAPSHOT</version>
++        <version>1.17.04</version>
 +        <relativePath>../../vpp-common/vpp-impl-parent</relativePath>
 +    </parent>
 +
@@ -290,12 +290,12 @@ index 0000000..5ed2c1b
 +    <groupId>io.fd.hc2vpp.ves</groupId>
 +    <artifactId>ves-impl</artifactId>
 +    <name>${project.artifactId}</name>
-+    <version>1.17.04.1-SNAPSHOT</version>
++    <version>1.17.04</version>
 +    <packaging>bundle</packaging>
 +
 +    <properties>
-+        <honeycomb.infra.version>1.17.04.1-SNAPSHOT</honeycomb.infra.version>
-+        <hc2vpp.common.version>1.17.04.1-SNAPSHOT</hc2vpp.common.version>
++        <honeycomb.infra.version>1.17.04</honeycomb.infra.version>
++        <hc2vpp.common.version>1.17.04</hc2vpp.common.version>
 +    </properties>
 +
 +    <dependencies>
@@ -319,7 +319,7 @@ index 0000000..5ed2c1b
 +        <dependency>
 +            <groupId>io.fd.vpp</groupId>
 +            <artifactId>jvpp-ves</artifactId>
-+            <version>17.04.2-SNAPSHOT</version>
++            <version>17.04</version>
 +        </dependency>
 +
 +        <!-- Honeycomb infrastructure-->
@@ -369,7 +369,7 @@ index 0000000..5ed2c1b
 +        <dependency>
 +            <groupId>io.fd.honeycomb</groupId>
 +            <artifactId>translate-impl</artifactId>
-+            <version>1.17.04.1-SNAPSHOT</version>
++            <version>1.17.04</version>
 +        </dependency>
 +
 +
@@ -1055,13 +1055,13 @@ index e126114..ca0e5b2 100644
 --- a/vpp-integration/minimal-distribution/pom.xml
 +++ b/vpp-integration/minimal-distribution/pom.xml
 @@ -40,6 +40,7 @@
-     <routing.version>1.17.04.1-SNAPSHOT</routing.version>
-     <acl.version>1.17.04.1-SNAPSHOT</acl.version>
-     <dhcp.version>1.17.04.1-SNAPSHOT</dhcp.version>
-+    <vesagent.version>1.17.04.1-SNAPSHOT</vesagent.version>
-     <vpp.classifier.version>1.17.04.1-SNAPSHOT</vpp.classifier.version>
-     <l3-impl.version>1.17.04.1-SNAPSHOT</l3-impl.version>
-     <vpp-management-impl.version>1.17.04.1-SNAPSHOT</vpp-management-impl.version>
+     <routing.version>1.17.04</routing.version>
+     <acl.version>1.17.04</acl.version>
+     <dhcp.version>1.17.04</dhcp.version>
++    <vesagent.version>1.17.04</vesagent.version>
+     <vpp.classifier.version>1.17.04</vpp.classifier.version>
+     <l3-impl.version>1.17.04</l3-impl.version>
+     <vpp-management-impl.version>1.17.04</vpp-management-impl.version>
 @@ -63,6 +64,7 @@
        io.fd.hc2vpp.routing.RoutingModule,
        io.fd.hc2vpp.acl.AclModule,

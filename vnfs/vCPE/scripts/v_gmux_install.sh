@@ -5,10 +5,10 @@ REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 VPP_SOURCE_REPO_URL=$(cat /opt/config/vpp_source_repo_url.txt)
-VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/vpp_source_repo_branch.txt)
+VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/vpp_source_repo_release_tag.txt)
 VPP_PATCH_URL=$(cat /opt/config/vpp_patch_url.txt)
 HC2VPP_SOURCE_REPO_URL=$(cat /opt/config/hc2vpp_source_repo_url.txt)
-HC2VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/hc2vpp_source_repo_branch.txt)
+HC2VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/hc2vpp_source_repo_release_tag.txt)
 HC2VPP_PATCH_URL=$(cat /opt/config/hc2vpp_patch_url.txt)
 LIBEVEL_PATCH_URL=$(cat /opt/config/libevel_patch_url.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -77,7 +77,7 @@ then
 
     #Download and build the VPP codes
     cd /opt
-    git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
+    git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_RELEASE_TAG} vpp
     wget -O Vpp-Add-VES-agent-for-vG-MUX.patch ${VPP_PATCH_URL} 
 
     cd vpp
@@ -249,7 +249,7 @@ if [[ $BUILD_STATE != "done" ]]
 then
     # Download and install HC2VPP from source
     cd /opt
-    git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_BRANCH} hc2vpp
+    git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_RELEASE_TAG} hc2vpp
     wget -O Hc2vpp-Add-VES-agent-for-vG-MUX.patch ${HC2VPP_PATCH_URL}
 
     apt-get install -y maven
