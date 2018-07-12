@@ -67,10 +67,11 @@ parameters:
   #  type: string
   #  label: vBRGEMU Home private network CIDR
   #  description: The CIDR of the input side of vBRGEMU Home private network
-  vbrgemu_private_ip_0:
-    type: string
-    label: vGW private IP address
-    description: Private IP address towards the BRGEMU-BNG network
+##  vbrgemu_private_ip_0:
+##    type: string
+##    label: vGW private IP address
+##    description: Private IP address towards the BRGEMU-BNG network
+##    VPP will use DHCP so does not need to be provided by preload
   #vbrgemu_private_ip_1:
   #  type: string
   #  label: vGW private IP address
@@ -186,7 +187,8 @@ resources:
     type: OS::Neutron::Port
     properties:
       network: { get_param: vbrgemu_bng_private_net_id }
-      fixed_ips: [{"subnet": { get_param: vbrgemu_bng_private_subnet_id }, "ip_address": { get_param: vbrgemu_private_ip_0 }}]
+      fixed_ips: [{"subnet": { get_param: vbrgemu_bng_private_subnet_id }}]
+  ##    fixed_ips: [{"subnet": { get_param: vbrgemu_bng_private_subnet_id }, "ip_address": { get_param: vbrgemu_private_ip_0 }}]
 
   #vbrgemu_private_1_port:
   #  type: OS::Neutron::Port
