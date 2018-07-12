@@ -7,7 +7,7 @@ REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 VPP_SOURCE_REPO_URL=$(cat /opt/config/vpp_source_repo_url.txt)
-VPP_SOURCE_REPO_BRANCH=$(cat /opt/config/vpp_source_repo_branch.txt)
+VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/vpp_source_repo_release_tag.txt)
 VPP_PATCH_URL=$(cat /opt/config/vpp_patch_url.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 BNG_GMUX_NET_CIDR=$(cat /opt/config/bng_gmux_net_cidr.txt)
@@ -81,7 +81,7 @@ then
 
     #Download and build the VPP codes
     cd /opt
-    git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_BRANCH} vpp
+    git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_RELEASE_TAG} vpp
     wget -O Vpp-Integrate-FreeRADIUS-Client-for-vBNG.patch ${VPP_PATCH_URL}
     cd vpp
     # The patch will place a "dummy" version of dhcp.api.h so the build will succeed
