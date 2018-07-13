@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a9dcd25_e488b0c8",
+        "filename": "heat/ONAP/onap_openstack.env",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-07-13T20:13:03Z",
+      "side": 1,
+      "message": "ADDRESS",
+      "revId": "08c32f2308eba6488f49389bcd83b593583adc7e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a9dcd25_0486fcb9",
+        "filename": "heat/ONAP/onap_openstack.env",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 269
+      },
+      "writtenOn": "2018-07-13T20:13:03Z",
+      "side": 1,
+      "message": "ADDRESS",
+      "revId": "08c32f2308eba6488f49389bcd83b593583adc7e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
