@@ -161,10 +161,10 @@ parameters:
     type: string
     label: VPP Source Git Repo
     description: URL for VPP source codes
-  vpp_source_repo_branch:
+  vpp_source_repo_release_tag:
     type: string
-    label: VPP Source Git Branch
-    description: Git Branch for the VPP source codes
+    label: VPP Source Git Release Tag
+    description: Git Release Tag for the VPP source codes
   vpp_patch_url:
     type: string
     label: VPP Patch URL
@@ -259,7 +259,7 @@ resources:
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
             __vpp_source_repo_url__ : { get_param: vpp_source_repo_url }
-            __vpp_source_repo_branch__ : { get_param: vpp_source_repo_branch }
+            __vpp_source_repo_release_tag__ : { get_param: vpp_source_repo_release_tag }
             __vpp_patch_url__ : { get_param: vpp_patch_url }
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
           template: |
@@ -283,7 +283,7 @@ resources:
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__vpp_source_repo_url__" > /opt/config/vpp_source_repo_url.txt
-            echo "__vpp_source_repo_branch__" > /opt/config/vpp_source_repo_branch.txt
+            echo "__vpp_source_repo_release_tag__" > /opt/config/vpp_source_repo_release_tag.txt
             echo "__vpp_patch_url__" > /opt/config/vpp_patch_url.txt
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
 
