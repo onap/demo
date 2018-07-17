@@ -7,6 +7,14 @@ CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 VNFSDK_BRANCH=$(cat /opt/config/vnfsdk_branch.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 VNFSDK_REPO=$(cat /opt/config/vnfsdk_repo.txt)
+HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
+HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
+
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+    export http_proxy=$HTTP_PROXY
+    export https_proxy=$HTTPS_PROXY
+fi
 
 # Add host name to /etc/host to avoid warnings in openstack images
 if [[ $CLOUD_ENV != "rackspace" ]]
@@ -62,6 +70,8 @@ unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip openo_all_serv.sh > /opt/openo_all_
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip openo_serv.sh > /opt/openo_serv.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip cli_install.sh > /opt/cli_install.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip esr_vm_init.sh > /opt/esr_vm_init.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip imagetest.sh > /opt/imagetest.sh
+chmod +x /opt/imagetest.sh
 chmod +x /opt/vnfsdk_vm_init.sh
 chmod +x /opt/msb_vm_init.sh
 chmod +x /opt/mvim_vm_init.sh
@@ -98,6 +108,11 @@ echo "DOCKER_OPTS=\"$DNS_FLAG--mtu=$MTU\"" >> /etc/default/docker
 
 cp /lib/systemd/system/docker.service /etc/systemd/system
 sed -i "/ExecStart/s/$/ --mtu=$MTU/g" /etc/systemd/system/docker.service
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+cd /opt
+./imagetest.sh
+fi
 service docker restart
 
 # DNS IP address configuration

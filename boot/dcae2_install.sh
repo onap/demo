@@ -24,6 +24,14 @@ DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 EXTERNAL_DNS=$(cat /opt/config/external_dns.txt)
 MAC_ADDR=$(cat /opt/config/mac_addr.txt)
+HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
+HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
+
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+    export http_proxy=$HTTP_PROXY
+    export https_proxy=$HTTPS_PROXY
+fi
 
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
@@ -47,6 +55,8 @@ apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates w
 # Download scripts from Nexus
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip dcae2_vm_init.sh > /opt/dcae2_vm_init.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip dcae2_serv.sh > /opt/dcae2_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip imagetest.sh > /opt/imagetest.sh
+chmod +x /opt/imagetest.sh
 chmod +x /opt/dcae2_vm_init.sh
 chmod +x /opt/dcae2_serv.sh
 mv /opt/dcae2_serv.sh /etc/init.d
@@ -79,6 +89,11 @@ echo "DOCKER_OPTS=\"$DNS_FLAG--mtu=$MTU --raw-logs -H tcp://0.0.0.0:2376 -H unix
 cp /lib/systemd/system/docker.service /etc/systemd/system
 sed -i "/ExecStart/s/$/ --mtu=$MTU/g" /etc/systemd/system/docker.service
 sed -i "/ExecStart/s/$/ -H tcp:\/\/0.0.0.0:2376 --raw-logs/g" /etc/systemd/system/docker.service
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+cd /opt
+./imagetest.sh
+fi
 systemctl daemon-reload
 service docker restart
 
