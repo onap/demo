@@ -144,10 +144,12 @@ parameters:
   http_proxy:
     type: string
     description: http proxy address
+    default: 'no_proxy'
 
   https_proxy:
     type: string
     description: https proxy address
+    default: 'no_proxy'
 
   ######################
   #                    #
