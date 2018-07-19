@@ -33,7 +33,7 @@
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.onap.demo.vnf</groupId>
+  <groupId>org.onap.demo.vnf.vcpe</groupId>
   <artifactId>vcpe-scripts</artifactId>
   <packaging>pom</packaging>
 
