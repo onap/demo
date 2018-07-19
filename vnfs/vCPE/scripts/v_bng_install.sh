@@ -2,7 +2,6 @@
 set -o xtrace  # print commands during script execution
 set -o errexit # exit on command errors
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
@@ -379,8 +378,8 @@ EOF
 
     # Download DHCP config files
     cd /opt
-    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_bng_init.sh
-    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_bng.sh
+    unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_bng_init.sh > /opt/v_bng_init.sh
+    unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_bng.sh > /opt/v_bng.sh
     chmod +x v_bng_init.sh
     chmod +x v_bng.sh
     sed -i 's/^\(# Provides:\).*/\1 v_bng/g' ./v_bng.sh

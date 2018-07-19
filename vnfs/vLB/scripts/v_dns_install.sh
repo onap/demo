@@ -1,6 +1,5 @@
 #!/bin/bash
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
@@ -55,10 +54,10 @@ sleep 1
 mkdir /opt/FDclient
 cd /opt
 
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_dns_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vdns.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/dnsclient.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/set_gre_tunnel.sh
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip v_dns_init.sh > /opt/v_dns_init.sh
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip vdns.sh > /opt/vdns.sh
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip dnsclient.sh > /opt/dnsclient.sh
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip set_gre_tunnel.sh > /opt/set_gre_tunnel.sh
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/dns-client/$DEMO_ARTIFACTS_VERSION/dns-client-$DEMO_ARTIFACTS_VERSION.jar
 
 mv dns-client-$DEMO_ARTIFACTS_VERSION.jar /opt/FDclient/
@@ -72,9 +71,9 @@ chmod +x /opt/FDclient/set_gre_tunnel.sh
 
 # Download Bind config files
 cd /opt/config
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/db_dnsdemo_onap_org
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/named.conf.options
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/named.conf.local
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip db_dnsdemo_onap_org > /opt/db_dnsdemo_onap_org
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip named.conf.options > /opt/named.conf.options
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip named.conf.local > /opt/named.conf.local
 
 # Configure Bind
 modprobe ip_gre

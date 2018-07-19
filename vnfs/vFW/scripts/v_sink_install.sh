@@ -1,6 +1,5 @@
 #!/bin/bash
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
@@ -58,8 +57,8 @@ sed -i "s/INTERFACE=.*/INTERFACE=\"-i eth1\"/g" /etc/darkstat/init.cfg
 
 # Download scripts for virtual sink
 cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/v_sink_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vfw/$INSTALL_SCRIPT_VERSION/vsink.sh
+unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip v_sink_init.sh > /opt/v_sink_init.sh
+unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip vsink.sh > /opt/vsink.sh
 chmod +x v_sink_init.sh
 chmod +x vsink.sh
 

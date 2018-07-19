@@ -137,10 +137,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_blob:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   repo_url_artifacts:
     type: string
     label: Repository URL
@@ -153,6 +149,10 @@ parameters:
     type: string
     label: Artifacts version used in demo vnfs
     description: Artifacts (jar, tar.gz) version used in demo vnfs
+  nexus_artifact_repo:
+    type: string
+    description: Root URL for the Nexus repository for Maven artifacts.
+    default: "https://nexus.onap.org"
   cloud_env:
     type: string
     label: Cloud environment
@@ -243,7 +243,6 @@ resources:
           params:
             __dcae_collector_ip__ : { get_param: dcae_collector_ip }
             __dcae_collector_port__ : { get_param: dcae_collector_port }
-            __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
@@ -261,7 +260,6 @@ resources:
             mkdir /opt/config
             echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
             echo "__dcae_collector_port__" > /opt/config/dcae_collector_port.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
@@ -274,7 +272,10 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_firewall_install.sh -o /opt/v_firewall_install.sh
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vfw&a=vfw-scripts&e=zip&v=__install_script_version__" -o /opt/vfw-scripts-__install_script_version__.zip
+            unzip -j /opt/vfw-scripts-__install_script_version__.zip -d /opt v_firewall_install.sh
             cd /opt
             chmod +x v_firewall_install.sh
             ./v_firewall_install.sh
@@ -312,7 +313,6 @@ resources:
             __fw_ipaddr__: { get_param: vfw_private_ip_0 }
             __protected_net_cidr__: { get_param: protected_private_net_cidr }
             __sink_ipaddr__: { get_param: vsn_private_ip_0 }
-            __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
@@ -329,7 +329,6 @@ resources:
             echo "__fw_ipaddr__" > /opt/config/fw_ipaddr.txt
             echo "__protected_net_cidr__" > /opt/config/protected_net_cidr.txt
             echo "__sink_ipaddr__" > /opt/config/sink_ipaddr.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
@@ -340,7 +339,10 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vfw&a=vfw-scripts&e=zip&v=__install_script_version__" -o /opt/vfw-scripts-__install_script_version__.zip
+            unzip -j /opt/vfw-scripts-__install_script_version__.zip -d /opt v_packetgen_install.sh
             cd /opt
             chmod +x v_packetgen_install.sh
             ./v_packetgen_install.sh
@@ -377,7 +379,6 @@ resources:
           params:
             __protected_net_gw__: { get_param: vfw_private_ip_1 }
             __unprotected_net__: { get_param: unprotected_private_net_cidr }
-            __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __install_script_version__ : { get_param: install_script_version }
             __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
@@ -392,7 +393,6 @@ resources:
             mkdir /opt/config
             echo "__protected_net_gw__" > /opt/config/protected_net_gw.txt
             echo "__unprotected_net__" > /opt/config/unprotected_net.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vsn_private_ip_0__" > /opt/config/vsn_private_ip_0.txt
             echo "__vsn_private_ip_1__" > /opt/config/vsn_private_ip_1.txt
@@ -401,7 +401,10 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_sink_install.sh -o /opt/v_sink_install.sh
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vfw&a=vfw-scripts&e=zip&v=__install_script_version__" -o /opt/vfw-scripts-__install_script_version__.zip
+            unzip -j /opt/vfw-scripts-__install_script_version__.zip -d /opt v_sink_install.sh
             cd /opt
             chmod +x v_sink_install.sh
             ./v_sink_install.sh

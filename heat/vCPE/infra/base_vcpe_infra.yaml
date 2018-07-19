@@ -161,10 +161,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_blob:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   repo_url_artifacts:
     type: string
     label: Repository URL
@@ -177,6 +173,10 @@ parameters:
     type: string
     label: Artifacts version used in demo vnfs
     description: Artifacts (jar, tar.gz) version used in demo vnfs
+  nexus_artifact_repo:
+    type: string
+    description: Root URL for the Nexus repository for Maven artifacts.
+    default: "https://nexus.onap.org"
   cloud_env:
     type: string
     label: Cloud environment
@@ -243,7 +243,6 @@ resources:
             __oam_ipaddr__: { get_param: vaaa_private_ip_1 }
             __oam_cidr__: { get_param: onap_private_net_cidr }
             __cpe_signal_net_cidr__: { get_param: cpe_signal_net_cidr }
-            __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
@@ -259,14 +258,16 @@ resources:
             echo "__oam_ipaddr__" > /opt/config/oam_ipaddr.txt
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__cpe_signal_net_cidr__" > /opt/config/cpe_signal_net_cidr.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_aaa_install.sh -o /opt/v_aaa_install.sh
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__install_script_version__" -o /opt/vcpe-scripts-__install_script_version__.zip
+            unzip -j /opt/vcpe-scripts-__install_script_version__.zip -d /opt v_aaa_install.sh
             cd /opt
             chmod +x v_aaa_install.sh
             ./v_aaa_install.sh
@@ -305,7 +306,6 @@ resources:
             __cpe_public_net_ipaddr__: { get_param: vdns_private_ip_0 }
             __oam_cidr__: { get_param: onap_private_net_cidr }
             __cpe_public_net_cidr__: { get_param: cpe_public_net_cidr }
-            __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
@@ -319,14 +319,16 @@ resources:
             echo "__cpe_public_net_ipaddr__" > /opt/config/cpe_public_net_ipaddr.txt
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__cpe_public_net_cidr__" > /opt/config/cpe_public_net_cidr.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_dns_install.sh -o /opt/v_dns_install.sh
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__install_script_version__" -o /opt/vcpe-scripts-__install_script_version__.zip
+            unzip -j /opt/vcpe-scripts-__install_script_version__.zip -d /opt v_dns_install.sh
             cd /opt
             chmod +x v_dns_install.sh
             ./v_dns_install.sh
@@ -367,7 +369,6 @@ resources:
             __cpe_signal_net_cidr__ : { get_param: cpe_signal_net_cidr }
             __mr_ip_addr__ : { get_param: mr_ip_addr }
             __mr_ip_port__ : { get_param: mr_ip_port }
-            __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
@@ -383,14 +384,16 @@ resources:
             echo "__cpe_signal_net_cidr__" > /opt/config/cpe_signal_net_cidr.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__mr_ip_port__" > /opt/config/mr_ip_port.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_dhcp_install.sh -o /opt/v_dhcp_install.sh
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__install_script_version__" -o /opt/vcpe-scripts-__install_script_version__.zip
+            unzip -j /opt/vcpe-scripts-__install_script_version__.zip -d /opt v_dhcp_install.sh
             cd /opt
             chmod +x v_dhcp_install.sh
             ./v_dhcp_install.sh
@@ -429,7 +432,6 @@ resources:
             __cpe_public_ipaddr__: { get_param: vweb_private_ip_0 }
             __oam_cidr__: { get_param: onap_private_net_cidr }
             __cpe_public_net_cidr__: { get_param: cpe_public_net_cidr }
-            __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
@@ -443,14 +445,16 @@ resources:
             echo "__cpe_public_ipaddr__" > /opt/config/cpe_public_ipaddr.txt
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__cpe_public_net_cidr__" > /opt/config/cpe_public_net_cidr.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_web_install.sh -o /opt/v_web_install.sh
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__install_script_version__" -o /opt/vcpe-scripts-__install_script_version__.zip
+            unzip -j /opt/vcpe-scripts-__install_script_version__.zip -d /opt v_web_install.sh
             cd /opt
             chmod +x v_web_install.sh
             ./v_web_install.sh

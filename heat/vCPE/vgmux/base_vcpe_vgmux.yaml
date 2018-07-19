@@ -129,10 +129,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_blob:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   repo_url_artifacts:
     type: string
     label: Repository URL
@@ -145,6 +141,10 @@ parameters:
     type: string
     label: Artifacts version used in demo vnfs
     description: Artifacts (jar, tar.gz) version used in demo vnfs
+  nexus_artifact_repo:
+    type: string
+    description: Root URL for the Nexus repository for Maven artifacts.
+    default: "https://nexus.onap.org"
   cloud_env:
     type: string
     label: Cloud environment
@@ -248,7 +248,6 @@ resources:
             __oam_cidr__ : { get_param: onap_private_net_cidr }
             __mux_gw_net_cidr__ : { get_param: mux_gw_private_net_cidr }
             __brg_bng_net_cidr__ : { get_param: brgemu_bng_private_net_cidr }
-            __repo_url_blob__ : { get_param: repo_url_blob }
             __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
@@ -273,7 +272,6 @@ resources:
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__mux_gw_net_cidr__" > /opt/config/mux_gw_net_cidr.txt
             echo "__brg_bng_net_cidr__" > /opt/config/brg_bng_net_cidr.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
@@ -287,7 +285,10 @@ resources:
             echo "__libevel_patch_url__" > /opt/config/libevel_patch_url.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vcpe/__install_script_version__/v_gmux_install.sh -o /opt/v_gmux_install.sh
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__install_script_version__" -o /opt/vcpe-scripts-__install_script_version__.zip
+            unzip -j /opt/vcpe-scripts-__install_script_version__.zip -d /opt v_gmux_install.sh
             cd /opt
             chmod +x v_gmux_install.sh
             ./v_gmux_install.sh

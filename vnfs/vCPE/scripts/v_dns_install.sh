@@ -1,6 +1,5 @@
 #!/bin/bash
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
@@ -56,9 +55,9 @@ sleep 1
 
 # Download DNS and DHCP config files
 cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-dhcp4_no_hook.conf
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_dns_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_dns.sh
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip kea-dhcp4_no_hook.conf > /opt/kea-dhcp4_no_hook.conf
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_dns_init.sh > /opt/v_dns_init.sh
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_dns.sh > /opt/v_dns.sh
 mv kea-dhcp4_no_hook.conf /etc/kea/kea-dhcp4.conf
 chmod +x v_dns_init.sh
 chmod +x v_dns.sh

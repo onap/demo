@@ -1,6 +1,5 @@
 #/bin/bash
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 #DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 NB_API_VERSION=$(cat /opt/config/nb_api_version.txt)
@@ -63,12 +62,12 @@ sleep 1
 
 # Download vLB demo code for load balancer
 cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/v_lb_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/vlb.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/add_dns.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/remove_dns.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/properties.conf -O /opt/config/properties.conf
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/run_health.sh
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip v_lb_init.sh > /opt/v_lb_init.sh
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip vlb.sh > /opt/vlb.sh
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip add_dns.sh > /opt/add_dns.sh
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip remove_dns.sh > /opt/remove_dns.sh
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip properties.conf > /opt/config/properties.conf
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip run_health.sh > /opt/run_health.sh
 #wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 #wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves_vlb_reporting/$DEMO_ARTIFACTS_VERSION/ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 

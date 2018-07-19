@@ -1,6 +1,5 @@
 #!/bin/bash
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
@@ -64,11 +63,11 @@ sleep 1
 mkdir /opt/FDserver
 cd /opt
 
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/v_lb_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/vlb.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/dnsmembership.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/add_dns.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlb/$INSTALL_SCRIPT_VERSION/remove_dns.sh
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip v_lb_init.sh > /opt/v_lb_init.sh
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip vlb.sh > /opt/vlb.sh
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip dnsmembership.sh > /opt/dnsmembership.sh
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip add_dns.sh > /opt/add_dns.sh
+unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip remove_dns.sh > /opt/remove_dns.sh
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/dns-manager/$DEMO_ARTIFACTS_VERSION/dns-manager-$DEMO_ARTIFACTS_VERSION.jar
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves_vlb_reporting/$DEMO_ARTIFACTS_VERSION/ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz

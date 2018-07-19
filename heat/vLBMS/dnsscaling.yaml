@@ -105,10 +105,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_blob:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   repo_url_artifacts:
     type: string
     label: Repository URL
@@ -184,7 +180,6 @@ resources:
             __lb_to_pktgen_if__: { get_param: vlb_private_ip_2}
             __local_private_ipaddr__: { get_param: vdns_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vdns_private_ip_1 }
-            __repo_url_blob__: { get_param: repo_url_blob }
             __repo_url_artifacts__: { get_param: repo_url_artifacts }
             __nb_api_version__: { get_param: nb_api_version }
             __install_script_version__: { get_param: install_script_version }
@@ -201,7 +196,6 @@ resources:
             echo "__lb_to_pktgen_if__" > /opt/config/lb_to_pktgen_if.txt
             echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
             echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__nb_api_version__" > /opt/config/nb_api_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
@@ -210,7 +204,10 @@ resources:
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vlbms/__install_script_version__/v_dns_install.sh -o /opt/v_dns_install.sh
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vlbms&a=vlbms-scripts&e=zip&v=__install_script_version__" -o /opt/vlbms-scripts-__install_script_version__.zip
+            unzip -j /opt/vlbms-scripts-__install_script_version__.zip -d /opt v_dns_install.sh
             cd /opt
             chmod +x v_dns_install.sh
             ./v_dns_install.sh

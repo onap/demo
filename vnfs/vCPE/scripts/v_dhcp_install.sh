@@ -1,6 +1,5 @@
 #!/bin/bash
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
@@ -69,10 +68,10 @@ mv build/kea-sdnc-notify.so /usr/local/lib
 
 # Download DHCP config files
 cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-dhcp4.conf
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-sdnc-notify.conf
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_dhcp_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_dhcp.sh
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip kea-dhcp4.conf > /opt/kea-dhcp4.conf
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip kea-sdnc-notify.conf > /opt/kea-sdnc-notify.conf
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_dhcp_init.sh > /opt/v_dhcp_init.sh
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_dhcp.sh > /opt/v_dhcp.sh
 chmod +x v_dhcp_init.sh
 chmod +x v_dhcp.sh
 mv v_dhcp.sh /etc/init.d

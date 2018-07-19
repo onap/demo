@@ -1,6 +1,5 @@
 #!/bin/bash
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
@@ -516,8 +515,8 @@ EOF
 
     # Download DHCP config files
     cd /opt
-    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_brgemu_init.sh
-    wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_brgemu.sh
+    unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_brgemu_init.sh > /opt/v_brgemu_init.sh
+    unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_brgemu.sh > /opt/v_brgemu.sh
     sed -i '/# Provides:/c\# Provides:     vbrg ' /opt/v_brgemu.sh
     chmod +x v_brgemu_init.sh
     chmod +x v_brgemu.sh

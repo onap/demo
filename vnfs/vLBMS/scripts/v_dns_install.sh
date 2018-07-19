@@ -1,6 +1,5 @@
 #!/bin/bash
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 NB_API_VERSION=$(cat /opt/config/nb_api_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
@@ -53,11 +52,11 @@ sleep 1
 
 # Download vDNS demo code for DNS Server
 cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/v_dns_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/vdns.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/set_gre_tunnel.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/properties.conf -O /opt/config/properties.conf
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/run_health_vdns.sh -O /opt/run_health.sh
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip v_dns_init.sh > /opt/v_dns_init.sh
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip vdns.sh > /opt/vdns.sh
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip set_gre_tunnel.sh > /opt/set_gre_tunnel.sh
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip properties.conf > /opt/config/properties.conf
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip run_health_vdns.sh > /opt/run_health.sh
 
 sed -i 's/primary=.*/primary=false/g' /opt/config/properties.conf
 sed -i 's/vnfc=.*/vnfc=vDNS/g' /opt/config/properties.conf
@@ -194,9 +193,9 @@ chmod +x run_health.sh
 
 # Download Bind config files
 cd /opt/config
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/db_dnsdemo_onap_org
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/named.conf.options
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vlbms/$INSTALL_SCRIPT_VERSION/named.conf.local
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip db_dnsdemo_onap_org > /opt/db_dnsdemo_onap_org
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip named.conf.options > /opt/named.conf.options
+unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip named.conf.local > /opt/named.conf.local
 
 echo "bind9" > service.txt
 

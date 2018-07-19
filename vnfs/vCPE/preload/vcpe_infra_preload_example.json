@@ -15,10 +15,6 @@
             },
              "vnf-parameters": [
                 {
-                    "vnf-parameter-name": "repo_url_blob",
-                    "vnf-parameter-value": "https://nexus.onap.org/content/sites/raw"
-                },
-                {
                     "vnf-parameter-name": "repo_url_artifacts",
                     "vnf-parameter-value": "https://nexus.onap.org/content/groups/staging"
                 },

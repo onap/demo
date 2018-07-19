@@ -1,6 +1,5 @@
 #!/bin/bash
 
-REPO_URL_BLOB=$(cat /opt/config/repo_url_blob.txt)
 REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
@@ -56,9 +55,9 @@ sleep 1
 
 # Download DHCP config and init files
 cd /opt
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/kea-dhcp4-web.conf
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_web_init.sh
-wget $REPO_URL_BLOB/org.onap.demo/vnfs/vcpe/$INSTALL_SCRIPT_VERSION/v_web.sh
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip kea-dhcp4-web.conf > /opt/kea-dhcp4-web.conf
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_web_init.sh > /opt/v_web_init.sh
+unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_web.sh > /opt/v_web.sh
 
 
 
