@@ -53,6 +53,10 @@
     <module>vnfs/VESreporting_vLB5.0</module>
     <module>vnfs/VESreporting_vFW5.0</module>
     <module>vnfs/vCPE/kea-sdnc-notify-mod</module>
+    <module>vnfs/vCPE/scripts</module>
+    <module>vnfs/vFW/scripts</module>
+    <module>vnfs/vLB/scripts</module>
+    <module>vnfs/vLBMS/scripts</module>
     <!--module>vnfs/vLBMS/apis/vlb-business-vnf-onap-plugin</module>
     <module>vnfs/vLBMS/apis/health-vnf-onap-plugin</module>
     <module>vnfs/vLBMS/apis/vlb-vnf-onap-distribution</module-->
