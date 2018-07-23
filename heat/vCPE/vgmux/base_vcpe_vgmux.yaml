@@ -259,6 +259,7 @@ resources:
             __vpp_patch_url__ : { get_param: vpp_patch_url }
             __hc2vpp_patch_url__ : { get_param: hc2vpp_patch_url }
             __libevel_patch_url__ : { get_param: libevel_patch_url }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -283,6 +284,7 @@ resources:
             echo "__hc2vpp_source_repo_release_tag__" > /opt/config/hc2vpp_source_repo_release_tag.txt
             echo "__hc2vpp_patch_url__" > /opt/config/hc2vpp_patch_url.txt
             echo "__libevel_patch_url__" > /opt/config/libevel_patch_url.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip

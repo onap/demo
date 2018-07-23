@@ -255,6 +255,7 @@ resources:
             __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
             __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -272,6 +273,7 @@ resources:
             echo "__protected_private_net_cidr__" > /opt/config/protected_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip
@@ -321,6 +323,7 @@ resources:
             __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
             __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -334,6 +337,7 @@ resources:
             echo "__protected_private_net_cidr__" > /opt/config/protected_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip

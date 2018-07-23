@@ -173,6 +173,10 @@ parameters:
     type: string
     label: SDNC IP address
     description: IP address of the SDNC
+  nexus_artifact_repo:
+    type: string
+    description: Root URL for the Nexus repository for Maven artifacts.
+    default: "https://nexus.onap.org"
 
 #############
 #           #
@@ -261,6 +265,7 @@ resources:
             __vpp_source_repo_release_tag__ : { get_param: vpp_source_repo_release_tag }
             __vpp_patch_url__ : { get_param: vpp_patch_url }
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -284,6 +289,7 @@ resources:
             echo "__vpp_source_repo_release_tag__" > /opt/config/vpp_source_repo_release_tag.txt
             echo "__vpp_patch_url__" > /opt/config/vpp_patch_url.txt
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip

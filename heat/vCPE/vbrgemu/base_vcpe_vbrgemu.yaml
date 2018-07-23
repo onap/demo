@@ -144,6 +144,8 @@ parameters:
     type: string
     label: Compile State
     description: State to compile code or not
+
+
 #############
 #           #
 # RESOURCES #
@@ -226,6 +228,7 @@ resources:
             __vpp_patch_url__ : { get_param: vpp_patch_url }
             __sdnc_ip__ : { get_param: sdnc_ip }
             __compile_state__ : { get_param: compile_state }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -245,6 +248,7 @@ resources:
             echo "__vpp_patch_url__" > /opt/config/vpp_patch_url.txt
             echo "__sdnc_ip__" > /opt/config/sdnc_ip.txt
             echo "__compile_state__" > /opt/config/compile_state.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip

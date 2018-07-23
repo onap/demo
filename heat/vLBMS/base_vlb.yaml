@@ -169,6 +169,10 @@ parameters:
     type: string
     label: Cloud environment
     description: Cloud environment (e.g., openstack, rackspace)
+  nexus_artifact_repo:
+    type: string
+    description: Root URL for the Nexus repository for Maven artifacts.
+    default: "https://nexus.onap.org"
 
 #############
 #           #
@@ -274,6 +278,7 @@ resources:
             __pktgen_private_net_cidr__: { get_param: pktgen_private_net_cidr }
             __pktgen_mac__: { get_attr: [vpg_private_0_port, mac_address] }
             __cloud_env__: { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -299,6 +304,7 @@ resources:
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__pktgen_mac__" > /opt/config/pktgen_mac.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip
@@ -349,6 +355,7 @@ resources:
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
             __cloud_env__: { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -365,6 +372,7 @@ resources:
             echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip
@@ -415,6 +423,7 @@ resources:
             __pg_int__: { get_param: pg_int }
             __vlb_mac__: { get_attr: [vlb_private_2_port, mac_address] }
             __cloud_env__: { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -432,6 +441,7 @@ resources:
             echo "__pg_int__" > /opt/config/pg_int.txt
             echo "__vlb_mac__" > /opt/config/vlb_mac.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip

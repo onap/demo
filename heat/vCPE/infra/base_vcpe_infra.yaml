@@ -247,6 +247,7 @@ resources:
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -262,6 +263,7 @@ resources:
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip
@@ -310,6 +312,7 @@ resources:
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -323,6 +326,7 @@ resources:
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip
@@ -373,6 +377,7 @@ resources:
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -388,6 +393,7 @@ resources:
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip
@@ -436,6 +442,7 @@ resources:
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
 
@@ -449,6 +456,7 @@ resources:
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip
