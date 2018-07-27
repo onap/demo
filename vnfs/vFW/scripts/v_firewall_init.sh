@@ -64,6 +64,7 @@ sleep 1
 
 # Start HoneyComb
 VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+mkdir -p /var/lib/honeycomb/persist/{config,context}/
 echo "" > /var/lib/honeycomb/persist/context/data.json
 echo "" > /var/lib/honeycomb/persist/config/data.json
 /opt/honeycomb/sample-distribution-$VERSION/honeycomb &>/dev/null &disown

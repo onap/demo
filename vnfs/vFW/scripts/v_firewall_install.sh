@@ -76,12 +76,11 @@ wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves_vfw_reporting/$DEMO_ARTIFACT
 tar -zmxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves-$DEMO_ARTIFACTS_VERSION VES
 tar -zmxvf ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-mv ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION VESreporting_vFW
+mv ves_vfw_reporting-$DEMO_ARTIFACTS_VERSION /opt/VES/evel/evel-library/code/VESreporting
 tar -zmxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
 
 mv sample-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
 sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/sample-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
-mv VESreporting_vFW /opt/VES/evel/evel-library/code/VESreporting
 rm *.tar.gz
 
 chmod +x v_firewall_init.sh
