@@ -1206,6 +1206,7 @@ resources:
             echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
+            echo "__policy_ip_addr__" > /opt/config/policy_healthcheck_ip_addr.txt
             echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
             echo "__portal_ip_addr__" > /opt/config/cli_ip_addr.txt
             echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
@@ -1213,12 +1214,15 @@ resources:
             echo "__sdc_be_ip_addr__" > /opt/config/sdc_be_ip_addr.txt
             echo "__sdc_be_onboard_ip_addr__" > /opt/config/sdc_be_onboard_ip_addr.txt
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
+            echo "__sdnc_ip_addr__" > /opt/config/sdnc_portal_ip_addr.txt
             echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
             echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
             echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
             echo "__openo_ip_addr__" > /opt/config/vnfsdk_ip_addr.txt
             echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
             echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
+            echo "__oof_ip_addr__" > /opt/config/oof_homing_ip_addr.txt
+            echo "__oof_ip_addr__" > /opt/config/oof_sniro_ip_addr.txt
             echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
             echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
