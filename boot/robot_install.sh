@@ -58,31 +58,34 @@ then
 	ifup eth1
 fi
 
-# Download dependencies
-echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget openjdk-8-jdk git ntp ntpdate make
+apt-get install -y apt-transport-https ca-certificates wget git ntp ntpdate make
 
 # Download scripts from Nexus
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot_vm_init.sh > /opt/robot_vm_init.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot_serv.sh > /opt/robot_serv.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip imagetest.sh > /opt/imagetest.sh
-chmod +x /opt/imagetest.sh
-chmod +x /opt/robot_vm_init.sh
-chmod +x /opt/robot_serv.sh
+
+mkdir -p /opt/eteshare/config
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot/integration_preload_parameters.py > /opt/eteshare/config/integration_preload_parameters.py
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot/integration_robot_properties.py > /opt/eteshare/config/integration_robot_properties.py
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot/vm_config2robot.sh > /opt/eteshare/config/vm_config2robot.sh
+chmod +x /opt/eteshare/config/vm_config2robot.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot/ete.sh > /opt/ete.sh
+chmod +x /opt/ete.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot/demo.sh > /opt/demo.sh
+chmod +x /opt/demo.sh
+
+mkdir -p /opt/eteshare/logs
+
 mv /opt/robot_serv.sh /etc/init.d
 update-rc.d robot_serv.sh defaults
 
-# Download and install docker-engine and docker-compose
+# Download and install docker-engine
 echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
 apt-get update
 apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
 apt-get install -y --allow-unauthenticated docker-engine
-
-mkdir /opt/docker
-curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
-chmod +x /opt/docker/docker-compose
 
 # Set the MTU size of docker containers to the minimum MTU size supported by vNICs. OpenStack deployments may need to know the external DNS IP
 DNS_FLAG=""
@@ -109,12 +112,6 @@ service docker restart
 echo "nameserver "$DNS_IP_ADDR >> /etc/resolvconf/resolv.conf.d/head
 resolvconf -u
 
-# Clone Gerrit repository
-mkdir -p /opt/eteshare/logs
-mkdir -p /opt/eteshare/config
-cd /opt
-git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO testsuite/properties
-git clone -b $GERRIT_BRANCH --single-branch $HEAT_CODE_REPO demo
 
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
