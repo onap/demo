@@ -63,8 +63,11 @@ apt-get install -y apt-transport-https ca-certificates wget git ntp ntpdate make
 
 # Download scripts from Nexus
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot_vm_init.sh > /opt/robot_vm_init.sh
+chmod +x /opt/robot_vm_init.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot_serv.sh > /opt/robot_serv.sh
+chmod +x /opt/robot_serv.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip imagetest.sh > /opt/imagetest.sh
+chmod +x /opt/imagetest.sh
 
 mkdir -p /opt/eteshare/config
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot/integration_preload_parameters.py > /opt/eteshare/config/integration_preload_parameters.py
