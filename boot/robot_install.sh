@@ -1,13 +1,10 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Read configuration files
 ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 DNS_IP_ADDR=$(cat /opt/config/dns_ip_addr.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
-GERRIT_BRANCH=$(cat /opt/config/gerrit_branch.txt)
 MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
-CODE_REPO=$(cat /opt/config/remote_repo.txt)
-HEAT_CODE_REPO=http://gerrit.onap.org/r/demo.git
 HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
 HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
 
@@ -63,8 +60,11 @@ apt-get install -y apt-transport-https ca-certificates wget git ntp ntpdate make
 
 # Download scripts from Nexus
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot_vm_init.sh > /opt/robot_vm_init.sh
+chmod +x /opt/robot_vm_init.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot_serv.sh > /opt/robot_serv.sh
+chmod +x /opt/robot_serv.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip imagetest.sh > /opt/imagetest.sh
+chmod +x /opt/imagetest.sh
 
 mkdir -p /opt/eteshare/config
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip robot/integration_preload_parameters.py > /opt/eteshare/config/integration_preload_parameters.py
@@ -78,7 +78,7 @@ chmod +x /opt/demo.sh
 
 mkdir -p /opt/eteshare/logs
 
-mv /opt/robot_serv.sh /etc/init.d
+cp /opt/robot_serv.sh /etc/init.d
 update-rc.d robot_serv.sh defaults
 
 # Download and install docker-engine
