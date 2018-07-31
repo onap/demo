@@ -71,7 +71,7 @@ mv /opt/sdc_serv.sh /etc/init.d
 update-rc.d sdc_serv.sh defaults
 
 # Download and install docker-engine and docker-compose
-echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+echo "deb https://apt.dockerproject.org/repo ubuntu-$(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/docker.list
 apt-get update
 apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
 apt-get install -y --allow-unauthenticated docker-engine
