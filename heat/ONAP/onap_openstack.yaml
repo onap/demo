@@ -304,8 +304,6 @@ parameters:
     type: string
   portal_repo:
     type: string
-  robot_repo:
-    type: string
   sdc_repo:
     type: string
   sdnc_repo:
@@ -507,8 +505,6 @@ parameters:
   policy_branch:
     type: string
   portal_branch:
-    type: string
-  robot_branch:
     type: string
   sdc_branch:
     type: string
@@ -1141,7 +1137,6 @@ resources:
             __artifacts_version__: { get_param: artifacts_version }
             __openstack_region__: { get_param: openstack_region }
             __dns_ip_addr__: { get_param: dns_ip_addr }
-            __gerrit_branch__: { get_param: robot_branch }
             __cloud_env__: { get_param: cloud_env }
             __keystone_url__: { get_param: keystone_url }
             __aai1_ip_addr__: { get_param: aai1_ip_addr }
@@ -1173,7 +1168,6 @@ resources:
             __public_net_id__: { get_param: public_net_id }
             __oam_network_id__: { get_resource: oam_onap }
             __script_version__: { get_param: artifacts_version }
-            __robot_repo__: { get_param: robot_repo }
             __docker_version__: { get_param: robot_docker }
             __sniro_docker_version__: { get_param: sniro_docker }
             __vnf_pub_key__: { get_param: pub_key }
@@ -1196,7 +1190,6 @@ resources:
             echo "__docker_version__" > /opt/config/docker_version.txt
             echo "__sniro_docker_version__" > /opt/config/sniro_docker_version.txt
             echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
             echo "__keystone_url__" > /opt/config/keystone.txt
             echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
             echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
@@ -1240,7 +1233,6 @@ resources:
             echo "__oam_network_id__" > /opt/config/oam_network_id.txt
             echo "__use_oam_net_for_robot__" > /opt/config/use_oam_net_for_robot.txt
             echo "__vnf_pub_key__" > /opt/config/vnf_pub_key.txt
-            echo "__robot_repo__" > /opt/config/remote_repo.txt
             echo "localhost" > /opt/config/log_elasticsearch_ip_addr.txt # these tests will be skipped by robot
             echo "localhost" > /opt/config/log_logstash_ip_addr.txt # these tests will be skipped by robot
             echo "localhost" > /opt/config/log_kibana_ip_addr.txt # these tests will be skipped by robot
