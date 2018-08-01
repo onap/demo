@@ -31,7 +31,7 @@ function usage
 	echo "       demo.sh deleteVNF <module_name from instantiateVFW>"
     echo "               - Delete the module created by instantiateVFW"
 	echo " "
-	echo "       demo.sh heatbridge <stack_name> <service_instance_id> <service> <ipv4-oam-address>"
+	echo "       demo.sh heatbridge <stack_name> <service_instance_id> <service> [<ipv4-oam-address>]"
     echo "               - Run heatbridge against the stack for the given service instance and service"
 }
 
@@ -130,8 +130,8 @@ do
     	heatbridge)
 			TAG="heatbridge"
 			shift
-			if [ $# -ne 4 ];then
-				echo "Usage: demo.sh heatbridge <stack_name> <service_instance_id> <service> <ipv4-oam-address>"
+			if [ $# -lt 3 ];then
+				echo "Usage: demo.sh heatbridge <stack_name> <service_instance_id> <service> [<ipv4-oam-address>]"
 				exit
 			fi
 			VARIABLES="$VARIABLES -v HB_STACK:$1"
