@@ -635,7 +635,7 @@ resources:
   dns_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_small }
       name:
         str_replace:
@@ -751,7 +751,7 @@ resources:
     type: OS::Nova::Server
     depends_on: aai2_vm
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_xlarge }
       name:
         str_replace:
@@ -838,7 +838,7 @@ resources:
   aai2_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_xlarge }
       name:
         str_replace:
@@ -1025,7 +1025,7 @@ resources:
   mrouter_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_large }
       name:
         str_replace:
@@ -1278,7 +1278,7 @@ resources:
   vid_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_medium }
       name:
         str_replace:
@@ -1363,7 +1363,7 @@ resources:
   sdnc_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_large }
       name:
         str_replace:
@@ -1552,7 +1552,7 @@ resources:
   portal_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_large }
       name:
         str_replace:
@@ -1640,7 +1640,7 @@ resources:
   policy_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_xlarge }
       name:
         str_replace:
@@ -1727,7 +1727,7 @@ resources:
   appc_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_large }
       name:
         str_replace:
@@ -2304,7 +2304,7 @@ resources:
   music_vm:
     type: OS::Nova::Server
     properties:
-      image: { get_param: ubuntu_1404_image }
+      image: { get_param: ubuntu_1604_image }
       flavor: { get_param: flavor_large }
       name:
         str_replace:
