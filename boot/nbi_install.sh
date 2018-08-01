@@ -55,7 +55,7 @@ then
 fi
 
 apt-get update
-apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates curl git ntp ntpdate make software-properties-common
+apt-get install -y apt-transport-https ca-certificates curl git ntp ntpdate make software-properties-common
 
 # Download scripts from Nexus
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip nbi_vm_init.sh > /opt/nbi_vm_init.sh
