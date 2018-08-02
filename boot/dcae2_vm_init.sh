@@ -21,6 +21,9 @@
 # parameters: URL METHOD CURLOPTIONS EXTRA_HEADERS_AS_A_STRING AUTH_AS_USER:PASS DATA
 assemble_curl_command()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     local URL="$1"
     local METHOD="$2"
     local CURLOPTIONS="$3"
@@ -51,6 +54,9 @@ assemble_curl_command()
 # parameters: URL METHOD expected_response_code EXTRA_HEADERS_AS_A_STRING AUTH_AS_USER:PASS DATA
 call_api_for_response_code()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     local CURLOPTIONS='-kIso /dev/null -w "%{http_code}"'
     read -r CMDF <<-END
 $(assemble_curl_command "$1" "$2" "$CURLOPTIONS" "$4" "$5" "$6")
@@ -59,6 +65,9 @@ END
 }
 call_api_for_response_body()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     local CURLOPTIONS='-ksb'
     read -r CMDF <<-END
 $(assemble_curl_command "$1" "$2" "$CURLOPTIONS" "$4" "$5" "$6")
@@ -66,7 +75,10 @@ END
     eval "$CMDF"
 }
 call_api_for_response_header()
-{  
+{
+    export http_proxy=""
+    export https_proxy=""
+	
     local CURLOPTIONS='-ks -o /dev/null -D -'
     read -r CMDF <<-END
 $(assemble_curl_command "$1" "$2" "$CURLOPTIONS" "$4" "$5" "$6")
@@ -74,7 +86,10 @@ END
     eval "$CMDF"
 }
 call_api_for_verbose()
-{ 
+{
+    export http_proxy=""
+    export https_proxy=""
+	
     local CURLOPTIONS='-kIv'
     read -r CMDF <<-END
 $(assemble_curl_command "$1" "$2" "$CURLOPTIONS" "$4" "$5" "$6")
@@ -91,6 +106,9 @@ END
 # parameters: URL METHOD EXPECTED_RESP_CODE EXTRA_HEADERS_AS_A_STRING AUTH_AS_USER:PASS DATA
 wait_for_api()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     local RESP="$3" 
     local ACTUALRESP
     ACTUALRESP=$(call_api_for_response_code "$1" "$2" "$3" "$4" "$5" "$6")
@@ -105,7 +123,10 @@ wait_for_api()
 # Wait till a TCP port is open
 # parameters: HOST PORT
 wait_for_tcp_port()
-{  
+{
+    export http_proxy=""
+    export https_proxy=""
+	
     local DEST="$1"
     local PORT="$2"
     while ! nc -z -w 1 "$DEST" "$PORT"; do
@@ -119,6 +140,9 @@ wait_for_tcp_port()
 
 wait_for_aai_ready()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     # wait till A&AI up and ready
     local AAIHOST
     AAIHOST=$(cat /opt/config/aai1_ip_addr.txt)
@@ -137,6 +161,9 @@ wait_for_aai_ready()
 
 wait_for_multicloud_ready()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     # wait till MultiCloud up and ready
     local MCHOST
     MCHOST=$(cat /opt/config/openo_ip_addr.txt)
@@ -153,6 +180,9 @@ wait_for_multicloud_ready()
 
 register_multicloud_pod25dns_with_aai()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     # Register MultiCloud with A&AI
     local CLOUD_OWNER='pod25dns'
     local CLOUD_VERSION='titanium_cloud'
@@ -227,7 +257,10 @@ EOL
 
 
 register_multicloud_pod25_with_aai()
-{ 
+{
+    export http_proxy=""
+    export https_proxy=""
+	
     # Register MultiCloud with A&AI
     local CLOUD_OWNER='pod25'
     local CLOUD_VERSION='titanium_cloud'
@@ -315,6 +348,9 @@ EOL
 
 verify_multicloud_registration() 
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     local CLOUD_OWNER='pod25'
     local CLOUD_REGION
     local CLOUD_VERSION='titanium_cloud'
@@ -346,6 +382,9 @@ verify_multicloud_registration()
 
 register_dns_zone_proxied_designate()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     local CLOUD_OWNER='pod25' 
     local CLOUD_REGION
     local CLOUD_VERSION='titanium_cloud'
@@ -428,6 +467,9 @@ register_dns_zone_proxied_designate()
 
 register_dns_zone_designate()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     local HEADER_CONTENT_TYPE_JSON="Content-Type: application/json"
     local HEADER_ACCEPT_JSON="Accept: application/json"
     local HEADER_TOKEN
@@ -514,6 +556,9 @@ register_dns_zone_designate()
 
 delete_dns_zone()
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     local CLOUD_OWNER='pod25'
     local CLOUD_REGION
     local CLOUD_VERSION='titanium_cloud'
@@ -556,6 +601,9 @@ delete_dns_zone()
 
 list_dns_zone() 
 {
+    export http_proxy=""
+    export https_proxy=""
+	
     local CLOUD_OWNER='pod25'
     local CLOUD_REGION
     local CLOUD_VERSION='titanium_cloud'
@@ -626,7 +674,14 @@ DOCKER_VERSION=$(cat /opt/config/docker_version.txt)
 ZONE=$(cat /opt/config/rand_str.txt)
 MYFLOATIP=$(cat /opt/config/dcae_float_ip.txt)
 MYLOCALIP=$(cat /opt/config/dcae_ip_addr.txt)
+HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
+HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
 
+if [ $HTTP_PROXY != "no_proxy" ]
+then
+    export http_proxy=$HTTP_PROXY
+    export https_proxy=$HTTPS_PROXY
+fi
 
 # start docker image pulling while we are waiting for A&AI to come online
 docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
@@ -752,6 +807,11 @@ if [[ $DEPLOYMENT_PROFILE == R2* ]]; then
   echo "Setup CloudifyManager and Registrator"
   ./setup.sh
   sleep 10
+
+  export http_proxy=""
+  export https_proxy=""
+
+
   ./register.sh
 
   echo "Bring up DCAE MIN service components for R2 use cases"
