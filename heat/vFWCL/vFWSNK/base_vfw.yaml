@@ -157,6 +157,9 @@ parameters:
     type: string
     label: Cloud environment
     description: Cloud environment (e.g., openstack, rackspace)
+  sec_group:
+    type: string
+    description: ONAP Security Group
 
 #############
 #           #
@@ -212,6 +215,8 @@ resources:
     properties:
       network: { get_resource: unprotected_private_network }
       fixed_ips: [{"subnet": { get_resource: unprotected_private_subnet }, "ip_address": { get_param: vfw_private_ip_0 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vfw_private_1_port:
     type: OS::Neutron::Port
@@ -219,12 +224,16 @@ resources:
       allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
       network: { get_resource: protected_private_network }
       fixed_ips: [{"subnet": { get_resource: protected_private_subnet }, "ip_address": { get_param: vfw_private_ip_1 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vfw_private_2_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vfw_private_ip_2 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vfw_0:
     type: OS::Nova::Server
@@ -291,12 +300,16 @@ resources:
     properties:
       network: { get_resource: protected_private_network }
       fixed_ips: [{"subnet": { get_resource: protected_private_subnet }, "ip_address": { get_param: vsn_private_ip_0 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vsn_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vsn_private_ip_1 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vsn_0:
     type: OS::Nova::Server

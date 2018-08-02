@@ -173,6 +173,9 @@ parameters:
     type: string
     description: Root URL for the Nexus repository for Maven artifacts.
     default: "https://nexus.onap.org"
+  sec_group:
+    type: string
+    description: ONAP Security Group
 
 #############
 #           #
@@ -228,18 +231,24 @@ resources:
     properties:
       network: { get_resource: vlb_private_network }
       fixed_ips: [{"subnet": { get_resource: vlb_private_subnet }, "ip_address": { get_param: vlb_private_ip_0 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vlb_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vlb_private_ip_1 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vlb_private_2_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: pktgen_private_network }
       fixed_ips: [{"subnet": { get_resource: pktgen_private_subnet }, "ip_address": { get_param: vlb_private_ip_2 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vlb_0:
     type: OS::Nova::Server
@@ -321,12 +330,16 @@ resources:
     properties:
       network: { get_resource: vlb_private_network }
       fixed_ips: [{"subnet": { get_resource: vlb_private_subnet }, "ip_address": { get_param: vdns_private_ip_0 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vdns_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vdns_private_ip_1 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vdns_0:
     type: OS::Nova::Server
@@ -389,12 +402,16 @@ resources:
     properties:
       network: { get_resource: pktgen_private_network }
       fixed_ips: [{"subnet": { get_resource: pktgen_private_subnet }, "ip_address": { get_param: vpg_private_ip_0 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vpg_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vpg_private_ip_1 }}]
+      security_groups:
+      - { get_param: sec_group }
 
   vpg_0:
     type: OS::Nova::Server

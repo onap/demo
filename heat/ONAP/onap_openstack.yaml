@@ -579,7 +579,10 @@ resources:
         - protocol: tcp
           port_range_min: 1
           port_range_max: 65535
-
+        # Protocols used for vLB/vDNS use case
+        - protocol: 47
+        - protocol: 53
+        - protocol: 132
 
 
   # ONAP management private network
