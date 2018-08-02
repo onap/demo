@@ -46,11 +46,9 @@ then
 fi
 
 # Download dependencies
-#echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-#echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
 apt-get update
-#apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget make openjdk-8-jdk git ntp ntpdate python python-pip
-apt-get install --allow-unauthenticated -y apt-transport-https ca-certificates wget git ntp ntpdate python python-pip
+#apt-get install -y apt-transport-https ca-certificates wget make git ntp ntpdate python python-pip
+apt-get install -y apt-transport-https ca-certificates wget git ntp ntpdate python python-pip
 
 # Download scripts from Nexus
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip dcae2_vm_init.sh > /opt/dcae2_vm_init.sh
