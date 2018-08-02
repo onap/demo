@@ -18,7 +18,7 @@ then
 fi
 
 dir="/opt"
-cmd="./sms_vm_init.sh"
+cmd=""
 user="root"
 
 name=`basename $0`

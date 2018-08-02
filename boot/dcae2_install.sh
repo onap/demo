@@ -52,11 +52,12 @@ apt-get install -y apt-transport-https ca-certificates wget git ntp ntpdate pyth
 
 # Download scripts from Nexus
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip dcae2_vm_init.sh > /opt/dcae2_vm_init.sh
-unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip dcae2_serv.sh > /opt/dcae2_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip serv.sh > /opt/dcae2_serv.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip imagetest.sh > /opt/imagetest.sh
 chmod +x /opt/imagetest.sh
 chmod +x /opt/dcae2_vm_init.sh
 chmod +x /opt/dcae2_serv.sh
+sed -i "s|cmd=\"\"|cmd=\"./dcae2_vm_init.sh\"|g" /opt/dcae2_serv.sh
 mv /opt/dcae2_serv.sh /etc/init.d
 update-rc.d dcae2_serv.sh defaults
 
@@ -69,7 +70,6 @@ apt-get install -y --allow-unauthenticated docker-engine
 mkdir -p /opt/docker
 curl -L "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)" > /opt/docker/docker-compose
 chmod +x /opt/docker/docker-compose
-
 
 # Set the MTU size of docker containers to the minimum MTU size supported by vNICs. OpenStack deployments may 
 # need to know the external DNS IP
@@ -103,19 +103,13 @@ echo "$(cat /opt/config/dcae_ip_addr.txt) dockerhost" >>/etc/hosts
 echo "nameserver $DNS_IP_ADDR" >> /etc/resolvconf/resolv.conf.d/head
 resolvconf -u
 
-
 # prepare the configurations needed by DCAEGEN2 installer
 rm -rf /opt/app/config
 mkdir -p /opt/app/config
 
-
 # private key
 sed -e 's/\\n/\n/g' /opt/config/priv_key | sed -e 's/^[ \t]*//g; s/[ \t]*$//g' > /opt/app/config/key
 chmod 777 /opt/app/config/key
-
-# move keystone url file
-#cp /opt/config/keystone_url.txt /opt/app/config/keystone_url.txt
-
 
 cd /opt
 ./dcae2_vm_init.sh

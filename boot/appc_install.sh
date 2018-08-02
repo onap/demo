@@ -26,45 +26,18 @@ then
 	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
 fi
 
-# Set private IP in /etc/network/interfaces manually in the presence of public interface
-# Some VM images don't add the private interface automatically, we have to do it during the component installation
-if [[ $CLOUD_ENV == "openstack_nofloat" ]]
-then
-	LOCAL_IP=$(cat /opt/config/local_ip_addr.txt)
-	CIDR=$(cat /opt/config/oam_network_cidr.txt)
-	BITMASK=$(echo $CIDR | cut -d"/" -f2)
-
-	# Compute the netmask based on the network cidr
-	if [[ $BITMASK == "8" ]]
-	then
-		NETMASK=255.0.0.0
-	elif [[ $BITMASK == "16" ]]
-	then
-		NETMASK=255.255.0.0
-	elif [[ $BITMASK == "24" ]]
-	then
-		NETMASK=255.255.255.0
-	fi
-
-	echo "auto eth1" >> /etc/network/interfaces
-	echo "iface eth1 inet static" >> /etc/network/interfaces
-	echo "    address $LOCAL_IP" >> /etc/network/interfaces
-	echo "    netmask $NETMASK" >> /etc/network/interfaces
-	echo "    mtu $MTU" >> /etc/network/interfaces
-	ifup eth1
-fi
-
 # Download dependencies
 apt-get update
 apt-get install -y apt-transport-https ca-certificates wget git ntp ntpdate make
 
 # Download scripts from Nexus
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip appc_vm_init.sh > /opt/appc_vm_init.sh
-unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip appc_serv.sh > /opt/appc_serv.sh
+unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip serv.sh > /opt/appc_serv.sh
 unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip imagetest.sh > /opt/imagetest.sh
 chmod +x /opt/imagetest.sh
 chmod +x /opt/appc_vm_init.sh
 chmod +x /opt/appc_serv.sh
+sed -i "s|cmd=\"\"|cmd=\"./appc_vm_init.sh\"|g" /opt/appc_serv.sh
 mv /opt/appc_serv.sh /etc/init.d
 update-rc.d appc_serv.sh defaults
 
