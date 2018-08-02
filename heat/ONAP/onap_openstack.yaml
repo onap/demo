@@ -620,6 +620,70 @@ resources:
       subnet_id: { get_resource: oam_onap_subnet }
 
 
+  common_config_script:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: ungrouped
+      config:
+        str_replace:
+          params:
+            __artifacts_version__: { get_param: artifacts_version }
+            __cloud_env__: { get_param: cloud_env }
+            __dns_ip_addr__: { get_param: dns_ip_addr }
+            __external_dns__: { get_param: external_dns }
+            __http_proxy__: { get_param: http_proxy }
+            __https_proxy__: { get_param: https_proxy }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+            __nexus_docker_repo__: { get_param: nexus_docker_repo }
+            __nexus_username__: { get_param: nexus_username }
+            __nexus_password__: { get_param: nexus_password }
+            __openstack_username__: { get_param: openstack_username }
+            __openstack_tenant_id__: { get_param: openstack_tenant_id }
+            __openstack_api_key__: { get_param: openstack_api_key }
+            __openstack_region__: { get_param: openstack_region }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir -p /opt/config
+            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
+            echo "__external_dns__" > /opt/config/external_dns.txt
+            echo "__http_proxy__" > /opt/config/http_proxy.txt
+            echo "__https_proxy__" > /opt/config/https_proxy.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
+            echo "__nexus_password__" > /opt/config/nexus_password.txt
+            echo "__nexus_username__" > /opt/config/nexus_username.txt
+            echo "__openstack_username__" > /opt/config/openstack_username.txt
+            echo "__openstack_tenant_id__" > /opt/config/openstack_tenant_id.txt
+            echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
+            echo "__openstack_region__" > /opt/config/openstack_region.txt
+
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+              echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
+              echo "{" >> /etc/apt/apt.conf.d/apt.conf
+              echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
+              echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+              echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
+              echo "};" >> /etc/apt/apt.conf.d/apt.conf
+
+              export http_proxy=__http_proxy__
+              export https_proxy=__https_proxy__
+            fi
+
+            # Download and run install script
+            apt update
+            apt-get -y install unzip
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            while [ ! -s /opt/boot-__artifacts_version__.zip ]; do
+              curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
+            done
+            ln -s /opt/boot-__artifacts_version__.zip /opt/boot.zip
+
+
   # DNS Server instantiation
   dns_private_port:
     type: OS::Neutron::Port
@@ -648,91 +712,76 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: dns_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __artifacts_version__: { get_param: artifacts_version }
-            __oam_network_cidr__: { get_attr: [oam_onap_subnet, cidr] }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __aai1_ip_addr__: { get_param: aai1_ip_addr }
-            __aai2_ip_addr__: { get_param: aai2_ip_addr }
-            __appc_ip_addr__: { get_param: appc_ip_addr }
-            __dcae_ip_addr__: { get_param: dcae_ip_addr }
-            __so_ip_addr__: { get_param: so_ip_addr }
-            __mr_ip_addr__: { get_param: mr_ip_addr }
-            __policy_ip_addr__: { get_param: policy_ip_addr }
-            __portal_ip_addr__: { get_param: portal_ip_addr }
-            __robot_ip_addr__: { get_param: robot_ip_addr }
-            __sdc_ip_addr__: { get_param: sdc_ip_addr }
-            __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
-            __vid_ip_addr__: { get_param: vid_ip_addr }
-            __clamp_ip_addr__: { get_param: clamp_ip_addr }
-            __openo_ip_addr__: { get_param: openo_ip_addr }
-            __music_ip_addr__: { get_param: music_ip_addr }
-            __oof_ip_addr__: { get_param: oof_ip_addr }
-            __aaf_ip_addr__: { get_param: aaf_ip_addr }
-            __sms_ip_addr__: { get_param: sms_ip_addr }
-            __nbi_ip_addr__: { get_param: nbi_ip_addr }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __dns_forwarder__: { get_param: dns_forwarder }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: dns_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
-            echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
-            echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
-            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-            echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
-            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
-            echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
-            echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
-            echo "__robot_ip_addr__" > /opt/config/robot_ip_addr.txt
-            echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
-            echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
-            echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
-            echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
-            echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
-            echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
-            echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
-            echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
-            echo "__sms_ip_addr__" > /opt/config/sms_ip_addr.txt
-            echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  dns_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/dns_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/dns_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt dns_install.sh
-            cd /opt
-            chmod +x dns_install.sh
-            ./dns_install.sh
+  dns_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: dns_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __oam_network_cidr__: { get_attr: [oam_onap_subnet, cidr] }
+              __aai1_ip_addr__: { get_param: aai1_ip_addr }
+              __aai2_ip_addr__: { get_param: aai2_ip_addr }
+              __appc_ip_addr__: { get_param: appc_ip_addr }
+              __dcae_ip_addr__: { get_param: dcae_ip_addr }
+              __so_ip_addr__: { get_param: so_ip_addr }
+              __mr_ip_addr__: { get_param: mr_ip_addr }
+              __policy_ip_addr__: { get_param: policy_ip_addr }
+              __portal_ip_addr__: { get_param: portal_ip_addr }
+              __robot_ip_addr__: { get_param: robot_ip_addr }
+              __sdc_ip_addr__: { get_param: sdc_ip_addr }
+              __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
+              __vid_ip_addr__: { get_param: vid_ip_addr }
+              __clamp_ip_addr__: { get_param: clamp_ip_addr }
+              __openo_ip_addr__: { get_param: openo_ip_addr }
+              __music_ip_addr__: { get_param: music_ip_addr }
+              __oof_ip_addr__: { get_param: oof_ip_addr }
+              __aaf_ip_addr__: { get_param: aaf_ip_addr }
+              __sms_ip_addr__: { get_param: sms_ip_addr }
+              __nbi_ip_addr__: { get_param: nbi_ip_addr }
+              __dns_forwarder__: { get_param: dns_forwarder }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
+              echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
+              echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
+              echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
+              echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
+              echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
+              echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
+              echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
+              echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
+              echo "__robot_ip_addr__" > /opt/config/robot_ip_addr.txt
+              echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
+              echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
+              echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
+              echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
+              echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
+              echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
+              echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
+              echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
+              echo "__sms_ip_addr__" > /opt/config/sms_ip_addr.txt
+              echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
+              echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
+
+              cd /opt
+              ./dns_install.sh
 
 
   # A&AI instantiation (2 VMs)
@@ -764,64 +813,43 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: aai1_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __dmaap_topic__: { get_param: dmaap_topic }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: aai_docker }
-            __gerrit_branch__: { get_param: aai_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __aai_repo__: { get_param: aai_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: aai1_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "aai_instance_1" > /opt/config/aai_instance.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__aai_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  aai1_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/aai_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/aai_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt aai_install.sh
-            cd /opt
-            chmod +x aai_install.sh
-            ./aai_install.sh
+  aai1_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: aai1_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __dmaap_topic__: { get_param: dmaap_topic }
+              __docker_version__: { get_param: aai_docker }
+              __gerrit_branch__: { get_param: aai_branch }
+              __aai_repo__: { get_param: aai_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "aai_instance_1" > /opt/config/aai_instance.txt
+              echo "__aai_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./aai_install.sh
 
 
   aai2_private_port:
@@ -851,64 +879,43 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: aai2_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __dmaap_topic__: { get_param: dmaap_topic }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: aai_docker }
-            __gerrit_branch__: { get_param: aai_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __aai_repo__: { get_param: aai_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: aai2_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "aai_instance_2" > /opt/config/aai_instance.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__aai_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  aai2_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/aai_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/aai_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt aai_install.sh
-            cd /opt
-            chmod +x aai_install.sh
-            ./aai_install.sh
+  aai2_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: aai2_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __dmaap_topic__: { get_param: dmaap_topic }
+              __docker_version__: { get_param: aai_docker }
+              __gerrit_branch__: { get_param: aai_branch }
+              __aai_repo__: { get_param: aai_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "aai_instance_2" > /opt/config/aai_instance.txt
+              echo "__aai_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./aai_install.sh
 
 
   # SO instantiation
@@ -939,75 +946,47 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: so_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __openstack_username__: { get_param: openstack_username }
-            __openstack_tenant_id__: { get_param: openstack_tenant_id }
-            __openstack_api_key__: { get_param: openstack_api_key }
-            __openstack_region__: { get_param: openstack_region }
-            __keystone_url__: { get_param: keystone_url }
-            __dmaap_topic__: { get_param: dmaap_topic }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __openo_ip__: { get_param: openo_ip_addr }
-            __docker_version__: { get_param: so_docker }
-            __gerrit_branch__: { get_param: so_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __so_repo__: { get_param: so_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: so_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__openo_ip__" > /opt/config/openo_ip.txt
-            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
-            echo "__openstack_username__" > /opt/config/openstack_username.txt
-            echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
-            echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
-            echo "__openstack_region__" > /opt/config/openstack_region.txt
-            echo "__keystone_url__" > /opt/config/keystone.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__so_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  so_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/so_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/so_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt so_install.sh
-            cd /opt
-            chmod +x so_install.sh
-            ./so_install.sh
+  so_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: so_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __keystone_url__: { get_param: keystone_url }
+              __dmaap_topic__: { get_param: dmaap_topic }
+              __openo_ip__: { get_param: openo_ip_addr }
+              __docker_version__: { get_param: so_docker }
+              __gerrit_branch__: { get_param: so_branch }
+              __so_repo__: { get_param: so_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__openo_ip__" > /opt/config/openo_ip.txt
+              echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+              ln -s /opt/config/openstack_tenant_id.txt /opt/config/tenant_id.txt
+              echo "__keystone_url__" > /opt/config/keystone.txt
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__so_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./so_install.sh
 
 
   # Message Router instantiation
@@ -1038,61 +1017,40 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: mrouter_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __gerrit_branch__: { get_param: mr_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __mr_repo__: { get_param: mr_repo }
-            __dbcl_docker__: { get_param: dbcl_docker }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: mrouter_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__mr_repo__" > /opt/config/remote_repo.txt
-            echo "__dbcl_docker__" > /opt/config/docker_version.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  mrouter_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/mr_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/mr_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt mr_install.sh
-            cd /opt
-            chmod +x mr_install.sh
-            ./mr_install.sh
+  mrouter_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: mrouter_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __gerrit_branch__: { get_param: mr_branch }
+              __mr_repo__: { get_param: mr_repo }
+              __dbcl_docker__: { get_param: dbcl_docker }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__mr_repo__" > /opt/config/remote_repo.txt
+              echo "__dbcl_docker__" > /opt/config/docker_version.txt
+
+              cd /opt
+              ./mr_install.sh
 
 
   # Robot Framework instantiation
@@ -1123,144 +1081,116 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: robot_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __network_name__: { get_attr: [oam_onap, name] }
-            __openstack_username__: { get_param: openstack_username }
-            __openstack_api_key__: { get_param : openstack_api_key }
-            __openstack_tenant_id__: { get_param: openstack_tenant_id }
-            __artifacts_version__: { get_param: artifacts_version }
-            __openstack_region__: { get_param: openstack_region }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __cloud_env__: { get_param: cloud_env }
-            __keystone_url__: { get_param: keystone_url }
-            __aai1_ip_addr__: { get_param: aai1_ip_addr }
-            __aai2_ip_addr__: { get_param: aai2_ip_addr }
-            __appc_ip_addr__: { get_param: appc_ip_addr }
-            __dcae_ip_addr__: { get_param: dcae_ip_addr }
-            __dcae_collector_ip__: { get_param: dcae_ip_addr }
-            __so_ip_addr__: { get_param: so_ip_addr }
-            __mr_ip_addr__: { get_param: mr_ip_addr }
-            __policy_ip_addr__: { get_param: policy_ip_addr }
-            __portal_ip_addr__: { get_param: portal_ip_addr }
-            __sdc_ip_addr__: { get_param: sdc_ip_addr }
-            __sdc_fe_ip_addr__: { get_param: sdc_ip_addr }
-            __sdc_be_ip_addr__: { get_param: sdc_ip_addr }
-            __sdc_be_onboard_ip_addr__: { get_param: sdc_ip_addr }
-            __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
-            __vid_ip_addr__: { get_param: vid_ip_addr }
-            __clamp_ip_addr__: { get_param: clamp_ip_addr }
-            __openo_ip_addr__: { get_param: openo_ip_addr }
-            __music_ip_addr__: { get_param: music_ip_addr }
-            __oof_ip_addr__: { get_param: oof_ip_addr }
-            __aaf_ip_addr__: { get_param: aaf_ip_addr }
-            __nbi_ip_addr__: { get_param: nbi_ip_addr }
-            __external_dns__: { get_param: external_dns }
-            __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
-            __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
-            __vm_image_name__: { get_param: ubuntu_1404_image }
-            __vm_flavor__: { get_param: flavor_medium }
-            __public_net_id__: { get_param: public_net_id }
-            __oam_network_id__: { get_resource: oam_onap }
-            __script_version__: { get_param: artifacts_version }
-            __docker_version__: { get_param: robot_docker }
-            __sniro_docker_version__: { get_param: sniro_docker }
-            __vnf_pub_key__: { get_param: pub_key }
-            __use_oam_net_for_robot__: { get_param: use_oam_net_for_robot }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: robot_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__network_name__" > /opt/config/network.txt
-            echo "__openstack_username__" > /opt/config/openstack_username.txt
-            echo "__openstack_api_key__" > /opt/config/openstack_password.txt
-            echo "__openstack_tenant_id__" > /opt/config/openstack_tenant_id.txt
-            echo "__openstack_region__" > /opt/config/region.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__sniro_docker_version__" > /opt/config/sniro_docker_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__keystone_url__" > /opt/config/keystone.txt
-            echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
-            echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
-            echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
-            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-            echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
-            echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
-            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
-            echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
-            echo "__policy_ip_addr__" > /opt/config/policy_healthcheck_ip_addr.txt
-            echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
-            echo "__portal_ip_addr__" > /opt/config/cli_ip_addr.txt
-            echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
-            echo "__sdc_fe_ip_addr__" > /opt/config/sdc_fe_ip_addr.txt
-            echo "__sdc_be_ip_addr__" > /opt/config/sdc_be_ip_addr.txt
-            echo "__sdc_be_onboard_ip_addr__" > /opt/config/sdc_be_onboard_ip_addr.txt
-            echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
-            echo "__sdnc_ip_addr__" > /opt/config/sdnc_portal_ip_addr.txt
-            echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
-            echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
-            echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
-            echo "__openo_ip_addr__" > /opt/config/vnfsdk_ip_addr.txt
-            echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
-            echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
-            echo "__oof_ip_addr__" > /opt/config/oof_homing_ip_addr.txt
-            echo "__oof_ip_addr__" > /opt/config/oof_sniro_ip_addr.txt
-            echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
-            echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__vm_flavor__" > /opt/config/vm_flavor.txt
-            echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
-            echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
-            echo "__vm_image_name__" > /opt/config/vm_image_name.txt
-            echo "__script_version__" > /opt/config/script_version.txt
-            if [ "__use_oam_net_for_robot__" != "False" ] && [ "__use_oam_net_for_robot__" != "false" ]; then
-              echo "__oam_network_id__" > /opt/config/public_net_id.txt
-            else
-              echo "__public_net_id__" > /opt/config/public_net_id.txt
-            fi
-            echo "__oam_network_id__" > /opt/config/oam_network_id.txt
-            echo "__use_oam_net_for_robot__" > /opt/config/use_oam_net_for_robot.txt
-            echo "__vnf_pub_key__" > /opt/config/vnf_pub_key.txt
-            echo "localhost" > /opt/config/log_elasticsearch_ip_addr.txt # these tests will be skipped by robot
-            echo "localhost" > /opt/config/log_logstash_ip_addr.txt # these tests will be skipped by robot
-            echo "localhost" > /opt/config/log_kibana_ip_addr.txt # these tests will be skipped by robot
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  robot_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/robot_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/robot_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt robot_install.sh
-            cd /opt
-            chmod +x robot_install.sh
-            ./robot_install.sh
+  robot_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: robot_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __network_name__: { get_attr: [oam_onap, name] }
+              __keystone_url__: { get_param: keystone_url }
+              __aai1_ip_addr__: { get_param: aai1_ip_addr }
+              __aai2_ip_addr__: { get_param: aai2_ip_addr }
+              __appc_ip_addr__: { get_param: appc_ip_addr }
+              __dcae_ip_addr__: { get_param: dcae_ip_addr }
+              __dcae_collector_ip__: { get_param: dcae_ip_addr }
+              __so_ip_addr__: { get_param: so_ip_addr }
+              __mr_ip_addr__: { get_param: mr_ip_addr }
+              __policy_ip_addr__: { get_param: policy_ip_addr }
+              __portal_ip_addr__: { get_param: portal_ip_addr }
+              __sdc_ip_addr__: { get_param: sdc_ip_addr }
+              __sdc_fe_ip_addr__: { get_param: sdc_ip_addr }
+              __sdc_be_ip_addr__: { get_param: sdc_ip_addr }
+              __sdc_be_onboard_ip_addr__: { get_param: sdc_ip_addr }
+              __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
+              __vid_ip_addr__: { get_param: vid_ip_addr }
+              __clamp_ip_addr__: { get_param: clamp_ip_addr }
+              __openo_ip_addr__: { get_param: openo_ip_addr }
+              __music_ip_addr__: { get_param: music_ip_addr }
+              __oof_ip_addr__: { get_param: oof_ip_addr }
+              __aaf_ip_addr__: { get_param: aaf_ip_addr }
+              __nbi_ip_addr__: { get_param: nbi_ip_addr }
+              __ubuntu_1404_image__: { get_param: ubuntu_1404_image }
+              __ubuntu_1604_image__: { get_param: ubuntu_1604_image }
+              __vm_image_name__: { get_param: ubuntu_1404_image }
+              __vm_flavor__: { get_param: flavor_medium }
+              __public_net_id__: { get_param: public_net_id }
+              __oam_network_id__: { get_resource: oam_onap }
+              __script_version__: { get_param: artifacts_version }
+              __docker_version__: { get_param: robot_docker }
+              __sniro_docker_version__: { get_param: sniro_docker }
+              __vnf_pub_key__: { get_param: pub_key }
+              __use_oam_net_for_robot__: { get_param: use_oam_net_for_robot }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__network_name__" > /opt/config/network.txt
+              ln -s /opt/config/openstack_region.txt /opt/config/region.txt
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__sniro_docker_version__" > /opt/config/sniro_docker_version.txt
+              echo "__keystone_url__" > /opt/config/keystone.txt
+              echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
+              echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
+              echo "__appc_ip_addr__" > /opt/config/appc_ip_addr.txt
+              echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
+              echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
+              echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
+              echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
+              echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
+              echo "__policy_ip_addr__" > /opt/config/policy_healthcheck_ip_addr.txt
+              echo "__portal_ip_addr__" > /opt/config/portal_ip_addr.txt
+              echo "__portal_ip_addr__" > /opt/config/cli_ip_addr.txt
+              echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
+              echo "__sdc_fe_ip_addr__" > /opt/config/sdc_fe_ip_addr.txt
+              echo "__sdc_be_ip_addr__" > /opt/config/sdc_be_ip_addr.txt
+              echo "__sdc_be_onboard_ip_addr__" > /opt/config/sdc_be_onboard_ip_addr.txt
+              echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
+              echo "__sdnc_ip_addr__" > /opt/config/sdnc_portal_ip_addr.txt
+              echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
+              echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
+              echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
+              echo "__openo_ip_addr__" > /opt/config/vnfsdk_ip_addr.txt
+              echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
+              echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
+              echo "__oof_ip_addr__" > /opt/config/oof_homing_ip_addr.txt
+              echo "__oof_ip_addr__" > /opt/config/oof_sniro_ip_addr.txt
+              echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
+              echo "__nbi_ip_addr__" > /opt/config/nbi_ip_addr.txt
+              echo "__vm_flavor__" > /opt/config/vm_flavor.txt
+              echo "__ubuntu_1404_image__" > /opt/config/ubuntu_1404_image.txt
+              echo "__ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
+              echo "__vm_image_name__" > /opt/config/vm_image_name.txt
+              echo "__script_version__" > /opt/config/script_version.txt
+              if [ "__use_oam_net_for_robot__" != "False" ] && [ "__use_oam_net_for_robot__" != "false" ]; then
+                echo "__oam_network_id__" > /opt/config/public_net_id.txt
+              else
+                echo "__public_net_id__" > /opt/config/public_net_id.txt
+              fi
+              echo "__oam_network_id__" > /opt/config/oam_network_id.txt
+              echo "__use_oam_net_for_robot__" > /opt/config/use_oam_net_for_robot.txt
+              echo "__vnf_pub_key__" > /opt/config/vnf_pub_key.txt
+              echo "localhost" > /opt/config/log_elasticsearch_ip_addr.txt # these tests will be skipped by robot
+              echo "localhost" > /opt/config/log_logstash_ip_addr.txt # these tests will be skipped by robot
+              echo "localhost" > /opt/config/log_kibana_ip_addr.txt # these tests will be skipped by robot
+
+              cd /opt
+              ./robot_install.sh
 
 
   # VID instantiation
@@ -1291,61 +1221,40 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: vid_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: vid_docker }
-            __gerrit_branch__: { get_param: vid_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __vid_repo__: { get_param: vid_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: vid_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__vid_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  vid_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/vid_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/vid_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt vid_install.sh
-            cd /opt
-            chmod +x vid_install.sh
-            ./vid_install.sh
+  vid_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: vid_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __docker_version__: { get_param: vid_docker }
+              __gerrit_branch__: { get_param: vid_branch }
+              __vid_repo__: { get_param: vid_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__vid_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./vid_install.sh
 
 
   # SDN-C instantiation
@@ -1376,63 +1285,42 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: sdnc_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: sdnc_docker }
-            __gerrit_branch__: { get_param: sdnc_branch }
-            __dgbuilder_docker__: { get_param: dgbuilder_docker }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __sdnc_repo__: { get_param: sdnc_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: sdnc_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__dgbuilder_docker__" > /opt/config/dgbuilder_version.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__sdnc_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  sdnc_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/sdnc_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/sdnc_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt sdnc_install.sh
-            cd /opt
-            chmod +x sdnc_install.sh
-            ./sdnc_install.sh
+  sdnc_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: sdnc_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __docker_version__: { get_param: sdnc_docker }
+              __gerrit_branch__: { get_param: sdnc_branch }
+              __dgbuilder_docker__: { get_param: dgbuilder_docker }
+              __sdnc_repo__: { get_param: sdnc_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__dgbuilder_docker__" > /opt/config/dgbuilder_version.txt
+              echo "__sdnc_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./sdnc_install.sh
 
 
   # SDC instantiation
@@ -1472,69 +1360,48 @@ resources:
       block_device_mapping:
         - device_name: /dev/vdb
           volume_id: {get_resource: sdc_volume_data}
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __env_name__: { get_param: dmaap_topic }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __mr_ip_addr__: { get_param: mr_ip_addr }
-            __private_ip__: { get_param: sdc_ip_addr }
-            __docker_version__: { get_param: sdc_docker }
-            __sdc_wfd_docker__: { get_param: sdc_wfd_docker }
-            __gerrit_branch__: { get_param: sdc_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __sdc_repo__: { get_param: sdc_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: sdc_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__env_name__" > /opt/config/env_name.txt
-            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
-            echo "__private_ip__" > /opt/config/private_ip.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__sdc_wfd_docker__" > /opt/config/sdc_wfd_docker.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__sdc_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  sdc_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/sdc_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/sdc_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt sdc_install.sh
-            cd /opt
-            chmod +x sdc_install.sh
-            ./sdc_install.sh
+  sdc_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: sdc_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __env_name__: { get_param: dmaap_topic }
+              __mr_ip_addr__: { get_param: mr_ip_addr }
+              __private_ip__: { get_param: sdc_ip_addr }
+              __docker_version__: { get_param: sdc_docker }
+              __sdc_wfd_docker__: { get_param: sdc_wfd_docker }
+              __gerrit_branch__: { get_param: sdc_branch }
+              __sdc_repo__: { get_param: sdc_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__env_name__" > /opt/config/env_name.txt
+              echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
+              echo "__private_ip__" > /opt/config/private_ip.txt
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__sdc_wfd_docker__" > /opt/config/sdc_wfd_docker.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__sdc_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./sdc_install.sh
 
 
   # PORTAL instantiation
@@ -1565,65 +1432,45 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: portal_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __public_ip__: { get_attr: [portal_floating_ip, floating_ip_address] }
-            __docker_version__: { get_param: portal_docker }
-            __gerrit_branch__: { get_param: portal_branch }
-            __cli_docker__: { get_param: cli_docker }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __portal_repo__: { get_param: portal_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: portal_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__public_ip__" > /opt/config/public_ip.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cli_docker__" > /opt/config/cli_docker_version.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__portal_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  portal_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/portal_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/portal_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt portal_install.sh
-            cd /opt
-            chmod +x portal_install.sh
-            ./portal_install.sh
+  portal_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: portal_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __public_ip__: { get_attr: [portal_floating_ip, floating_ip_address] }
+              __docker_version__: { get_param: portal_docker }
+              __gerrit_branch__: { get_param: portal_branch }
+              __cli_docker__: { get_param: cli_docker }
+              __portal_repo__: { get_param: portal_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__public_ip__" > /opt/config/public_ip.txt
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__cli_docker__" > /opt/config/cli_docker_version.txt
+              echo "__portal_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./portal_install.sh
+
 
   # Policy Engine instantiation
   policy_private_port:
@@ -1653,63 +1500,42 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: policy_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __public_ip__: { get_attr: [policy_floating_ip, floating_ip_address] }
-            __docker_version__: { get_param: policy_docker }
-            __gerrit_branch__: { get_param: policy_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __policy_repo__: { get_param: policy_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: policy_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__public_ip__" > /opt/config/public_ip.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__policy_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  policy_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/policy_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/policy_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt policy_install.sh
-            cd /opt
-            chmod +x policy_install.sh
-            ./policy_install.sh
+  policy_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: policy_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __public_ip__: { get_attr: [policy_floating_ip, floating_ip_address] }
+              __docker_version__: { get_param: policy_docker }
+              __gerrit_branch__: { get_param: policy_branch }
+              __policy_repo__: { get_param: policy_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__public_ip__" > /opt/config/public_ip.txt
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__policy_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./policy_install.sh
 
 
   # APP-C instantiation
@@ -1740,65 +1566,44 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: appc_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __dmaap_topic__: { get_param: dmaap_topic }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: appc_docker }
-            __gerrit_branch__: { get_param: appc_branch }
-            __dgbuilder_docker__: { get_param: dgbuilder_docker }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __appc_repo__: { get_param: appc_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: appc_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__dgbuilder_docker__" > /opt/config/dgbuilder_version.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__appc_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  appc_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/appc_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/appc_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt appc_install.sh
-            cd /opt
-            chmod +x appc_install.sh
-            ./appc_install.sh
+  appc_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: appc_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __dmaap_topic__: { get_param: dmaap_topic }
+              __docker_version__: { get_param: appc_docker }
+              __gerrit_branch__: { get_param: appc_branch }
+              __dgbuilder_docker__: { get_param: dgbuilder_docker }
+              __appc_repo__: { get_param: appc_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__dgbuilder_docker__" > /opt/config/dgbuilder_version.txt
+              echo "__appc_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./appc_install.sh
 
 
   # CLAMP instantiation
@@ -1829,73 +1634,45 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: clamp_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __openstack_username__: { get_param: openstack_username }
-            __openstack_tenant_id__: { get_param: openstack_tenant_id }
-            __openstack_api_key__: { get_param: openstack_api_key }
-            __openstack_region__: { get_param: openstack_region }
-            __keystone_url__: { get_param: keystone_url }
-            __dmaap_topic__: { get_param: dmaap_topic }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: clamp_docker }
-            __gerrit_branch__: { get_param: clamp_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __clamp_repo__: { get_param: clamp_repo }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: clamp_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
-            echo "__openstack_username__" > /opt/config/openstack_username.txt
-            echo "__openstack_tenant_id__" > /opt/config/tenant_id.txt
-            echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
-            echo "__openstack_region__" > /opt/config/openstack_region.txt
-            echo "__keystone_url__" > /opt/config/keystone.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__clamp_repo__" > /opt/config/remote_repo.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  clamp_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/clamp_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/clamp_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt clamp_install.sh
-            cd /opt
-            chmod +x clamp_install.sh
-            ./clamp_install.sh
+  clamp_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: clamp_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __keystone_url__: { get_param: keystone_url }
+              __dmaap_topic__: { get_param: dmaap_topic }
+              __docker_version__: { get_param: clamp_docker }
+              __gerrit_branch__: { get_param: clamp_branch }
+              __clamp_repo__: { get_param: clamp_repo }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
+              ln -s /opt/config/openstack_tenant_id.txt /opt/config/tenant_id.txt
+              echo "__keystone_url__" > /opt/config/keystone.txt
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__clamp_repo__" > /opt/config/remote_repo.txt
+
+              cd /opt
+              ./clamp_install.sh
 
 
   # OPEN-O VM instantiation
@@ -1926,136 +1703,115 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: openo_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __oam_network_cidr__: { get_param: oam_network_cidr }
-            __aai1_ip_addr__: { get_param: aai1_ip_addr }
-            __aai2_ip_addr__: { get_param: aai2_ip_addr }
-            __appc_ip_addr__: { get_param: appc_ip_addr }
-            __dcae_ip_addr__: { get_param: dcae_ip_addr }
-            __so_ip_addr__: { get_param: so_ip_addr }
-            __mr_ip_addr__: { get_param: mr_ip_addr }
-            __policy_ip_addr__: { get_param: policy_ip_addr }
-            __portal_ip_addr__: { get_param: portal_ip_addr }
-            __robot_ip_addr__: { get_param: robot_ip_addr }
-            __sdc_ip_addr__: { get_param: sdc_ip_addr }
-            __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
-            __vid_ip_addr__: { get_param: vid_ip_addr }
-            __clamp_ip_addr__: { get_param: clamp_ip_addr }
-            __openo_ip_addr__: { get_param: openo_ip_addr }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __vnfsdk_branch__: { get_param: vnfsdk_branch }
-            __msb_docker__: { get_param: msb_docker }
-            __mvim_docker__: { get_param: mvim_docker }
-            __mvim_openstack_docker__: { get_param: mvim_openstack_docker }
-            __uui_docker__: { get_param: uui_docker }
-            __esr_docker__: { get_param: esr_docker }
-            __vnfsdk_repo__: { get_param: vnfsdk_repo }
-            __vfc_nokia_docker__: { get_param: vfc_nokia_docker }
-            __vfc_nokiav2_docker__: { get_param: vfc_nokiav2_docker }
-            __vfc_ztevnfmdriver_docker__: { get_param: vfc_ztevnfmdriver_docker }
-            __vfc_multivimproxy_docker__: { get_param: vfc_multivimproxy_docker }
-            __vfc_ztesdncdriver_docker__: { get_param: vfc_ztesdncdriver_docker }
-            __vfc_vnfres_docker__: { get_param: vfc_vnfres_docker }
-            __vfc_vnfmgr_docker__: { get_param: vfc_vnfmgr_docker }
-            __vfc_vnflcm_docker__: { get_param: vfc_vnflcm_docker }
-            __vfc_resmanagement_docker__: { get_param: vfc_resmanagement_docker }
-            __vfc_nslcm_docker__: { get_param: vfc_nslcm_docker }
-            __vfc_huawei_docker__: { get_param: vfc_huawei_docker }
-            __vfc_jujudriver_docker__: { get_param: vfc_jujudriver_docker }
-            __vfc_gvnfmdriver_docker__: { get_param: vfc_gvnfmdriver_docker }
-            __vfc_emsdriver_docker__: { get_param: vfc_emsdriver_docker }
-            __vfc_catalog_docker__: { get_param: vfc_catalog_docker }
-            __vfc_wfengine_mgrservice_docker__: { get_param: vfc_wfengine_mgrservice_docker }
-            __vfc_wfengine_activiti_docker__: { get_param: vfc_wfengine_activiti_docker }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: openo_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__vnfsdk_branch__" > /opt/config/vnfsdk_branch.txt
-            echo "__msb_docker__" > /opt/config/msb_docker.txt
-            echo "__mvim_docker__" > /opt/config/mvim_docker.txt
-            echo "__mvim_openstack_docker__" > /opt/config/mvim_openstack_docker.txt
-            echo "__uui_docker__" > /opt/config/uui_docker.txt
-            echo "__esr_docker__" > /opt/config/esr_docker.txt
-            echo "__vnfsdk_repo__" > /opt/config/vnfsdk_repo.txt
+  openo_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/openo_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/openo_install.sh }
 
-            echo "export NOKIA_DOCKER_VER=__vfc_nokia_docker__" >> /opt/config/vfc_docker.txt
-            echo "export NOKIAV2_DOCKER_VER=__vfc_nokiav2_docker__" >> /opt/config/vfc_docker.txt
-            echo "export MULTIVIMPROXY_DOCKER_VER=__vfc_multivimproxy_docker__" >> /opt/config/vfc_docker.txt
-            echo "export ZTEVNFMDRIVER_DOCKER_VER=__vfc_ztevnfmdriver_docker__" >> /opt/config/vfc_docker.txt
-            echo "export ZTESDNCDRIVER_DOCKER_VER=__vfc_ztesdncdriver_docker__" >> /opt/config/vfc_docker.txt
-            echo "export VNFRES_DOCKER_VER=__vfc_vnfres_docker__" >> /opt/config/vfc_docker.txt
-            echo "export VNFMGR_DOCKER_VER=__vfc_vnfmgr_docker__" >> /opt/config/vfc_docker.txt
-            echo "export VNFLCM_DOCKER_VER=__vfc_vnflcm_docker__" >> /opt/config/vfc_docker.txt
-            echo "export RESMANAGEMENT_DOCKER_VER=__vfc_resmanagement_docker__" >> /opt/config/vfc_docker.txt
-            echo "export NSLCM_DOCKER_VER=__vfc_nslcm_docker__" >> /opt/config/vfc_docker.txt
-            echo "export HUAWEI_DOCKER_VER=__vfc_huawei_docker__" >> /opt/config/vfc_docker.txt
-            echo "export JUJUDRIVER_DOCKER_VER=__vfc_jujudriver_docker__" >> /opt/config/vfc_docker.txt
-            echo "export GVNFMDRIVER_DOCKER_VER=__vfc_gvnfmdriver_docker__" >> /opt/config/vfc_docker.txt
-            echo "export EMSDRIVER_DOCKER_VER=__vfc_emsdriver_docker__" >> /opt/config/vfc_docker.txt
-            echo "export CATALOG_DOCKER_VER=__vfc_catalog_docker__" >> /opt/config/vfc_docker.txt
-            echo "export MGRSERVICE_DOCKER_VER=__vfc_wfengine_mgrservice_docker__" >> /opt/config/vfc_docker.txt
-            echo "export ACTIVITI_DOCKER_VER=__vfc_wfengine_activiti_docker__" >> /opt/config/vfc_docker.txt
+  openo_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: openo_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __oam_network_cidr__: { get_param: oam_network_cidr }
+              __aai1_ip_addr__: { get_param: aai1_ip_addr }
+              __aai2_ip_addr__: { get_param: aai2_ip_addr }
+              __appc_ip_addr__: { get_param: appc_ip_addr }
+              __dcae_ip_addr__: { get_param: dcae_ip_addr }
+              __so_ip_addr__: { get_param: so_ip_addr }
+              __mr_ip_addr__: { get_param: mr_ip_addr }
+              __policy_ip_addr__: { get_param: policy_ip_addr }
+              __portal_ip_addr__: { get_param: portal_ip_addr }
+              __robot_ip_addr__: { get_param: robot_ip_addr }
+              __sdc_ip_addr__: { get_param: sdc_ip_addr }
+              __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
+              __vid_ip_addr__: { get_param: vid_ip_addr }
+              __clamp_ip_addr__: { get_param: clamp_ip_addr }
+              __openo_ip_addr__: { get_param: openo_ip_addr }
+              __vnfsdk_branch__: { get_param: vnfsdk_branch }
+              __msb_docker__: { get_param: msb_docker }
+              __mvim_docker__: { get_param: mvim_docker }
+              __mvim_openstack_docker__: { get_param: mvim_openstack_docker }
+              __uui_docker__: { get_param: uui_docker }
+              __esr_docker__: { get_param: esr_docker }
+              __vnfsdk_repo__: { get_param: vnfsdk_repo }
+              __vfc_nokia_docker__: { get_param: vfc_nokia_docker }
+              __vfc_nokiav2_docker__: { get_param: vfc_nokiav2_docker }
+              __vfc_ztevnfmdriver_docker__: { get_param: vfc_ztevnfmdriver_docker }
+              __vfc_multivimproxy_docker__: { get_param: vfc_multivimproxy_docker }
+              __vfc_ztesdncdriver_docker__: { get_param: vfc_ztesdncdriver_docker }
+              __vfc_vnfres_docker__: { get_param: vfc_vnfres_docker }
+              __vfc_vnfmgr_docker__: { get_param: vfc_vnfmgr_docker }
+              __vfc_vnflcm_docker__: { get_param: vfc_vnflcm_docker }
+              __vfc_resmanagement_docker__: { get_param: vfc_resmanagement_docker }
+              __vfc_nslcm_docker__: { get_param: vfc_nslcm_docker }
+              __vfc_huawei_docker__: { get_param: vfc_huawei_docker }
+              __vfc_jujudriver_docker__: { get_param: vfc_jujudriver_docker }
+              __vfc_gvnfmdriver_docker__: { get_param: vfc_gvnfmdriver_docker }
+              __vfc_emsdriver_docker__: { get_param: vfc_emsdriver_docker }
+              __vfc_catalog_docker__: { get_param: vfc_catalog_docker }
+              __vfc_wfengine_mgrservice_docker__: { get_param: vfc_wfengine_mgrservice_docker }
+              __vfc_wfengine_activiti_docker__: { get_param: vfc_wfengine_activiti_docker }
+            template: |
+              #!/bin/bash
 
-            # Create env file with the IP address of all ONAP components
-            echo "export AAI_IP1=__aai1_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export AAI_IP2=__aai2_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export APPC_IP=__appc_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export DCAE_IP=__dcae_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export SO_IP=__so_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export MR_IP=__mr_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export POLICY_IP=__policy_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export PORTAL_IP=__portal_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export ROBOT_IP=__robot_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export SDC_IP=__sdc_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export SDNC_IP=__sdnc_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export VID_IP=__vid_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export CLAMP_IP=__clamp_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "export OPENO_IP=__openo_ip_addr__" >> /opt/config/onap_ips.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+              # Create configuration files
+              echo "__oam_network_cidr__" > /opt/config/oam_network_cidr.txt
+              echo "__vnfsdk_branch__" > /opt/config/vnfsdk_branch.txt
+              echo "__msb_docker__" > /opt/config/msb_docker.txt
+              echo "__mvim_docker__" > /opt/config/mvim_docker.txt
+              echo "__mvim_openstack_docker__" > /opt/config/mvim_openstack_docker.txt
+              echo "__uui_docker__" > /opt/config/uui_docker.txt
+              echo "__esr_docker__" > /opt/config/esr_docker.txt
+              echo "__vnfsdk_repo__" > /opt/config/vnfsdk_repo.txt
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt openo_install.sh
-            cd /opt
-            chmod +x openo_install.sh
-            ./openo_install.sh
+              echo "export NOKIA_DOCKER_VER=__vfc_nokia_docker__" >> /opt/config/vfc_docker.txt
+              echo "export NOKIAV2_DOCKER_VER=__vfc_nokiav2_docker__" >> /opt/config/vfc_docker.txt
+              echo "export MULTIVIMPROXY_DOCKER_VER=__vfc_multivimproxy_docker__" >> /opt/config/vfc_docker.txt
+              echo "export ZTEVNFMDRIVER_DOCKER_VER=__vfc_ztevnfmdriver_docker__" >> /opt/config/vfc_docker.txt
+              echo "export ZTESDNCDRIVER_DOCKER_VER=__vfc_ztesdncdriver_docker__" >> /opt/config/vfc_docker.txt
+              echo "export VNFRES_DOCKER_VER=__vfc_vnfres_docker__" >> /opt/config/vfc_docker.txt
+              echo "export VNFMGR_DOCKER_VER=__vfc_vnfmgr_docker__" >> /opt/config/vfc_docker.txt
+              echo "export VNFLCM_DOCKER_VER=__vfc_vnflcm_docker__" >> /opt/config/vfc_docker.txt
+              echo "export RESMANAGEMENT_DOCKER_VER=__vfc_resmanagement_docker__" >> /opt/config/vfc_docker.txt
+              echo "export NSLCM_DOCKER_VER=__vfc_nslcm_docker__" >> /opt/config/vfc_docker.txt
+              echo "export HUAWEI_DOCKER_VER=__vfc_huawei_docker__" >> /opt/config/vfc_docker.txt
+              echo "export JUJUDRIVER_DOCKER_VER=__vfc_jujudriver_docker__" >> /opt/config/vfc_docker.txt
+              echo "export GVNFMDRIVER_DOCKER_VER=__vfc_gvnfmdriver_docker__" >> /opt/config/vfc_docker.txt
+              echo "export EMSDRIVER_DOCKER_VER=__vfc_emsdriver_docker__" >> /opt/config/vfc_docker.txt
+              echo "export CATALOG_DOCKER_VER=__vfc_catalog_docker__" >> /opt/config/vfc_docker.txt
+              echo "export MGRSERVICE_DOCKER_VER=__vfc_wfengine_mgrservice_docker__" >> /opt/config/vfc_docker.txt
+              echo "export ACTIVITI_DOCKER_VER=__vfc_wfengine_activiti_docker__" >> /opt/config/vfc_docker.txt
+
+              # Create env file with the IP address of all ONAP components
+              echo "export AAI_IP1=__aai1_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export AAI_IP2=__aai2_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export APPC_IP=__appc_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export DCAE_IP=__dcae_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export SO_IP=__so_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export MR_IP=__mr_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export POLICY_IP=__policy_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export PORTAL_IP=__portal_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export ROBOT_IP=__robot_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export SDC_IP=__sdc_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export SDNC_IP=__sdnc_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export VID_IP=__vid_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export CLAMP_IP=__clamp_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export OPENO_IP=__openo_ip_addr__" >> /opt/config/onap_ips.txt
+
+              cd /opt
+              ./openo_install.sh
 
 
   # DCAE GEN 2 Controller instantiation
@@ -2088,205 +1844,186 @@ resources:
         - port: { get_resource: dcae_c_private_port }
       #security_groups:
       #  - { get_resource: onap_sg }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __rand_str__: { get_resource: random-str }
-            # repo related
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __artifacts_version__: { get_param: artifacts_version }
-            __docker_version__: { get_param: dcae_docker }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
-            __dcae_deployment_profile__: { get_param: dcae_deployment_profile }
-            __mac_addr__: { get_attr: [dcae_c_private_port, mac_address] }
-            __dcae_ip_addr__: { get_param: dcae_ip_addr }
-            __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __external_dns__: { get_param: external_dns }
-            __dns_forwarder__: { get_param: dns_forwarder }
-            __dcae_domain__: { get_param: dcae_domain }
-            # conf for VMs DCAE is to bringup
-            __openstack_keystone_url__: { get_param: keystone_url }
-            __dcae_keystone_url__: { get_param: dcae_keystone_url }
-            __dcaeos_cloud_env__: { get_param: cloud_env }
-            __dcaeos_keystone_url__: { get_param: dcae_keystone_url }
-            __dcaeos_region__: { get_param: openstack_region }
-            __dcaeos_tenant_id__: { get_param: openstack_tenant_id }
-            __dcaeos_tenant_name__: { get_param: openstack_tenant_name }
-            __dcaeos_security_group__:
-              str_replace:
-                template: 'onap_sg_rand'
-                params:
-                  rand: { get_resource: random-str }
-            #__dcaeos_security_group__: { get_attr: [onap_sg, name] }
-            __dcaeos_username__: { get_param: openstack_username }
-            __dcaeos_password__: { get_param: openstack_api_key }
-            __dcaeos_key_name__: { get_resource: vm_key }
-            __dcaeos_public_key__: { get_param: dcae_public_key }
-            __dcaeos_private_key__: { get_param: dcae_private_key }
-            __dcaeos_private_network_name__: { get_attr: [oam_onap, name] }
-            __dcaeos_public_network_name__: { get_param: public_net_name }
-            __dcaeos_ubuntu_1604_image__: { get_param: ubuntu_1604_image }
-            __dcaeos_centos_7_image__: { get_param: dcae_centos_7_image }
-            __dcaeos_flavor_id__: { get_param: flavor_medium }
-            __dcaeos_flavor_id_cdap__: { get_param: flavor_large }
-            __dcaeos_dnsaas_config_enabled__: { get_param: dnsaas_config_enabled }
-            __dcaeos_dnsaas_region__: { get_param: dnsaas_region }
-            __dcaeos_dnsaas_keystone_url__: { get_param: dnsaas_keystone_url }
-            __dnsaas_tenant_name__: { get_param: dnsaas_tenant_name }
-            __dcaeos_dnsaas_username__: { get_param: dnsaas_username }
-            __dcaeos_dnsaas_password__: { get_param: dnsaas_password }
-            # fixed private IPs
-            __mr_ip_addr__: { get_param: mr_ip_addr }
-            __policy_ip_addr__: { get_param: policy_ip_addr }
-            __sdc_ip_addr__: { get_param: sdc_ip_addr }
-            __openo_ip_addr__: { get_param: openo_ip_addr }
-            __aai1_ip_addr__: { get_param: aai1_ip_addr }
-            __aai2_ip_addr__: { get_param: aai2_ip_addr }
-            # floating IPs
-            __dns_floating_ip_addr__: { get_attr: [dns_floating_ip, floating_ip_address] }
-            __aai1_floating_ip_addr__: { get_attr: [aai1_floating_ip, floating_ip_address] }
-            __aai2_floating_ip_addr__: { get_attr: [aai2_floating_ip, floating_ip_address] }
-            __mrouter_floating_ip_addr__: { get_attr: [mrouter_floating_ip, floating_ip_address] }
-            __sdc_floating_ip_addr__: { get_attr: [sdc_floating_ip, floating_ip_address] }
-            __policy_floating_ip_addr__: { get_attr: [policy_floating_ip, floating_ip_address] }
-            __openo_floating_ip_addr__: { get_attr: [openo_floating_ip, floating_ip_address] }
-            __dcae_c_floating_ip_addr__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
-            # container versions
-            __dcae_docker__:  { get_param: dcae_docker }
-            __dcae_snmptrap_docker__:  { get_param: dcae_snmptrap_docker }
-            __dcae_ves_docker__:  { get_param: dcae_ves_docker }
-            __dcae_bootstrap_docker__:  { get_param: dcae_bootstrap_docker }
-            __dcae_cm_docker__:  { get_param: dcae_cm_docker }
-            __dcae_k8sbootstrap_docker__:  { get_param: dcae_k8sbootstrap_docker }
-            __dcae_redisc_docker__:  { get_param: dcae_redisc_docker }
-            __dcae_tca_docker__:  { get_param: dcae_tca_docker }
-            __dcae_cb_docker__:  { get_param: dcae_cb_docker }
-            __dcae_cbs_docker__:  { get_param: dcae_cbs_docker }
-            __dcae_dh_docker__:  { get_param: dcae_dh_docker }
-            __dcae_inv_docker__:  { get_param: dcae_inv_docker }
-            __dcae_ph_docker__:  { get_param: dcae_ph_docker }
-            __dcae_sch_docker__:  { get_param: dcae_sch_docker }
-            __dcae_heartbeat_docker__:  { get_param: dcae_heartbeat_docker }
-            __dcae_prh_docker__:  { get_param: dcae_prh_docker }
-            __holmes_em_docker__:  { get_param: holmes_em_docker }
-            __holmes_rm_docker__:  { get_param: holmes_rm_docker }
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: dcae_c_vm_config }
+
+  dcae_c_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/dcae2_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/dcae2_install.sh }
+
+  dcae_c_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: dcae_c_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __rand_str__: { get_resource: random-str }
+              # repo related
+              __docker_version__: { get_param: dcae_docker }
+              # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
+              __dcae_deployment_profile__: { get_param: dcae_deployment_profile }
+              __mac_addr__: { get_attr: [dcae_c_private_port, mac_address] }
+              __dcae_ip_addr__: { get_param: dcae_ip_addr }
+              __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
+              __dns_forwarder__: { get_param: dns_forwarder }
+              __dcae_domain__: { get_param: dcae_domain }
+              # conf for VMs DCAE is to bringup
+              __openstack_keystone_url__: { get_param: keystone_url }
+              __dcae_keystone_url__: { get_param: dcae_keystone_url }
+              __dcaeos_cloud_env__: { get_param: cloud_env }
+              __dcaeos_keystone_url__: { get_param: dcae_keystone_url }
+              __dcaeos_region__: { get_param: openstack_region }
+              __dcaeos_tenant_id__: { get_param: openstack_tenant_id }
+              __dcaeos_tenant_name__: { get_param: openstack_tenant_name }
+              __dcaeos_security_group__:
+                str_replace:
+                  template: 'onap_sg_rand'
+                  params:
+                    rand: { get_resource: random-str }
+              #__dcaeos_security_group__: { get_attr: [onap_sg, name] }
+              __dcaeos_username__: { get_param: openstack_username }
+              __dcaeos_password__: { get_param: openstack_api_key }
+              __dcaeos_key_name__: { get_resource: vm_key }
+              __dcaeos_public_key__: { get_param: dcae_public_key }
+              __dcaeos_private_key__: { get_param: dcae_private_key }
+              __dcaeos_private_network_name__: { get_attr: [oam_onap, name] }
+              __dcaeos_public_network_name__: { get_param: public_net_name }
+              __dcaeos_ubuntu_1604_image__: { get_param: ubuntu_1604_image }
+              __dcaeos_centos_7_image__: { get_param: dcae_centos_7_image }
+              __dcaeos_flavor_id__: { get_param: flavor_medium }
+              __dcaeos_flavor_id_cdap__: { get_param: flavor_large }
+              __dcaeos_dnsaas_config_enabled__: { get_param: dnsaas_config_enabled }
+              __dcaeos_dnsaas_region__: { get_param: dnsaas_region }
+              __dcaeos_dnsaas_keystone_url__: { get_param: dnsaas_keystone_url }
+              __dnsaas_tenant_name__: { get_param: dnsaas_tenant_name }
+              __dcaeos_dnsaas_username__: { get_param: dnsaas_username }
+              __dcaeos_dnsaas_password__: { get_param: dnsaas_password }
+              # fixed private IPs
+              __mr_ip_addr__: { get_param: mr_ip_addr }
+              __policy_ip_addr__: { get_param: policy_ip_addr }
+              __sdc_ip_addr__: { get_param: sdc_ip_addr }
+              __openo_ip_addr__: { get_param: openo_ip_addr }
+              __aai1_ip_addr__: { get_param: aai1_ip_addr }
+              __aai2_ip_addr__: { get_param: aai2_ip_addr }
+              # floating IPs
+              __dns_floating_ip_addr__: { get_attr: [dns_floating_ip, floating_ip_address] }
+              __aai1_floating_ip_addr__: { get_attr: [aai1_floating_ip, floating_ip_address] }
+              __aai2_floating_ip_addr__: { get_attr: [aai2_floating_ip, floating_ip_address] }
+              __mrouter_floating_ip_addr__: { get_attr: [mrouter_floating_ip, floating_ip_address] }
+              __sdc_floating_ip_addr__: { get_attr: [sdc_floating_ip, floating_ip_address] }
+              __policy_floating_ip_addr__: { get_attr: [policy_floating_ip, floating_ip_address] }
+              __openo_floating_ip_addr__: { get_attr: [openo_floating_ip, floating_ip_address] }
+              __dcae_c_floating_ip_addr__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
+              # container versions
+              __dcae_docker__:  { get_param: dcae_docker }
+              __dcae_snmptrap_docker__:  { get_param: dcae_snmptrap_docker }
+              __dcae_ves_docker__:  { get_param: dcae_ves_docker }
+              __dcae_bootstrap_docker__:  { get_param: dcae_bootstrap_docker }
+              __dcae_cm_docker__:  { get_param: dcae_cm_docker }
+              __dcae_k8sbootstrap_docker__:  { get_param: dcae_k8sbootstrap_docker }
+              __dcae_redisc_docker__:  { get_param: dcae_redisc_docker }
+              __dcae_tca_docker__:  { get_param: dcae_tca_docker }
+              __dcae_cb_docker__:  { get_param: dcae_cb_docker }
+              __dcae_cbs_docker__:  { get_param: dcae_cbs_docker }
+              __dcae_dh_docker__:  { get_param: dcae_dh_docker }
+              __dcae_inv_docker__:  { get_param: dcae_inv_docker }
+              __dcae_ph_docker__:  { get_param: dcae_ph_docker }
+              __dcae_sch_docker__:  { get_param: dcae_sch_docker }
+              __dcae_heartbeat_docker__:  { get_param: dcae_heartbeat_docker }
+              __dcae_prh_docker__:  { get_param: dcae_prh_docker }
+              __holmes_em_docker__:  { get_param: holmes_em_docker }
+              __holmes_rm_docker__:  { get_param: holmes_rm_docker }
 
 
-          template: |
-            #!/bin/bash
+            template: |
+              #!/bin/bash
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__rand_str__" > /opt/config/dcae_zone.txt
-            echo "__rand_str__" > /opt/config/rand_str.txt
-            # repo related
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
-            echo "__dcae_deployment_profile__" > /opt/config/dcae_deployment_profile.txt
-            echo "__mac_addr__" > /opt/config/mac_addr.txt
-            echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-            echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
-            echo "__dcae_domain__" > /opt/config/dcae_domain.txt
-            # conf for the OpenStack env where DCAE is deployed
-            echo "__openstack_keystone_url__" > /opt/config/openstack_keystone_url.txt
-            echo "__dcaeos_cloud_env__" > /opt/config/cloud_env.txt
-            echo "__dcaeos_keystone_url__" > /opt/config/keystone_url.txt
-            echo "__dcaeos_region__" > /opt/config/openstack_region.txt
-            echo "__dcaeos_tenant_id__" > /opt/config/tenant_id.txt
-            echo "__dcaeos_tenant_name__" > /opt/config/tenant_name.txt
-            echo "__dcaeos_username__" > /opt/config/openstack_user.txt
-            echo "__dcaeos_password__" > /opt/config/openstack_password.txt
-            echo "__dcaeos_key_name__" > /opt/config/key_name.txt
-            echo "__dcaeos_public_key__" > /opt/config/pub_key.txt
-            echo "__dcaeos_private_key__" > /opt/config/priv_key
-            echo "__dcaeos_private_network_name__" > /opt/config/openstack_private_network_name.txt
-            echo "__dcaeos_public_network_name__" > /opt/config/public_net_name.txt
-            echo "__dcaeos_public_network_name__" > /opt/config/public_net_id.txt
-            echo "__dcaeos_ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
-            echo "__dcaeos_centos_7_image__" > /opt/config/centos_7_image.txt
-            echo "__dcaeos_security_group__" > /opt/config/security_group.txt
-            echo "__dcaeos_flavor_id__" > /opt/config/flavor_id.txt
-            echo "__dcaeos_flavor_id_cdap__" > /opt/config/flavor_id_cdap.txt
-            echo "__dcaeos_dnsaas_config_enabled__" > /opt/config/dnsaas_config_enabled.txt
-            echo "__dcaeos_dnsaas_region__" > /opt/config/dnsaas_region.txt
-            echo "__dcaeos_dnsaas_keystone_url__" > /opt/config/dnsaas_keystone_url.txt
-            echo "__dnsaas_tenant_name__" > /opt/config/dnsaas_tenant_name.txt
-            echo "__dcaeos_dnsaas_username__" > /opt/config/dnsaas_username.txt
-            echo "__dcaeos_dnsaas_password__" > /opt/config/dnsaas_password.txt
-            # fixed private IP addresses of other ONAP components
-            echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
-            echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
-            echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
-            echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
-            echo "__openo_ip_addr__" > /opt/config/msb_ip_addr.txt
-            echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
-            echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
-            # floating IPs
-            echo "__dns_floating_ip_addr__" > /opt/config/dns_floating_ip_addr.txt
-            echo "__aai1_floating_ip_addr__" > /opt/config/aai1_floating_ip_addr.txt
-            echo "__aai2_floating_ip_addr__" > /opt/config/aai2_floating_ip_addr.txt
-            echo "__mrouter_floating_ip_addr__" > /opt/config/mrouter_floating_ip_addr.txt
-            echo "__sdc_floating_ip_addr__" > /opt/config/sdc_floating_ip_addr.txt
-            echo "__policy_floating_ip_addr__" > /opt/config/policy_floating_ip_addr.txt
-            echo "__openo_floating_ip_addr__" > /opt/config/openo_floating_ip_addr.txt
-            echo "__dcae_c_floating_ip_addr__" > /opt/config/dcae_c_floating_ip_addr.txt
-            # container versions
-            echo "__dcae_docker__" > /opt/config/dcae_docker.txt
-            echo "__dcae_snmptrap_docker__" > /opt/config/dcae_docker_snmptrap.txt
-            echo "__dcae_ves_docker__" > /opt/config/dcae_docker_ves.txt
-            echo "__dcae_bootstrap_docker__" > /opt/config/dcae_docker_bootstrap.txt
-            echo "__dcae_cm_docker__" > /opt/config/dcae_docker_cm.txt
-            echo "__dcae_k8sbootstrap_docker__" > /opt/config/dcae_docker_k8sbootstrap.txt
-            echo "__dcae_redisc_docker__" > /opt/config/dcae_docker_redisc.txt
-            echo "__dcae_tca_docker__" > /opt/config/dcae_docker_tca.txt
-            echo "__dcae_cb_docker__" > /opt/config/dcae_docker_cb.txt
-            echo "__dcae_cbs_docker__" > /opt/config/dcae_docker_cbs.txt
-            echo "__dcae_dh_docker__" > /opt/config/dcae_docker_dh.txt
-            echo "__dcae_inv_docker__" > /opt/config/dcae_docker_inv.txt
-            echo "__dcae_ph_docker__" > /opt/config/dcae_docker_ph.txt
-            echo "__dcae_sch_docker__" > /opt/config/dcae_docker_sch.txt
-            echo "__dcae_heartbeat_docker__" > /opt/config/dcae_docker_heartbeat.txt
-            echo "__dcae_prh_docker__" > /opt/config/dcae_docker_prh.txt
-            echo "__holmes_em_docker__" > /opt/config/holmes_docker_em.txt
-            echo "__holmes_rm_docker__" > /opt/config/holmes_docker_rm.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+              # Create configuration files
+              echo "__rand_str__" > /opt/config/dcae_zone.txt
+              echo "__rand_str__" > /opt/config/rand_str.txt
+              # repo related
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
+              echo "__dcae_deployment_profile__" > /opt/config/dcae_deployment_profile.txt
+              echo "__mac_addr__" > /opt/config/mac_addr.txt
+              echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
+              echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
+              echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
+              echo "__dcae_domain__" > /opt/config/dcae_domain.txt
+              # conf for the OpenStack env where DCAE is deployed
+              echo "__openstack_keystone_url__" > /opt/config/openstack_keystone_url.txt
+              echo "__dcaeos_cloud_env__" > /opt/config/cloud_env.txt
+              echo "__dcaeos_keystone_url__" > /opt/config/keystone_url.txt
+              echo "__dcaeos_region__" > /opt/config/openstack_region.txt
+              echo "__dcaeos_tenant_id__" > /opt/config/tenant_id.txt
+              echo "__dcaeos_tenant_name__" > /opt/config/tenant_name.txt
+              echo "__dcaeos_username__" > /opt/config/openstack_user.txt
+              echo "__dcaeos_password__" > /opt/config/openstack_password.txt
+              echo "__dcaeos_key_name__" > /opt/config/key_name.txt
+              echo "__dcaeos_public_key__" > /opt/config/pub_key.txt
+              echo "__dcaeos_private_key__" > /opt/config/priv_key
+              echo "__dcaeos_private_network_name__" > /opt/config/openstack_private_network_name.txt
+              echo "__dcaeos_public_network_name__" > /opt/config/public_net_name.txt
+              echo "__dcaeos_public_network_name__" > /opt/config/public_net_id.txt
+              echo "__dcaeos_ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
+              echo "__dcaeos_centos_7_image__" > /opt/config/centos_7_image.txt
+              echo "__dcaeos_security_group__" > /opt/config/security_group.txt
+              echo "__dcaeos_flavor_id__" > /opt/config/flavor_id.txt
+              echo "__dcaeos_flavor_id_cdap__" > /opt/config/flavor_id_cdap.txt
+              echo "__dcaeos_dnsaas_config_enabled__" > /opt/config/dnsaas_config_enabled.txt
+              echo "__dcaeos_dnsaas_region__" > /opt/config/dnsaas_region.txt
+              echo "__dcaeos_dnsaas_keystone_url__" > /opt/config/dnsaas_keystone_url.txt
+              echo "__dnsaas_tenant_name__" > /opt/config/dnsaas_tenant_name.txt
+              echo "__dcaeos_dnsaas_username__" > /opt/config/dnsaas_username.txt
+              echo "__dcaeos_dnsaas_password__" > /opt/config/dnsaas_password.txt
+              # fixed private IP addresses of other ONAP components
+              echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
+              echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
+              echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
+              echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
+              echo "__openo_ip_addr__" > /opt/config/msb_ip_addr.txt
+              echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
+              echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
+              # floating IPs
+              echo "__dns_floating_ip_addr__" > /opt/config/dns_floating_ip_addr.txt
+              echo "__aai1_floating_ip_addr__" > /opt/config/aai1_floating_ip_addr.txt
+              echo "__aai2_floating_ip_addr__" > /opt/config/aai2_floating_ip_addr.txt
+              echo "__mrouter_floating_ip_addr__" > /opt/config/mrouter_floating_ip_addr.txt
+              echo "__sdc_floating_ip_addr__" > /opt/config/sdc_floating_ip_addr.txt
+              echo "__policy_floating_ip_addr__" > /opt/config/policy_floating_ip_addr.txt
+              echo "__openo_floating_ip_addr__" > /opt/config/openo_floating_ip_addr.txt
+              echo "__dcae_c_floating_ip_addr__" > /opt/config/dcae_c_floating_ip_addr.txt
+              # container versions
+              echo "__dcae_docker__" > /opt/config/dcae_docker.txt
+              echo "__dcae_snmptrap_docker__" > /opt/config/dcae_docker_snmptrap.txt
+              echo "__dcae_ves_docker__" > /opt/config/dcae_docker_ves.txt
+              echo "__dcae_bootstrap_docker__" > /opt/config/dcae_docker_bootstrap.txt
+              echo "__dcae_cm_docker__" > /opt/config/dcae_docker_cm.txt
+              echo "__dcae_k8sbootstrap_docker__" > /opt/config/dcae_docker_k8sbootstrap.txt
+              echo "__dcae_redisc_docker__" > /opt/config/dcae_docker_redisc.txt
+              echo "__dcae_tca_docker__" > /opt/config/dcae_docker_tca.txt
+              echo "__dcae_cb_docker__" > /opt/config/dcae_docker_cb.txt
+              echo "__dcae_cbs_docker__" > /opt/config/dcae_docker_cbs.txt
+              echo "__dcae_dh_docker__" > /opt/config/dcae_docker_dh.txt
+              echo "__dcae_inv_docker__" > /opt/config/dcae_docker_inv.txt
+              echo "__dcae_ph_docker__" > /opt/config/dcae_docker_ph.txt
+              echo "__dcae_sch_docker__" > /opt/config/dcae_docker_sch.txt
+              echo "__dcae_heartbeat_docker__" > /opt/config/dcae_docker_heartbeat.txt
+              echo "__dcae_prh_docker__" > /opt/config/dcae_docker_prh.txt
+              echo "__holmes_em_docker__" > /opt/config/holmes_docker_em.txt
+              echo "__holmes_rm_docker__" > /opt/config/holmes_docker_rm.txt
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt dcae2_install.sh
-            cd /opt
-            chmod +x dcae2_install.sh
-            ./dcae2_install.sh > /tmp/dcae2_install.log 2>&1
+              cd /opt
+              ./dcae2_install.sh > /tmp/dcae2_install.log 2>&1
 
 
   # MUSIC instantiation
@@ -2317,61 +2054,40 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: music_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: music_docker }
-            __music_repo__: { get_param: music_repo }
-            __gerrit_branch__: { get_param: music_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: music_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__music_repo__" > /opt/config/remote_repo.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  music_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/music_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/music_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt music_install.sh
-            cd /opt
-            chmod +x music_install.sh
-            ./music_install.sh
+  music_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: music_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __docker_version__: { get_param: music_docker }
+              __music_repo__: { get_param: music_repo }
+              __gerrit_branch__: { get_param: music_branch }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__music_repo__" > /opt/config/remote_repo.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+
+              cd /opt
+              ./music_install.sh
 
 
   # OOF instantiation
@@ -2402,67 +2118,46 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: oof_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __has_docker_version__: { get_param: optf_has_docker }
-            __osdf_docker_version__: { get_param: optf_osdf_docker }
-            __music_docker_version__: { get_param: music_docker }
-            __cass_music_docker_version__: { get_param: cassandra_music_docker }
-            __oof_repo__: { get_param: oof_repo }
-            __gerrit_branch__: { get_param: oof_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: oof_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__has_docker_version__" > /opt/config/has_docker_version.txt
-            echo "__osdf_docker_version__" > /opt/config/osdf_docker_version.txt
-            echo "__music_docker_version__" > /opt/config/music_version.txt
-            echo "__cass_music_docker_version__" > /opt/config/cass_version.txt
-            echo "__oof_repo__" > /opt/config/remote_repo.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  oof_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/oof_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/oof_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt oof_install.sh
-            cd /opt
-            chmod +x oof_install.sh
-            ./oof_install.sh
+  oof_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: oof_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __has_docker_version__: { get_param: optf_has_docker }
+              __osdf_docker_version__: { get_param: optf_osdf_docker }
+              __music_docker_version__: { get_param: music_docker }
+              __cass_music_docker_version__: { get_param: cassandra_music_docker }
+              __oof_repo__: { get_param: oof_repo }
+              __gerrit_branch__: { get_param: oof_branch }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__has_docker_version__" > /opt/config/has_docker_version.txt
+              echo "__osdf_docker_version__" > /opt/config/osdf_docker_version.txt
+              echo "__music_docker_version__" > /opt/config/music_version.txt
+              echo "__cass_music_docker_version__" > /opt/config/cass_version.txt
+              echo "__oof_repo__" > /opt/config/remote_repo.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+
+              cd /opt
+              ./oof_install.sh
 
 
   # AAF instantiation
@@ -2493,63 +2188,43 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: aaf_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: aaf_docker }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __aaf_repo__: { get_param: aaf_repo }
-            __gerrit_branch__: { get_param: aaf_branch }
-            __local_ip__: { get_param: aaf_ip_addr }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: aaf_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__aaf_repo__" > /opt/config/remote_repo.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__local_ip__" > /opt/config/local_ip.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  aaf_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/aaf_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/aaf_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt aaf_install.sh
-            cd /opt
-            chmod +x aaf_install.sh
-            ./aaf_install.sh
+  aaf_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: aaf_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __docker_version__: { get_param: aaf_docker }
+              __aaf_repo__: { get_param: aaf_repo }
+              __gerrit_branch__: { get_param: aaf_branch }
+              __local_ip__: { get_param: aaf_ip_addr }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__aaf_repo__" > /opt/config/remote_repo.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__local_ip__" > /opt/config/local_ip.txt
+
+              cd /opt
+              ./aaf_install.sh
+
 
   # SMS instantiation
   sms_private_port:
@@ -2579,63 +2254,43 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: sms_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: sms_docker }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __sms_repo__: { get_param: sms_repo }
-            __gerrit_branch__: { get_param: sms_branch }
-            __local_ip__: { get_param: sms_ip_addr }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: sms_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__sms_repo__" > /opt/config/remote_repo.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__local_ip__" > /opt/config/local_ip.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  sms_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/sms_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/sms_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt sms_install.sh
-            cd /opt
-            chmod +x sms_install.sh
-            ./sms_install.sh
+  sms_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: sms_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __docker_version__: { get_param: sms_docker }
+              __sms_repo__: { get_param: sms_repo }
+              __gerrit_branch__: { get_param: sms_branch }
+              __local_ip__: { get_param: sms_ip_addr }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__sms_repo__" > /opt/config/remote_repo.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__local_ip__" > /opt/config/local_ip.txt
+
+              cd /opt
+              ./sms_install.sh
+
 
   # NBI instantiation
   nbi_private_port:
@@ -2665,64 +2320,43 @@ resources:
       key_name: { get_resource: vm_key }
       networks:
         - port: { get_resource: nbi_private_port }
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __http_proxy__: { get_param: http_proxy }
-            __https_proxy__: { get_param: https_proxy }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __nexus_docker_repo__: { get_param: nexus_docker_repo }
-            __nexus_username__: { get_param: nexus_username }
-            __nexus_password__: { get_param: nexus_password }
-            __artifacts_version__: { get_param: artifacts_version }
-            __dns_ip_addr__: { get_param: dns_ip_addr }
-            __docker_version__: { get_param: nbi_docker }
-            __nbi_repo__: { get_param: nbi_repo }
-            __gerrit_branch__: { get_param: nbi_branch }
-            __cloud_env__: { get_param: cloud_env }
-            __external_dns__: { get_param: external_dns }
-            __sdc_ip_addr__: { get_param: sdc_ip_addr }
-            __aai1_ip_addr__: { get_param: aai1_ip_addr }
-            __so_ip_addr__: { get_param: so_ip_addr }
-          template: |
-            #!/bin/bash
+      user_data_format: SOFTWARE_CONFIG
+      user_data: { get_resource: nbi_vm_config }
 
-            # Create configuration files
-            mkdir -p /opt/config
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
-            echo "__nexus_docker_repo__" > /opt/config/nexus_docker_repo.txt
-            echo "__nexus_username__" > /opt/config/nexus_username.txt
-            echo "__nexus_password__" > /opt/config/nexus_password.txt
-            echo "__artifacts_version__" > /opt/config/artifacts_version.txt
-            echo "__dns_ip_addr__" > /opt/config/dns_ip_addr.txt
-            echo "__docker_version__" > /opt/config/docker_version.txt
-            echo "__nbi_repo__" > /opt/config/remote_repo.txt
-            echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__external_dns__" > /opt/config/external_dns.txt
-            echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
-            echo "__aai1_ip_addr__" > /opt/config/aai_ip_addr.txt
-            echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
-            echo "__http_proxy__" > /opt/config/http_proxy.txt
-            echo "__https_proxy__" > /opt/config/https_proxy.txt
-            if [ __http_proxy__ != "no_proxy" ]
-            then
-            echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
-            echo "{" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  Retries \"0\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  http::Proxy \"http://__http_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "  https::Proxy \"https://__https_proxy__/\";" >> /etc/apt/apt.conf.d/apt.conf
-            echo "};" >> /etc/apt/apt.conf.d/apt.conf
+  nbi_vm_scripts:
+    type: OS::Heat::CloudConfig
+    properties:
+      cloud_config:
+        write_files:
+        - path: /opt/nbi_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/nbi_install.sh }
 
-            # Download and run install script
-            export http_proxy=__http_proxy__
-            export https_proxy=__https_proxy__
-            fi
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            unzip -j /opt/boot-__artifacts_version__.zip -d /opt nbi_install.sh
-            cd /opt
-            chmod +x nbi_install.sh
-            ./nbi_install.sh
+  nbi_vm_config:
+    type: OS::Heat::MultipartMime
+    properties:
+      parts:
+      - config: { get_resource: common_config_script }
+      - config: { get_resource: nbi_vm_scripts }
+      - config:
+          str_replace:
+            params:
+              __docker_version__: { get_param: nbi_docker }
+              __nbi_repo__: { get_param: nbi_repo }
+              __gerrit_branch__: { get_param: nbi_branch }
+              __sdc_ip_addr__: { get_param: sdc_ip_addr }
+              __aai1_ip_addr__: { get_param: aai1_ip_addr }
+              __so_ip_addr__: { get_param: so_ip_addr }
+            template: |
+              #!/bin/bash
+
+              # Create configuration files
+              echo "__docker_version__" > /opt/config/docker_version.txt
+              echo "__nbi_repo__" > /opt/config/remote_repo.txt
+              echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
+              echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
+              echo "__aai1_ip_addr__" > /opt/config/aai_ip_addr.txt
+              echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
+
+              cd /opt
+              ./nbi_install.sh
