@@ -661,6 +661,16 @@ resources:
             echo "__openstack_api_key__" > /opt/config/openstack_api_key.txt
             echo "__openstack_region__" > /opt/config/openstack_region.txt
 
+            # Add host name to /etc/host to avoid warnings in openstack images
+            if [[ "__cloud_env__" != "rackspace" ]]
+            then
+              echo 127.0.0.1 $(hostname) >> /etc/hosts
+
+              # Allow remote login as root
+              mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
+              cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
+            fi
+
             if [ __http_proxy__ != "no_proxy" ]
             then
               echo "Acquire" > /etc/apt/apt.conf.d/apt.conf
@@ -674,15 +684,58 @@ resources:
               export https_proxy=__https_proxy__
             fi
 
-            # Download and run install script
             apt update
-            apt-get -y install unzip
-            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            while [ ! -s /opt/boot-__artifacts_version__.zip ]; do
-              curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__" -o /opt/boot-__artifacts_version__.zip
-            done
-            ln -s /opt/boot-__artifacts_version__.zip /opt/boot.zip
+            apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual apt-transport-https ca-certificates wget git ntp ntpdate make jq unzip
 
+            # Download boot scripts
+            if [[ "__artifacts_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            cd /opt
+            while [ -z "$ZIP_NAME" ] || [ ! -s "$ZIP_NAME" ]; do
+              wget --content-disposition "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo&a=boot&e=zip&v=__artifacts_version__"
+              ZIP_NAME=$(ls -1 /opt/boot-*.zip)
+            done
+            mkdir -p /opt/boot
+            unzip $ZIP_NAME -d /opt/boot
+
+            # Download and install docker-engine
+            echo "deb https://apt.dockerproject.org/repo ubuntu-$(lsb_release -cs) main" | tee /etc/apt/sources.list.d/docker.list
+            apt-get update
+            apt-get install -y --allow-unauthenticated docker-engine
+
+            # Install docker-compose
+            mkdir -p /opt/docker
+            curl -L "https://github.com/docker/compose/releases/download/1.16.1/docker-compose-$(uname -s)-$(uname -m)" > /opt/docker/docker-compose
+            chmod +x /opt/docker/docker-compose
+
+            # Set the MTU size of docker containers to the minimum MTU size supported by vNICs. OpenStack deployments may need to know the external DNS IP
+            DNS_FLAG=""
+            if [ -s /opt/config/dns_ip_addr.txt ]
+            then
+              DNS_FLAG=$DNS_FLAG"--dns $(cat /opt/config/dns_ip_addr.txt) "
+            fi
+            if [ -s /opt/config/external_dns.txt ]
+            then
+              DNS_FLAG=$DNS_FLAG"--dns $(cat /opt/config/external_dns.txt) "
+            fi
+            MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
+            echo "DOCKER_OPTS=\"$DNS_FLAG--mtu=$MTU\"" >> /etc/default/docker
+
+            cp /lib/systemd/system/docker.service /etc/systemd/system
+            sed -i "/ExecStart/s/$/ --mtu=$MTU/g" /etc/systemd/system/docker.service
+            if [ __http_proxy__ != "no_proxy" ]
+            then
+              echo "[Service]" > /etc/systemd/system/docker.service.d/http-proxy.conf
+              echo "Environment=\"http_proxy=http://__http_proxy__" >> /etc/systemd/system/docker.service.d/http-proxy.conf
+              echo "Environment=\"https_proxy=https://__https_proxy__" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+              echo "Environment=\"HTTP_PROXY=HTTP://__http_proxy__" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+              echo "Environment=\"HTTPS_PROXY=HTTPS://__https_proxy__" >>/etc/systemd/system/docker.service.d/http-proxy.conf
+            fi
+            systemctl daemon-reload
+            service docker restart
+
+            # DNS IP address configuration
+            echo "nameserver __dns_ip_addr__" >> /etc/resolvconf/resolv.conf.d/head
+            resolvconf -u
 
   # DNS Server instantiation
   dns_private_port:
@@ -824,6 +877,17 @@ resources:
         - path: /opt/aai_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/aai_install.sh }
+        - path: /opt/aai_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/aai_vm_init.sh }
+        - path: /etc/init.d/aai_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: aai_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   aai1_vm_config:
     type: OS::Heat::MultipartMime
@@ -890,6 +954,17 @@ resources:
         - path: /opt/aai_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/aai_install.sh }
+        - path: /opt/aai_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/aai_vm_init.sh }
+        - path: /etc/init.d/aai_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: aai_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   aai2_vm_config:
     type: OS::Heat::MultipartMime
@@ -957,6 +1032,17 @@ resources:
         - path: /opt/so_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/so_install.sh }
+        - path: /opt/so_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/so_vm_init.sh }
+        - path: /etc/init.d/so_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: so_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   so_vm_config:
     type: OS::Heat::MultipartMime
@@ -1028,6 +1114,20 @@ resources:
         - path: /opt/mr_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/mr_install.sh }
+        - path: /opt/mr_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/mr_vm_init.sh }
+        - path: /opt/dbcl_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/dbcl_vm_init.sh }
+        - path: /etc/init.d/mr_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: mr_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   mrouter_vm_config:
     type: OS::Heat::MultipartMime
@@ -1092,6 +1192,17 @@ resources:
         - path: /opt/robot_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/robot_install.sh }
+        - path: /opt/robot_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/robot_vm_init.sh }
+        - path: /etc/init.d/robot_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: robot_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   robot_vm_config:
     type: OS::Heat::MultipartMime
@@ -1232,6 +1343,17 @@ resources:
         - path: /opt/vid_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/vid_install.sh }
+        - path: /opt/vid_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/vid_vm_init.sh }
+        - path: /etc/init.d/vid_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: vid_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   vid_vm_config:
     type: OS::Heat::MultipartMime
@@ -1296,6 +1418,17 @@ resources:
         - path: /opt/sdnc_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/sdnc_install.sh }
+        - path: /opt/sdnc_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/sdnc_vm_init.sh }
+        - path: /etc/init.d/sdnc_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: sdnc_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   sdnc_vm_config:
     type: OS::Heat::MultipartMime
@@ -1371,6 +1504,20 @@ resources:
         - path: /opt/sdc_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/sdc_install.sh }
+        - path: /opt/sdc_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/sdc_vm_init.sh }
+        - path: /opt/sdc_wfd_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/sdc_wfd_vm_init.sh }
+        - path: /etc/init.d/sdc_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: sdc_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   sdc_vm_config:
     type: OS::Heat::MultipartMime
@@ -1443,6 +1590,17 @@ resources:
         - path: /opt/portal_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/portal_install.sh }
+        - path: /opt/portal_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/portal_vm_init.sh }
+        - path: /etc/init.d/portal_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: portal_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   portal_vm_config:
     type: OS::Heat::MultipartMime
@@ -1511,6 +1669,17 @@ resources:
         - path: /opt/policy_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/policy_install.sh }
+        - path: /opt/policy_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/policy_vm_init.sh }
+        - path: /etc/init.d/policy_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: policy_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   policy_vm_config:
     type: OS::Heat::MultipartMime
@@ -1577,6 +1746,17 @@ resources:
         - path: /opt/appc_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/appc_install.sh }
+        - path: /opt/appc_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/appc_vm_init.sh }
+        - path: /etc/init.d/appc_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: appc_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   appc_vm_config:
     type: OS::Heat::MultipartMime
@@ -1645,6 +1825,17 @@ resources:
         - path: /opt/clamp_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/clamp_install.sh }
+        - path: /opt/clamp_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/clamp_vm_init.sh }
+        - path: /etc/init.d/clamp_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: clamp_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   clamp_vm_config:
     type: OS::Heat::MultipartMime
@@ -1714,6 +1905,17 @@ resources:
         - path: /opt/openo_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/openo_install.sh }
+        - path: /opt/cli_install.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/cli_install.sh }
+        - path: /etc/init.d/openo_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: openo_all_serv.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   openo_vm_config:
     type: OS::Heat::MultipartMime
@@ -1855,6 +2057,14 @@ resources:
         - path: /opt/dcae2_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/dcae2_install.sh }
+        - path: /etc/init.d/dcae2_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: dcae2_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   dcae_c_vm_config:
     type: OS::Heat::MultipartMime
@@ -2023,7 +2233,7 @@ resources:
               echo "__holmes_rm_docker__" > /opt/config/holmes_docker_rm.txt
 
               cd /opt
-              ./dcae2_install.sh > /tmp/dcae2_install.log 2>&1
+              ./dcae2_install.sh 2>&1 | tee -a /tmp/dcae2_install.log
 
 
   # MUSIC instantiation
@@ -2065,6 +2275,17 @@ resources:
         - path: /opt/music_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/music_install.sh }
+        - path: /opt/music_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/music_vm_init.sh }
+        - path: /etc/init.d/music_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: music_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   music_vm_config:
     type: OS::Heat::MultipartMime
@@ -2129,6 +2350,17 @@ resources:
         - path: /opt/oof_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/oof_install.sh }
+        - path: /opt/oof_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/oof_vm_init.sh }
+        - path: /etc/init.d/oof_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: oof_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   oof_vm_config:
     type: OS::Heat::MultipartMime
@@ -2199,6 +2431,17 @@ resources:
         - path: /opt/aaf_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/aaf_install.sh }
+        - path: /opt/aaf_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/aaf_vm_init.sh }
+        - path: /etc/init.d/aaf_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: aaf_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   aaf_vm_config:
     type: OS::Heat::MultipartMime
@@ -2265,6 +2508,17 @@ resources:
         - path: /opt/sms_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/sms_install.sh }
+        - path: /opt/sms_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/sms_vm_init.sh }
+        - path: /etc/init.d/sms_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: sms_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   sms_vm_config:
     type: OS::Heat::MultipartMime
@@ -2331,6 +2585,17 @@ resources:
         - path: /opt/nbi_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/nbi_install.sh }
+        - path: /opt/nbi_vm_init.sh
+          permissions: '0755'
+          content: { get_file: cloud-config/nbi_vm_init.sh }
+        - path: /etc/init.d/nbi_serv.sh
+          permissions: '0755'
+          content:
+            str_replace:
+              params:
+                __vm_init_script__: nbi_vm_init.sh
+              template:
+                get_file: cloud-config/serv.sh
 
   nbi_vm_config:
     type: OS::Heat::MultipartMime
