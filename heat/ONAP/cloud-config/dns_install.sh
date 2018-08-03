@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Read configuration files
-ARTIFACTS_VERSION=$(cat /opt/config/artifacts_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 HTTP_PROXY=$(cat /opt/config/http_proxy.txt)
 HTTPS_PROXY=$(cat /opt/config/https_proxy.txt)
@@ -15,33 +14,24 @@ fi
 
 if [[ $CLOUD_ENV != "rackspace" ]]
 then
-	# Add host name to /etc/host to avoid warnings in openstack images
-	echo 127.0.0.1 $(hostname) >> /etc/hosts
-
-	# Allow remote login as root
-	mv /root/.ssh/authorized_keys /root/.ssh/authorized_keys.bk
-	cp /home/ubuntu/.ssh/authorized_keys /root/.ssh
-
-	# Set the Bind configuration file name based on the deployment environment
-	ZONE_FILE="bind_zones"
-	ZONE_ONAP="bind_zones_onap"
-	OPTIONS_FILE="bind_options"
+       # Set the Bind configuration file name based on the deployment environment
+       ZONE_FILE="bind_zones"
+       ZONE_ONAP="bind_zones_onap"
+       OPTIONS_FILE="bind_options"
 else
-	ZONE_FILE="db_simpledemo_openecomp_org"
-	ZONE_ONAP="db_simpledemo_onap_org"
-	OPTIONS_FILE="named.conf.options"
+       ZONE_FILE="db_simpledemo_openecomp_org"
+       ZONE_ONAP="db_simpledemo_onap_org"
+       OPTIONS_FILE="named.conf.options"
 fi
 
-# Download dependencies
-apt-get update
-apt-get install -y apt-transport-https ca-certificates wget bind9 bind9utils bind9-doc ntp ntpdate make
+apt-get install -y bind9 bind9utils bind9-doc
 
 # Download script
 mkdir /etc/bind/zones
-unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip $ZONE_FILE > /etc/bind/zones/db.simpledemo.openecomp.org
-unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip $ZONE_ONAP > /etc/bind/zones/db.simpledemo.onap.org
-unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip $OPTIONS_FILE > /etc/bind/named.conf.options
-unzip -p -j /opt/boot-$ARTIFACTS_VERSION.zip named.conf.local > /etc/bind/named.conf.local
+cp /opt/boot/$ZONE_FILE /etc/bind/zones/db.simpledemo.openecomp.org
+cp /opt/boot/$ZONE_ONAP /etc/bind/zones/db.simpledemo.onap.org
+cp /opt/boot/$OPTIONS_FILE /etc/bind/named.conf.options
+cp /opt/boot/named.conf.local /etc/bind/named.conf.local
 
 # Set the private IP address of each ONAP VM in the Bind configuration in OpenStack deployments
 if [[ $CLOUD_ENV != "rackspace" ]]

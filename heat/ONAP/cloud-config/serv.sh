@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:
+# Provides:          __vm_init_script__
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -18,7 +18,7 @@ then
 fi
 
 dir="/opt"
-cmd=""
+cmd="__vm_init_script__"
 user="root"
 
 name=`basename $0`
