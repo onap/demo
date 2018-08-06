@@ -166,7 +166,7 @@ wait_for_multicloud_ready()
 	
     # wait till MultiCloud up and ready
     local MCHOST
-    MCHOST=$(cat /opt/config/openo_ip_addr.txt)
+    MCHOST=$(cat /opt/config/multiserv_ip_addr.txt)
     local MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
     local MCMETHOD='-X GET'
     local MCRESP='200'
@@ -195,7 +195,7 @@ register_multicloud_pod25dns_with_aai()
 
     CLOUD_REGION="$(cat /opt/config/dnsaas_region.txt)"
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
-    MCIP="$(cat /opt/config/openo_ip_addr.txt)"
+    MCIP="$(cat /opt/config/multiserv_ip_addr.txt)"
     CLOUD_IDENTITY_URL="http://${MCIP}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}/identity/v2.0"
 
     local RESPCODE
@@ -277,7 +277,7 @@ register_multicloud_pod25_with_aai()
     CLOUD_REGION="$(cat /opt/config/openstack_region.txt)"
     DNSAAS_CLOUD_REGION="$(cat /opt/config/dnsaas_region.txt)"
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
-    MCIP="$(cat /opt/config/openo_ip_addr.txt)"
+    MCIP="$(cat /opt/config/multiserv_ip_addr.txt)"
     CLOUD_IDENTITY_URL="http://${MCIP}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}/identity/v2.0"
     KEYSTONE_URL="$(cat /opt/config/openstack_keystone_url.txt)"
     if [[ "$KEYSTONE_URL" == */v3 ]]; then
@@ -405,7 +405,7 @@ register_dns_zone_proxied_designate()
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
     if [ -z "$1" ]; then DCAE_ZONE="$(cat /opt/config/dcae_zone.txt)"; else DCAE_ZONE="$1"; fi
     DNSAAS_TENANT_NAME="$(cat /opt/config/dnsaas_tenant_name.txt)"
-    MCHOST=$(cat /opt/config/openo_ip_addr.txt)
+    MCHOST=$(cat /opt/config/multiserv_ip_addr.txt)
     MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
 
     MCDATA='-d "{\"auth\":{\"tenantName\": \"'${DNSAAS_TENANT_NAME}'\"}}"'
@@ -578,7 +578,7 @@ delete_dns_zone()
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
     DCAE_ZONE="$(cat /opt/config/dcae_zone.txt)"
     DNSAAS_TENANT_NAME="$(cat /opt/config/dnsaas_tenant_name.txt)"
-    MCHOST=$(cat /opt/config/openo_ip_addr.txt)
+    MCHOST=$(cat /opt/config/multiserv_ip_addr.txt)
     MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
 
     local DCAE_DOMAIN
@@ -623,7 +623,7 @@ list_dns_zone()
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
     DCAE_ZONE="$(cat /opt/config/dcae_zone.txt)"
     DNSAAS_TENANT_NAME="$(cat /opt/config/dnsaas_tenant_name.txt)"
-    MCHOST=$(cat /opt/config/openo_ip_addr.txt)
+    MCHOST=$(cat /opt/config/multiserv_ip_addr.txt)
     MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
 
     MCDATA='"{\"auth\":{\"tenantName\": \"'${DNSAAS_TENANT_NAME}'\"}}"'

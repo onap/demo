@@ -99,7 +99,7 @@ parameters:
 
   nexus_password:
     type: string
-    description: Nexus Repository Password
+    description: Nexus Repository password
 
   artifacts_version:
     type: string
@@ -207,7 +207,7 @@ parameters:
     type: string
   clamp_ip_addr:
     type: string
-  openo_ip_addr:
+  multiserv_ip_addr:
     type: string
   music_ip_addr:
     type: string
@@ -697,6 +697,9 @@ resources:
             mkdir -p /opt/boot
             unzip $ZIP_NAME -d /opt/boot
 
+            # Enable autorestart when VM reboots
+            update-rc.d serv.sh defaults
+
             # Download and install docker-engine
             echo "deb https://apt.dockerproject.org/repo ubuntu-$(lsb_release -cs) main" | tee /etc/apt/sources.list.d/docker.list
             apt-get update
@@ -800,7 +803,7 @@ resources:
               __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
               __vid_ip_addr__: { get_param: vid_ip_addr }
               __clamp_ip_addr__: { get_param: clamp_ip_addr }
-              __openo_ip_addr__: { get_param: openo_ip_addr }
+              __multiserv_ip_addr__: { get_param: multiserv_ip_addr }
               __music_ip_addr__: { get_param: music_ip_addr }
               __oof_ip_addr__: { get_param: oof_ip_addr }
               __aaf_ip_addr__: { get_param: aaf_ip_addr }
@@ -825,7 +828,7 @@ resources:
               echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
               echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
               echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
-              echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
+              echo "__multiserv_ip_addr__" > /opt/config/multiserv_ip_addr.txt
               echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
               echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
               echo "__aaf_ip_addr__" > /opt/config/aaf_ip_addr.txt
@@ -880,7 +883,7 @@ resources:
         - path: /opt/aai_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/aai_vm_init.sh }
-        - path: /etc/init.d/aai_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -957,7 +960,7 @@ resources:
         - path: /opt/aai_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/aai_vm_init.sh }
-        - path: /etc/init.d/aai_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1035,7 +1038,7 @@ resources:
         - path: /opt/so_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/so_vm_init.sh }
-        - path: /etc/init.d/so_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1055,7 +1058,6 @@ resources:
             params:
               __keystone_url__: { get_param: keystone_url }
               __dmaap_topic__: { get_param: dmaap_topic }
-              __openo_ip__: { get_param: openo_ip_addr }
               __docker_version__: { get_param: so_docker }
               __gerrit_branch__: { get_param: so_branch }
               __so_repo__: { get_param: so_repo }
@@ -1063,7 +1065,6 @@ resources:
               #!/bin/bash
 
               # Create configuration files
-              echo "__openo_ip__" > /opt/config/openo_ip.txt
               echo "__dmaap_topic__" > /opt/config/dmaap_topic.txt
               ln -s /opt/config/openstack_tenant_id.txt /opt/config/tenant_id.txt
               echo "__keystone_url__" > /opt/config/keystone.txt
@@ -1120,7 +1121,7 @@ resources:
         - path: /opt/dbcl_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/dbcl_vm_init.sh }
-        - path: /etc/init.d/mr_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1195,7 +1196,7 @@ resources:
         - path: /opt/robot_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/robot_vm_init.sh }
-        - path: /etc/init.d/robot_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1231,7 +1232,7 @@ resources:
               __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
               __vid_ip_addr__: { get_param: vid_ip_addr }
               __clamp_ip_addr__: { get_param: clamp_ip_addr }
-              __openo_ip_addr__: { get_param: openo_ip_addr }
+              __multiserv_ip_addr__: { get_param: multiserv_ip_addr }
               __music_ip_addr__: { get_param: music_ip_addr }
               __oof_ip_addr__: { get_param: oof_ip_addr }
               __aaf_ip_addr__: { get_param: aaf_ip_addr }
@@ -1275,8 +1276,8 @@ resources:
               echo "__sdnc_ip_addr__" > /opt/config/sdnc_portal_ip_addr.txt
               echo "__vid_ip_addr__" > /opt/config/vid_ip_addr.txt
               echo "__clamp_ip_addr__" > /opt/config/clamp_ip_addr.txt
-              echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
-              echo "__openo_ip_addr__" > /opt/config/vnfsdk_ip_addr.txt
+              echo "__multiserv_ip_addr__" > /opt/config/multiserv_ip_addr.txt
+              echo "__multiserv_ip_addr__" > /opt/config/vnfsdk_ip_addr.txt
               echo "__music_ip_addr__" > /opt/config/music_ip_addr.txt
               echo "__oof_ip_addr__" > /opt/config/oof_ip_addr.txt
               echo "__oof_ip_addr__" > /opt/config/oof_homing_ip_addr.txt
@@ -1346,7 +1347,7 @@ resources:
         - path: /opt/vid_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/vid_vm_init.sh }
-        - path: /etc/init.d/vid_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1421,7 +1422,7 @@ resources:
         - path: /opt/sdnc_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/sdnc_vm_init.sh }
-        - path: /etc/init.d/sdnc_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1510,7 +1511,7 @@ resources:
         - path: /opt/sdc_wfd_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/sdc_wfd_vm_init.sh }
-        - path: /etc/init.d/sdc_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1593,7 +1594,7 @@ resources:
         - path: /opt/portal_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/portal_vm_init.sh }
-        - path: /etc/init.d/portal_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1672,7 +1673,7 @@ resources:
         - path: /opt/policy_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/policy_vm_init.sh }
-        - path: /etc/init.d/policy_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1749,7 +1750,7 @@ resources:
         - path: /opt/appc_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/appc_vm_init.sh }
-        - path: /etc/init.d/appc_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1828,7 +1829,7 @@ resources:
         - path: /opt/clamp_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/clamp_vm_init.sh }
-        - path: /etc/init.d/clamp_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -1866,22 +1867,22 @@ resources:
               ./clamp_install.sh
 
 
-  # OPEN-O VM instantiation
-  openo_private_port:
+  # MultiService VM instantiation
+  multiserv_private_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: oam_onap }
-      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: openo_ip_addr }}]
+      fixed_ips: [{"subnet": { get_resource: oam_onap_subnet }, "ip_address": { get_param: multiserv_ip_addr }}]
       security_groups:
       - { get_resource: onap_sg }
 
-  openo_floating_ip:
+  multiserv_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: openo_private_port }
+      port_id: { get_resource: multiserv_private_port }
 
-  openo_vm:
+  multiserv_vm:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
@@ -1893,36 +1894,36 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
-        - port: { get_resource: openo_private_port }
+        - port: { get_resource: multiserv_private_port }
       user_data_format: SOFTWARE_CONFIG
-      user_data: { get_resource: openo_vm_config }
+      user_data: { get_resource: multiserv_vm_config }
 
-  openo_vm_scripts:
+  multiserv_vm_scripts:
     type: OS::Heat::CloudConfig
     properties:
       cloud_config:
         write_files:
-        - path: /opt/openo_install.sh
+        - path: /opt/multiserv_install.sh
           permissions: '0755'
-          content: { get_file: cloud-config/openo_install.sh }
+          content: { get_file: cloud-config/multiserv_install.sh }
         - path: /opt/cli_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/cli_install.sh }
-        - path: /etc/init.d/openo_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
               params:
-                __vm_init_script__: openo_all_serv.sh
+                __vm_init_script__: multiserv_all_serv.sh
               template:
                 get_file: cloud-config/serv.sh
 
-  openo_vm_config:
+  multiserv_vm_config:
     type: OS::Heat::MultipartMime
     properties:
       parts:
       - config: { get_resource: common_config_script }
-      - config: { get_resource: openo_vm_scripts }
+      - config: { get_resource: multiserv_vm_scripts }
       - config:
           str_replace:
             params:
@@ -1940,7 +1941,7 @@ resources:
               __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
               __vid_ip_addr__: { get_param: vid_ip_addr }
               __clamp_ip_addr__: { get_param: clamp_ip_addr }
-              __openo_ip_addr__: { get_param: openo_ip_addr }
+              __multiserv_ip_addr__: { get_param: multiserv_ip_addr }
               __vnfsdk_branch__: { get_param: vnfsdk_branch }
               __msb_docker__: { get_param: msb_docker }
               __mvim_docker__: { get_param: mvim_docker }
@@ -2010,14 +2011,14 @@ resources:
               echo "export SDNC_IP=__sdnc_ip_addr__" >> /opt/config/onap_ips.txt
               echo "export VID_IP=__vid_ip_addr__" >> /opt/config/onap_ips.txt
               echo "export CLAMP_IP=__clamp_ip_addr__" >> /opt/config/onap_ips.txt
-              echo "export OPENO_IP=__openo_ip_addr__" >> /opt/config/onap_ips.txt
+              echo "export MULTISERV_IP=__multiserv_ip_addr__" >> /opt/config/onap_ips.txt
 
               cd /opt
-              ./openo_install.sh
+              ./multiserv_install.sh
 
 
   # DCAE GEN 2 Controller instantiation
-  dcae_c_private_port:
+  dcae_private_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: oam_onap }
@@ -2025,13 +2026,13 @@ resources:
       security_groups:
       - { get_resource: onap_sg }
 
-  dcae_c_floating_ip:
+  dcae_floating_ip:
     type: OS::Neutron::FloatingIP
     properties:
       floating_network_id: { get_param: public_net_id }
-      port_id: { get_resource: dcae_c_private_port }
+      port_id: { get_resource: dcae_private_port }
 
-  dcae_c_vm:
+  dcae_vm:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
@@ -2043,13 +2044,11 @@ resources:
             base: { get_param: vm_base_name }
       key_name: { get_resource: vm_key }
       networks:
-        - port: { get_resource: dcae_c_private_port }
-      #security_groups:
-      #  - { get_resource: onap_sg }
+        - port: { get_resource: dcae_private_port }
       user_data_format: SOFTWARE_CONFIG
-      user_data: { get_resource: dcae_c_vm_config }
+      user_data: { get_resource: dcae_vm_config }
 
-  dcae_c_vm_scripts:
+  dcae_vm_scripts:
     type: OS::Heat::CloudConfig
     properties:
       cloud_config:
@@ -2057,7 +2056,7 @@ resources:
         - path: /opt/dcae2_install.sh
           permissions: '0755'
           content: { get_file: cloud-config/dcae2_install.sh }
-        - path: /etc/init.d/dcae2_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -2066,12 +2065,12 @@ resources:
               template:
                 get_file: cloud-config/serv.sh
 
-  dcae_c_vm_config:
+  dcae_vm_config:
     type: OS::Heat::MultipartMime
     properties:
       parts:
       - config: { get_resource: common_config_script }
-      - config: { get_resource: dcae_c_vm_scripts }
+      - config: { get_resource: dcae_vm_scripts }
       - config:
           str_replace:
             params:
@@ -2080,9 +2079,9 @@ resources:
               __docker_version__: { get_param: dcae_docker }
               # conf for the ONAP environment where the DCAE bootstrap vm/conatiner runs
               __dcae_deployment_profile__: { get_param: dcae_deployment_profile }
-              __mac_addr__: { get_attr: [dcae_c_private_port, mac_address] }
+              __mac_addr__: { get_attr: [dcae_private_port, mac_address] }
               __dcae_ip_addr__: { get_param: dcae_ip_addr }
-              __dcae_float_ip__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
+              __dcae_float_ip__: { get_attr: [dcae_floating_ip, floating_ip_address] }
               __dns_forwarder__: { get_param: dns_forwarder }
               __dcae_domain__: { get_param: dcae_domain }
               # conf for VMs DCAE is to bringup
@@ -2098,7 +2097,6 @@ resources:
                   template: 'onap_sg_rand'
                   params:
                     rand: { get_resource: random-str }
-              #__dcaeos_security_group__: { get_attr: [onap_sg, name] }
               __dcaeos_username__: { get_param: openstack_username }
               __dcaeos_password__: { get_param: openstack_api_key }
               __dcaeos_key_name__: { get_resource: vm_key }
@@ -2120,7 +2118,7 @@ resources:
               __mr_ip_addr__: { get_param: mr_ip_addr }
               __policy_ip_addr__: { get_param: policy_ip_addr }
               __sdc_ip_addr__: { get_param: sdc_ip_addr }
-              __openo_ip_addr__: { get_param: openo_ip_addr }
+              __multiserv_ip_addr__: { get_param: multiserv_ip_addr }
               __aai1_ip_addr__: { get_param: aai1_ip_addr }
               __aai2_ip_addr__: { get_param: aai2_ip_addr }
               # floating IPs
@@ -2130,8 +2128,8 @@ resources:
               __mrouter_floating_ip_addr__: { get_attr: [mrouter_floating_ip, floating_ip_address] }
               __sdc_floating_ip_addr__: { get_attr: [sdc_floating_ip, floating_ip_address] }
               __policy_floating_ip_addr__: { get_attr: [policy_floating_ip, floating_ip_address] }
-              __openo_floating_ip_addr__: { get_attr: [openo_floating_ip, floating_ip_address] }
-              __dcae_c_floating_ip_addr__: { get_attr: [dcae_c_floating_ip, floating_ip_address] }
+              __multiserv_floating_ip_addr__: { get_attr: [multiserv_floating_ip, floating_ip_address] }
+              __dcae_floating_ip_addr__: { get_attr: [dcae_floating_ip, floating_ip_address] }
               # container versions
               __dcae_docker__:  { get_param: dcae_docker }
               __dcae_snmptrap_docker__:  { get_param: dcae_snmptrap_docker }
@@ -2152,7 +2150,6 @@ resources:
               __holmes_em_docker__:  { get_param: holmes_em_docker }
               __holmes_rm_docker__:  { get_param: holmes_rm_docker }
 
-
             template: |
               #!/bin/bash
 
@@ -2166,7 +2163,6 @@ resources:
               echo "__dcae_deployment_profile__" > /opt/config/dcae_deployment_profile.txt
               echo "__mac_addr__" > /opt/config/mac_addr.txt
               echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-              echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
               echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
               echo "__dcae_domain__" > /opt/config/dcae_domain.txt
               # conf for the OpenStack env where DCAE is deployed
@@ -2199,8 +2195,8 @@ resources:
               echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
               echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
               echo "__sdc_ip_addr__" > /opt/config/sdc_ip_addr.txt
-              echo "__openo_ip_addr__" > /opt/config/openo_ip_addr.txt
-              echo "__openo_ip_addr__" > /opt/config/msb_ip_addr.txt
+              echo "__multiserv_ip_addr__" > /opt/config/multiserv_ip_addr.txt
+              echo "__multiserv_ip_addr__" > /opt/config/msb_ip_addr.txt
               echo "__aai1_ip_addr__" > /opt/config/aai1_ip_addr.txt
               echo "__aai2_ip_addr__" > /opt/config/aai2_ip_addr.txt
               # floating IPs
@@ -2210,8 +2206,8 @@ resources:
               echo "__mrouter_floating_ip_addr__" > /opt/config/mrouter_floating_ip_addr.txt
               echo "__sdc_floating_ip_addr__" > /opt/config/sdc_floating_ip_addr.txt
               echo "__policy_floating_ip_addr__" > /opt/config/policy_floating_ip_addr.txt
-              echo "__openo_floating_ip_addr__" > /opt/config/openo_floating_ip_addr.txt
-              echo "__dcae_c_floating_ip_addr__" > /opt/config/dcae_c_floating_ip_addr.txt
+              echo "__multiserv_floating_ip_addr__" > /opt/config/multiserv_floating_ip_addr.txt
+              echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
               # container versions
               echo "__dcae_docker__" > /opt/config/dcae_docker.txt
               echo "__dcae_snmptrap_docker__" > /opt/config/dcae_docker_snmptrap.txt
@@ -2278,7 +2274,7 @@ resources:
         - path: /opt/music_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/music_vm_init.sh }
-        - path: /etc/init.d/music_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -2353,7 +2349,7 @@ resources:
         - path: /opt/oof_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/oof_vm_init.sh }
-        - path: /etc/init.d/oof_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -2434,7 +2430,7 @@ resources:
         - path: /opt/aaf_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/aaf_vm_init.sh }
-        - path: /etc/init.d/aaf_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -2511,7 +2507,7 @@ resources:
         - path: /opt/sms_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/sms_vm_init.sh }
-        - path: /etc/init.d/sms_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:
@@ -2588,7 +2584,7 @@ resources:
         - path: /opt/nbi_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/nbi_vm_init.sh }
-        - path: /etc/init.d/nbi_serv.sh
+        - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
             str_replace:

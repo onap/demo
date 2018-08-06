@@ -12,14 +12,6 @@ then
     export https_proxy=$HTTPS_PROXY
 fi
 
-
-# Download scripts from Nexus
-# a) scripts for message router (mr)
-update-rc.d mr_serv.sh defaults
-
-# b) scripts for bus controller (dbcl)
-
-
 # Clone Gerrit repository and run docker containers
 cd /opt
 git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO /opt/startup-vm-message-router

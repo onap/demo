@@ -27,8 +27,5 @@ chmod +x /opt/demo.sh
 
 mkdir -p /opt/eteshare/logs
 
-update-rc.d robot_serv.sh defaults
-
-
 # Run docker containers.
 ./robot_vm_init.sh

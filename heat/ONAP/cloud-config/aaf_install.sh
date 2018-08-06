@@ -19,10 +19,6 @@ echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s)
 apt-get update
 apt-get install --allow-unauthenticated -y openjdk-8-jdk maven
 
-# Download scripts from Nexus
-update-rc.d aaf_serv.sh defaults
-
-
 # Clone Gerrit repository and run docker containers
 cd /opt
 git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO

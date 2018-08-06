@@ -38,7 +38,6 @@ apt-get install -y python python-pip
 # Download scripts from Nexus
 cp /opt/boot/dcae2_vm_init.sh /opt/dcae2_vm_init.sh
 chmod +x /opt/dcae2_vm_init.sh
-update-rc.d dcae2_serv.sh defaults
 
 echo "DOCKER_OPTS=\"\$DOCKER_OPTS --raw-logs -H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock\"" >> /etc/default/docker
 sed -i "/ExecStart/s/$/ -H tcp:\/\/0.0.0.0:2376 --raw-logs/g" /etc/systemd/system/docker.service

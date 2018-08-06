@@ -12,11 +12,6 @@ then
     export https_proxy=$HTTPS_PROXY
 fi
 
-
-# Download scripts from Nexus
-update-rc.d nbi_serv.sh defaults
-
-
 # Run docker containers
 cd /opt
 ./nbi_vm_init.sh

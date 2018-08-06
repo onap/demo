@@ -82,7 +82,7 @@ vm1.aaf-sms.simpledemo.openecomp.org.	IN	A	sms_ip_addr
 
 vm1.mr.simpledemo.openecomp.org.	IN	A	mr_ip_addr
 
-vm1.openo.simpledemo.openecomp.org. IN  A   openo_ip_addr
+vm1.multiserv.simpledemo.openecomp.org. IN  A   multiserv_ip_addr
 
 vm1.music.simpledemo.openecomp.org. IN  A   music_ip_addr
 
@@ -141,13 +141,13 @@ sniro.api.simpledemo.openecomp.org.	IN	CNAME	vm1.robot.simpledemo.openecomp.org.
 aaf.api.simpledemo.openecomp.org.	IN	CNAME	vm1.aaf.simpledemo.openecomp.org.
 aaf-sms.api.simpledemo.openecomp.org.	IN	CNAME	vm1.aaf-sms.simpledemo.openecomp.org.
 
-;OPEN-O
-msb.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
-mvim.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
-vnfsdk.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
-vfc.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
-uui.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
-esr.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.openo.simpledemo.openecomp.org.
+;MultiService
+msb.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.multiserv.simpledemo.openecomp.org.
+mvim.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.multiserv.simpledemo.openecomp.org.
+vnfsdk.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.multiserv.simpledemo.openecomp.org.
+vfc.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.multiserv.simpledemo.openecomp.org.
+uui.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.multiserv.simpledemo.openecomp.org.
+esr.api.simpledemo.openecomp.org. 	IN	CNAME   vm1.multiserv.simpledemo.openecomp.org.
 
 ;MUSIC
 music.api.simpledemo.openecomp.org.	IN	CNAME	vm1.music.simpledemo.openecomp.org.

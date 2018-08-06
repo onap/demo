@@ -14,8 +14,8 @@ def upgrade_docker(server_name, my_env):
 		execute_file = "/opt/mr_vm_init.sh"
 	elif server_name in "dcae-controller":
 		execute_file = "/opt/dcae2_vm_init.sh"
-    	elif server_name in "openo-server":
-		execute_file = "/opt/openo_all_serv.sh" 
+    	elif server_name in "multiserv-server":
+		execute_file = "/opt/multiserv_all_serv.sh" 
 	elif server_name in "dns":
 		execute_file = None
 	else:

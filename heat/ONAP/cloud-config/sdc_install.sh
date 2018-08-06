@@ -13,10 +13,6 @@ then
     export https_proxy=$HTTPS_PROXY
 fi
 
-
-# Download scripts from Nexus
-update-rc.d sdc_serv.sh defaults
-
 # Create partition and mount the external volume
 cp /opt/boot/sdc_ext_volume_partitions.txt /opt/sdc_ext_volume_partitions.txt
 

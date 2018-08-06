@@ -82,7 +82,7 @@ vm1.clamp.simpledemo.onap.org.           IN      A       10.0.12.1
 c1.vm1.clamp.simpledemo.onap.org.        IN      A       10.0.12.1
 c2.vm1.clamp.simpledemo.onap.org.        IN      A       10.0.12.1
 
-vm1.openo.simpledemo.onap.org.	IN	A	10.0.14.1
+vm1.multiserv.simpledemo.onap.org.	IN	A	10.0.14.1
 
 vm1.music.simpledemo.onap.org.	IN	A	10.0.15.1
 
@@ -109,7 +109,7 @@ sdc.api.simpledemo.onap.org.	IN	CNAME	vm1.sdc.simpledemo.onap.org.
 ;DCAE
 dcae.api.simpledemo.onap.org.	IN	CNAME	vm1.dcae.simpledemo.onap.org.
 
-;MSO
+;SO
 mso.api.simpledemo.onap.org.	IN	CNAME	vm1.mso.simpledemo.onap.org.
 so.api.simpledemo.onap.org.	    IN	CNAME	vm1.mso.simpledemo.onap.org.
 
@@ -144,13 +144,13 @@ clamp.api.simpledemo.onap.org.	IN	CNAME	vm1.clamp.simpledemo.onap.org.
 aaf.api.simpledemo.onap.org.	IN	CNAME	vm1.aaf.simpledemo.onap.org.
 aaf-sms.api.simpledemo.onap.org.	IN	CNAME	vm1.aaf-sms.simpledemo.onap.org.
 
-;OPEN-O
-msb.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
-mvim.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
-vnfsdk.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
-vfc.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
-uui.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
-esr.api.simpledemo.onap.org. 	IN	CNAME   vm1.openo.simpledemo.onap.org.
+;MultiService
+msb.api.simpledemo.onap.org. 	IN	CNAME   vm1.multiserv.simpledemo.onap.org.
+mvim.api.simpledemo.onap.org. 	IN	CNAME   vm1.multiserv.simpledemo.onap.org.
+vnfsdk.api.simpledemo.onap.org. 	IN	CNAME   vm1.multiserv.simpledemo.onap.org.
+vfc.api.simpledemo.onap.org. 	IN	CNAME   vm1.multiserv.simpledemo.onap.org.
+uui.api.simpledemo.onap.org. 	IN	CNAME   vm1.multiserv.simpledemo.onap.org.
+esr.api.simpledemo.onap.org. 	IN	CNAME   vm1.multiserv.simpledemo.onap.org.
 
 ;MUSIC
 music.api.simpledemo.onap.org.	IN	CNAME	vm1.music.simpledemo.onap.org.

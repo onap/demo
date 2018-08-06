@@ -13,11 +13,6 @@ then
     export https_proxy=$HTTPS_PROXY
 fi
 
-
-# Download scripts from Nexus
-update-rc.d so_serv.sh defaults
-
-
 # Clone Gerrit repository and run docker containers.
 cd /opt
 git clone -b $GERRIT_BRANCH --single-branch $CODE_REPO test_lab

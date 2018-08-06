@@ -53,7 +53,7 @@ then
 	sed -i "s/sdnc_ip_addr/"$(cat /opt/config/sdnc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/vid_ip_addr/"$(cat /opt/config/vid_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/clamp_ip_addr/"$(cat /opt/config/clamp_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
-	sed -i "s/openo_ip_addr/"$(cat /opt/config/openo_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
+	sed -i "s/multiserv_ip_addr/"$(cat /opt/config/multiserv_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/music_ip_addr/"$(cat /opt/config/music_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/oof_ip_addr/"$(cat /opt/config/oof_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
 	sed -i "s/aaf_ip_addr/"$(cat /opt/config/aaf_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.openecomp.org
@@ -74,7 +74,7 @@ then
 	sed -i "s/sdnc_ip_addr/"$(cat /opt/config/sdnc_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 	sed -i "s/vid_ip_addr/"$(cat /opt/config/vid_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 	sed -i "s/clamp_ip_addr/"$(cat /opt/config/clamp_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
-	sed -i "s/openo_ip_addr/"$(cat /opt/config/openo_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
+	sed -i "s/multiserv_ip_addr/"$(cat /opt/config/multiserv_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 	sed -i "s/music_ip_addr/"$(cat /opt/config/music_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 	sed -i "s/oof_ip_addr/"$(cat /opt/config/oof_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
 	sed -i "s/aaf_ip_addr/"$(cat /opt/config/aaf_ip_addr.txt)"/g" /etc/bind/zones/db.simpledemo.onap.org
