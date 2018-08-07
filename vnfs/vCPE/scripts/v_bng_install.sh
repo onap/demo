@@ -2,12 +2,7 @@
 set -o xtrace  # print commands during script execution
 set -o errexit # exit on command errors
 
-REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
-DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
-INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
-VPP_SOURCE_REPO_URL=$(cat /opt/config/vpp_source_repo_url.txt)
-VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/vpp_source_repo_release_tag.txt)
-VPP_PATCH_URL=$(cat /opt/config/vpp_patch_url.txt)
+SCRIPT_VERSION=$(cat /opt/config/script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 BNG_GMUX_NET_CIDR=$(cat /opt/config/bng_gmux_net_cidr.txt)
 BNG_GMUX_NET_IPADDR=$(cat /opt/config/bng_gmux_net_ipaddr.txt)
@@ -17,15 +12,6 @@ CPE_SIGNAL_NET_CIDR=$(cat /opt/config/cpe_signal_net_cidr.txt)
 CPE_SIGNAL_NET_IPADDR=$(cat /opt/config/cpe_signal_net_ipaddr.txt)
 SDNC_IP_ADDR=$(cat /opt/config/sdnc_ip_addr.txt)
 
-# Build states are:
-# 'build' - just build the code
-# 'done' - code is build, install and setup
-# 'auto' - bulid, install and setup
-BUILD_STATE="auto"
-if [[ -f /opt/config/compile_state.txt ]]
-then
-    BUILD_STATE=$(cat /opt/config/compile_state.txt)
-fi
 
 # Convert Network CIDR to Netmask
 cdr2mask () {
@@ -36,10 +22,8 @@ cdr2mask () {
 }
 
 # OpenStack network configuration
-if [[ $BUILD_STATE != "build" ]]
+if [[ $CLOUD_ENV == "openstack" ]]
 then
-    if [[ $CLOUD_ENV == "openstack" ]]
-    then
         echo 127.0.0.1 $(hostname) >> /etc/hosts
 
         # Allow remote login as root
@@ -59,68 +43,10 @@ then
 
         # eth2 probably doesn't exist yet and we should reboot after this anyway
         # ifup eth2
-    fi
-fi  # endif BUILD_STATE != "build"
+fi
 
-if [[ $BUILD_STATE != "done" ]]
-then
-    # Enable IPV4 forwarding through kernel
-    sed -i 's/^.*\(net.ipv4.ip_forward\).*/\1=1/g' /etc/sysctl.conf
-    sysctl -p /etc/sysctl.conf
 
-    # Download required dependencies
-    echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-    echo "deb-src http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
-    apt-get update
-    apt-get install --allow-unauthenticated -y wget openjdk-8-jdk apt-transport-https ca-certificates g++ libcurl4-gnutls-dev
-    sleep 1
-
-    # Install the tools required for download codes
-    apt-get install -y expect git patch make autoconf libtool linux-image-extra-`uname -r`
-
-    #Download and build the VPP codes
-    cd /opt
-    git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_RELEASE_TAG} vpp
-    wget -O Vpp-Integrate-FreeRADIUS-Client-for-vBNG.patch ${VPP_PATCH_URL}
-    cd vpp
-    # The patch will place a "dummy" version of dhcp.api.h so the build will succeed
-    mkdir -p build-root/build-vpp-native/vpp/vnet/dhcp/
-    patch -p1 < ../Vpp-Integrate-FreeRADIUS-Client-for-vBNG.patch
-    UNATTENDED='y' make install-dep
-
-    # Install the FreeRADIUS client since we need the lib
-    cd /opt
-    git clone https://github.com/FreeRADIUS/freeradius-client.git
-    cd freeradius-client
-    ./configure
-    make && make install
-    cd /usr/local/lib && ln -s -f libfreeradius-client.so.2.0.0 libfreeradiusclient.so
-    ldconfig
-
-    cd /opt/vpp/build-root
-    ./bootstrap.sh
-    make V=0 PLATFORM=vpp TAG=vpp install-deb
-
-    # install additional dependencies for vpp
-    apt-get install -y python-cffi python-ply python-pycparser
-
-    # Install the VPP package
-    cd /opt/vpp/build-root
-    dpkg -i *.deb
-    systemctl stop vpp
-
-    # Disable automatic upgrades
-    if [[ $CLOUD_ENV != "rackspace" ]]
-    then
-        echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
-        sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
-    fi
-
-fi  # endif BUILD_STATE != "done"
-
-if [[ $BUILD_STATE != "build" ]]
-then
-    # Auto-start configuration for the VPP
+# Auto-start configuration for the VPP
     cat > /etc/vpp/startup.conf << EOF
 
 unix {
@@ -378,8 +304,8 @@ EOF
 
     # Download DHCP config files
     cd /opt
-    unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_bng_init.sh > /opt/v_bng_init.sh
-    unzip -p -j /opt/vcpe-scripts-$INSTALL_SCRIPT_VERSION.zip v_bng.sh > /opt/v_bng.sh
+    unzip -p -j /opt/vcpe-scripts-$SCRIPT_VERSION.zip v_bng_init.sh > /opt/v_bng_init.sh
+    unzip -p -j /opt/vcpe-scripts-$SCRIPT_VERSION.zip v_bng.sh > /opt/v_bng.sh
     chmod +x v_bng_init.sh
     chmod +x v_bng.sh
     sed -i 's/^\(# Provides:\).*/\1 v_bng/g' ./v_bng.sh
@@ -399,5 +325,3 @@ EOF
     fi
 
     ./v_bng_init.sh
-fi # endif BUILD_STATE != "build"
-
