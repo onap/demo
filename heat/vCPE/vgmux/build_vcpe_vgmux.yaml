@@ -1,0 +1,212 @@
+##########################################################################
+#
+#==================LICENSE_START==========================================
+#
+#
+# Copyright 2017 AT&T Intellectual Property. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#==================LICENSE_END============================================
+#
+# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+#
+##########################################################################
+
+heat_template_version: 2013-05-23
+
+description: Heat template to build vCPE Infrastructue Metro vGMUX
+
+##############
+#            #
+# PARAMETERS #
+#            #
+##############
+
+parameters:
+  vcpe_image_name:
+    type: string
+    label: Image name or ID
+    description: Image to be used for compute instance
+  vcpe_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used
+  public_net_id:
+    type: string
+    label: Public network name or ID
+    description: Public network that enables remote connection to VNF
+  vgmux_name_0:
+    type: string
+    label: vGMUX name
+    description: Name of the vGMUX
+  vnf_id:
+    type: string
+    label: VNF ID
+    description: The VNF ID is provided by ONAP
+  vf_module_id:
+    type: string
+    label: vCPE module ID
+    description: The vCPE Module ID is provided by ONAP
+  dcae_collector_ip:
+    type: string
+    label: DCAE collector IP address
+    description: IP address of the DCAE collector
+  dcae_collector_port:
+    type: string
+    label: DCAE collector port
+    description: Port of the DCAE collector
+  key_name:
+    type: string
+    label: Key pair name
+    description: Public/Private key pair name
+  pub_key:
+    type: string
+    label: Public key
+    description: Public key to be installed on the compute instance
+  repo_url_artifacts:
+    type: string
+    label: Repository URL
+    description: URL of the repository that hosts the demo packages
+  script_version:
+    type: string
+    label: Script version number
+    description: Version number of the scripts that build the vGMUX
+  demo_artifacts_version:
+    type: string
+    label: Artifacts version used in demo vnfs
+    description: Artifacts (jar, tar.gz) version used in demo vnfs
+  nexus_artifact_repo:
+    type: string
+    description: Root URL for the Nexus repository for Maven artifacts.
+    default: "https://nexus.onap.org"
+  cloud_env:
+    type: string
+    label: Cloud environment
+    description: Cloud environment (e.g., openstack, rackspace)
+  vpp_source_repo_url:
+    type: string
+    label: VPP Source Git Repo
+    description: URL for VPP source codes
+  vpp_source_repo_release_tag:
+    type: string
+    label: VPP Source Git Release Tag
+    description: Git Tag for the VPP source codes
+  hc2vpp_source_repo_url:
+    type: string
+    label: Honeycomb Source Git Repo
+    description: URL for Honeycomb source codes
+  hc2vpp_source_repo_release_tag:
+    type: string
+    label: Honeycomb Source Git Release Tag
+    description: Git Tag for the Honeycomb source codes
+  vpp_patch_url:
+    type: string
+    label: VPP Patch URL
+    description: URL for VPP patch for vG-MUX
+  hc2vpp_patch_url:
+    type: string
+    label: Honeycomb Patch URL
+    description: URL for Honeycomb patch for vG-MUX
+  libevel_patch_url:
+    type: string
+    label: libevel Patch URL
+    description: URL for libevel patch for vG-MUX
+ # Compile_state parameter is added to provide backward compatibility for Beijing and Amsterdam releases
+  compile_state:
+    type: string
+    label: Compile State
+    description: State to compile code or not
+    default: "done"
+
+#############
+#           #
+# RESOURCES #
+#           #
+#############
+
+resources:
+
+  random-str:
+    type: OS::Heat::RandomString
+    properties:
+      length: 4
+
+  my_keypair:
+    type: OS::Nova::KeyPair
+    properties:
+      name:
+        str_replace:
+          template: base_rand
+          params:
+            base: { get_param: key_name }
+            rand: { get_resource: random-str }
+      public_key: { get_param: pub_key }
+      save_private_key: false
+
+
+  # Virtual GMUX Instantiation
+  vgmux_0:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: vcpe_image_name }
+      flavor: { get_param: vcpe_flavor_name }
+      name: { get_param: vgmux_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - network: { get_param: public_net_id }
+      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
+            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
+            __script_version__ : { get_param: script_version }
+            __cloud_env__ : { get_param: cloud_env }
+            __vpp_source_repo_url__ : { get_param: vpp_source_repo_url }
+            __vpp_source_repo_release_tag__ : { get_param: vpp_source_repo_release_tag }
+            __hc2vpp_source_repo_url__ : { get_param: hc2vpp_source_repo_url }
+            __hc2vpp_source_repo_release_tag__ : { get_param: hc2vpp_source_repo_release_tag }
+            __vpp_patch_url__ : { get_param: vpp_patch_url }
+            __hc2vpp_patch_url__ : { get_param: hc2vpp_patch_url }
+            __libevel_patch_url__ : { get_param: libevel_patch_url }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+            __compile_state__ : {get_param : compile_state}
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir /opt/config
+            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
+            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__script_version__" > /opt/config/script_version.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__vpp_source_repo_url__" > /opt/config/vpp_source_repo_url.txt
+            echo "__vpp_source_repo_release_tag__" > /opt/config/vpp_source_repo_release_tag.txt
+            echo "__vpp_patch_url__" > /opt/config/vpp_patch_url.txt
+            echo "__hc2vpp_source_repo_url__" > /opt/config/hc2vpp_source_repo_url.txt
+            echo "__hc2vpp_source_repo_release_tag__" > /opt/config/hc2vpp_source_repo_release_tag.txt
+            echo "__hc2vpp_patch_url__" > /opt/config/hc2vpp_patch_url.txt
+            echo "__libevel_patch_url__" > /opt/config/libevel_patch_url.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+            echo "__compile_state__" > /opt/config/compile_state.txt
+
+            # Download and run install script
+            apt-get -y install unzip
+            if [[ "__script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__install_script_version__" -o /opt/vcpe-scripts-__script_version__.zip
+            unzip -j /opt/vcpe-scripts-__script_version__.zip -d /opt v_gmux_build.sh
+            sudo su -
+            cd /opt
+            chmod +x v_gmux_build.sh
+            ./v_gmux_build.sh
