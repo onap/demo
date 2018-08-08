@@ -122,18 +122,10 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_artifacts:
+  script_version:
     type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
-  install_script_version:
-    type: string
-    label: Installation script version number
-    description: Version number of the scripts that install the vFW demo app
-  demo_artifacts_version:
-    type: string
-    label: Artifacts version used in demo vnfs
-    description: Artifacts (jar, tar.gz) version used in demo vnfs
+    label: Script version number
+    description: Version number of the scripts that install the vGW
   nexus_artifact_repo:
     type: string
     description: Root URL for the Nexus repository for Maven artifacts.
@@ -142,22 +134,6 @@ parameters:
     type: string
     label: Cloud environment
     description: Cloud environment (e.g., openstack, rackspace)
-  vpp_source_repo_url:
-    type: string
-    label: VPP Source Git Repo
-    description: URL for VPP source codes
-  vpp_source_repo_release_tag:
-    type: string
-    label: VPP Source Git Release tag
-    description: Git release tag for the VPP source codes
-  hc2vpp_source_repo_url:
-    type: string
-    label: Honeycomb Source Git Repo
-    description: URL for Honeycomb source codes
-  hc2vpp_source_repo_release_tag:
-    type: string
-    label: Honeycomb Source Git release tag
-    description: Git release tag for the Honeycomb source codes
   mux_ip_addr:
     type: string
     label: vGMUX IP address
@@ -234,14 +210,8 @@ resources:
             __oam_cidr__ : { get_param: onap_private_net_cidr }
             __cpe_public_net_cidr__ : { get_param: cpe_public_net_cidr }
             __mux_gw_private_net_cidr__ : { get_param: mux_gw_private_net_cidr }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
+            __script_version__ : { get_param: script_version }
             __cloud_env__ : { get_param: cloud_env }
-            __vpp_source_repo_url__ : { get_param: vpp_source_repo_url }
-            __vpp_source_repo_release_tag__ : { get_param: vpp_source_repo_release_tag }
-            __hc2vpp_source_repo_url__ : { get_param: hc2vpp_source_repo_url }
-            __hc2vpp_source_repo_release_tag__ : { get_param: hc2vpp_source_repo_release_tag }
             __mux_ip_addr__: { get_param: mux_ip_addr }
             __vg_vgmux_tunnel_vni__: { get_param: vg_vgmux_tunnel_vni }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
@@ -255,23 +225,18 @@ resources:
             echo "__cpe_public_net_cidr__" > /opt/config/cpe_public_net_cidr.txt
             echo "__mux_gw_private_net_ipaddr__" > /opt/config/mux_gw_private_net_ipaddr.txt
             echo "__mux_gw_private_net_cidr__" > /opt/config/mux_gw_private_net_cidr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
-            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
-            echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__script_version__" > /opt/config/script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__vpp_source_repo_url__" > /opt/config/vpp_source_repo_url.txt
-            echo "__vpp_source_repo_release_tag__" > /opt/config/vpp_source_repo_release_tag.txt
-            echo "__hc2vpp_source_repo_url__" > /opt/config/hc2vpp_source_repo_url.txt
-            echo "__hc2vpp_source_repo_release_tag__" > /opt/config/hc2vpp_source_repo_release_tag.txt
             echo "__mux_ip_addr__" > /opt/config/mux_ip_addr.txt
             echo "__vg_vgmux_tunnel_vni__" > /opt/config/vg_vgmux_tunnel_vni.txt
             echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
             apt-get -y install unzip
-            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__install_script_version__" -o /opt/vcpe-scripts-__install_script_version__.zip
-            unzip -j /opt/vcpe-scripts-__install_script_version__.zip -d /opt v_gw_install.sh
+            if [[ "__script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__script_version__" -o /opt/vcpe-scripts-__script_version__.zip
+            unzip -j /opt/vcpe-scripts-__script_version__.zip -d /opt v_gw_install.sh
+            sudo su -
             cd /opt
             chmod +x v_gw_install.sh
             ./v_gw_install.sh
