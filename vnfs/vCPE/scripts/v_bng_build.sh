@@ -6,7 +6,7 @@ VPP_SOURCE_REPO_URL=$(cat /opt/config/vpp_source_repo_url.txt)
 VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/vpp_source_repo_release_tag.txt)
 VPP_PATCH_URL=$(cat /opt/config/vpp_patch_url.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
-
+ERROR_MESSAGE='Execution of vBRG script failed.'
 
 # Convert Network CIDR to Netmask
 cdr2mask () {
@@ -40,6 +40,13 @@ cdr2mask () {
     mkdir -p build-root/build-vpp-native/vpp/vnet/dhcp/
     patch -p1 < ../Vpp-Integrate-FreeRADIUS-Client-for-vBNG.patch
     UNATTENDED='y' make install-dep
+    
+# Check VPP build status    
+    if [[$? -ne 0]]
+    then
+        echo $ERROR_MESSAGE 'Reason: VPP build failed' > /opt/script_status.txt
+	exit
+    fi
 
 # Install the FreeRADIUS client since we need the lib
     cd /opt
@@ -54,12 +61,27 @@ cdr2mask () {
     ./bootstrap.sh
     make V=0 PLATFORM=vpp TAG=vpp install-deb
 
+# Check vpp/build-root status
+    if [[$? -ne 0]]
+    then
+        echo $ERROR_MESSAGE 'Reason: vpp/build-root build failed' > /opt/script_status.txt
+	exit
+    fi
+
 # Install additional dependencies for vpp
     apt-get install -y python-cffi python-ply python-pycparser
 
 # Install the VPP package
     cd /opt/vpp/build-root
     dpkg -i *.deb
+    
+# Check VPP package installation status
+    if [[$? -ne 0]]
+    then
+        echo $ERROR_MESSAGE 'Reason: VPP package installation failed' > /opt/script_status.txt
+	exit
+    fi
+
     systemctl stop vpp
 
 # Disable automatic upgrades
@@ -68,3 +90,6 @@ cdr2mask () {
         echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
         sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
     fi
+
+# Indicate script has finished executing
+    echo 'Execution of vBNG build script completed' > /opt/script_status.txt

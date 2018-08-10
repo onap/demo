@@ -325,3 +325,7 @@ EOF
     fi
 
     ./v_bng_init.sh
+
+# Indicate script has finished executing
+    echo 'Execution of vBNG install script completed' > /opt/script_status.txt
+
