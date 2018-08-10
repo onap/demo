@@ -342,3 +342,6 @@ EOF
     fi
 
     ./v_brgemu_init.sh
+
+# Indicate script has finished executing
+    echo 'Execution of vBRG install script completed' > /opt/script_status.txt
