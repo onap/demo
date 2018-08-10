@@ -261,6 +261,7 @@ then
     sed -i "s/ens[0-9]*/eth0/g" /etc/network/interfaces.d/*.cfg
     #sed -i "s/ens[0-9]*/eth0/g" /etc/udev/rules.d/70-persistent-net.rules
     echo 'network: {config: disabled}' >> /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+    echo 'Execution of vG install script completed' > /opt/script_status.txt
     reboot
 fi
-
+echo 'Execution of vG install script completed' > /opt/script_status.txt

@@ -236,7 +236,6 @@ resources:
             if [[ "__script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__script_version__" -o /opt/vcpe-scripts-__script_version__.zip
             unzip -j /opt/vcpe-scripts-__script_version__.zip -d /opt v_gw_install.sh
-            sudo su -
             cd /opt
             chmod +x v_gw_install.sh
             ./v_gw_install.sh

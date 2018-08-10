@@ -9,7 +9,7 @@ HC2VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/hc2vpp_source_repo_release_tag.
 HC2VPP_PATCH_URL=$(cat /opt/config/hc2vpp_patch_url.txt)
 LIBEVEL_PATCH_URL=$(cat /opt/config/libevel_patch_url.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
-
+ERROR_MESSAGE="Execution of vG-MUX build script failed. Reason"
 
 # Download required dependencies
 echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
@@ -28,12 +28,14 @@ wget -O Vpp-Add-VES-agent-for-vG-MUX.patch ${VPP_PATCH_URL}
 
 cd vpp
 patch -p1 < ../Vpp-Add-VES-agent-for-vG-MUX.patch
-expect -c "
-        spawn make install-dep;
-        expect {
-                \"Do you want to continue?*\" {send \"Y\r\"; interact}
-        }
-"
+yes Y | make install-dep
+
+# Check vpp build status
+if [ $? -ne 0 ];
+then
+    echo '$ERROR_MESSAGE VPP build failed' > /opt/script_status.txt 
+    exit
+fi
 
 # Install the evel-library first since we need the lib
 cd /opt
@@ -45,6 +47,15 @@ git checkout 312996e2
 patch -p1 < ../vCPE-vG-MUX-libevel-fixup.patch
 cd vnfs/VES5.0/evel/evel-library/bldjobs 
 make
+
+# Check eval-library installation status
+if [ $? -ne 0 ];
+then
+    echo '$ERROR_MESSAGE Installation of eval-library failed' > /opt/script_status.txt 
+    exit
+fi
+
+
 cp ../libs/x86_64/libevel.so /usr/lib
 ldconfig
 
@@ -52,11 +63,24 @@ cd /opt/vpp/build-root
 ./bootstrap.sh
 make V=0 PLATFORM=vpp TAG=vpp install-deb
 
+# Check vpp/build-root build status
+if [ $? -ne 0 ];
+then
+    echo '$ERROR_MESSAGE VPP/build-root build failed' > /opt/script_status.txt 
+    exit
+fi
+
 # Install the VPP package
 apt install -y python-ply-lex-3.5 python-ply-yacc-3.5 python-pycparser python-cffi
 dpkg -i *.deb
-systemctl stop vpp
 
+# Check VPP package installation status
+if [ $? -ne 0 ];
+then
+    echo '$ERROR_MESSAGE Installation of VPP package failed' > /opt/script_status.txt 
+    exit
+fi
+systemctl stop vpp
 
 
 # Download and install HC2VPP from source
@@ -183,6 +207,14 @@ p_version=$(echo "${p_version_snap%-*}")
 mkdir -p  ~/.m2/repository/io/fd/vpp/jvpp-ves/${p_version_snap}
 mvn install:install-file -Dfile=/usr/share/java/jvpp-ves-${p_version}.jar -DgroupId=io.fd.vpp -DartifactId=jvpp-ves -Dversion=${p_version_snap} -Dpackaging=jar
 mvn clean install -nsu -DskipTests=true
+
+# Check hc2vpp installation status
+if [ $? -ne 0 ];
+then
+    echo '$ERROR_MESSAGE Installation of hc2vpp failed' > /opt/script_status.txt 
+    exit
+fi
+
 l_version=$(cat pom.xml | grep "<version>" | head -1)
 l_version=$(echo "${l_version%<*}")
 l_version=$(echo "${l_version#*>}")
@@ -196,4 +228,5 @@ then
     sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
 fi
 
+echo 'Execution of vG-MUX build script completed' > /opt/script_status.txt
 

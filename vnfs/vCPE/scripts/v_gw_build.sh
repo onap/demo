@@ -6,7 +6,7 @@ VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/vpp_source_repo_release_tag.txt)
 HC2VPP_SOURCE_REPO_URL=$(cat /opt/config/hc2vpp_source_repo_url.txt)
 HC2VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/hc2vpp_source_repo_release_tag.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
-
+ERROR_MESSAGE= "Execution of vGbuild script failed. Reason:"
 
 # Download required dependencies
 echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
@@ -26,23 +26,44 @@ cd /opt
 git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_RELEASE_TAG} vpp
 
 cd vpp
-yes y | make install-dep
+yes Y | make install-dep
+
+# Check vpp build status
+if [ $? -ne 0 ];
+then
+    echo '$ERROR_MESSAGE VPP build failed' > /opt/script_status.txt 
+    exit
+fi
 
 cd build-root
 ./bootstrap.sh
 make V=0 PLATFORM=vpp TAG=vpp install-deb
 
+# Check vpp/build-root build status
+if [ $? -ne 0 ];
+then
+    echo '$ERROR_MESSAGE VPP/build-root build failed' > /opt/script_status.txt 
+    exit
+fi
+
+apt --allow-unauthenticated install -y python-ply-lex-3.5 python-ply-yacc-3.5 python-pycparser python-cffi
+
 # Install the VPP package
 dpkg -i *.deb
-systemctl stop vpp
 
+# Check vpp package installation status
+if [ $? -ne 0 ];
+then
+    echo '$ERROR_MESSAGE VPP package installation failed' > /opt/script_status.txt 
+    exit
+fi
+
+systemctl stop vpp
 
 
 # Download and install HC2VPP from source
 cd /opt
 git clone ${HC2VPP_SOURCE_REPO_URL} -b ${HC2VPP_SOURCE_REPO_RELEASE_TAG} hc2vpp
-
-apt --allow-unauthenticated install -y python-ply-lex-3.5 python-ply-yacc-3.5 python-pycparser python-cffi
 apt-get install -y maven
 mkdir -p ~/.m2
 cat > ~/.m2/settings.xml << EOF
@@ -155,6 +176,14 @@ EOF
 
 cd hc2vpp
 mvn clean install
+
+# Check hc2vpp build status
+if [ $? -ne 0 ];
+then
+    echo '$ERROR_MESSAGE hc2vpp build failed' > /opt/script_status.txt 
+    exit
+fi
+
 l_version=$(cat pom.xml | grep "<version>" | head -1)
 l_version=$(echo "${l_version%<*}")
 l_version=$(echo "${l_version#*>}")
@@ -168,3 +197,4 @@ then
     sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
 fi
 
+echo 'Execution of vG build script completed' > /opt/script_status.txt
