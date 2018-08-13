@@ -6,6 +6,7 @@ VPP_PATCH_URL=$(cat /opt/config/vpp_patch_url.txt)
 HC2VPP_SOURCE_REPO_URL=$(cat /opt/config/hc2vpp_source_repo_url.txt)
 HC2VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/hc2vpp_source_repo_release_tag.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
+ERROR_MESSAGE='Execution of vBRG build script failed.'
 
 # Convert Network CIDR to Netmask
 cdr2mask () {
@@ -24,27 +25,43 @@ cdr2mask () {
 
 # Install the tools required for download codes
     apt-get install -y expect git patch make linux-image-extra-`uname -r`
-#Download and build the VPP codes
+# Download and build the VPP codes
     cd /opt
     git clone ${VPP_SOURCE_REPO_URL} -b ${VPP_SOURCE_REPO_RELEASE_TAG} vpp
     wget -O VPP-Add-Option82-Nat-Filter-For-vBRG.patch ${VPP_PATCH_URL}
 
     cd vpp
     patch -p1 < ../VPP-Add-Option82-Nat-Filter-For-vBRG.patch
-    expect -c "
-            set timeout 60;
-            spawn make install-dep;
-            expect {
-                    \"Do you want to continue?*\" {send \"Y\r\"; interact}
-            }
-    "
+    yes y | make install-dep
+
+# Check vpp build status
+    if [[$? -ne 0]]
+    then
+        echo $ERROR_MESSAGE 'Reason: VPP build failed' > /opt/script_status.txt
+        exit
+    fi
 
     cd build-root
     ./bootstrap.sh
     make V=0 PLATFORM=vpp TAG=vpp install-deb
 
-    # Install the VPP package
+# Check vpp/build-root build status
+    if [[$? -ne 0]]
+    then
+        echo $ERROR_MESSAGE 'Reason: vpp/build-root build failed' > /opt/script_status.txt
+        exit
+    fi
+
+# Install the VPP package
     dpkg -i *.deb
+
+# Check vpp package installation status
+    if [[$? -ne 0]]
+    then
+        echo $ERROR_MESSAGE 'Reason: VPP package installation failed' > /opt/script_status.txt
+        exit
+    fi
+
     systemctl stop vpp
 
 # Download and install HC2VPP from source
@@ -164,6 +181,14 @@ EOF
 
     cd hc2vpp
     mvn clean install
+
+# Check hc2vpp build status
+    if [[$? -ne 0]]
+    then
+        echo $ERROR_MESSAGE 'Reason: hc2vpp build failed' > /opt/script_status.txt
+        exit
+    fi
+
     l_version=$(cat pom.xml | grep "<version>" | head -1)
     l_version=$(echo "${l_version%<*}")
     l_version=$(echo "${l_version#*>}")
@@ -176,3 +201,6 @@ EOF
         echo "APT::Periodic::Unattended-Upgrade \"0\";" >> /etc/apt/apt.conf.d/10periodic
         sed -i 's/\(APT::Periodic::Unattended-Upgrade\) "1"/\1 "0"/' /etc/apt/apt.conf.d/20auto-upgrades
     fi
+
+# Indicate script has finished executing
+    echo 'Execution of vBRG build script completed' > /opt/script_status.txt
