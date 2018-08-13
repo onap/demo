@@ -101,6 +101,7 @@ parameters:
     type: string
     label: Compile State
     description: State to compile code or not; included for backwards compatibility
+    default: "done"
 
 #############
 #           #
