@@ -115,6 +115,13 @@ under the License.
     -->
   </pluginGroups>
 
+EOF
+
+if [[ $(cat /opt/config/https_proxy.txt) != "no_proxy" ]]; then
+  HTTPS_PROXY_HOST=$(cat /opt/config/https_proxy.txt | cut -d ':' -f1)
+  HTTPS_PROXY_PORT=$(cat /opt/config/https_proxy.txt | cut -d ':' -f2)
+
+  cat >> settings.xml << EOF
   <!-- proxies
    | This is a list of proxies which can be used on this machine to connect to the network.
    | Unless otherwise specified (by system property or command-line switch), the first proxy
@@ -127,8 +134,8 @@ under the License.
       <protocol>http</protocol>
       <username>proxyuser</username>
       <password>proxypass</password>
-      <host>$(cat /opt/config/http_proxy.txt | cut -d ':' -f1)</host>
-      <port>$(cat /opt/config/http_proxy.txt | cut -d ':' -f2)</port>
+      <host>$HTTPS_PROXY_HOST</host>
+      <port>$HTTPS_PROXY_PORT</port>
       <nonProxyHosts>local.net|some.host.com</nonProxyHosts>
     </proxy>
     <proxy>
@@ -137,12 +144,16 @@ under the License.
       <protocol>https</protocol>
       <username>proxyuser</username>
       <password>proxypass</password>
-      <host>$(cat /opt/config/https_proxy.txt | cut -d ':' -f1)</host>
-      <port>$(cat /opt/config/https_proxy.txt | cut -d ':' -f2)</port>
+      <host>$HTTPS_PROXY_HOST</host>
+      <port>$HTTPS_PROXY_PORT</port>
       <nonProxyHosts>local.net|some.host.com</nonProxyHosts>
     </proxy>
   </proxies>
 
+EOF
+fi
+
+cat >> settings.xml << EOF
 
   <!-- servers
    | This is a list of authentication profiles, keyed by the server-id used within the system.
