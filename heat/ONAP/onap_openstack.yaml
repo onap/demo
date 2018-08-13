@@ -459,6 +459,8 @@ parameters:
   dbcl_docker:
     type: string
 
+  vfc_db_docker:
+    type: string
   vfc_nokia_docker:
     type: string
   vfc_nokiav2_docker:
@@ -1951,6 +1953,7 @@ resources:
               __uui_docker__: { get_param: uui_docker }
               __esr_docker__: { get_param: esr_docker }
               __vnfsdk_repo__: { get_param: vnfsdk_repo }
+              __vfc_db_docker__: { get_param: vfc_db_docker }
               __vfc_nokia_docker__: { get_param: vfc_nokia_docker }
               __vfc_nokiav2_docker__: { get_param: vfc_nokiav2_docker }
               __vfc_ztevnfmdriver_docker__: { get_param: vfc_ztevnfmdriver_docker }
@@ -1981,6 +1984,7 @@ resources:
               echo "__esr_docker__" > /opt/config/esr_docker.txt
               echo "__vnfsdk_repo__" > /opt/config/vnfsdk_repo.txt
 
+              echo "export DB_DOCKER_VER=__vfc_db_docker__" >> /opt/config/vfc_docker.txt
               echo "export NOKIA_DOCKER_VER=__vfc_nokia_docker__" >> /opt/config/vfc_docker.txt
               echo "export NOKIAV2_DOCKER_VER=__vfc_nokiav2_docker__" >> /opt/config/vfc_docker.txt
               echo "export MULTIVIMPROXY_DOCKER_VER=__vfc_multivimproxy_docker__" >> /opt/config/vfc_docker.txt
