@@ -161,10 +161,6 @@ parameters:
     type: string
     label: SDNC IP address
     description: IP address of the SDNC
-  compile_state:
-    type: string
-    label: Compile State
-    description: State to compile code or not; included for backwards compatibility
 
 #############
 #           #
@@ -250,7 +246,6 @@ resources:
             __script_version__ : { get_param: script_version }
             __cloud_env__ : { get_param: cloud_env }
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
-            __compile_state__ : { get_param: compile_state }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
@@ -272,7 +267,6 @@ resources:
             echo "__script_version__" > /opt/config/script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__sdnc_ip_addr__" > /opt/config/sdnc_ip_addr.txt
-            echo "__compile_state__" > /opt/config/compile_state.txt
             echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
