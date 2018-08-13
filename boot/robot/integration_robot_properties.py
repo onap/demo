@@ -52,6 +52,16 @@ GLOBAL_MR_SERVER_PORT = "3904"
 # mso info - everything is from the private oam network (also called onap private network)
 GLOBAL_MSO_SERVER_PROTOCOL = "http"
 GLOBAL_MSO_SERVER_PORT = "8080"
+# SO containers
+GLOBAL_MSO_APIHAND_SERVER_PORT = "8080"
+GLOBAL_MSO_ASDCHAND_SERVER_PORT = "8085"
+GLOBAL_MSO_BPMN_SERVER_PORT = "8081"
+GLOBAL_MSO_CATDB_SERVER_PORT = "8082"
+GLOBAL_MSO_OPENSTACK_SERVER_PORT = "8087"
+GLOBAL_MSO_REQDB_SERVER_PORT = "8083"
+GLOBAL_MSO_SDNC_SERVER_PORT =  "8090"
+GLOBAL_MSO_VFC_SERVER_PORT = "8084"
+
 GLOBAL_MSO_USERNAME = "InfraPortalClient"
 GLOBAL_MSO_PASSWORD = "password1$"
 # music info - everything is from the private oam network (also called onap private network)
