@@ -101,9 +101,9 @@ void * ring_buffer_read(ring_buffer * buffer)
       msg = (buffer->ring)[buffer->next_read];
       buffer->ring[buffer->next_read] = NULL;
       buffer->next_read = (buffer->next_read + 1) % buffer->size;
-      EVEL_DEBUG("RBR: next read location is %d", buffer->next_read);
       pthread_mutex_unlock(&buffer->ring_mutex);
-      break;
+      EVEL_DEBUG("RBR: next read location is %d data %lp", buffer->next_read,msg);
+      return msg;
     }
     else
     {
@@ -112,7 +112,7 @@ void * ring_buffer_read(ring_buffer * buffer)
       EVEL_DEBUG("RBR: Condition variable wait completed");
     }
   }
-  EVEL_DEBUG("RBR: Ring buffer read returning data at %lp", msg);
+  pthread_mutex_unlock(&buffer->ring_mutex);
   return msg;
 }
 

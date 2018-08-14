@@ -172,27 +172,36 @@ typedef struct evel_throttle_spec {
  * @param[in] event_api_url
  *                      The URL where the Vendor Event Listener API is expected
  *                      to be.
+ * @param[in] bakup_api_url
+ *                      The BakupURL where the Vendor Backup Listener is expected
+ *                      to be.
  * @param[in] throt_api_url
  *                      The URL where the Throttling API is expected to be.
- * @param[in] source_ip  Source IP of VES Agent
- * @param[in] ring_buf_size     Initialization size of Ring Buffer
+ * @param[in] source_ip        Source IP of VES Agent
+ * @param[in] bakup_source_ip  Backup Source IP of VES Agent
+ * @param[in] ring_buf_size    Initialization size of Ring Buffer
  * @param[in] secure     Whether Using http or https
  * @param[in] cert_file_path  Path to Client Certificate file
  * @param[in] key_file_path   Path to Client key file
  * @param[in] ca_info         Path to CA info file
- * @param[in] ca_file_path    Path to CA file 
+ * @param[in] ca_file_path    Path to CA file
  * @param[in] verify_peer     Using peer verification or not
  * @param[in] verify_host     Using host verification or not
  * @param[in] username  The username for the Basic Authentication of requests.
  * @param[in] password  The password for the Basic Authentication of requests.
+ * @param[in] username2  The username for the Bakup requests.
+ * @param[in] password2  The password for the Bakup requests.
  * @param     verbosity 0 for normal operation, positive values for chattier
  *                        logs.
  *****************************************************************************/
 EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
+                                        const char * const bakup_api_url,
                                         const char * const throt_api_url,
                                         const char * const source_ip,
+                                        const char * const bakup_source_ip,
                                         int ring_buf_size,
                                         int secure,
+                                        int activitymode,
                                         const char * const cert_file_path,
                                         const char * const key_file_path,
                                         const char * const ca_info,
@@ -201,6 +210,8 @@ EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
                                         long verify_host,
                                         const char * const username,
                                         const char * const password,
+                                        const char * const username2,
+                                        const char * const password2,
                                         int verbosity);
 
 /**************************************************************************//**

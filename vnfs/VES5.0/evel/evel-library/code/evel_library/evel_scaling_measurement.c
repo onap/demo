@@ -3402,7 +3402,7 @@ void evel_json_encode_measurement(EVEL_JSON_BUFFER * jbuf,
   /* vNIC Usage TBD Performance array                          */
   /***************************************************************************/
   evel_json_checkpoint(jbuf);
-  if (evel_json_open_opt_named_list(jbuf, "vNicUsageArray"))
+  if (evel_json_open_opt_named_list(jbuf, "vNicPerformanceArray"))
   {
     bool item_added = false;
 
