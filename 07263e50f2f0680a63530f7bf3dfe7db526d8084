@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_06749197",
+        "filename": "heat/ONAP/onap_openstack.env",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 35
+      },
+      "writtenOn": "2018-08-15T15:11:39Z",
+      "side": 1,
+      "message": "onap/vfc/db:1.1.0 has not been released and does not currently exist.  Can this be released some time soon?",
+      "range": {
+        "startLine": 173,
+        "startChar": 17,
+        "endLine": 173,
+        "endChar": 22
+      },
+      "revId": "07263e50f2f0680a63530f7bf3dfe7db526d8084",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
