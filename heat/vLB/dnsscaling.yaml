@@ -121,6 +121,10 @@ parameters:
     type: string
     label: Cloud environment
     description: Cloud environment (e.g., openstack, rackspace)
+  sec_group:
+    type: string
+    description: ONAP Security Group
+
 
 #############
 #           #
@@ -152,12 +156,16 @@ resources:
     properties:
       network: { get_param: vlb_private_net_id }
       fixed_ips: [{"subnet": { get_param: vlb_private_net_id }, "ip_address": { get_param: vdns_private_ip_0 }}]
+      security_groups:
+       - { get_param: sec_group }
 
   vdns_2_private_1_port:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
       fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vdns_private_ip_1 }}]
+      security_groups:
+       - { get_param: sec_group }
 
   vdns_2:
     type: OS::Nova::Server
