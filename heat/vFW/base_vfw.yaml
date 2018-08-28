@@ -137,10 +137,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_artifacts:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   install_script_version:
     type: string
     label: Installation script version number
@@ -252,7 +248,6 @@ resources:
           params:
             __dcae_collector_ip__ : { get_param: dcae_collector_ip }
             __dcae_collector_port__ : { get_param: dcae_collector_port }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __vfw_private_ip_0__ : { get_param: vfw_private_ip_0 }
@@ -270,7 +265,6 @@ resources:
             mkdir /opt/config
             echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
             echo "__dcae_collector_port__" > /opt/config/dcae_collector_port.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vfw_private_ip_0__" > /opt/config/vfw_private_ip_0.txt
@@ -328,7 +322,6 @@ resources:
             __fw_ipaddr__: { get_param: vfw_private_ip_0 }
             __protected_net_cidr__: { get_param: protected_private_net_cidr }
             __sink_ipaddr__: { get_param: vsn_private_ip_0 }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __vpg_private_ip_0__ : { get_param: vpg_private_ip_0 }
@@ -345,7 +338,6 @@ resources:
             echo "__fw_ipaddr__" > /opt/config/fw_ipaddr.txt
             echo "__protected_net_cidr__" > /opt/config/protected_net_cidr.txt
             echo "__sink_ipaddr__" > /opt/config/sink_ipaddr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
@@ -400,7 +392,6 @@ resources:
           params:
             __protected_net_gw__: { get_param: vfw_private_ip_1 }
             __unprotected_net__: { get_param: unprotected_private_net_cidr }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __install_script_version__ : { get_param: install_script_version }
             __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
             __vsn_private_ip_1__ : { get_param: vsn_private_ip_1 }

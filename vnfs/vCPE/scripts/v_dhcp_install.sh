@@ -1,7 +1,8 @@
 #!/bin/bash
 
-REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
+NEXUS_ARTIFACT_REPO=$(cat /opt/config/nexus_artifact_repo.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+if [[ "$DEMO_ARTIFACTS_VERSION" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 MR_IP_ADDR=$(cat /opt/config/mr_ip_addr.txt)
@@ -57,7 +58,7 @@ sleep 1
 
 # Download the kea hook
 cd /opt
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vcpe/kea-sdnc-notify-mod/$DEMO_ARTIFACTS_VERSION/kea-sdnc-notify-mod-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+wget -O kea-sdnc-notify-mod-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=kea-sdnc-notify-mod&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
 tar -zxvf kea-sdnc-notify-mod-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv kea-sdnc-notify-mod-$DEMO_ARTIFACTS_VERSION VDHCP
 rm *.tar.gz

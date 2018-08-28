@@ -96,10 +96,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_artifacts:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   script_version:
     type: string
     label: Installation script version number
@@ -192,7 +188,6 @@ resources:
            # __brgemu_net_ipaddr__: { get_param: vbrgemu_private_ip_1 }
            # __brgemu_cidr__: { get_param: vbrgemu_private_net_cidr }
             __brgemu_bng_private_net_cidr__: { get_param: vbrgemu_bng_private_net_cidr }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __script_version__ : { get_param: script_version }
             __cloud_env__ : { get_param: cloud_env }
@@ -206,7 +201,6 @@ resources:
             #echo "__brgemu_net_ipaddr__" > /opt/config/brgemu_net_ipaddr.txt
             #echo "__brgemu_cidr__" > /opt/config/brgemu_net_cidr.txt
             echo "__brgemu_bng_private_net_cidr__" > /opt/config/brgemu_bng_private_net_cidr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__script_version__" > /opt/config/script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
