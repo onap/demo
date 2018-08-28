@@ -161,10 +161,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_artifacts:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   install_script_version:
     type: string
     label: Installation script version number
@@ -243,7 +239,6 @@ resources:
             __oam_ipaddr__: { get_param: vaaa_private_ip_1 }
             __oam_cidr__: { get_param: onap_private_net_cidr }
             __cpe_signal_net_cidr__: { get_param: cpe_signal_net_cidr }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
@@ -259,7 +254,6 @@ resources:
             echo "__oam_ipaddr__" > /opt/config/oam_ipaddr.txt
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__cpe_signal_net_cidr__" > /opt/config/cpe_signal_net_cidr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
@@ -308,7 +302,6 @@ resources:
             __cpe_public_net_ipaddr__: { get_param: vdns_private_ip_0 }
             __oam_cidr__: { get_param: onap_private_net_cidr }
             __cpe_public_net_cidr__: { get_param: cpe_public_net_cidr }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
@@ -322,7 +315,6 @@ resources:
             echo "__cpe_public_net_ipaddr__" > /opt/config/cpe_public_net_ipaddr.txt
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__cpe_public_net_cidr__" > /opt/config/cpe_public_net_cidr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
@@ -373,7 +365,6 @@ resources:
             __cpe_signal_net_cidr__ : { get_param: cpe_signal_net_cidr }
             __mr_ip_addr__ : { get_param: mr_ip_addr }
             __mr_ip_port__ : { get_param: mr_ip_port }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
@@ -389,7 +380,6 @@ resources:
             echo "__cpe_signal_net_cidr__" > /opt/config/cpe_signal_net_cidr.txt
             echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
             echo "__mr_ip_port__" > /opt/config/mr_ip_port.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
@@ -438,7 +428,6 @@ resources:
             __cpe_public_ipaddr__: { get_param: vweb_private_ip_0 }
             __oam_cidr__: { get_param: onap_private_net_cidr }
             __cpe_public_net_cidr__: { get_param: cpe_public_net_cidr }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __cloud_env__ : { get_param: cloud_env }
@@ -452,7 +441,6 @@ resources:
             echo "__cpe_public_ipaddr__" > /opt/config/cpe_public_ipaddr.txt
             echo "__oam_cidr__" > /opt/config/oam_cidr.txt
             echo "__cpe_public_net_cidr__" > /opt/config/cpe_public_net_cidr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt

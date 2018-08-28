@@ -1,7 +1,8 @@
 #!/bin/bash
 
-REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
+NEXUS_ARTIFACT_REPO=$(cat /opt/config/nexus_artifact_repo.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+if [[ "$DEMO_ARTIFACTS_VERSION" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
@@ -60,8 +61,8 @@ cd /opt
 unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip v_packetgen_init.sh > /opt/v_packetgen_init.sh
 unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip vpacketgen.sh > /opt/vpacketgen.sh
 unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip run_traffic_fw_demo.sh > /opt/run_traffic_fw_demo.sh
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/sample-distribution/$DEMO_ARTIFACTS_VERSION/sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vfw/vfw_pg_streams/$DEMO_ARTIFACTS_VERSION/vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
+wget -O sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf&a=sample-distribution&c=hc&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
+wget -O vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vfw&a=vfw_pg_streams&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
 
 tar -zmxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
 tar -zmxvf vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz

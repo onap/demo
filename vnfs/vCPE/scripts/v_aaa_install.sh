@@ -1,7 +1,8 @@
 #!/bin/bash
 
-REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
+NEXUS_ARTIFACT_REPO=$(cat /opt/config/nexus_artifact_repo.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+if [[ "$DEMO_ARTIFACTS_VERSION" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 

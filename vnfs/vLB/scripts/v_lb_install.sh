@@ -1,7 +1,8 @@
 #!/bin/bash
 
-REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
+NEXUS_ARTIFACT_REPO=$(cat /opt/config/nexus_artifact_repo.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+if [[ "$DEMO_ARTIFACTS_VERSION" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
@@ -68,9 +69,9 @@ unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip vlb.sh > /opt/vlb.sh
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip dnsmembership.sh > /opt/dnsmembership.sh
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip add_dns.sh > /opt/add_dns.sh
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip remove_dns.sh > /opt/remove_dns.sh
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/dns-manager/$DEMO_ARTIFACTS_VERSION/dns-manager-$DEMO_ARTIFACTS_VERSION.jar
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves/$DEMO_ARTIFACTS_VERSION/ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/ves5/ves_vlb_reporting/$DEMO_ARTIFACTS_VERSION/ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+wget -O dns-manager-$DEMO_ARTIFACTS_VERSION-dns-manager.jar "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vlb&a=dns-manager&e=jar&v=$DEMO_ARTIFACTS_VERSION"
+wget -O ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.ves5&a=ves&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
+wget -O ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.ves5&a=ves_vlb_reporting&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
 
 tar -zmxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves-$DEMO_ARTIFACTS_VERSION VES

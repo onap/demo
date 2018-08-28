@@ -149,10 +149,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_artifacts:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   demo_artifacts_version:
     type: string
     label: Artifacts version used in demo vnfs
@@ -273,7 +269,6 @@ resources:
             __gre_ipaddr__: { get_param: gre_ipaddr }
             __pktgen_ipaddr__: { get_param: vpg_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vlb_private_ip_1 }
-            __repo_url_artifacts__: { get_param: repo_url_artifacts }
             __demo_artifacts_version__: { get_param: demo_artifacts_version }
             __install_script_version__: { get_param: install_script_version }
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
@@ -295,7 +290,6 @@ resources:
             echo "__gre_ipaddr__" > /opt/config/gre_ipaddr.txt
             echo "__pktgen_ipaddr__" > /opt/config/pktgen_ipaddr.txt
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
@@ -352,7 +346,6 @@ resources:
             __lb_private_ipaddr__: { get_param: vlb_private_ip_0 }
             __local_private_ipaddr__: { get_param: vdns_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vdns_private_ip_1 }
-            __repo_url_artifacts__: { get_param: repo_url_artifacts }
             __demo_artifacts_version__: { get_param: demo_artifacts_version }
             __install_script_version__: { get_param: install_script_version }
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
@@ -368,7 +361,6 @@ resources:
             echo "__lb_private_ipaddr__" > /opt/config/lb_private_ipaddr.txt
             echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
@@ -417,7 +409,6 @@ resources:
       user_data:
         str_replace:
           params:
-            __repo_url_artifacts__: { get_param: repo_url_artifacts }
             __local_private_ipaddr__: { get_param: vpg_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vpg_private_ip_1 }
             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
@@ -439,7 +430,6 @@ resources:
             echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
             echo "__pktgen_private_net_cidr__" > /opt/config/pktgen_private_net_cidr.txt
             echo "__vlb_ipaddr__" > /opt/config/vlb_ipaddr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__pg_int__" > /opt/config/pg_int.txt

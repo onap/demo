@@ -15,8 +15,8 @@
             },
              "vnf-parameters": [
                 {
-                    "vnf-parameter-name": "repo_url_artifacts",
-                    "vnf-parameter-value": "https://nexus.onap.org/content/groups/staging"
+                    "vnf-parameter-name": "nexus_artifact_repo",
+                    "vnf-parameter-value": "https://nexus.onap.org"
                 },
                 {
                     "vnf-parameter-name": "demo_artifacts_version",

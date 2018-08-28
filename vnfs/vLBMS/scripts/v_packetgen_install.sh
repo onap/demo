@@ -1,7 +1,8 @@
 #!/bin/bash
 
-REPO_URL_ARTIFACTS=$(cat /opt/config/repo_url_artifacts.txt)
+NEXUS_ARTIFACT_REPO=$(cat /opt/config/nexus_artifact_repo.txt)
 DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+if [[ "$DEMO_ARTIFACTS_VERSION" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
 NB_API_VERSION=$(cat /opt/config/nb_api_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
@@ -58,7 +59,7 @@ unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip vpacketgen.sh > /opt/
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip run_streams_dns.sh > /opt/run_streams_dns.sh
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip properties.conf > /opt/config/properties.conf
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip run_health.sh > /opt/run_health.sh
-wget $REPO_URL_ARTIFACTS/org/onap/demo/vnf/vlb/vlb_dns_streams/$DEMO_ARTIFACTS_VERSION/vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz 
+wget -O vlb_dns_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vlb&a=vlb_dns_streams&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
 
 sed -i 's/primary=.*/primary=false/g' /opt/config/properties.conf
 sed -i 's/vnfc=.*/vnfc=vPacketGen/g' /opt/config/properties.conf
