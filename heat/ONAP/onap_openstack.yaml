@@ -1245,6 +1245,7 @@ resources:
               __vm_flavor__: { get_param: flavor_medium }
               __public_net_id__: { get_param: public_net_id }
               __oam_network_id__: { get_resource: oam_onap }
+              __sec_group__: { get_resource: onap_sg }
               __script_version__: { get_param: artifacts_version }
               __docker_version__: { get_param: robot_docker }
               __sniro_docker_version__: { get_param: sniro_docker }
@@ -1299,6 +1300,7 @@ resources:
                 echo "__public_net_id__" > /opt/config/public_net_id.txt
               fi
               echo "__oam_network_id__" > /opt/config/oam_network_id.txt
+              echo "__sec_group__" > /opt/config/sec_group.txt
               echo "__use_oam_net_for_robot__" > /opt/config/use_oam_net_for_robot.txt
               echo "__vnf_pub_key__" > /opt/config/vnf_pub_key.txt
               echo "localhost" > /opt/config/log_elasticsearch_ip_addr.txt # these tests will be skipped by robot
