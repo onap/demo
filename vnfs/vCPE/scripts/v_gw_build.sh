@@ -6,7 +6,7 @@ VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/vpp_source_repo_release_tag.txt)
 HC2VPP_SOURCE_REPO_URL=$(cat /opt/config/hc2vpp_source_repo_url.txt)
 HC2VPP_SOURCE_REPO_RELEASE_TAG=$(cat /opt/config/hc2vpp_source_repo_release_tag.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
-ERROR_MESSAGE= "Execution of vGbuild script failed. Reason:"
+ERROR_MESSAGE="Execution of vGbuild script failed. Reason:"
 
 # Download required dependencies
 echo "deb http://ppa.launchpad.net/openjdk-r/ppa/ubuntu $(lsb_release -c -s) main" >>  /etc/apt/sources.list.d/java.list
