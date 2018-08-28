@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_49ed7aee",
+        "filename": "vnfs/vCPE/scripts/v_dns_install.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 29
+      },
+      "writtenOn": "2018-08-28T21:16:39Z",
+      "side": 1,
+      "message": "where is REPO used ?",
+      "range": {
+        "startLine": 5,
+        "startChar": 54,
+        "endLine": 5,
+        "endChar": 69
+      },
+      "revId": "c7ecda0381ef25f89c25504bad0c2d79ea260a14",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
