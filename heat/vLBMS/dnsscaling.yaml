@@ -105,10 +105,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_artifacts:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   install_script_version:
     type: string
     label: Installation script version number
@@ -191,7 +187,6 @@ resources:
             __lb_to_pktgen_if__: { get_param: vlb_private_ip_2}
             __local_private_ipaddr__: { get_param: vdns_private_ip_0 }
             __oam_private_ipaddr__: { get_param: vdns_private_ip_1 }
-            __repo_url_artifacts__: { get_param: repo_url_artifacts }
             __nb_api_version__: { get_param: nb_api_version }
             __install_script_version__: { get_param: install_script_version }
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
@@ -208,7 +203,6 @@ resources:
             echo "__lb_to_pktgen_if__" > /opt/config/lb_to_pktgen_if.txt
             echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__nb_api_version__" > /opt/config/nb_api_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt

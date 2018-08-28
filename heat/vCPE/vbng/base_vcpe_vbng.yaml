@@ -137,10 +137,6 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_artifacts:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
   script_version:
     type: string
     label: Installation script version number
@@ -241,7 +237,6 @@ resources:
             __bng_gmux_cidr__: { get_param: bng_gmux_private_net_cidr }
             __dcae_collector_ip__: { get_param: dcae_collector_ip }
             __dcae_collector_port__: { get_param: dcae_collector_port }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __script_version__ : { get_param: script_version }
             __cloud_env__ : { get_param: cloud_env }
@@ -262,7 +257,6 @@ resources:
             echo "__brgemu_bng_cidr__" > /opt/config/brgemu_bng_net_cidr.txt
             echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
             echo "__dcae_collector_port__" > /opt/config/dcae_collector_port.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__script_version__" > /opt/config/script_version.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
