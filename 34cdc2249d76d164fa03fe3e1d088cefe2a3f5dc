@@ -22,6 +22,30 @@
       "revId": "34cdc2249d76d164fa03fe3e1d088cefe2a3f5dc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_69a4f6a5",
+        "filename": "boot/robot/integration_preload_parameters.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 35
+      },
+      "writtenOn": "2018-08-28T21:39:56Z",
+      "side": 0,
+      "message": "It used to be that the VNFs scripts were downloaded from the \"raw\" repo, which was holding both SNAPSHOT and release version-labeled artifacts that weren\u0027t really version controlled.  This whole exercise was to move away from the use of the \"raw\" repo.",
+      "parentUuid": "1a76adc5_e9900645",
+      "range": {
+        "startLine": 6,
+        "startChar": 10,
+        "endLine": 6,
+        "endChar": 75
+      },
+      "revId": "34cdc2249d76d164fa03fe3e1d088cefe2a3f5dc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
