@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set environment variables
-DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
+export DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 export NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
