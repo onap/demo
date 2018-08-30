@@ -65,6 +65,30 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_850b6929",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1603
+      },
+      "writtenOn": "2018-08-30T22:27:30Z",
+      "side": 1,
+      "message": "can the orchestrator take a glance image name - or does the actual image need to be included in the csar package?",
+      "parentUuid": "1a76adc5_172d54a8",
+      "range": {
+        "startLine": 379,
+        "startChar": 26,
+        "endLine": 379,
+        "endChar": 28
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_775da846",
         "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
         "patchSetId": 1
