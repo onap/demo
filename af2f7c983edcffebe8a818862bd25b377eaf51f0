@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_058199c3",
+        "filename": "heat/ONAP/onap_openstack.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 2462,
+      "author": {
+        "id": 35
+      },
+      "writtenOn": "2018-08-30T21:18:27Z",
+      "side": 1,
+      "message": "Probably should be aaf_floating_ip?",
+      "range": {
+        "startLine": 2462,
+        "startChar": 42,
+        "endLine": 2462,
+        "endChar": 60
+      },
+      "revId": "af2f7c983edcffebe8a818862bd25b377eaf51f0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
