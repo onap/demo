@@ -1,0 +1,436 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+metadata:
+  template_name: vCPE_vbng
+  template_version: "1.0"
+  template_author: onap
+description: vCPE_vbng
+
+imports:
+  - onap_dm.yaml
+
+node_types:
+  onap.vcpe_vbng:
+    derived_from: tosca.nodes.nfv.VNF
+    properties:
+      descriptor_id:
+        type: string
+        constraints: [ valid_values: [ b1bb0ce7-5555-4fa7-95ed-4840d70a1177 ] ]
+        default: b1bb0ce7-5555-4fa7-95ed-4840d70a1177
+      provider:
+        type: string
+        constraints: [ valid_values: [ onap ] ]
+        default: onap
+      product_name:
+        type: string
+        constraints: [ valid_values: [ vcpe_vbng ] ]
+        default: vcpe_vbng
+      software_version:
+        type: string
+        constraints: [ valid_values: [ '1.0' ] ]
+        default: '1.0'
+      descriptor_version:
+        type: string
+        constraints: [ valid_values: [ '1.0' ] ]
+        default: '1.0'
+      flavour_id:
+        type: string
+        constraints: [ valid_values: [ simple ] ]  #only one and only allowed one DF in this example
+        default: simple
+      flavour_description:
+        type: string
+        default: simple
+      vnfm_info:
+        type: list
+        entry_schema:
+          type: string
+        default: ['gvnfm']
+
+topology_template:
+#  substitution_mappings:
+#    node_type: onap.vcpe_vbng
+#    requirements:
+#      virtual_link: [ Cp_vbng_public, virtual_link ] # expose as external CP
+#      virtual_link: [ Cp_vbng_onap_private, virtual_link ] # expose as external CP
+
+  inputs:
+    vcpe_image_name:
+      type: string
+      description: image name for vcpe in openstack glance
+      default: ubuntu_16.04
+    public_net_id:
+      type: string
+      description: public network id used during onap installation
+    onap_private_net_id:
+      type: string
+      description: onap OAM network id
+    onap_private_net_cidr:
+      type: string
+      description: oanp OAM network cidr
+      default: 10.0.0.0/16
+    brgemu_bng_private_net_id:
+      type: string
+      description: Private network that connects vBRG to vBNG
+      default: zdfw1bngin01_private
+    brgemu_bng_private_net_cidr:
+      type: string
+      description: The CIDR of the input side of vBNG private network
+      default: 10.3.0.0/24
+    bng_gmux_private_net_id:
+      type: string
+      description: Private network that connects vBNG to vGMUX
+      default: zdfw1bngmux01_private
+    bng_gmux_private_net_cidr:
+      type: string
+      description: The CIDR of the input side of vGMUX private network
+      default: 10.1.0.0/24
+    cpe_signal_net_id:
+      type: string
+      description: Private network that connects vCPE elements with vCPE infrastructure elements
+      default: zdfw1cpe01_private
+    cpe_signal_private_net_cidr:
+      type: string
+      description: The CIDR of the vAAA private network
+      default: 10.4.0.0/24
+    vbng_private_ip_0:
+      type: string
+      description: Private IP address that is assigned to the vBNG IN
+      default: 10.3.0.1
+    vbng_private_ip_1:
+      type: string
+      description: Private IP address that is assigned to the vBNG to communicate with ONAP components
+      default: 10.0.101.10
+    vbng_private_ip_2:
+      type: string
+      description: Private IP address that is assigned to the vBNG in the CPE_SIGNAL network
+      default: 10.4.0.3
+    vbng_private_ip_3:
+      type: string
+      description: Private IP address that is assigned to the vBNG to vGMUX port
+      default: 10.1.0.10
+    vbng_name_0:
+      type: string
+      description: Name of the vBNG
+      default: zdcpe1cpe01bng01
+    vnf_id:
+      type: string
+      description: The VNF ID is provided by ONAP
+      default: vCPE_Infrastructure_Metro_vBNG_demo_app
+    vf_module_id:
+      type: string
+      description: The vCPE Module ID is provided by ONAP
+      default: vCPE_Intrastructure_Metro_vBNG
+    dcae_collector_ip:
+      type: string
+      description: dcae collector ip
+      default: 10.0.4.102
+    dcae_collector_port:
+      type: integer
+      description: dcae collector port
+      default: 8080
+    pub_key:
+      type: string
+      description: ssh public key
+      default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGx6SKrAuCz1V8KGevZueksLdWoPWJP6z3r29Z7TmPVEOjM+7PIPeSs2BVRx3rnHZBAlasMrZ+fJBS25ts9vfC+ItezQah/hr9vrkmwxCR54Lb84poW+sToPeF6i5eZY7W+jWJfLaFSFx9d2vp4zes/fOlT3NvYCXbn/3QdryQoGl7VFI8oemZypVcikZXElJeeKgAVdSwnrzuqtO/tmbXcAeSbYvVjki8ywYcsWMVMYWUWhh+1BAB6kXnTsIWqzrq0Pfvy+81WDwtiqsqmd93HY8hE0scBrXFBZzQS/AYfIFBlEuFNdLczchntjbZ0n7dmDXk8zHtCZYNk7kwb8k/
+    nexus_artifact_repo:
+      type: string
+      description: Root URL for the Nexus repository for Maven artifacts
+      default: https://nexus.onap.org
+    demo_artifacts_version:
+      type: string
+      description: artifacts version used in demo vnfs
+      default: 1.2.0
+    install_script_version:
+      type: string
+      description: install script version number
+      default: 1.2.0-SNAPSHOT
+    cloud_env:
+      type: string
+      description: cloud environment(openstack or rackspace)
+      default: openstack
+    sdnc_ip_addr:
+      type: string
+      description: IP address of the SDNC
+      default: 10.0.7.1
+
+  node_templates:
+    #onap public net
+#    VL_public:
+#      type: tosca.nodes.nfv.VnfVirtualLink
+#      properties:
+#        connectivity_type:
+#          layer_protocol: ipv4
+#        vl_profile:
+#          max_bit_rate_requirements:
+#            root: 10000000
+#            leaf: 10000000
+#          min_bit_rate_requirements:
+#            root: 10000000
+#            leaf: 10000000
+#          networkName: { get_input: public_net_id }
+#
+#    #onap oam net
+#    VL_onap_private:
+#      type: tosca.nodes.nfv.VnfVirtualLink
+#      properties:
+#        connectivity_type:
+#          layer_protocol: ipv4
+#        vl_profile:
+#          max_bit_rate_requirements:
+#            root: 10000000
+#            leaf: 10000000
+#          min_bit_rate_requirements:
+#            root: 10000000
+#            leaf: 10000000
+#          networkName: { get_input: onap_private_net_id }
+#          cidr: { get_input: onap_private_net_cidr }
+
+    #Private network that connects vBRG to vBNG
+    VL_brgemu_bng_private_net:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: brgemu_bng_private_net_id}
+          cidr: { get_input: brgemu_bng_private_net_cidr }
+          dhcpEnabled: false
+ 
+    #cpe signal network
+    VL_cpe_signal:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: cpe_signal_net_id}
+          cidr: { get_input: cpe_signal_private_net_cidr }
+          dhcpEnabled: false
+
+    #Private network that connects vBNG to vGMUX
+    VL_bng_gmux_private_net:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: bng_gmux_private_net_id}
+          cidr: { get_input: bng_gmux_private_net_cidr }
+          dhcpEnabled: false
+
+    # vbng related
+    Cp_vbng_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+      requirements:
+        - virtual_binding: VDU_vbng_0
+        #- virtual_link: VL_public
+
+    Cp_vbng_onap_private:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vbng_private_ip_1 }
+      requirements:
+        - virtual_binding: VDU_vbng_0
+        #- virtual_link: VL_onap_private
+
+    Cp_vbng_brgemu_bng_private_net:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vbng_private_ip_0 }
+        virtual_network_interface_requirements:
+          - name: dpdk support
+            support_mandatory: true
+            # TODO HPA
+            network_interface_requirements:
+              #dataProcessingAccelerationLibrary: dpdk_2.2
+              interfaceType: virtio
+      requirements:
+        - virtual_binding: VDU_vbng_0
+        - virtual_link: VL_brgemu_bng_private_net
+
+    Cp_vbng_cpe_signal:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vbng_private_ip_2 }
+      requirements:
+        - virtual_binding: VDU_vbng_0
+        - virtual_link: VL_cpe_signal
+
+    Cp_vbng_bng_gmux_private_net:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vbng_private_ip_3 }
+        virtual_network_interface_requirements:
+          - name: dpdk support
+            support_mandatory: true
+            # TODO HPA
+            network_interface_requirements:
+              #dataProcessingAccelerationLibrary: dpdk_2.2
+              interfaceType: virtio
+      requirements:
+        - virtual_binding: VDU_vbng_0
+        - virtual_link: VL_bng_gmux_private_net
+
+    VirtualStorage_root_all:
+      # this indicate the VDU root storage size 
+      type: tosca.nodes.nfv.Vdu.VirtualStorage
+      properties:
+        type_of_storage: root
+        size_of_storage: 40 GB
+
+    VDU_vbng_0:
+      type: tosca.nodes.nfv.Vdu.Compute
+      properties:
+        name: { get_input: vbng_name_0 }
+        description: vbng
+        configurable_properties: 
+          additional_vnfc_configurable_properties: {}
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          watchdog: none
+        inject_files: #TODO SDC bug
+          source_path: ../Artifacts/keys/authorized_keys #SSH authorized_keys
+          dest_path: /home/ubuntu/.ssh/authorized_keys
+        meta_data:
+          vnf_id: { get_input: vnf_id }
+          vf_module_id: { get_input: vf_module_id }
+
+          brgemu_bng_net_ipaddr: { get_input: vbng_private_ip_0 }
+          cpe_signal_net_ipaddr: { get_input: vbng_private_ip_2 }
+          bng_gmux_net_ipaddr: { get_input: vbng_private_ip_3 }
+          oam_ipaddr: { get_input: vbng_private_ip_1 }
+          oam_cidr: { get_input: oam_private_net_cidr }
+          bng_gmux_cidr: { get_input: bng_gmux_private_net_cidr }
+          cpe_signal_cidr: { get_input: cpe_signal_private_net_cidr }
+          brgemu_bng_cidr: { get_input: brgemu_bng_private_net_cidr }
+          dcae_collector_ip: { get_input: dcae_collector_ip }
+          dcae_collector_port: { get_input: dcae_collector_port }
+          demo_artifacts_version: { get_input: demo_artifacts_version }
+          install_script_version: { get_input: install_script_version }
+          sdnc_ip: { get_input: sdnc_ip }
+          cloud_env: { get_input: cloud_env }
+          nexus_artifact_repo: { get_input: nexus_artifact_repo }
+        user_data: |
+          !/bin/bash
+          METADATA=`curl -s http://169.254.169.254/openstack/2012-08-10/meta_data.json`
+          apt-get -y install jq
+
+          get_metadata () {
+            echo $METADATA | jq -r ".meta.$1"
+          }
+
+          # Create configuration files
+          mkdir /opt/config
+          echo "$(get_metadata brgemu_bng_net_ipaddr)" > /opt/config/brgemu_bng_net_ipaddr.txt
+          echo "$(get_metadata cpe_signal_net_ipaddr)" > /opt/config/cpe_signal_net_ipaddr.txt
+          echo "$(get_metadata bng_gmux_net_ipaddr)" > /opt/config/bng_gmux_net_ipaddr.txt
+          echo "$(get_metadata oam_ipaddr)" > /opt/config/oam_ipaddr.txt
+          echo "$(get_metadata oam_cidr)" > /opt/config/oam_cidr.txt
+          echo "$(get_metadata bng_gmux_cidr)" > /opt/config/bng_gmux_net_cidr.txt
+          echo "$(get_metadata cpe_signal_cidr)" > /opt/config/cpe_signal_net_cidr.txt
+          echo "$(get_metadata brgemu_bng_cidr)" > /opt/config/brgemu_bng_net_cidr.txt
+          echo "$(get_metadata dcae_collector_ip)" > /opt/config/dcae_collector_ip.txt
+          echo "$(get_metadata dcae_collector_port)" > /opt/config/dcae_collector_port.txt
+          echo "$(get_metadata demo_artifacts_version)" > /opt/config/demo_artifacts_version.txt
+          echo "$(get_metadata install_script_version)" > /opt/config/install_script_version.txt
+          echo "$(get_metadata cloud_env)" > /opt/config/cloud_env.txt
+          echo "$(get_metadata sdnc_ip)" > /opt/config/sdnc_ip.txt
+          echo "$(get_metadata nexus_artifact_repo)" > /opt/config/nexus_artifact_repo.txt
+
+          # Download and run install script
+          apt-get -y install unzip
+          INSTALL_SCRIPT_VERSION=$(get_metadata install_script_version)
+          NEXUS_ARTIFACT_REPO=$(get_metadata nexus_artifact_repo)
+          if [[ "${INSTALL_SCRIPT_VERSION}" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+          curl -k -L "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=${INSTALL_SCRIPT_VERSION}" -o /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip
+          unzip -j /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip -d /opt v_bng_install.sh
+          cd /opt
+          chmod +x v_bng_install.sh
+          ./v_bng_install.sh
+      capabilities:
+        virtual_compute:
+          properties:
+            virtual_memory:
+              virtual_mem_size: 4096 MB
+              # HPA requirements
+              vdu_memory_requirements:
+                memoryPageSize: '{"schema-version": "0", "schema-location": "", "platform-id": "generic", "mandatory": true, "configuration-value": "2 MB"}'
+                numberOfPages: '{"schema-version": "0","schema-location": "","platform-id": "generic","mandatory": true,"configuration-value": 1024}'
+            virtual_cpu:
+              num_virtual_cpu: 2
+              cpu_architecture: generic
+      requirements:
+        - virtual_storage: VirtualStorage_root_all
+      artifacts:
+        sw_image: #TODO need to put glance image name here
+          #file: { get_input: vcpe_image_name }
+          file: ../Artifacts/images/ubuntu_16.04
+          type: tosca.artifacts.nfv.SwImage

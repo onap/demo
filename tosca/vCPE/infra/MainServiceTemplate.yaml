@@ -1,0 +1,757 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+metadata:
+  template_name: vCPE_infra
+  template_version: "1.0"
+  template_author: onap
+description: vCPE_infra
+
+imports:
+  - onap_dm.yaml
+
+node_types:
+  onap.vcpe_infra:
+    derived_from: tosca.nodes.nfv.VNF
+    properties:
+      descriptor_id:
+        type: string
+        constraints: [ valid_values: [ b1bb0ce7-1111-4fa7-95ed-4840d70a1177 ] ]
+        default: b1bb0ce7-1111-4fa7-95ed-4840d70a1177
+      provider:
+        type: string
+        constraints: [ valid_values: [ onap ] ]
+        default: onap
+      product_name:
+        type: string
+        constraints: [ valid_values: [ vcpe_infra ] ]
+        default: vcpe_infra
+      software_version:
+        type: string
+        constraints: [ valid_values: [ '1.0' ] ]
+        default: '1.0'
+      descriptor_version:
+        type: string
+        constraints: [ valid_values: [ '1.0' ] ]
+        default: '1.0'
+      flavour_id:
+        type: string
+        constraints: [ valid_values: [ simple ] ]  #only one and only allowed one DF in this example
+        default: simple
+      flavour_description:
+        type: string
+        default: simple
+      vnfm_info:
+        type: list
+        entry_schema:
+          type: string
+        default: ['gvnfm']
+
+topology_template:
+#  substitution_mappings:
+#    node_type: onap.vcpe_infra
+#    requirements:
+#      virtual_link: [ Cp_vaaa_public, virtual_link ] # expose as external CP
+#      virtual_link: [ Cp_vaaa_onap_private, virtual_link ] # expose as external CP
+#      virtual_link: [ Cp_vdns_public, virtual_link ]
+#      virtual_link: [ Cp_vdns_onap_private, virtual_link ]
+#      virtual_link: [ Cp_vdhcp_public, virtual_link ]
+#      virtual_link: [ Cp_vdhcp_onap_private, virtual_link ]
+#      virtual_link: [ Cp_vweb_public, virtual_link ]
+#      virtual_link: [ Cp_vweb_onap_private, virtual_link ]
+
+  inputs:
+    vcpe_image_name:
+      type: string
+      description: image name for vcpe in openstack glance
+      default: ubuntu_16.04
+    public_net_id:
+      type: string
+      description: public network id used during onap installation
+    onap_private_net_id:
+      type: string
+      description: onap OAM network id
+    onap_private_net_cidr:
+      type: string
+      description: oanp OAM network cidr
+      default: 10.0.0.0/16
+    mr_ip_addr:
+      type: string
+      description: message router ip that for vDHCP configuration 
+      default: 10.0.11.1
+    dcae_collector_ip:
+      type: string
+      description: dcae collector ip
+      default: 10.0.4.102
+    dcae_collector_port:
+      type: integer
+      description: dcae collector port
+      default: 8080
+    nexus_artifact_repo:
+      type: string
+      description: Root URL for the Nexus repository for Maven artifacts
+      default: https://nexus.onap.org
+    demo_artifacts_version:
+      type: string
+      description: artifacts version used in demo vnfs
+      default: 1.2.0
+    install_script_version:
+      type: string
+      description: install script version number
+      default: 1.2.0-SNAPSHOT
+    cloud_env:
+      type: string
+      description: cloud environment(openstack or rackspace)
+      default: openstack
+    pub_key:
+      type: string
+      description: ssh public key
+      default: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDGx6SKrAuCz1V8KGevZueksLdWoPWJP6z3r29Z7TmPVEOjM+7PIPeSs2BVRx3rnHZBAlasMrZ+fJBS25ts9vfC+ItezQah/hr9vrkmwxCR54Lb84poW+sToPeF6i5eZY7W+jWJfLaFSFx9d2vp4zes/fOlT3NvYCXbn/3QdryQoGl7VFI8oemZypVcikZXElJeeKgAVdSwnrzuqtO/tmbXcAeSbYvVjki8ywYcsWMVMYWUWhh+1BAB6kXnTsIWqzrq0Pfvy+81WDwtiqsqmd93HY8hE0scBrXFBZzQS/AYfIFBlEuFNdLczchntjbZ0n7dmDXk8zHtCZYNk7kwb8k/
+    cpe_signal_net_id:
+      type: string
+      description: cpe signal net name
+      default: zdfw1cpe01_private
+    cpe_signal_net_cidr:
+      type: string
+      description: cpe signal net cidr
+      default: 10.4.0.0/24
+    cpe_public_net_id:
+      type: string
+      description: cpe public net name
+      default: zdfw1cpe01_public
+    cpe_public_net_cidr:
+      type: string
+      description: cpe public net cidr
+      default: 10.2.0.0/24
+    vdhcp_name_0:
+      type: string
+      description: vdu vdhcp_0 name
+      default: zdcpe1cpe01dhcp01
+    vdhcp_private_ip_0:
+      type: string
+      description: ip of vdhcp port to cpe signal net 
+      default: 10.4.0.1
+    vdhcp_private_ip_1:
+      type: string
+      description: ip of vdhcp port to onap oam net 
+      default: 10.0.101.1
+    vaaa_name_0:
+      type: string
+      description: vdu vaaa_0 name
+      default: zdcpe1cpe01aaa01
+    vaaa_private_ip_0:
+      type: string
+      description: ip of vaaa port to cpe signal net 
+      default: 10.4.0.4
+    vaaa_private_ip_1:
+      type: string
+      description: ip of vaaa port to onap oam net 
+      default: 10.0.101.2
+    vdns_name_0:
+      type: string
+      description: vdu vdns_0 name
+      default: zdcpe1cpe01dns01
+    vdns_private_ip_0:
+      type: string
+      description: ip of vdns port to cpe public net 
+      default: 10.2.0.1
+    vdns_private_ip_1:
+      type: string
+      description: ip of vdns port to onap oam net 
+      default: 10.0.101.3
+    vweb_name_0:
+      type: string
+      description: vdu vweb_0 name
+      default: zdcpe1cpe01web01
+    vweb_private_ip_0:
+      type: string
+      description: ip of vweb port to cpe public net 
+      default: 10.2.0.10
+    vweb_private_ip_1:
+      type: string
+      description: ip of vweb port to onap oam net 
+      default: 10.0.101.40
+    vnf_id:
+      type: string
+      description: The VNF ID is provided by ONAP
+      default: vCPE_Infrastructure_demo_app
+    vf_module_id:
+      type: string
+      description: The vCPE Module ID is provided by ONAP
+      default: vCPE_Intrastructure
+    
+  node_templates:
+    #onap public net
+#    VL_public:
+#      type: tosca.nodes.nfv.VnfVirtualLink
+#      properties:
+#        connectivity_type:
+#          layer_protocol: ipv4
+#        vl_profile:
+#          max_bit_rate_requirements:
+#            root: 10000000
+#            leaf: 10000000
+#          min_bit_rate_requirements:
+#            root: 10000000
+#            leaf: 10000000
+#          networkName: { get_input: public_net_id }
+#
+#    #onap oam net
+#    VL_onap_private:
+#      type: tosca.nodes.nfv.VnfVirtualLink
+#      properties:
+#        connectivity_type:
+#          layer_protocol: ipv4
+#        vl_profile:
+#          max_bit_rate_requirements:
+#            root: 10000000
+#            leaf: 10000000
+#          min_bit_rate_requirements:
+#            root: 10000000
+#            leaf: 10000000
+#          networkName: { get_input: onap_private_net_id }
+#          cidr: { get_input: onap_private_net_cidr }
+
+    #cpe signal network
+    VL_cpe_signal:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: cpe_signal_net_id}
+          cidr: { get_input: cpe_signal_net_cidr }
+          dhcpEnabled: false
+ 
+    #cpe public network
+    VL_cpe_public:
+      type: tosca.nodes.nfv.VnfVirtualLink
+      properties:
+        connectivity_type:
+          layer_protocol: ipv4
+        vl_profile:
+          max_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          min_bit_rate_requirements:
+            root: 10000000
+            leaf: 10000000
+          networkName: { get_input: cpe_public_net_id}
+          cidr: { get_input: cpe_public_net_cidr }
+          dhcpEnabled: false
+
+    # vaaa related
+    Cp_vaaa_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+      requirements:
+        - virtual_binding: VDU_vaaa_0
+#        - virtual_link: VL_public
+
+    Cp_vaaa_onap_private:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vaaa_private_ip_1 }
+      requirements:
+        - virtual_binding: VDU_vaaa_0
+#        - virtual_link: VL_onap_private
+
+    Cp_vaaa_cpe_signal:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vaaa_private_ip_0 }
+      requirements:
+        - virtual_binding: VDU_vaaa_0
+        - virtual_link: VL_cpe_signal
+
+    VirtualStorage_root_all:
+      # this indicate the VDU root storage size 
+      type: tosca.nodes.nfv.Vdu.VirtualStorage
+      properties:
+        type_of_storage: root
+        size_of_storage: 40 GB
+
+    VDU_vaaa_0:
+      type: tosca.nodes.nfv.Vdu.Compute
+      properties:
+        name: { get_input: vaaa_name_0 }
+        description: vaaa
+        configurable_properties: 
+          additional_vnfc_configurable_properties: {}
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          watchdog: none
+        inject_files: #TODO SDC Bug
+          source_path: ../Artifacts/keys/authorized_keys #SSH authorized_keys
+          dest_path: /home/ubuntu/.ssh/authorized_keys
+        meta_data:
+          vnf_id: { get_input: vnf_id }
+          vf_module_id: { get_input: vf_module_id }
+          dcae_collector_ip: { get_input: dcae_collector_ip }
+          dcae_collector_port: { get_input: dcae_collector_port }
+          cpe_signal_net_ipaddr: { get_input: vaaa_private_ip_0 }
+          oam_ipaddr: { get_input: vaaa_private_ip_1 }
+          oam_cidr: { get_input: oam_private_net_cidr }
+          cpe_signal_net_cidr: { get_input: cpe_signal_net_cidr }
+          demo_artifacts_version: { get_input: demo_artifacts_version }
+          install_script_version: { get_input: install_script_version }
+          cloud_env: { get_input: cloud_env }
+          nexus_artifact_repo: { get_input: nexus_artifact_repo }
+        user_data: |
+          !/bin/bash
+          METADATA=`curl -s http://169.254.169.254/openstack/2012-08-10/meta_data.json`
+          apt-get -y install jq
+
+          get_metadata () {
+            echo $METADATA | jq -r ".meta.$1"
+          }
+
+          # Create configuration files
+          mkdir /opt/config
+          echo "$(get_metadata dcae_collector_ip)" > /opt/config/dcae_collector_ip.txt
+          echo "$(get_metadata dcae_collector_port)" > /opt/config/dcae_collector_port.txt
+          echo "$(get_metadata cpe_signal_net_ipaddr)" > /opt/config/cpe_signal_net_ipaddr.txt
+          echo "$(get_metadata oam_ipaddr)" > /opt/config/oam_ipaddr.txt
+          echo "$(get_metadata oam_cidr)" > /opt/config/oam_cidr.txt
+          echo "$(get_metadata cpe_signal_net_cidr)" > /opt/config/cpe_signal_net_cidr.txt
+          echo "$(get_metadata demo_artifacts_version)" > /opt/config/demo_artifacts_version.txt
+          echo "$(get_metadata install_script_version)" > /opt/config/install_script_version.txt
+          echo "$(get_metadata cloud_env)" > /opt/config/cloud_env.txt
+          echo "$(get_metadata nexus_artifact_repo)" > /opt/config/nexus_artifact_repo.txt
+
+          # Download and run install script
+          apt-get -y install unzip
+          INSTALL_SCRIPT_VERSION=$(get_metadata install_script_version)
+          NEXUS_ARTIFACT_REPO=$(get_metadata nexus_artifact_repo)
+          if [[ "${INSTALL_SCRIPT_VERSION}" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+          curl -k -L "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=${INSTALL_SCRIPT_VERSION}" -o /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip
+          unzip -j /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip -d /opt v_aaa_install.sh
+          cd /opt
+          chmod +x v_aaa_install.sh
+          ./v_aaa_install.sh
+      capabilities:
+        virtual_compute:
+          properties:
+            #TODO add local disk size
+            virtual_memory:
+              virtual_mem_size: 4096 MB
+            virtual_cpu:
+              num_virtual_cpu: 2     
+      requirements:
+        - virtual_storage: VirtualStorage_root_all
+      artifacts:
+        sw_image: #TODO need to put glance image name here
+          #file: { get_input: vcpe_image_name }
+          file: ubuntu_16.04
+          type: tosca.artifacts.nfv.SwImage
+
+    # vdns related
+    Cp_vdns_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+      requirements:
+        - virtual_binding: VDU_vdns_0
+#        - virtual_link: VL_public
+
+    Cp_vdns_onap_private:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vdns_private_ip_1 }
+      requirements:
+        - virtual_binding: VDU_vdns_0
+        #- virtual_link: VL_onap_private
+
+    Cp_vdns_cpe_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vdns_private_ip_0 }
+      requirements:
+        - virtual_binding: VDU_vdns_0
+        - virtual_link: VL_cpe_public
+
+    VDU_vdns_0:
+      type: tosca.nodes.nfv.Vdu.Compute
+      properties:
+        name: { get_input: vdns_name_0 }
+        description: vdns
+        configurable_properties: 
+          additional_vnfc_configurable_properties: {}
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          watchdog: none
+        inject_files: # TODO SDC Bug
+          source_path: ../Artifacts/keys/authorized_keys #SSH authorized_keys
+          dest_path: /home/ubuntu/.ssh/authorized_keys
+        meta_data:
+          vnf_id: { get_input: vnf_id }
+          vf_module_id: { get_input: vf_module_id }
+          oam_ipaddr: { get_input: vdns_private_ip_1 }
+          cpe_public_net_ipaddr: { get_input: vdns_private_ip_0 }
+          oam_cidr: { get_input: oam_private_net_cidr }
+          cpe_public_net_cidr: { get_input: cpe_public_net_cidr }
+          demo_artifacts_version: { get_input: demo_artifacts_version }
+          install_script_version: { get_input: install_script_version }
+          cloud_env: { get_input: cloud_env }
+          nexus_artifact_repo: { get_input: nexus_artifact_repo }
+        user_data: |
+          !/bin/bash
+          METADATA=`curl -s http://169.254.169.254/openstack/2012-08-10/meta_data.json`
+          apt-get -y install jq
+
+          get_metadata () {
+            echo $METADATA | jq -r ".meta.$1"
+          }
+
+          # Create configuration files
+          mkdir /opt/config
+          echo "$(get_metadata oam_ipaddr)" > /opt/config/oam_ipaddr.txt
+          echo "$(get_metadata cpe_public_net_ipaddr)" > /opt/config/cpe_public_net_ipaddr.txt
+          echo "$(get_metadata onap_cidr)" > /opt/config/oam_cidr.txt
+          echo "$(get_metadata cpe_public_net_cidr)" > /opt/config/cpe_public_net_cidr.txt
+          echo "$(get_metadata demo_artifacts_version)" > /opt/config/demo_artifacts_version.txt
+          echo "$(get_metadata install_script_version)" > /opt/config/install_script_version.txt
+          echo "$(get_metadata cloud_env)" > /opt/config/cloud_env.txt
+          echo "$(get_metadata nexus_artifact_repo)" > /opt/config/nexus_artifact_repo.txt
+
+          # Download and run install script
+          apt-get -y install unzip
+          INSTALL_SCRIPT_VERSION=$(get_metadata install_script_version)
+          NEXUS_ARTIFACT_REPO=$(get_metadata nexus_artifact_repo)
+          if [[ "${INSTALL_SCRIPT_VERSION}" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+          curl -k -L "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=${INSTALL_SCRIPT_VERSION}" -o /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip
+          unzip -j /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip -d /opt v_dns_install.sh
+          cd /opt
+          chmod +x v_dns_install.sh
+          ./v_dns_install.sh
+      capabilities:
+        virtual_compute:
+          properties:
+            #TODO add local disk size
+            virtual_memory:
+              virtual_mem_size: 4096 MB
+            virtual_cpu:
+              num_virtual_cpu: 2
+      requirements:
+        - virtual_storage: VirtualStorage_root_all
+      artifacts:
+        sw_image: #TODO need to put glance image name here
+          #file: { get_input: vcpe_image_name }
+          file: ubuntu_16.04
+          type: tosca.artifacts.nfv.SwImage
+
+    # vdhcp related
+    Cp_vdhcp_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+      requirements:
+        - virtual_binding: VDU_vdhcp_0
+#        - virtual_link: VL_public
+
+    Cp_vdhcp_onap_private:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vdhcp_private_ip_1 }
+      requirements:
+        - virtual_binding: VDU_vdhcp_0
+#        - virtual_link: VL_onap_private
+
+    Cp_vdhcp_cpe_signal:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vdhcp_private_ip_0 }
+      requirements:
+        - virtual_binding: VDU_vdhcp_0
+        - virtual_link: VL_cpe_signal
+
+    VDU_vdhcp_0:
+      type: tosca.nodes.nfv.Vdu.Compute
+      properties:
+        name: { get_input: vdhcp_name_0 }
+        description: vdhcp
+        configurable_properties: 
+          additional_vnfc_configurable_properties: {}
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          watchdog: none
+        inject_files: #SDC Bug
+          source_path: ../Artifacts/keys/authorized_keys #SSH authorized_keys
+          dest_path: /home/ubuntu/.ssh/authorized_keys
+        meta_data:
+          vnf_id: { get_input: vnf_id }
+          vf_module_id: { get_input: vf_module_id }
+          oam_ipaddr: { get_input: vdhcp_private_ip_1 }
+          cpe_signal_ipaddr: { get_input: vdhcp_private_ip_0 }
+          oam_cidr: { get_input: oam_private_net_cidr }
+          cpe_signal_net_cidr: { get_input: cpe_signal_net_cidr }
+          mr_ip_addr: { get_input: mr_ip_addr }
+          mr_ip_port: { get_input: mr_ip_port }
+          demo_artifacts_version: { get_input: demo_artifacts_version }
+          install_script_version: { get_input: install_script_version }
+          cloud_env: { get_input: cloud_env }
+          nexus_artifact_repo: { get_input: nexus_artifact_repo }
+        user_data: |
+          !/bin/bash
+          METADATA=`curl -s http://169.254.169.254/openstack/2012-08-10/meta_data.json`
+          apt-get -y install jq
+
+          get_metadata () {
+            echo $METADATA | jq -r ".meta.$1"
+          }
+
+          # Create configuration files
+          mkdir /opt/config
+          echo "$(get_metadata oam_ipaddr)" > /opt/config/oam_ipaddr.txt
+          echo "$(get_metadata cpe_signal_ipaddr)" > /opt/config/cpe_signal_ipaddr.txt
+          echo "$(get_metadata onap_cidr)" > /opt/config/oam_cidr.txt
+          echo "$(get_metadata cpe_signal_net_cidr)" > /opt/config/cpe_signal_net_cidr.txt
+          echo "$(get_metadata mr_ip_addr)" > /opt/config/mr_ip_addr.txt
+          echo "$(get_metadata mr_ip_port)" > /opt/config/mr_ip_port.txt
+          echo "$(get_metadata demo_artifacts_version)" > /opt/config/demo_artifacts_version.txt
+          echo "$(get_metadata install_script_version)" > /opt/config/install_script_version.txt
+          echo "$(get_metadata cloud_env)" > /opt/config/cloud_env.txt
+          echo "$(get_metadata nexus_artifact_repo)" > /opt/config/nexus_artifact_repo.txt
+
+          # Download and run install script
+          apt-get -y install unzip
+          INSTALL_SCRIPT_VERSION=$(get_metadata install_script_version)
+          NEXUS_ARTIFACT_REPO=$(get_metadata nexus_artifact_repo)
+          if [[ "${INSTALL_SCRIPT_VERSION}" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+          curl -k -L "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=${INSTALL_SCRIPT_VERSION}" -o /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip
+          unzip -j /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip -d /opt v_dhcp_install.sh
+          cd /opt
+          chmod +x v_dhcp_install.sh
+          ./v_dhcp_install.sh
+      capabilities:
+        virtual_compute:
+          properties:
+            #TODO add local disk size
+            virtual_memory:
+              virtual_mem_size: 4096 MB
+            virtual_cpu:
+              num_virtual_cpu: 2
+      requirements:
+        - virtual_storage: VirtualStorage_root_all
+      artifacts:
+        sw_image: #TODO need to put glance image name here
+          #file: { get_input: vcpe_image_name }
+          file: ubuntu_16.04
+          type: tosca.artifacts.nfv.SwImage
+
+    # vweb related
+    Cp_vweb_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+      requirements:
+        - virtual_binding: VDU_vweb_0
+#        - virtual_link: VL_public
+
+    Cp_vweb_onap_private:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vweb_private_ip_1 }
+      requirements:
+        - virtual_binding: VDU_vweb_0
+#        - virtual_link: VL_onap_private
+
+    Cp_vweb_cpe_public:
+      type: tosca.nodes.nfv.VduCp
+      properties:
+        layer_protocol: [ipv4]
+        trunk_mode: false
+        protocol_data:
+          - asscociated_layer_protocol: ipv4
+            address_data:
+              address_type: ip_address
+              l3_address_data:
+                ip_address_assignment: false
+                floating_ip_activated: false
+                fixed_ip_address:
+                  - { get_input: vweb_private_ip_0 }
+      requirements:
+        - virtual_binding: VDU_vweb_0
+        - virtual_link: VL_cpe_public
+
+    VDU_vweb_0:
+      type: tosca.nodes.nfv.Vdu.Compute
+      properties:
+        name: { get_input: vweb_name_0 }
+        description: vweb
+        configurable_properties: 
+          additional_vnfc_configurable_properties: {}
+        vdu_profile:
+          min_number_of_instances: 1
+          max_number_of_instances: 1
+          watchdog: none
+        inject_files: # TODO SDC bug
+          source_path: ../Artifacts/keys/authorized_keys #SSH authorized_keys
+          dest_path: /home/ubuntu/.ssh/authorized_keys
+        meta_data:
+          vnf_id: { get_input: vnf_id }
+          vf_module_id: { get_input: vf_module_id }
+          oam_ipaddr: { get_input: vweb_private_ip_1 }
+          cpe_public_ipaddr: { get_input: vweb_private_ip_0 }
+          oam_cidr: { get_input: oam_private_net_cidr }
+          cpe_public_net_cidr: { get_input: cpe_public_net_cidr }
+          demo_artifacts_version: { get_input: demo_artifacts_version }
+          install_script_version: { get_input: install_script_version }
+          cloud_env: { get_input: cloud_env }
+          nexus_artifact_repo: { get_input: nexus_artifact_repo }
+        user_data: |
+          !/bin/bash
+          METADATA=`curl -s http://169.254.169.254/openstack/2012-08-10/meta_data.json`
+          apt-get -y install jq
+
+          get_metadata () {
+            echo $METADATA | jq -r ".meta.$1"
+          }
+
+          # Create configuration files
+          mkdir /opt/config
+          echo "$(get_metadata oam_ipaddr)" > /opt/config/oam_ipaddr.txt
+          echo "$(get_metadata cpe_public_ipaddr)" > /opt/config/cpe_public_ipaddr.txt
+          echo "$(get_metadata onap_cidr)" > /opt/config/oam_cidr.txt
+          echo "$(get_metadata cpe_public_net_cidr)" > /opt/config/cpe_public_net_cidr.txt
+          echo "$(get_metadata demo_artifacts_version)" > /opt/config/demo_artifacts_version.txt
+          echo "$(get_metadata install_script_version)" > /opt/config/install_script_version.txt
+          echo "$(get_metadata cloud_env)" > /opt/config/cloud_env.txt
+          echo "$(get_metadata nexus_artifact_repo)" > /opt/config/nexus_artifact_repo.txt
+
+          # Download and run install script
+          apt-get -y install unzip
+          INSTALL_SCRIPT_VERSION=$(get_metadata install_script_version)
+          NEXUS_ARTIFACT_REPO=$(get_metadata nexus_artifact_repo)
+          if [[ "${INSTALL_SCRIPT_VERSION}" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+          curl -k -L "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=${INSTALL_SCRIPT_VERSION}" -o /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip
+          unzip -j /opt/vcpe-scripts-${INSTALL_SCRIPT_VERSION}.zip -d /opt v_web_install.sh
+          cd /opt
+          chmod +x v_web_install.sh
+          ./v_web_install.sh
+      capabilities:
+        virtual_compute:
+          properties:
+            #TODO add local disk size
+            virtual_memory:
+              virtual_mem_size: 4096 MB
+            virtual_cpu:
+              num_virtual_cpu: 2
+      requirements:
+        - virtual_storage: VirtualStorage_root_all
+      artifacts:
+        sw_image: #TODO need to put glance image name here
+          #file: { get_input: vcpe_image_name }
+          file: ../Artifacts/images/ubuntu_16.04
+          type: tosca.artifacts.nfv.SwImage
+
