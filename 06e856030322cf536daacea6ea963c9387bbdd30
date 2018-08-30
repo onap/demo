@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_5760ac00",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "#!/bin/bash",
+      "range": {
+        "startLine": 335,
+        "startChar": 16,
+        "endLine": 335,
+        "endChar": 20
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_172d54a8",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "should this be ../Artifacts/images/ubuntu_16.04, the same as VDU_vweb?",
+      "range": {
+        "startLine": 379,
+        "startChar": 26,
+        "endLine": 379,
+        "endChar": 28
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_775da846",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 461,
+        "startChar": 16,
+        "endLine": 461,
+        "endChar": 20
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_57274cca",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "should this be ../Artifacts/images/ubuntu_16.04, the same as VDU_vweb?",
+      "range": {
+        "startLine": 503,
+        "startChar": 26,
+        "endLine": 503,
+        "endChar": 28
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_3753b03a",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 587,
+        "startChar": 16,
+        "endLine": 587,
+        "endChar": 20
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_b73ee0d8",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "should this be ../Artifacts/images/ubuntu_16.04, the same as VDU_vweb?",
+      "range": {
+        "startLine": 631,
+        "startChar": 26,
+        "endLine": 631,
+        "endChar": 28
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_973964f4",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 713,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 713,
+        "startChar": 16,
+        "endLine": 713,
+        "endChar": 20
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_9710845a",
+        "filename": "tosca/vCPE/vbng/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "#!/bin/bash",
+      "range": {
+        "startLine": 382,
+        "startChar": 16,
+        "endLine": 382,
+        "endChar": 20
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_b715804a",
+        "filename": "tosca/vCPE/vbrgemu/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "#!/bin/bash",
+      "range": {
+        "startLine": 244,
+        "startChar": 16,
+        "endLine": 244,
+        "endChar": 20
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_b747c076",
+        "filename": "tosca/vCPE/vgmux/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "#!/bin/bash",
+      "range": {
+        "startLine": 330,
+        "startChar": 16,
+        "endLine": 330,
+        "endChar": 20
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_f751b836",
+        "filename": "tosca/vCPE/vgw/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T01:25:32Z",
+      "side": 1,
+      "message": "#!/bin/bash",
+      "range": {
+        "startLine": 326,
+        "startChar": 10,
+        "endLine": 326,
+        "endChar": 20
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
