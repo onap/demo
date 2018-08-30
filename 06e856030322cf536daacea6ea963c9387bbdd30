@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a76adc5_d2c92a27",
+        "filename": "tosca/vCPE/Artifacts/images/ubuntu16.04",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T06:27:42Z",
+      "side": 1,
+      "message": "change the file name to ubuntu_16.04, to match the file set in VNFD template artifacts",
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_5760ac00",
         "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
         "patchSetId": 1
