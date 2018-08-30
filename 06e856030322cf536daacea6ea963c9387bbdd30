@@ -89,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "1a76adc5_60b4fb34",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T23:14:28Z",
+      "side": 1,
+      "message": "Since SDC doesn\u0027t support the image yet, what we do here is to put a empty file with the correct name in the csar package to make tosca parser happy. And VFC would use this file property value as the image name for OpenStack glance/nova to launch VM",
+      "parentUuid": "1a76adc5_850b6929",
+      "range": {
+        "startLine": 379,
+        "startChar": 26,
+        "endLine": 379,
+        "endChar": 28
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a76adc5_775da846",
         "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
         "patchSetId": 1
@@ -330,6 +354,30 @@
       "writtenOn": "2018-08-30T23:02:59Z",
       "side": 1,
       "message": "This should be \"latest\"",
+      "range": {
+        "startLine": 327,
+        "startChar": 61,
+        "endLine": 327,
+        "endChar": 71
+      },
+      "revId": "06e856030322cf536daacea6ea963c9387bbdd30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_80b11749",
+        "filename": "tosca/vCPE/vgw/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-08-30T23:14:28Z",
+      "side": 1,
+      "message": "No, Eric is right. See https://docs.openstack.org/nova/latest/user/metadata-service.html",
+      "parentUuid": "1a76adc5_4049bf5e",
       "range": {
         "startLine": 327,
         "startChar": 61,
