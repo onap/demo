@@ -1,0 +1,8 @@
+metadata:
+    vnf_product_name: vcpe_vbrgemu
+    vnf_provider_id: ONAP
+    vnf_package_version: 1.0
+    vnf_release_data_time: 2018.05.06T13:00+08:00
+
+source: MainServiceTemplate.yaml
+
