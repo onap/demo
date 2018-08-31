@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_960b9d29",
+        "filename": "heat/ONAP/onap_openstack.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 2443,
+      "author": {
+        "id": 35
+      },
+      "writtenOn": "2018-08-31T14:59:44Z",
+      "side": 1,
+      "message": "I don\u0027t see this file in the repo",
+      "range": {
+        "startLine": 2443,
+        "startChar": 31,
+        "endLine": 2443,
+        "endChar": 71
+      },
+      "revId": "27bc3ecaf98a97b8f2a779aa1b4534a9c0cc03d7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
