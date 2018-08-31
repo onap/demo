@@ -2438,6 +2438,9 @@ resources:
         - path: /opt/aaf_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/aaf_vm_init.sh }
+        - path: /opt/sample_ca/aaf.signer.p12
+          permissions: '0600'
+          content: { get_file: cloud-config/sample_ca/aaf.signer.p12 }
         - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
@@ -2465,6 +2468,7 @@ resources:
               #!/bin/bash
 
               # Create configuration files
+              mkdir -p /opt/config/sample_ca
               echo "__docker_version__" > /opt/config/docker_version.txt
               echo "__aaf_repo__" > /opt/config/remote_repo.txt
               echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
