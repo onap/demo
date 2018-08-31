@@ -19,7 +19,7 @@ fi
 echo $NEXUS_DOCKER_REPO
 HOSTNAME=`hostname -f`
 FQDN=aaf.api.simpledemo.onap.org
-HOST_IP=$(cat /opt/config/local_ip.txt)
+HOST_IP=$(cat /opt/config/public_ip.txt)
 
 cd /opt/authz/auth/auth-cass/docker
 if [ "`docker container ls | grep aaf_cass`" = "" ]; then
@@ -52,9 +52,14 @@ sed -i "s/HOST_IP=.*/HOST_IP=$HOST_IP/g" /opt/authz/auth/docker/d.props
 sed -i "s/LATITUDE=.*/LATITUDE=$CADI_LATITUDE/g" /opt/authz/auth/docker/d.props
 sed -i "s/LONGITUDE=.*/LONGITUDE=$CADI_LONGITUDE/g" /opt/authz/auth/docker/d.props
 
-SIGNER_P12="$CURRENT_DIR/sample_ca/aaf.signer.p12"
-AAF_P12="$CURRENT_DIR/sample_ca/aaf.bootstrap.p12"
+SIGNER_P12="$CURRENT_DIR/config/sample_ca/aaf.signer.p12"
+AAF_P12="$CURRENT_DIR/config/sample_ca/aaf.bootstrap.p12"
 P12_PASSWORD="something easy"
+
+if [ ! -e "$SIGNER_P12" ]; then
+  mkdir -p "$CURRENT_DIR/sample_ca"
+  cp /opt/authz/conf/onap.sample.signer.p12 "$SIGNER_P12"
+fi
 
 if [ ! -e "$AAF_P12" ]; then
   mkdir -p $CURRENT_DIR/sample_ca
