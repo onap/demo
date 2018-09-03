@@ -167,7 +167,7 @@ wait_for_multicloud_ready()
     # wait till MultiCloud up and ready
     local MCHOST
     MCHOST=$(cat /opt/config/multiserv_ip_addr.txt)
-    local MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
+    local MCURL="http://$MCHOST:9005/api/multicloud-titaniumcloud/v0/swagger.json"
     local MCMETHOD='-X GET'
     local MCRESP='200'
     local MCHEADERS='-H "Real-Time: true" -H "Content-Type: application/json" -H "Accept: application/json"'
@@ -196,7 +196,7 @@ register_multicloud_pod25dns_with_aai()
     CLOUD_REGION="$(cat /opt/config/dnsaas_region.txt)"
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
     MCIP="$(cat /opt/config/multiserv_ip_addr.txt)"
-    CLOUD_IDENTITY_URL="http://${MCIP}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}/identity/v2.0"
+    CLOUD_IDENTITY_URL="http://${MCIP}/api/multicloud-titaniumcloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}/identity/v2.0"
 
     local RESPCODE
     DNSAAS_SERVICE_URL="$(cat /opt/config/dnsaas_keystone_url.txt)"
@@ -278,7 +278,7 @@ register_multicloud_pod25_with_aai()
     DNSAAS_CLOUD_REGION="$(cat /opt/config/dnsaas_region.txt)"
     CLOUD_ENV="$(cat /opt/config/cloud_env.txt)"
     MCIP="$(cat /opt/config/multiserv_ip_addr.txt)"
-    CLOUD_IDENTITY_URL="http://${MCIP}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}/identity/v2.0"
+    CLOUD_IDENTITY_URL="http://${MCIP}/api/multicloud-titaniumcloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}/identity/v2.0"
     KEYSTONE_URL="$(cat /opt/config/openstack_keystone_url.txt)"
     if [[ "$KEYSTONE_URL" == */v3 ]]; then
         echo "$KEYSTONE_URL"
@@ -406,10 +406,10 @@ register_dns_zone_proxied_designate()
     if [ -z "$1" ]; then DCAE_ZONE="$(cat /opt/config/dcae_zone.txt)"; else DCAE_ZONE="$1"; fi
     DNSAAS_TENANT_NAME="$(cat /opt/config/dnsaas_tenant_name.txt)"
     MCHOST=$(cat /opt/config/multiserv_ip_addr.txt)
-    MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
+    MCURL="http://$MCHOST:9005/api/multicloud-titaniumcloud/v0/swagger.json"
 
     MCDATA='-d "{\"auth\":{\"tenantName\": \"'${DNSAAS_TENANT_NAME}'\"}}"'
-    MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
+    MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titaniumcloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
 
      ### zone operations
      # because all VM's use 10.0.100.1 as their first DNS server, the designate DNS server as seocnd, we need to use a
@@ -579,7 +579,7 @@ delete_dns_zone()
     DCAE_ZONE="$(cat /opt/config/dcae_zone.txt)"
     DNSAAS_TENANT_NAME="$(cat /opt/config/dnsaas_tenant_name.txt)"
     MCHOST=$(cat /opt/config/multiserv_ip_addr.txt)
-    MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
+    MCURL="http://$MCHOST:9005/api/multicloud-titaniumcloud/v0/swagger.json"
 
     local DCAE_DOMAIN
     local ZONENAME
@@ -587,7 +587,7 @@ delete_dns_zone()
     ZONENAME="${DCAE_ZONE}.${DCAE_DOMAIN}."
 
     MCDATA='"{\"auth\":{\"tenantName\": \"'${DNSAAS_TENANT_NAME}'\"}}"'
-    MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
+    MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titaniumcloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
 
     ### Get Token
     local TOKEN
@@ -624,10 +624,10 @@ list_dns_zone()
     DCAE_ZONE="$(cat /opt/config/dcae_zone.txt)"
     DNSAAS_TENANT_NAME="$(cat /opt/config/dnsaas_tenant_name.txt)"
     MCHOST=$(cat /opt/config/multiserv_ip_addr.txt)
-    MCURL="http://$MCHOST:9005/api/multicloud-titanium_cloud/v0/swagger.json"
+    MCURL="http://$MCHOST:9005/api/multicloud-titaniumcloud/v0/swagger.json"
 
     MCDATA='"{\"auth\":{\"tenantName\": \"'${DNSAAS_TENANT_NAME}'\"}}"'
-    MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titanium_cloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
+    MULTICLOUD_PLUGIN_ENDPOINT=http://${MCHOST}/api/multicloud-titaniumcloud/v0/${CLOUD_OWNER}_${CLOUD_REGION}
 
     ### Get Token
     local TOKEN
