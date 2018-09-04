@@ -33,6 +33,29 @@
       "revId": "6c1312ce00c3d2c6544b08c470d8510e22dc03e3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_2f8a676a",
+        "filename": "tosca/vCPE/vgw/MainServiceTemplate.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 2363
+      },
+      "writtenOn": "2018-09-04T01:04:14Z",
+      "side": 1,
+      "message": "The line should write like below:\ninterfaceType: \u0027{\"schema-version\": \"0\", \"schema-location\":\"\", \"platform-id\": \"generic\", \"mandatory\": false, \"configuration-value\": \"virtio\"}\u0027",
+      "range": {
+        "startLine": 268,
+        "startChar": 14,
+        "endLine": 268,
+        "endChar": 35
+      },
+      "revId": "6c1312ce00c3d2c6544b08c470d8510e22dc03e3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
