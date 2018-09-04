@@ -12,7 +12,7 @@ GLOBAL_APPC_SERVER_PROTOCOL = "http"
 GLOBAL_APPC_SERVER_PORT = "8282"
 GLOBAL_APPC_SERVER = "http://10.0.2.1:"
 GLOBAL_APPC_USERNAME = "admin"
-GLOBAL_APPC_PASSWORD = "admin"
+GLOBAL_APPC_PASSWORD = "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U"
 # sdc info - everything is from the private oam network (also called onap private network)
 GLOBAL_ASDC_SERVER_PROTOCOL = "http"
 GLOBAL_ASDC_FE_PORT = "8181"
