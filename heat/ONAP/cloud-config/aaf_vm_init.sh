@@ -52,13 +52,14 @@ sed -i "s/HOST_IP=.*/HOST_IP=$HOST_IP/g" /opt/authz/auth/docker/d.props
 sed -i "s/LATITUDE=.*/LATITUDE=$CADI_LATITUDE/g" /opt/authz/auth/docker/d.props
 sed -i "s/LONGITUDE=.*/LONGITUDE=$CADI_LONGITUDE/g" /opt/authz/auth/docker/d.props
 
+SIGNER_B64="$CURRENT_DIR/config/sample_ca/aaf.signer.b64"
 SIGNER_P12="$CURRENT_DIR/config/sample_ca/aaf.signer.p12"
 AAF_P12="$CURRENT_DIR/config/sample_ca/aaf.bootstrap.p12"
 P12_PASSWORD="something easy"
 
 if [ ! -e "$SIGNER_P12" ]; then
-  mkdir -p "$CURRENT_DIR/sample_ca"
-  cp /opt/authz/conf/onap.sample.signer.p12 "$SIGNER_P12"
+  mkdir -p "$CURRENT_DIR/config/sample_ca"
+  base64 -d $SIGNER_B64 > $SIGNER_P12
 fi
 
 if [ ! -e "$AAF_P12" ]; then
