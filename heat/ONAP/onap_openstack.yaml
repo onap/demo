@@ -2434,9 +2434,9 @@ resources:
         - path: /opt/aaf_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/aaf_vm_init.sh }
-        - path: /opt/config/sample_ca/aaf.signer.p12
+        - path: /opt/config/sample_ca/aaf.signer.b64
           permissions: '0600'
-          content: { get_file: cloud-config/sample_ca/aaf.signer.p12 }
+          content: { get_file: cloud-config/sample_ca/aaf.signer.b64 }
         - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:
