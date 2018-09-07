@@ -2,6 +2,12 @@
 
 CURRENT_DIR=$(pwd)
 
+if [ ! -e /opt/authz/auth/docker/d.props ]; then
+  cp /opt/authz/auth/docker/d.props.init /opt/authz/auth/docker/d.props
+fi
+. /opt/authz/auth/docker/d.props
+
+
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 if [ -e /opt/authz/auth/docker/d.props ]; then
@@ -28,12 +34,6 @@ if [ "`docker container ls | grep aaf_cass`" = "" ]; then
   bash ./dinstall.sh
 fi
 
-if [ ! -e /opt/authz/auth/docker/d.props ]; then
-  cp /opt/authz/auth/docker/d.props.init /opt/authz/auth/docker/d.props
-fi
-
-VERSION=$(grep VERSION /opt/authz/auth/docker/d.props)
-VERSION=${VERSION#VERSION=}
 CASS_IP=`docker inspect aaf_cass | grep '"IPAddress' | head -1 | cut -d '"' -f 4`
 CASS_HOST="cass.aaf.osaaf.org:"$CASS_IP
 if [ ! -e /opt/authz/auth/docker/cass.props ]; then
@@ -42,15 +42,17 @@ fi
 
 sed -i "s/CASS_HOST=.*/CASS_HOST="$CASS_HOST"/g" /opt/authz/auth/docker/cass.props
 # TODO Pull from Config Dir
-CADI_LATITUDE=37.781
-CADI_LONGITUDE=-122.261
+if [ "$CADI_LATITUDE" = "" ]; then
+  CADI_LATITUDE=37.781
+  CADI_LONGITUDE=-122.261
+  sed -i "s/LATITUDE=.*/LATITUDE=$CADI_LATITUDE/g" /opt/authz/auth/docker/d.props
+  sed -i "s/LONGITUDE=.*/LONGITUDE=$CADI_LONGITUDE/g" /opt/authz/auth/docker/d.props
+fi
 
 sed -i "s/DOCKER_REPOSITORY=.*/DOCKER_REPOSITORY=$NEXUS_DOCKER_REPO/g" /opt/authz/auth/docker/d.props
 sed -i "s/VERSION=.*/VERSION=$VERSION/g" /opt/authz/auth/docker/d.props
 sed -i "s/HOSTNAME=.*/HOSTNAME=$HOSTNAME/g" /opt/authz/auth/docker/d.props
 sed -i "s/HOST_IP=.*/HOST_IP=$HOST_IP/g" /opt/authz/auth/docker/d.props
-sed -i "s/LATITUDE=.*/LATITUDE=$CADI_LATITUDE/g" /opt/authz/auth/docker/d.props
-sed -i "s/LONGITUDE=.*/LONGITUDE=$CADI_LONGITUDE/g" /opt/authz/auth/docker/d.props
 
 SIGNER_B64="$CURRENT_DIR/config/sample_ca/aaf.signer.b64"
 SIGNER_P12="$CURRENT_DIR/config/sample_ca/aaf.signer.p12"
@@ -81,8 +83,8 @@ if [ -e "$AAF_P12" ]; then
 fi
 
 if [ -e "$SIGNER_P12" ]; then
-    if [ -e "/opt/config/cadi_x509_issuers.txt" ]; then
-	    ISSUERS=$(cat "/opt/config/cadi_x509_issuers.txt")":"
+    if [ "$CADI_X509_ISSUERS" != "" ]; then
+	    CADI_X509_ISSUERS="$CADI_X509_ISSUERS:"
     fi
     # Pick the REAL subject off the P12
     SUBJECT=$(echo "$P12_PASSWORD" | openssl pkcs12 -info -clcerts -in $SIGNER_P12 -nokeys -passin stdin | grep subject)
@@ -96,7 +98,7 @@ if [ -e "$SIGNER_P12" ]; then
 	   RSUBJECT="$S, $RSUBJECT"
         fi
     done
-    ISSUERS="$ISSUERS$RSUBJECT"
+    ISSUERS="$CADI_X509_ISSUERS$RSUBJECT"
     sed -i "s/CADI_X509_ISSUERS=.*/CADI_X509_ISSUERS=\"$ISSUERS\"/g" /opt/authz/auth/docker/d.props
     sed -i "s/AAF_SIGNER_P12=.*/AAF_SIGNER_P12=${SIGNER_P12//\//\\/}/g" /opt/authz/auth/docker/d.props
     sed -i "s/AAF_SIGNER_PASSWORD=.*/AAF_SIGNER_PASSWORD=\"$P12_PASSWORD\"/g" /opt/authz/auth/docker/d.props
