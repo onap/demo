@@ -6,6 +6,7 @@ export MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort
 NEXUS_USERNAME=$(cat /opt/config/nexus_username.txt)
 NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
+AAF_DOCKER_VERSION=$(cat /opt/config/docker_version.txt)
 HOSTNAME=`hostname -f`
 FQDN=aaf.api.simpledemo.onap.org
 HOST_IP=$(cat /opt/config/local_ip.txt)
@@ -31,15 +32,14 @@ fi
 CASS_IP=`docker inspect aaf_cass | grep '"IPAddress' | head -1 | cut -d '"' -f 4`
 CASS_HOST="cass.aaf.osaaf.org:"$CASS_IP
  
-docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_config:latest
-docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_core:latest
-docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_cm:latest
-docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_fs:latest
-docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_gui:latest
-docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_hello:latest
-docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_locate:latest
-docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_oauth:latest
-docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_service:latest
+docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_config:$AAF_DOCKER_VERSION
+docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_cm:$AAF_DOCKER_VERSION
+docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_fs:$AAF_DOCKER_VERSION
+docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_gui:$AAF_DOCKER_VERSION
+docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_hello:$AAF_DOCKER_VERSION
+docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_locate:$AAF_DOCKER_VERSION
+docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_oauth:$AAF_DOCKER_VERSION
+docker pull $NEXUS_DOCKER_REPO/onap/aaf/aaf_service:$AAF_DOCKER_VERSION
  
 cd $CURRENT_DIR
 /bin/bash ./aaf_vm_init.sh 
