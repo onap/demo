@@ -188,23 +188,29 @@ int main(int argc, char** argv)
   /* Initialize                                                             */
   /**************************************************************************/
   if(evel_initialize(fqdn,                         /* FQDN                  */
-                     port, 	                   /* Port                  */
-                     NULL,                         /* optional path         */
-                     NULL,                         /* optional topic        */
-                     100,                          /* Ring Buffer size      */
-                     0,                            /* HTTPS?                */
-                     NULL,                         /* cert file             */
-                     NULL,                         /* key  file             */
-                     NULL,                         /* ca   info             */
-                     NULL,                         /* ca   file             */
-                     0,                            /* verify peer           */
-                     0,                            /* verify host           */
-                     "",                           /* Username              */
-                     "",                           /* Password              */
-                     NULL,                         /* Source ip             */
-                     EVEL_SOURCE_VIRTUAL_MACHINE,  /* Source type           */
-                     "vFirewall",      	           /* Role                  */
-                     1))                           /* Verbosity             */
+                       port,                         /* Port                  */
+                       "",                           /* Backup FQDN           */
+                       5555,                         /* Backup Port           */
+                       NULL,                         /* optional path         */
+                       NULL,                         /* optional topic        */
+                       100,                          /* Ring Buffer size      */
+                       0,                            /* HTTPS?                */
+                       0,                            /* Active mode           */
+                       NULL,                         /* cert file             */
+                       NULL,                         /* key  file             */
+                       NULL,                         /* ca   info             */
+                       NULL,                         /* ca   file             */
+                       0,                            /* verify peer           */
+                       0,                            /* verify host           */
+                       "",                           /* Username              */
+                       "",                           /* Password              */
+                       "",                           /* Backup Username       */
+                       "",                           /* Backup Password       */
+                       NULL,                         /* Source ip             */
+                       NULL,                         /* Backup Source IP      */
+                       EVEL_SOURCE_VIRTUAL_MACHINE,  /* Source type           */
+                       "vFirewall",                  /* Role                  */
+                       1))                           /* Verbosity             */
   {
     fprintf(stderr, "\nFailed to initialize the EVEL library!!!\n");
     exit(-1);
