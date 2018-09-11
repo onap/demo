@@ -1266,6 +1266,15 @@ resources:
               echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
               echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
               echo "__so_ip_addr__" > /opt/config/so_ip_addr.txt
+              # in HEAT install the components are on the same IP address but not for OOM
+              echo "__so_ip_addr__" > /opt/config/so_apihand_ip_addr.txt
+              echo "__so_ip_addr__" > /opt/config/so_asdchand_ip_addr.txt
+              echo "__so_ip_addr__" > /opt/config/so_bpmn_ip_addr.txt
+              echo "__so_ip_addr__" > /opt/config/so_catdb_ip_addr.txt
+              echo "__so_ip_addr__" > /opt/config/so_openstack_ip_addr.txt
+              echo "__so_ip_addr__" > /opt/config/so_reqdb_ip_addr.txt
+              echo "__so_ip_addr__" > /opt/config/so_sdnc_ip_addr.txt
+              echo "__so_ip_addr__" > /opt/config/so_vfc_ip_addr.txt
               echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
               echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
               echo "__policy_ip_addr__" > /opt/config/policy_healthcheck_ip_addr.txt
