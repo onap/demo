@@ -264,6 +264,7 @@ resources:
             echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
             # Download and run install script
+            apt-get update
             apt-get -y install unzip
             if [[ "__script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vcpe&a=vcpe-scripts&e=zip&v=__script_version__" -o /opt/vcpe-scripts-__script_version__.zip
