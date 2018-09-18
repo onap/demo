@@ -1,8 +1,8 @@
 #!/bin/bash
 
 NEXUS_ARTIFACT_REPO=$(cat /opt/config/nexus_artifact_repo.txt)
-#DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
-#if [[ "$DEMO_ARTIFACTS_VERSION" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+if [[ "$DEMO_ARTIFACTS_VERSION" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
 NB_API_VERSION=$(cat /opt/config/nb_api_version.txt)
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
