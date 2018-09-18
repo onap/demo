@@ -25,6 +25,9 @@ function usage
 	echo "       demo.sh init_robot [ <etc_hosts_prefix> ]"
     echo "               - Initialize robot after all ONAP VMs have started"
 	echo " "
+	echo "       demo.sh cds"
+    echo "               - Instantiate vFW service with Controller Design Studio feature for the a demo customer (DemoCust<uuid>)"
+	echo " "
 	echo "       demo.sh instantiateVFW | instantiateVFWCL"
     echo "               - Instantiate vFW or vFWCL module for the a demo customer (DemoCust<uuid>)"
 	echo " "
@@ -142,6 +145,10 @@ do
 			shift
 			VARIABLES="$VARIABLES -v HB_IPV4_OAM_ADDRESS:$1"
             shift
+			;;
+    	cds)
+			TAG="cds"
+			shift
 			;;
     	*)
 			usage
