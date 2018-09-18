@@ -224,63 +224,8 @@ parameters:
 
   dcae_deployment_profile:
     type: string
-    default: R2
+    default: R3
     description: DCAE deployment profile.  Currently supported profiles R2, R2MVP, and R2PLUS.
-
-  dnsaas_config_enabled:
-    type: string
-    default: ""
-    description: (deprecated in R2) whether the DNSaaS configuration section is enabled
-
-  dnsaas_region:
-    type: string
-    default: ""
-    description: (deprecated in R2) the region of the cloud instance providing the Designate DNS as a Service
-
-  dnsaas_keystone_url:
-    type: string
-    default: ""
-    description: (deprecated in R2) the keystone URL of the cloud instance providing the Designate DNS as a Service
-
-  dnsaas_username:
-    type: string
-    default: ""
-    description: (deprecated in R2) the username of the cloud instance providing the Designate DNS as a Service
-
-  dnsaas_password:
-    type: string
-    default: ""
-    description: (deprecated in R2) the password of the cloud instance providing the Designate DNS as a Service
-
-  dnsaas_tenant_name:
-    type: string
-    default: ""
-    description: (deprecated in R2) the name of the tenant in the cloud instance providing the Designate DNS as a Service
-
-  dcae_keystone_url:
-    type: string
-    default: ""
-    description: (deprecated in R2) the keystone URL for DCAE to use (via MultiCloud)
-
-  dcae_private_key:
-    type: string
-    default: ""
-    description: (deprecated in R2) the private key of the key-apir used between the DCAE bootstrap container and DCAE VMs
-
-  dcae_public_key:
-    type: string
-    default: ""
-    description: (deprecated in R2) the prublic key of the key-apir used between the DCAE bootstrap container and DCAE VMs
-
-  dcae_centos_7_image:
-    type: string
-    default: ""
-    description: (deprecated in R2) the id/name of the CentOS 7 VM imange
-
-  dcae_domain:
-    type: string
-    default: ""
-    description: (deprecated in R2) the top level domain to register DCAE VMs (the zone will be random-str.dcae_domain)
 
   #####################
   #                   #
@@ -345,6 +290,14 @@ parameters:
     type: string
     default: latest
     description: Docker image version for onap/org.dcaegen2.collectors.ves.vescollector
+  dcae_hvves_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.dcaegen2.collectors.hv-ves
+  dcae_datafile_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.dcaegen2.collectors.datafile
   dcae_bootstrap_docker:
     type: string
     default: latest
@@ -2095,38 +2048,6 @@ resources:
               __mac_addr__: { get_attr: [dcae_private_port, mac_address] }
               __dcae_ip_addr__: { get_param: dcae_ip_addr }
               __dcae_float_ip__: { get_attr: [dcae_floating_ip, floating_ip_address] }
-              __dns_forwarder__: { get_param: dns_forwarder }
-              __dcae_domain__: { get_param: dcae_domain }
-              # conf for VMs DCAE is to bringup
-              __openstack_keystone_url__: { get_param: keystone_url }
-              __dcae_keystone_url__: { get_param: dcae_keystone_url }
-              __dcaeos_cloud_env__: { get_param: cloud_env }
-              __dcaeos_keystone_url__: { get_param: dcae_keystone_url }
-              __dcaeos_region__: { get_param: openstack_region }
-              __dcaeos_tenant_id__: { get_param: openstack_tenant_id }
-              __dcaeos_tenant_name__: { get_param: openstack_tenant_name }
-              __dcaeos_security_group__:
-                str_replace:
-                  template: 'onap_sg_rand'
-                  params:
-                    rand: { get_resource: random-str }
-              __dcaeos_username__: { get_param: openstack_username }
-              __dcaeos_password__: { get_param: openstack_api_key }
-              __dcaeos_key_name__: { get_resource: vm_key }
-              __dcaeos_public_key__: { get_param: dcae_public_key }
-              __dcaeos_private_key__: { get_param: dcae_private_key }
-              __dcaeos_private_network_name__: { get_attr: [oam_onap, name] }
-              __dcaeos_public_network_name__: { get_param: public_net_name }
-              __dcaeos_ubuntu_1604_image__: { get_param: ubuntu_1604_image }
-              __dcaeos_centos_7_image__: { get_param: dcae_centos_7_image }
-              __dcaeos_flavor_id__: { get_param: flavor_medium }
-              __dcaeos_flavor_id_cdap__: { get_param: flavor_large }
-              __dcaeos_dnsaas_config_enabled__: { get_param: dnsaas_config_enabled }
-              __dcaeos_dnsaas_region__: { get_param: dnsaas_region }
-              __dcaeos_dnsaas_keystone_url__: { get_param: dnsaas_keystone_url }
-              __dnsaas_tenant_name__: { get_param: dnsaas_tenant_name }
-              __dcaeos_dnsaas_username__: { get_param: dnsaas_username }
-              __dcaeos_dnsaas_password__: { get_param: dnsaas_password }
               # fixed private IPs
               __mr_ip_addr__: { get_param: mr_ip_addr }
               __policy_ip_addr__: { get_param: policy_ip_addr }
@@ -2147,6 +2068,8 @@ resources:
               __dcae_docker__:  { get_param: dcae_docker }
               __dcae_snmptrap_docker__:  { get_param: dcae_snmptrap_docker }
               __dcae_ves_docker__:  { get_param: dcae_ves_docker }
+              __dcae_hvves_docker__: { get_param: dcae_hvves_docker }
+              __dcae_datafile_docker__: { get_param: dcae_datafile_docker }
               __dcae_bootstrap_docker__:  { get_param: dcae_bootstrap_docker }
               __dcae_cm_docker__:  { get_param: dcae_cm_docker }
               __dcae_k8sbootstrap_docker__:  { get_param: dcae_k8sbootstrap_docker }
@@ -2176,34 +2099,6 @@ resources:
               echo "__dcae_deployment_profile__" > /opt/config/dcae_deployment_profile.txt
               echo "__mac_addr__" > /opt/config/mac_addr.txt
               echo "__dcae_ip_addr__" > /opt/config/dcae_ip_addr.txt
-              echo "__dns_forwarder__" > /opt/config/dns_forwarder.txt
-              echo "__dcae_domain__" > /opt/config/dcae_domain.txt
-              # conf for the OpenStack env where DCAE is deployed
-              echo "__openstack_keystone_url__" > /opt/config/openstack_keystone_url.txt
-              echo "__dcaeos_cloud_env__" > /opt/config/cloud_env.txt
-              echo "__dcaeos_keystone_url__" > /opt/config/keystone_url.txt
-              echo "__dcaeos_region__" > /opt/config/openstack_region.txt
-              echo "__dcaeos_tenant_id__" > /opt/config/tenant_id.txt
-              echo "__dcaeos_tenant_name__" > /opt/config/tenant_name.txt
-              echo "__dcaeos_username__" > /opt/config/openstack_user.txt
-              echo "__dcaeos_password__" > /opt/config/openstack_password.txt
-              echo "__dcaeos_key_name__" > /opt/config/key_name.txt
-              echo "__dcaeos_public_key__" > /opt/config/pub_key.txt
-              echo "__dcaeos_private_key__" > /opt/config/priv_key
-              echo "__dcaeos_private_network_name__" > /opt/config/openstack_private_network_name.txt
-              echo "__dcaeos_public_network_name__" > /opt/config/public_net_name.txt
-              echo "__dcaeos_public_network_name__" > /opt/config/public_net_id.txt
-              echo "__dcaeos_ubuntu_1604_image__" > /opt/config/ubuntu_1604_image.txt
-              echo "__dcaeos_centos_7_image__" > /opt/config/centos_7_image.txt
-              echo "__dcaeos_security_group__" > /opt/config/security_group.txt
-              echo "__dcaeos_flavor_id__" > /opt/config/flavor_id.txt
-              echo "__dcaeos_flavor_id_cdap__" > /opt/config/flavor_id_cdap.txt
-              echo "__dcaeos_dnsaas_config_enabled__" > /opt/config/dnsaas_config_enabled.txt
-              echo "__dcaeos_dnsaas_region__" > /opt/config/dnsaas_region.txt
-              echo "__dcaeos_dnsaas_keystone_url__" > /opt/config/dnsaas_keystone_url.txt
-              echo "__dnsaas_tenant_name__" > /opt/config/dnsaas_tenant_name.txt
-              echo "__dcaeos_dnsaas_username__" > /opt/config/dnsaas_username.txt
-              echo "__dcaeos_dnsaas_password__" > /opt/config/dnsaas_password.txt
               # fixed private IP addresses of other ONAP components
               echo "__mr_ip_addr__" > /opt/config/mr_ip_addr.txt
               echo "__policy_ip_addr__" > /opt/config/policy_ip_addr.txt
@@ -2225,6 +2120,8 @@ resources:
               echo "__dcae_docker__" > /opt/config/dcae_docker.txt
               echo "__dcae_snmptrap_docker__" > /opt/config/dcae_docker_snmptrap.txt
               echo "__dcae_ves_docker__" > /opt/config/dcae_docker_ves.txt
+              echo "__dcae_hvves_docker__" > /opt/config/dcae_docker_hvves.txt
+              echo "__dcae_datafile_docker__" > /opt/config/dcae_docker_datafile.txt
               echo "__dcae_bootstrap_docker__" > /opt/config/dcae_docker_bootstrap.txt
               echo "__dcae_cm_docker__" > /opt/config/dcae_docker_cm.txt
               echo "__dcae_k8sbootstrap_docker__" > /opt/config/dcae_docker_k8sbootstrap.txt
