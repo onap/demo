@@ -69,14 +69,14 @@ unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip add_dns.sh > /opt/add
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip remove_dns.sh > /opt/remove_dns.sh
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip properties.conf > /opt/config/properties.conf
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip run_health.sh > /opt/run_health.sh
-#wget -O ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.ves5&a=ves&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
-#wget -O ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.ves5&a=ves_vlb_reporting&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
+wget -O ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.ves5&a=ves&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
+wget -O ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.ves5&a=ves_vlb_reporting&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
 
-#tar -zmxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-#mv ves-$DEMO_ARTIFACTS_VERSION VES
-#tar -zmxvf ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
-#mv ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION VESreporting_vLB
-#mv VESreporting_vLB /opt/VES/evel/evel-library/code/VESreporting
+tar -zmxvf ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+mv ves-$DEMO_ARTIFACTS_VERSION VES
+tar -zmxvf ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
+mv ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION VESreporting_vLB
+mv VESreporting_vLB /opt/VES/evel/evel-library/code/VESreporting
 
 # Clone Honeycomb interface for the VNF component
 mkdir honeycomb-api
@@ -201,12 +201,12 @@ mvn clean install
 
 sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' /opt/honeycomb-api/vnfs/vLBMS/apis/vlb-vnf-onap-distribution/target/vlb-vnf-onap-distribution-$NB_API_VERSION-hc/vlb-vnf-onap-distribution-$NB_API_VERSION/config/honeycomb.json
 sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' /opt/honeycomb-api/vnfs/vLBMS/apis/vlb-vnf-onap-distribution/target/vlb-vnf-onap-distribution-$NB_API_VERSION-hc/vlb-vnf-onap-distribution-$NB_API_VERSION/config/honeycomb.json
-#rm *.tar.gz
+rm *.tar.gz
 
 cd /opt
 chmod +x v_lb_init.sh
 chmod +x vlb.sh
-#chmod +x /opt/VES/evel/evel-library/code/VESreporting/go-client.sh
+chmod +x /opt/VES/evel/evel-library/code/VESreporting/go-client.sh
 chmod +x add_dns.sh
 chmod +x remove_dns.sh
 chmod +x run_health.sh
@@ -223,10 +223,10 @@ apt-get install -y vpp vpp-dpdk-dkms vpp-lib vpp-dbg vpp-plugins vpp-dev
 sleep 1
 
 # Install VES
-#cd /opt/VES/evel/evel-library/bldjobs/
-#make clean
-#make
-#sleep 1
+cd /opt/VES/evel/evel-library/bldjobs/
+make clean
+make
+sleep 1
 
 # Run instantiation script
 cd /opt

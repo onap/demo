@@ -86,6 +86,6 @@ VDNS_IPADDR=$(cat /opt/config/vdns_ipaddr.txt)
 curl -X PUT http://localhost:8183/restconf/config/vlb-business-vnf-onap-plugin:vlb-business-vnf-onap-plugin/vdns-instances/vdns-instance/$VDNS_IPADDR -H 'Accept: application/json' -H 'Cache-Control: no-cache' -H 'Content-Type: application/json' -H 'Postman-Token: 8bfe8815-3efb-4c9b-8974-7b8d7b6da4c6' -H "Authorization: Basic YWRtaW46YWRtaW4=" -d '{"vdns-instance": [{ "ip-addr": "'$VDNS_IPADDR'", "oam-ip-addr": "'$OAM_VDNS_IP'", "enabled": true }]}'
 
 # Start VES agent
-#cd /opt/VES/evel/evel-library/code/VESreporting/
-#echo 0 > active_dns.txt
-#./go-client.sh &>/dev/null &disown
+cd /opt/VES/evel/evel-library/code/VESreporting/
+echo 0 > active_dns.txt
+./go-client.sh &>/dev/null &disown
