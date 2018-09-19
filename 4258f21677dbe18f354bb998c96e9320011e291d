@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_0c5c0218",
+        "filename": "heat/ONAP/onap_openstack.env",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 93
+      },
+      "writtenOn": "2018-09-19T04:11:36Z",
+      "side": 1,
+      "message": "This may be version 3.0.0 based on tca-gen2/dcae-analytics/dcae-analytics-tca-web/pom.xml",
+      "range": {
+        "startLine": 167,
+        "startChar": 21,
+        "endLine": 167,
+        "endChar": 26
+      },
+      "revId": "4258f21677dbe18f354bb998c96e9320011e291d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
