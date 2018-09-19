@@ -282,74 +282,94 @@ parameters:
   dcae_docker:
     type: string
     default: latest
-  dcae_snmptrap_docker:
-    type: string
-    default: latest
-    description: Docker image version for onap/org.dcaegen2.collectors.snmptrap
-  dcae_ves_docker:
-    type: string
-    default: latest
-    description: Docker image version for onap/org.dcaegen2.collectors.ves.vescollector
-  dcae_hvves_docker:
-    type: string
-    default: latest
-    description: Docker image version for onap/org.dcaegen2.collectors.hv-ves
-  dcae_datafile_docker:
-    type: string
-    default: latest
-    description: Docker image version for onap/org.dcaegen2.collectors.datafile
   dcae_bootstrap_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.deployments.bootstrap
-  dcae_cm_docker:
-    type: string
-    default: latest
-    description: Docker image version for onap/org.dcaegen2.deployments.cm-container
+    description: Docker image version for onap/org.onap.dcaegen2.deployments.bootstrap
   dcae_k8sbootstrap_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.deployments.k8s-bootstrap-container
+    description: Docker image version for onap/org.onap.dcaegen2.deployments.k8s-bootstrap-container
   dcae_redisc_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.deployments.redis-cluster-container
-  dcae_tca_docker:
+    description: Docker image version for onap/org.onap.dcaegen2.deployments.redis-cluster-container
+  dcae_hc_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.deployments.tca-cdap-container
+    description: Docker image version for onap/org.onap.dcaegen2.deployments.healthcheck-container
+  dcae_tls_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.deployments.tls-init-container
   dcae_cb_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.platform.cdapbroker
+    description: Docker image version for onap/org.onap.dcaegen2.platform.cdapbroker
+  dcae_snmptrap_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.collectors.snmptrap
+  dcae_ves_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.collectors.ves.vescollector
+  dcae_hvves_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.collectors.hv-ves.hv-collector-main
+  dcae_datafile_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.collectors.datafile.datafile-app-server
+  dcae_cm_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.deployments.cm-container
+  dcae_tca_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.deployments.tca-cdap-container
+  dcae_tca2_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.analytics.tca-gen2
   dcae_cbs_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.platform.configbinding
+    description: Docker image version for onap/org.onap.onap.dcaegen2.platform.configbinding.app-app
   dcae_dh_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.platform.deployment-handler
+    description: Docker image version for onap/org.onap.dcaegen2.platform.deployment-handler
   dcae_inv_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.platform.inventory-api
+    description: Docker image version for onap/org.onap.dcaegen2.platform.inventory-api
   dcae_ph_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.platform.deployment-handler
+    description: Docker image version for onap/org.onap.dcaegen2.platform.policy-handler
   dcae_sch_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.platform.servicechange-handler
-  dcae_heartbeat_docker:
-    type: string
-    default: latest
-    description: Docker image version for onap/org.dcaegen2.services.heartbeat
+    description: Docker image version for onap/org.onap.dcaegen2.platform.servicechange-handler
   dcae_prh_docker:
     type: string
     default: latest
-    description: Docker image version for onap/org.dcaegen2.services.prh.prh-app-server
+    description: Docker image version for onap/org.onap.dcaegen2.services.prh.prh-app-server
+  dcae_heartbeat_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.services.heartbeat
+  dcae_mua_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.services.mapper.vesadapter.universalvesadaptor
+  dcae_msnmp_docker:
+    type: string
+    default: latest
+    description: Docker image version for onap/org.onap.dcaegen2.services.mapper.vesadapter.snmpmapper
   holmes_em_docker:
     type: string
     default: latest
@@ -2066,26 +2086,31 @@ resources:
               __dcae_floating_ip_addr__: { get_attr: [dcae_floating_ip, floating_ip_address] }
               # container versions
               __dcae_docker__:  { get_param: dcae_docker }
+              __dcae_bootstrap_docker__:  { get_param: dcae_bootstrap_docker }
+              __dcae_k8sbootstrap_docker__:  { get_param: dcae_k8sbootstrap_docker }
+              __dcae_redisc_docker__:  { get_param: dcae_redisc_docker }
+              __dcae_hc_docker__:  { get_param: dcae_hc_docker }
+              __dcae_tls_docker__:  { get_param: dcae_tls_docker }
+              __dcae_cb_docker__:  { get_param: dcae_cb_docker }
               __dcae_snmptrap_docker__:  { get_param: dcae_snmptrap_docker }
               __dcae_ves_docker__:  { get_param: dcae_ves_docker }
               __dcae_hvves_docker__: { get_param: dcae_hvves_docker }
               __dcae_datafile_docker__: { get_param: dcae_datafile_docker }
-              __dcae_bootstrap_docker__:  { get_param: dcae_bootstrap_docker }
               __dcae_cm_docker__:  { get_param: dcae_cm_docker }
-              __dcae_k8sbootstrap_docker__:  { get_param: dcae_k8sbootstrap_docker }
-              __dcae_redisc_docker__:  { get_param: dcae_redisc_docker }
               __dcae_tca_docker__:  { get_param: dcae_tca_docker }
-              __dcae_cb_docker__:  { get_param: dcae_cb_docker }
+              __dcae_tca2_docker__:  { get_param: dcae_tca2_docker }
               __dcae_cbs_docker__:  { get_param: dcae_cbs_docker }
               __dcae_dh_docker__:  { get_param: dcae_dh_docker }
               __dcae_inv_docker__:  { get_param: dcae_inv_docker }
               __dcae_ph_docker__:  { get_param: dcae_ph_docker }
               __dcae_sch_docker__:  { get_param: dcae_sch_docker }
-              __dcae_heartbeat_docker__:  { get_param: dcae_heartbeat_docker }
               __dcae_prh_docker__:  { get_param: dcae_prh_docker }
+              __dcae_heartbeat_docker__:  { get_param: dcae_heartbeat_docker }
+              __dcae_mua_docker__:  { get_param: dcae_mua_docker }
+              __dcae_msnmp_docker__:  { get_param: dcae_msnmp_docker }
               __holmes_em_docker__:  { get_param: holmes_em_docker }
               __holmes_rm_docker__:  { get_param: holmes_rm_docker }
-
+  
             template: |
               #!/bin/bash
 
@@ -2118,23 +2143,28 @@ resources:
               echo "__dcae_float_ip__" > /opt/config/dcae_float_ip.txt
               # container versions
               echo "__dcae_docker__" > /opt/config/dcae_docker.txt
+              echo "__dcae_bootstrap_docker__" > /opt/config/dcae_docker_bootstrap.txt
+              echo "__dcae_k8sbootstrap_docker__" > /opt/config/dcae_docker_k8sbootstrap.txt
+              echo "__dcae_redisc_docker__" > /opt/config/dcae_docker_redisc.txt
+              echo "__dcae_hc_docker__" > /opt/config/dcae_docker_hc.txt
+              echo "__dcae_tls_docker__" > /opt/config/dcae_docker_tls.txt
+              echo "__dcae_cb_docker__" > /opt/config/dcae_docker_cb.txt
               echo "__dcae_snmptrap_docker__" > /opt/config/dcae_docker_snmptrap.txt
               echo "__dcae_ves_docker__" > /opt/config/dcae_docker_ves.txt
               echo "__dcae_hvves_docker__" > /opt/config/dcae_docker_hvves.txt
               echo "__dcae_datafile_docker__" > /opt/config/dcae_docker_datafile.txt
-              echo "__dcae_bootstrap_docker__" > /opt/config/dcae_docker_bootstrap.txt
               echo "__dcae_cm_docker__" > /opt/config/dcae_docker_cm.txt
-              echo "__dcae_k8sbootstrap_docker__" > /opt/config/dcae_docker_k8sbootstrap.txt
-              echo "__dcae_redisc_docker__" > /opt/config/dcae_docker_redisc.txt
               echo "__dcae_tca_docker__" > /opt/config/dcae_docker_tca.txt
-              echo "__dcae_cb_docker__" > /opt/config/dcae_docker_cb.txt
+              echo "__dcae_tca2_docker__" > /opt/config/dcae_docker_tca2.txt
               echo "__dcae_cbs_docker__" > /opt/config/dcae_docker_cbs.txt
               echo "__dcae_dh_docker__" > /opt/config/dcae_docker_dh.txt
               echo "__dcae_inv_docker__" > /opt/config/dcae_docker_inv.txt
               echo "__dcae_ph_docker__" > /opt/config/dcae_docker_ph.txt
               echo "__dcae_sch_docker__" > /opt/config/dcae_docker_sch.txt
-              echo "__dcae_heartbeat_docker__" > /opt/config/dcae_docker_heartbeat.txt
               echo "__dcae_prh_docker__" > /opt/config/dcae_docker_prh.txt
+              echo "__dcae_heartbeat_docker__" > /opt/config/dcae_docker_heartbeat.txt
+              echo "__dcae_mua_docker__" > /opt/config/dcae_docker_mua.txt
+              echo "__dcae_msnmp_docker__" > /opt/config/dcae_docker_msnmp.txt
               echo "__holmes_em_docker__" > /opt/config/holmes_docker_em.txt
               echo "__holmes_rm_docker__" > /opt/config/holmes_docker_rm.txt
 
