@@ -262,8 +262,7 @@ topology_template:
             support_mandatory: true
             #TODO HPA
             network_interface_requirements:
-              #dataProcessingAccelerationLibrary: dpdk_2.2
-              interfaceType: virtio
+              dataProcessingAccelerationLibrary: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "DPDK"}'
       requirements:
         - virtual_binding: VDU_vgmux_0
         - virtual_link: VL_bng_gmux_private_net
@@ -287,8 +286,7 @@ topology_template:
             support_mandatory: true
             #TODO HPA
             network_interface_requirements:
-              #dataProcessingAccelerationLibrary: dpdk_2.2
-              interfaceType: virtio
+              dataProcessingAccelerationLibrary: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "DPDK"}'
       requirements:
         - virtual_binding: VDU_vgmux_0
         - virtual_link: VL_mux_gw_private_net
@@ -368,8 +366,8 @@ topology_template:
               virtual_mem_size: 4096 MB
               # HPA requirements
               vdu_memory_requirements:
-                memoryPageSize: '{"schema-version": "0", "schema-location": "", "platform-id": "generic", "mandatory": true, "configuration-value": "2 MB"}'
-                numberOfPages: '{"schema-version": "0","schema-location": "","platform-id": "generic","mandatory": true,"configuration-value": 1024}'
+                memoryPageSize: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "2 MB"}'
+                numberOfPages: '{"schemaVersion": "0","schemaSelector": "","hardwarePlatform": "generic","mandatory": "true", "configurationValue": "1024"}'
             virtual_cpu:
               num_virtual_cpu: 2
               cpu_architecture: generic
