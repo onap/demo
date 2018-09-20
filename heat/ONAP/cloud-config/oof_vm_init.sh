@@ -116,14 +116,14 @@ MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddre
 
 # Run OOF-HAS
 # Set A&AI and MUSIC url inside OOF-HAS conductor.conf
-sed -i "138 s%.*%server_url = https://aai.api.simpledemo.onap.org:8443/aai%" $COND_CONF
-sed -i "141 s%.*%server_url_version = v13%" $COND_CONF
-sed -i "257 s%.*%server_url = http://$MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
-sed -i "284 s%.*%replication_factor = 1%" $COND_CONF
-sed -i "359 s%.*%server_url = http://msb.api.simpledemo.onap.org/api/multicloud%" $COND_CONF
+sed -i "160 s%.*%server_url = https://aai.api.simpledemo.onap.org:8443/aai%" $COND_CONF
+sed -i "163 s%.*%server_url_version = v14%" $COND_CONF
+sed -i "279 s%.*%server_url = http://$MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
+sed -i "306 s%.*%replication_factor = 1%" $COND_CONF
+sed -i "381 s%.*%server_url = http://msb.api.simpledemo.onap.org/api/multicloud%" $COND_CONF
 
 # Set A&AI authentication file locations inside OOF-HAS conductor.conf
-sed -i "153 s%.*%certificate_authority_bundle_file = $AAI_cert%" $COND_CONF
+sed -i "175 s%.*%certificate_authority_bundle_file = $AAI_cert%" $COND_CONF
 
 
 echo "Values to data component"
