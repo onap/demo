@@ -16,6 +16,24 @@
       "revId": "714334d05a3ce47075a4b17a59daa0a7443b95f4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a76adc5_150abe25",
+        "filename": "tosca/vCPE/vgw/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 309
+      },
+      "writtenOn": "2018-09-20T02:16:56Z",
+      "side": 1,
+      "message": "hmm, it seems there is mismatch between ETSI NFV ISG HPA Capability Registry draft and the wiki. In the draft, there are 2 separate keys: dataProcessingAccelerationLibrary and dataProcessingAccelerationLibraryVersion. But it seems in the wiki https://wiki.onap.org/pages/viewpage.action?pageId\u003d25439922, dataProcessingAccelerationLibray is used to specify both library and version. We need to sort that out.",
+      "parentUuid": "1a76adc5_b52d0aaa",
+      "revId": "714334d05a3ce47075a4b17a59daa0a7443b95f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
