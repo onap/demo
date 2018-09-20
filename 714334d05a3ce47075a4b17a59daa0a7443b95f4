@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a76adc5_b52d0aaa",
+        "filename": "tosca/vCPE/vgw/MainServiceTemplate.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 2905
+      },
+      "writtenOn": "2018-09-20T02:09:39Z",
+      "side": 1,
+      "message": "just one comment for the value of this feature: it uses \"DPDK\", in the https://wiki.onap.org/display/DW/HPA+Policies+and+Mappings, the value is v12.1, what\u0027s the expected scope of value? like \u003e\u003dv10.",
+      "revId": "714334d05a3ce47075a4b17a59daa0a7443b95f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
