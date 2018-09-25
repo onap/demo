@@ -1,3 +1,17 @@
+# Copyright (c) 2018 AT&T, and others
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 # aaf info - everything is from the private oam network (also called onap private network)
 GLOBAL_AAF_SERVER = "https://aaf.api.simpledemo.onap.org:8100"
 GLOBAL_AAF_USERNAME = "demo@people.osaaf.org"
@@ -10,9 +24,11 @@ GLOBAL_AAI_PASSWORD = "demo123456!"
 # appc info - everything is from the private oam network (also called onap private network)
 GLOBAL_APPC_SERVER_PROTOCOL = "http"
 GLOBAL_APPC_SERVER_PORT = "8282"
-GLOBAL_APPC_SERVER = "http://10.0.2.1:"
 GLOBAL_APPC_USERNAME = "admin"
 GLOBAL_APPC_PASSWORD = "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U"
+GLOBAL_APPC_CDT_SERVER_PROTOCOL = "http"
+GLOBAL_APPC_CDT_SERVER_PORT = "80"
+GLOBAL_APPC_CDT_USERNAME = "demo"
 # sdc info - everything is from the private oam network (also called onap private network)
 GLOBAL_ASDC_SERVER_PROTOCOL = "http"
 GLOBAL_ASDC_FE_PORT = "8181"
@@ -34,16 +50,26 @@ GLOBAL_DCAE_SERVER_PROTOCOL = "http"
 GLOBAL_DCAE_HEALTH_SERVER_PORT = "8000"
 GLOBAL_DCAE_USERNAME = "console"
 GLOBAL_DCAE_PASSWORD = "ZjJkYjllMjljMTI2M2Iz"
+# data router info - everything is from the private oam network (also called onap private network)
+GLOBAL_DMAAP_DR_PROV_SERVER_PROTOCOL = "http"
+GLOBAL_DMAAP_DR_PROV_SERVER_PORT = "8080"
+GLOBAL_DMAAP_DR_NODE_SERVER_PROTOCOL = "http"
+GLOBAL_DMAAP_DR_NODE_SERVER_PORT = "8080"
 # DROOL server port and credentials
 GLOBAL_DROOLS_SERVER_PORT = "9696"
 GLOBAL_DROOLS_USERNAME = "@1b3rt"
 GLOBAL_DROOLS_PASSWORD = "31nst31n"
-# log server config - No log server is run in HEAT
+# log server config - NOTE: no log server is run in HEAT; only on OOM
 GLOBAL_LOG_SERVER_PROTOCOL = "http"
 GLOBAL_LOG_ELASTICSEARCH_PORT = "9200"
 GLOBAL_LOG_LOGSTASH_PORT = "9600"
 GLOBAL_LOG_KIBANA_PORT = "5601"
-# microservice bus info - everything is from the private oam network (also called ecomp private network)
+# pomba info - NOTE: no pomba is run in HEAT; only on OOM
+GLOBAL_POMBA_SERVER_PROTOCOL = "http"
+GLOBAL_POMBA_AAICONTEXTBUILDER_PORT = "9530"
+GLOBAL_POMBA_SDCCONTEXTBUILDER_PORT = "9530"
+GLOBAL_POMBA_NETWORKDISCCONTEXTBUILDER_PORT = "9530"
+# microservice bus info - everything is from the private oam network (also called onap private network)
 GLOBAL_MSB_SERVER_PROTOCOL = "http"
 GLOBAL_MSB_SERVER_PORT = "80"
 # message router info - everything is from the private oam network (also called onap private network)
