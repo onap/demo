@@ -18,6 +18,10 @@
 
 set -ex 
 
+# add well-known DCAE hostname aliases
+echo "$(cat /opt/config/dcae_ip_addr.txt) consul" >>/etc/hosts
+echo "$(cat /opt/config/dcae_ip_addr.txt) dockerhost" >>/etc/hosts
+
 # Read configuration files
 EXTERNAL_DNS=$(cat /opt/config/external_dns.txt)
 MAC_ADDR=$(cat /opt/config/mac_addr.txt)
@@ -39,7 +43,11 @@ apt-get install -y python python-pip
 cp /opt/boot/dcae2_vm_init.sh /opt/dcae2_vm_init.sh
 chmod +x /opt/dcae2_vm_init.sh
 
-echo "DOCKER_OPTS=\" $DOCKER_OPTS --raw-logs -H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock\" " >> /etc/default/docker
+DOCKER_OPTS=$(cat /etc/default/docker | grep ^DOCKER_OPTS)
+DOCKER_OPTS=${DOCKER_OPTS::-1}" --raw-logs -H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock\""
+sed -i "s|DOCKER_OPTS=.*|DOCKER_OPTS=$DOCKER_OPTS|g" /etc/default/docker
+
+#echo "DOCKER_OPTS=\" $DOCKER_OPTS --raw-logs -H tcp://0.0.0.0:2376 -H unix:///var/run/docker.sock\" " >> /etc/default/docker
 sed -i "/ExecStart/s/$/ -H tcp:\/\/0.0.0.0:2376 --raw-logs/g" /etc/systemd/system/docker.service
 if [ ! -e /etc/docker/daemon.json ]; then
   REGISTRY="$(cat /opt/config/nexus_docker_repo.txt)"
@@ -56,4 +64,4 @@ mkdir -p /opt/app/config
 
 
 cd /opt
-./dcae2_vm_init.sh
+./dcae2_vm_init.sh &>/dev/null &disown

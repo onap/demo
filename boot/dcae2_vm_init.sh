@@ -23,11 +23,6 @@
 
 set -ex
 
-# add well-known DCAE hostname aliases
-echo "$(cat /opt/config/dcae_ip_addr.txt) consul" >>/etc/hosts
-echo "$(cat /opt/config/dcae_ip_addr.txt) dockerhost" >>/etc/hosts
-
-
 URL_ROOT='nexus.onap.org/service/local/repositories/raw/content'
 REPO_BLUEPRINTS='org.onap.dcaegen2.platform.blueprints'
 REPO_DEPLOYMENTS='org.onap.dcaegen2.deployments'
@@ -52,6 +47,8 @@ then
     export https_proxy=$HTTPS_PROXY
 fi
 
+# clean up old network configuration in docker engine
+docker network rm config_default
 
 docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
 
