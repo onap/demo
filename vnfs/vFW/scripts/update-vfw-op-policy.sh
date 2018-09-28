@@ -78,7 +78,7 @@ echo "PDP-D amsterdam maven coordinates .."
 echo
 echo
 
-curl -vvv -k --silent --user @1b3rt:31nst31n -X GET https://${POLICY_HOST}:9696/policy/pdp/engine/controllers/amsterdam/drools  | python -m json.tool
+curl -vvv -k --silent --user "demo@people.osaaf.org:demo123456!" -X GET https://${POLICY_HOST}:9696/policy/pdp/engine/controllers/amsterdam/drools  | python -m json.tool
 
 
 echo
@@ -87,4 +87,4 @@ echo "PDP-D control loop updated .."
 echo
 echo
 
-curl -v -k --silent --user @1b3rt:31nst31n -X GET https://${POLICY_HOST}:9696/policy/pdp/engine/controllers/amsterdam/drools/facts/closedloop-amsterdam/org.onap.policy.controlloop.Params  | python -m json.tool
+curl -v -k --silent --user "demo@people.osaaf.org:demo123456!" -X GET https://${POLICY_HOST}:9696/policy/pdp/engine/controllers/amsterdam/drools/facts/closedloop-amsterdam/org.onap.policy.controlloop.Params  | python -m json.tool
