@@ -1,0 +1,50 @@
+{
+    "name": "vFW",
+    "description": "",
+    "data": [
+        {
+            "file": "base_template.yaml",
+            "type": "HEAT",
+            "isBase": "true",
+            "data": [
+                {
+                    "file": "base_template.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "vfw.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "vfw.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "vpg.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "vpg.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "vsn.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "vsn.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        }
+    ]
+}
