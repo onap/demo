@@ -1,0 +1,116 @@
+##########################################################################
+#
+#==================LICENSE_START==========================================
+#
+#
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#==================LICENSE_END============================================
+#
+# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+#
+##########################################################################
+
+heat_template_version: 2013-05-23
+
+description: Heat template that deploys a private network for ONAP VNFs
+
+##############
+#            #
+# PARAMETERS #
+#            #
+##############
+
+parameters:
+  unprotected_private_net_id:
+    type: string
+    label: Unprotected private network name or ID
+    description: Private network that connects vPacketGenerator with vFirewall
+  unprotected_private_subnet_id:
+    type: string
+    label: Unprotected private subnetwork name or ID
+    description: Private subnetwork of the protected network
+  unprotected_private_net_cidr:
+    type: string
+    label: Unprotected private network CIDR
+    description: The CIDR of the unprotected private network
+  protected_private_net_id:
+    type: string
+    label: Protected private network name or ID
+    description: Private network that connects vFirewall with vSink
+  protected_private_subnet_id:
+    type: string
+    label: Protected private subnetwork name or ID
+    description: Private subnetwork of the unprotected network
+  protected_private_net_cidr:
+    type: string
+    label: Protected private network CIDR
+    description: The CIDR of the protected private network
+  key_name:
+    type: string
+    label: Key pair name
+    description: Public/Private key pair name
+  pub_key:
+    type: string
+    label: Public key
+    description: Public key to be installed on the compute instance
+
+
+#############
+#           #
+# RESOURCES #
+#           #
+#############
+
+resources:
+  random-str:
+    type: OS::Heat::RandomString
+    properties:
+      length: 4
+
+  my_keypair:
+    type: OS::Nova::KeyPair
+    properties:
+      name:
+        str_replace:
+          template: base_rand
+          params:
+            base: { get_param: key_name }
+            rand: { get_resource: random-str }
+      public_key: { get_param: pub_key }
+      save_private_key: false
+
+  unprotected_private_network:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: unprotected_private_net_id }
+
+  unprotected_private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: { get_param: unprotected_private_subnet_id }
+      network_id: { get_resource: unprotected_private_network }
+      cidr: { get_param: unprotected_private_net_cidr }
+
+  protected_private_network:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: protected_private_net_id }
+
+  protected_private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: { get_param: protected_private_subnet_id }
+      network_id: { get_resource: protected_private_network }
+      cidr: { get_param: protected_private_net_cidr }
