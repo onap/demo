@@ -116,14 +116,18 @@ MUSIC_URL=$(docker inspect --format '{{ .NetworkSettings.Networks.bridge.IPAddre
 
 # Run OOF-HAS
 # Set A&AI and MUSIC url inside OOF-HAS conductor.conf
-sed -i "160 s%.*%server_url = https://aai.api.simpledemo.onap.org:8443/aai%" $COND_CONF
-sed -i "163 s%.*%server_url_version = v14%" $COND_CONF
-sed -i "279 s%.*%server_url = http://$MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
-sed -i "306 s%.*%replication_factor = 1%" $COND_CONF
-sed -i "381 s%.*%server_url = http://msb.api.simpledemo.onap.org/api/multicloud%" $COND_CONF
+sed -i "147 s%.*%aaf_url = http://aaf.api.simpledemo.onap.org:8100/authz/perms/user/%" $COND_CONF
+sed -i "167 s%.*%aaf_sms_url = http://aaf-sms.api.simpledemo.onap.org:10443%" $COND_CONF
+sed -i "202 s%.*%server_url = https://aai.api.simpledemo.onap.org:8443/aai%" $COND_CONF
+sed -i "211 s%.*%server_url_version = v14%" $COND_CONF
+sed -i "382 s%.*%server_url = http://msb.api.simpledemo.onap.org/api/multicloud%" $COND_CONF
+sed -i "401 s%.*%server_url = http://$MUSIC_URL:8080/MUSIC/rest/v2%" $COND_CONF
+sed -i "433 s%.*%replication_factor = 1%" $COND_CONF
+sed -i "536 s%.*%server_url = https://sdnc.api.simpledemo.onap.org:8282/restconf/%" $COND_CONF
 
-# Set A&AI authentication file locations inside OOF-HAS conductor.conf
-sed -i "175 s%.*%certificate_authority_bundle_file = $AAI_cert%" $COND_CONF
+# Set A&AI and SMS authentication file locations inside OOF-HAS conductor.conf
+sed -i "174 s%.*%aaf_ca_certs = $AAI_cert%" $COND_CONF
+sed -i "225 s%.*%certificate_authority_bundle_file = $AAI_cert%" $COND_CONF
 
 
 echo "Values to data component"
@@ -185,6 +189,18 @@ mkdir -p /opt/optf-osdf/config
 
 cat > $OSDF_CONFIG<<NEWFILE
 
+placementVersioningEnabled: False
+
+# Placement API latest version numbers to be set in HTTP header
+placementMajorVersion: "1"
+placementMinorVersion: "0"
+placementPatchVersion: "0"
+
+# Placement API default version numbers to be set in HTTP header
+placementDefaultMajorVersion: "1"
+placementDefaultMinorVersion: "0"
+placementDefaultPatchVersion: "0"
+
 # Credentials for SO
 soUsername: ""   # SO username for call back.
 soPassword: ""   # SO password for call back.
@@ -195,6 +211,8 @@ conductorUsername: admin1
 conductorPassword: plan.15
 conductorPingWaitTime: 60  # seconds to wait before calling the conductor retry URL
 conductorMaxRetries: 30  # if we don't get something in 30 minutes, give up
+# versions to be set in HTTP header
+conductorMinorVersion: 0
 
 # Policy Platform -- requires ClientAuth, Authorization, and Environment
 policyPlatformUrl: http://policy.api.simpledemo.onap.org:8081/pdp/api/getConfig # Policy Dev platform URL
@@ -224,9 +242,41 @@ osdfPlacementPassword: testpwd
 osdfPlacementSOUsername: so_test
 osdfPlacementSOPassword: so_testpwd
 
+# Credentials for the OOF placement service - VFC
+osdfPlacementVFCUsername: vfc_test
+osdfPlacementVFCPassword: vfc_testpwd
+
 # Credentials for the OOF CM scheduling service - Generic
 osdfCMSchedulerUsername: test1
 osdfCMSchedulerPassword: testpwd1
+
+is_aaf_enabled: False
+aaf_cache_expiry_hrs: 3
+aaf_url: https://aaf.api.simpledemo.onap.org:8100
+aaf_user_roles:
+    - /api/oof/v1/placement:org.onap.osdf.access|*|read ALL
+
+# Secret Management Service from AAF
+aaf_sms_url: https://aaf-sms.api.simpledemo.onap.org:10443
+aaf_sms_timeout: 30
+secret_domain: osdf
+aaf_ca_certs: ssl_certs/aaf_root_ca.cer
+
+# config db api
+configDbUrl: http://config.db.url:8080
+configDbUserName: osdf
+configDbPassword: passwd
+configDbGetCellListUrl: 'SDNCConfigDBAPI/getCellList'
+configDbGetNbrListUrl: 'SDNCConfigDBAPI/getNbrList'
+
+# Credentials for PCIHandler
+pciHMSUsername: ""   # pcihandler username for call back.
+pciHMSPassword: ""   # pcihandler password for call back.
+
+# Credentials for the OOF PCI Opt service
+osdfPCIOptUsername: pci_test
+osdfPCIOptPassword: pci_testpwd
+
 
 NEWFILE
 
