@@ -45,6 +45,7 @@ fi
 sed -i "s/VERSION=.*/VERSION=$VERSION/g" /opt/authz/auth/docker/d.props
 sed -i "s/HOSTNAME=.*/HOSTNAME=$HOSTNAME/g" /opt/authz/auth/docker/d.props
 sed -i "s/HOST_IP=.*/HOST_IP=$HOST_IP/g" /opt/authz/auth/docker/d.props
+sed -i "s/AAF_REGISTER_AS=.*/AAF_REGISTER_AS=$FQDN/g" /opt/authz/auth/docker/d.props
 
 cd /opt/authz/auth/docker
 # Need new Deployment system properties
