@@ -409,6 +409,8 @@ parameters:
     type: string
   dgbuilder_docker:
     type: string
+  ansible_docker:
+    type: string
   cli_docker:
     type: string
   music_docker:
@@ -1756,6 +1758,7 @@ resources:
               __docker_version__: { get_param: appc_docker }
               __gerrit_branch__: { get_param: appc_branch }
               __dgbuilder_docker__: { get_param: dgbuilder_docker }
+              __ansible_docker__: { get_param: ansible_docker }
               __appc_repo__: { get_param: appc_repo }
             template: |
               #!/bin/bash
@@ -1765,6 +1768,7 @@ resources:
               echo "__docker_version__" > /opt/config/docker_version.txt
               echo "__gerrit_branch__" > /opt/config/gerrit_branch.txt
               echo "__dgbuilder_docker__" > /opt/config/dgbuilder_version.txt
+              echo "__ansible_docker__" > /opt/config/ansible_version.txt
               echo "__appc_repo__" > /opt/config/remote_repo.txt
 
               cd /opt

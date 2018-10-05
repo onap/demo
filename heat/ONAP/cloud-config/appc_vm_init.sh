@@ -5,6 +5,7 @@ NEXUS_PASSWD=$(cat /opt/config/nexus_password.txt)
 export NEXUS_DOCKER_REPO=$(cat /opt/config/nexus_docker_repo.txt)
 DMAAP_TOPIC=$(cat /opt/config/dmaap_topic.txt)
 DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
+ANSIBLE_DOCKER_IMAGE_VERSION=$(cat /opt/config/ansible_version.txt)
 DGBUILDER_IMAGE_VERSION=$(cat /opt/config/dgbuilder_version.txt)
 export MTU=$(/sbin/ifconfig | grep MTU | sed 's/.*MTU://' | sed 's/ .*//' | sort -n | head -1)
 
@@ -18,6 +19,10 @@ docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
 docker pull $NEXUS_DOCKER_REPO/onap/appc-image:$DOCKER_IMAGE_VERSION
 docker tag $NEXUS_DOCKER_REPO/onap/appc-image:$DOCKER_IMAGE_VERSION onap/appc-image:latest
+
+
+docker pull $NEXUS_DOCKER_REPO/onap/sdnc-ansible-server-image:$ANSIBLE_DOCKER_IMAGE_VERSION
+docker tag $NEXUS_DOCKER_REPO/onap/sdnc-ansible-server-image:$ANSIBLE_DOCKER_IMAGE_VERSION onap/sdnc-ansible-server-image:latest
 
 docker pull $NEXUS_DOCKER_REPO/onap/ccsdk-dgbuilder-image:$DGBUILDER_IMAGE_VERSION
 docker tag $NEXUS_DOCKER_REPO/onap/ccsdk-dgbuilder-image:$DGBUILDER_IMAGE_VERSION onap/ccsdk-dgbuilder-image:latest
