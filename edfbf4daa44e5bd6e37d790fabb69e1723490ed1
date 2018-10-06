@@ -16,6 +16,24 @@
       "revId": "edfbf4daa44e5bd6e37d790fabb69e1723490ed1",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_57b4acf1",
+        "filename": "heat/ONAP/onap_openstack_template.env",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1733
+      },
+      "writtenOn": "2018-10-06T08:09:51Z",
+      "side": 1,
+      "message": "Yes, it will always be equal to SDNC_IMAGE_DOCKER unless the ansible image moves to CCSDK in which case it could change in the future to a CCSDK_ANSIBLE_IMAGE_DOCKER value.",
+      "parentUuid": "bada0100_fc54a722",
+      "revId": "edfbf4daa44e5bd6e37d790fabb69e1723490ed1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
