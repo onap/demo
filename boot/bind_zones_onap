@@ -111,6 +111,7 @@ dcae.api.simpledemo.onap.org.	IN	CNAME	vm1.dcae.simpledemo.onap.org.
 
 ;SO
 mso.api.simpledemo.onap.org.	IN	CNAME	vm1.mso.simpledemo.onap.org.
+so.api.simpledemo.onap.org.	    IN	CNAME	vm1.mso.simpledemo.onap.org.
 
 ;Policy
 policy.api.simpledemo.onap.org. 	IN	CNAME	vm1.policy.simpledemo.onap.org.

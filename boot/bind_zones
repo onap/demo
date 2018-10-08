@@ -111,6 +111,7 @@ dcae.api.simpledemo.openecomp.org.	IN	CNAME	vm1.dcae.simpledemo.openecomp.org.
 
 ;SO
 mso.api.simpledemo.openecomp.org.	IN	CNAME	vm1.mso.simpledemo.openecomp.org.
+so.api.simpledemo.openecomp.org.	IN	CNAME	vm1.mso.simpledemo.openecomp.org.
 
 ;Policy
 policy.api.simpledemo.openecomp.org. 	IN	CNAME	vm1.policy.simpledemo.openecomp.org.
