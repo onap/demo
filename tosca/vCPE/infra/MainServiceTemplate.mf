@@ -4,5 +4,5 @@ metadata:
     vnf_package_version: 1.0
     vnf_release_data_time: 2018.05.06T13:00+08:00
 
-source: MainServiceTemplate.yaml
+Source: MainServiceTemplate.yaml
 
