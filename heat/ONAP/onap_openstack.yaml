@@ -1794,7 +1794,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: ubuntu_1604_image }
-      flavor: { get_param: flavor_medium }
+      flavor: { get_param: flavor_large }
       name:
         str_replace:
           template: base-clamp

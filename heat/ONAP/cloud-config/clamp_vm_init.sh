@@ -21,10 +21,17 @@ docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 
 docker pull $NEXUS_DOCKER_REPO/onap/clamp:$DOCKER_IMAGE_VERSION
 
-cd extra/docker/clamp/
+cd extra/docker/heat/
 
 # Change the Clamp docker image name in the docker-compose.yml to match the one downloaded
-sed -i "/image: onap\/clamp/c\    image: $NEXUS_DOCKER_REPO\/onap\/clamp:$DOCKER_IMAGE_VERSION" docker-compose.yml
+for image in "onap/clamp" "onap/clamp-dashboard-elasticsearch" "onap/clamp-dashboard-logstash" "onap/clamp-dashboard-kibana"
+do
+    sed -i "s@image: $image:latest@image: $NEXUS_DOCKER_REPO/$image:$DOCKER_IMAGE_VERSION@g" docker-compose.yml
+done
+
+# Ensure max_map_count is high enough for elasticsearch
+sysctl -w vm.max_map_count=262144
+echo "sysctl -w vm.max_map_count=262144" >> /etc/sysctl.conf
 
 # Start Clamp and MariaDB containers with docker compose and clamp/extra/docker/clamp/docker-compose.yml
 /opt/docker/docker-compose up -d
