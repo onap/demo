@@ -13,7 +13,7 @@ DOCKER_IMAGE_VERSION=$(cat /opt/config/docker_version.txt)
 # Use "latest" to deploy snapshot images:
 # DOCKER_IMAGE_VERSION=latest
 CLI_DOCKER_VERSION=$(cat /opt/config/cli_docker_version.txt)
-CDR_IMAGE_VERSION=latest
+CDR_IMAGE_VERSION=3.0.0
 ZK_IMAGE_VERSION=3.4
 
 # Refresh configuration and scripts
