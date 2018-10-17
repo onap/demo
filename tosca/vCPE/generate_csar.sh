@@ -28,7 +28,12 @@ for dir in $DIRS; do
     # prepare temporary csar build subdirectory
     cd $ROOT_DIR/$dir
     mkdir $ROOT_DIR/$dir/tmp
-    cp MainServiceTemplate.mf MainServiceTemplate.yaml tmp/
+    cp MainServiceTemplate.mf tmp/
+    if [ $1 ] && [ $1 == "sriov" ]; then
+        cp MainServiceTemplate_sriov.yaml tmp/MainServiceTemplate.yaml
+    else
+        cp MainServiceTemplate.yaml tmp/
+    fi
     cp -r $ROOT_DIR/Artifacts tmp/
     cp -r $ROOT_DIR/Definitions tmp/
     cp -r $ROOT_DIR/TOSCA-Metadata tmp/
