@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bada0100_6b168557",
+        "filename": "tosca/vCPE/infra/MainServiceTemplate.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 141
+      },
+      "writtenOn": "2018-10-18T12:14:28Z",
+      "side": 1,
+      "message": "does this description have some language grammar fault? Need native language guys to check it.",
+      "range": {
+        "startLine": 85,
+        "startChar": 54,
+        "endLine": 85,
+        "endChar": 57
+      },
+      "revId": "ca4fcd718269810e3e8e447af293fd82730c4b90",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
