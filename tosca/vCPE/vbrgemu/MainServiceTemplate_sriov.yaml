@@ -110,7 +110,7 @@ topology_template:
       type: string
       description: cloud environment(openstack or rackspace)
       default: openstack
-    sdnc_ip:
+    sdnc_ip_addr:
       type: string
       description: SDNC ip address used to set NAT
       default: 10.0.7.1
@@ -241,7 +241,7 @@ topology_template:
           vbrgemu_bng_private_net_cidr: { get_input: vbrgemu_bng_private_net_cidr }
           demo_artifacts_version: { get_input: demo_artifacts_version }
           install_script_version: { get_input: install_script_version }
-          sdnc_ip: { get_input: sdnc_ip }
+          sdnc_ip: { get_input: sdnc_ip_addr }
           cloud_env: { get_input: cloud_env }
           nexus_artifact_repo: { get_input: nexus_artifact_repo }
         user_data: |
