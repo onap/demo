@@ -327,7 +327,7 @@ topology_template:
           dcae_collector_port: { get_input: dcae_collector_port }
           cpe_signal_net_ipaddr: { get_input: vaaa_private_ip_0 }
           oam_ipaddr: { get_input: vaaa_private_ip_1 }
-          oam_cidr: { get_input: oam_private_net_cidr }
+          oam_cidr: { get_input: onap_private_net_cidr }
           cpe_signal_net_cidr: { get_input: cpe_signal_net_cidr }
           demo_artifacts_version: { get_input: demo_artifacts_version }
           install_script_version: { get_input: install_script_version }
@@ -453,7 +453,7 @@ topology_template:
           vf_module_id: { get_input: vf_module_id }
           oam_ipaddr: { get_input: vdns_private_ip_1 }
           cpe_public_net_ipaddr: { get_input: vdns_private_ip_0 }
-          oam_cidr: { get_input: oam_private_net_cidr }
+          oam_cidr: { get_input: onap_private_net_cidr }
           cpe_public_net_cidr: { get_input: cpe_public_net_cidr }
           demo_artifacts_version: { get_input: demo_artifacts_version }
           install_script_version: { get_input: install_script_version }
@@ -577,7 +577,7 @@ topology_template:
           vf_module_id: { get_input: vf_module_id }
           oam_ipaddr: { get_input: vdhcp_private_ip_1 }
           cpe_signal_ipaddr: { get_input: vdhcp_private_ip_0 }
-          oam_cidr: { get_input: oam_private_net_cidr }
+          oam_cidr: { get_input: onap_private_net_cidr }
           cpe_signal_net_cidr: { get_input: cpe_signal_net_cidr }
           mr_ip_addr: { get_input: mr_ip_addr }
           mr_ip_port: { get_input: mr_ip_port }
@@ -705,7 +705,7 @@ topology_template:
           vf_module_id: { get_input: vf_module_id }
           oam_ipaddr: { get_input: vweb_private_ip_1 }
           cpe_public_ipaddr: { get_input: vweb_private_ip_0 }
-          oam_cidr: { get_input: oam_private_net_cidr }
+          oam_cidr: { get_input: onap_private_net_cidr }
           cpe_public_net_cidr: { get_input: cpe_public_net_cidr }
           demo_artifacts_version: { get_input: demo_artifacts_version }
           install_script_version: { get_input: install_script_version }

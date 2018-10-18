@@ -315,7 +315,7 @@ topology_template:
           vf_module_id: { get_input: vf_module_id }
           mux_gw_private_net_ipaddr: { get_input: vgw_private_ip_0 }
           oam_ipaddr: { get_input: vgw_private_ip_1 }
-          oam_cidr: { get_input: oam_private_net_cidr }
+          oam_cidr: { get_input: onap_private_net_cidr }
           cpe_public_net_cidr: { get_input: cpe_public_net_cidr }
           mux_gw_private_net_cidr: { get_input: mux_gw_private_net_cidr }
           mux_ip_addr: { get_input: mux_ip_addr }

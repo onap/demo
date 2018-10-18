@@ -367,7 +367,7 @@ topology_template:
           cpe_signal_net_ipaddr: { get_input: vbng_private_ip_2 }
           bng_gmux_net_ipaddr: { get_input: vbng_private_ip_3 }
           oam_ipaddr: { get_input: vbng_private_ip_1 }
-          oam_cidr: { get_input: oam_private_net_cidr }
+          oam_cidr: { get_input: onap_private_net_cidr }
           bng_gmux_cidr: { get_input: bng_gmux_private_net_cidr }
           cpe_signal_cidr: { get_input: cpe_signal_private_net_cidr }
           brgemu_bng_cidr: { get_input: brgemu_bng_private_net_cidr }

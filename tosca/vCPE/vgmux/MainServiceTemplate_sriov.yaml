@@ -328,7 +328,7 @@ topology_template:
           mux_gw_net_ipaddr: { get_input: vgmux_private_ip_2 }
           bng_to_mux_net_ipaddr: { get_input: bng_gmux_private_ip }
           bng_mux_net_cidr: { get_input: bng_gmux_private_net_cidr }
-          oam_cidr: { get_input: oam_private_net_cidr }
+          oam_cidr: { get_input: onap_private_net_cidr }
           mux_gw_net_cidr: { get_input: mux_gw_private_net_cidr }
           brg_bng_net_cidr: { get_input: brgemu_bng_private_net_cidr }
           install_script_version: { get_input: install_script_version }
