@@ -74,20 +74,10 @@ parameters:
 #############
 
 resources:
-  random-str:
-    type: OS::Heat::RandomString
-    properties:
-      length: 4
-
   my_keypair:
     type: OS::Nova::KeyPair
     properties:
-      name:
-        str_replace:
-          template: base_rand
-          params:
-            base: { get_param: key_name }
-            rand: { get_resource: random-str }
+      name: { get_param: key_name }
       public_key: { get_param: pub_key }
       save_private_key: false
 
