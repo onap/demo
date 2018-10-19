@@ -69,4 +69,4 @@ docker run -i -t -d --name vfc_svnfm_nokia -p 8486:8486 -e MSB_ADDR=$MULTISERV_I
 docker run -i -t -d --name vfc_multivimproxy -p 8481:8481 -e MSB_ADDR=$MULTISERV_IP:80 -e SERVICE_IP=$MULTISERV_IP $NEXUS_DOCKER_REPO/onap/vfc/multivimproxy:$MULTIVIMPROXY_DOCKER_VER
 
 VNFM_ID=vnfmUuid
-docker run -i -t -d --name vfc_svnfm_nokiav2 -p 8089:8089 -e MSB_IP=$MULTISERV_IP -e CONFIGURE=kuku -e EXTERNAL_IP=$MULTISERV_IP -e "VNFM_ID=$VNFM_ID" -d --stop-timeout 300 $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokiav2:$NOKIAV2_DOCKER_VER
+docker run -i -t -d --name vfc_svnfm_nokiav2 -p 8089:8089 -e EXTERNAL_PORT=8089 -e MSB_IP=$MULTISERV_IP -e CONFIGURE=kuku -e EXTERNAL_IP=$MULTISERV_IP -e "VNFM_ID=$VNFM_ID" -d --stop-timeout 300 $NEXUS_DOCKER_REPO/onap/vfc/nfvo/svnfm/nokiav2:$NOKIAV2_DOCKER_VER
