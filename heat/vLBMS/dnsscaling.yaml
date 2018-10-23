@@ -124,6 +124,9 @@ parameters:
   sec_group:
     type: string
     description: ONAP Security Group
+  dns_enabled:
+    type: string
+    description: Enable/disable DNS (by default use true)
 
 #############
 #           #
