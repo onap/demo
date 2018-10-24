@@ -1,0 +1,99 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;module name="notifications"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:ncEvent="urn:ietf:params:xml:ns:netconf:notification:1.0"
+        xmlns:yang="urn:ietf:params:xml:ns:yang:ietf-yang-types"&gt;
+  &lt;namespace uri="urn:ietf:params:xml:ns:netconf:notification:1.0"/&gt;
+  &lt;prefix value="ncEvent"/&gt;
+  &lt;import module="ietf-yang-types"&gt;
+    &lt;prefix value="yang"/&gt;
+  &lt;/import&gt;
+  &lt;organization&gt;
+    &lt;text&gt;IETF NETCONF WG&lt;/text&gt;
+  &lt;/organization&gt;
+  &lt;contact&gt;
+    &lt;text&gt;netconf@ops.ietf.org&lt;/text&gt;
+  &lt;/contact&gt;
+  &lt;description&gt;
+    &lt;text&gt;Conversion of the 'ncEvent' XSD in the
+NETCONF Notifications RFC.&lt;/text&gt;
+  &lt;/description&gt;
+  &lt;reference&gt;
+    &lt;text&gt;RFC 5277.&lt;/text&gt;
+  &lt;/reference&gt;
+  &lt;revision date="2008-07-14"&gt;
+    &lt;description&gt;
+      &lt;text&gt;RFC 5277 version.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/revision&gt;
+  &lt;typedef name="streamNameType"&gt;
+    &lt;type name="string"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;The name of an event stream.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/typedef&gt;
+  &lt;container name="notification"&gt;
+    &lt;config value="false"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;internal struct to start a notification&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="eventTime"&gt;
+      &lt;type name="yang:date-and-time"/&gt;
+      &lt;mandatory value="true"/&gt;
+    &lt;/leaf&gt;
+  &lt;/container&gt;
+  &lt;rpc name="create-subscription"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The command to create a notification subscription. It
+takes as argument the name of the notification stream
+and filter. Both of those options limit the content of
+the subscription. In addition, there are two time-related
+parameters, startTime and stopTime, which can be used to
+select the time interval of interest to the notification
+replay feature.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;input&gt;
+      &lt;leaf name="stream"&gt;
+        &lt;type name="streamNameType"/&gt;
+        &lt;default value="NETCONF"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;An optional parameter that indicates which stream of events
+is of interest. If not present, then events in the default
+NETCONF stream will be sent.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;anyxml name="filter"&gt;
+        &lt;description&gt;
+          &lt;text&gt;An optional parameter that indicates which subset of all
+possible events is of interest. The format of this
+parameter is the same as that of the filter parameter
+in the NETCONF protocol operations. If not present,
+all events not precluded by other parameters will
+be sent.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/anyxml&gt;
+      &lt;leaf name="startTime"&gt;
+        &lt;type name="yang:date-and-time"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;A parameter used to trigger the replay feature and
+indicates that the replay should start at the time
+specified. If start time is not present, this is not a
+replay subscription.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;leaf name="stopTime"&gt;
+        &lt;type name="yang:date-and-time"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;An optional parameter used with the optional replay
+feature to indicate the newest notifications of
+interest. If stop time is not present, the notifications
+will continue until the subscription is terminated.
+Must be used with startTime.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+    &lt;/input&gt;
+  &lt;/rpc&gt;
+&lt;/module&gt;
+</data>
+</rpc-reply>

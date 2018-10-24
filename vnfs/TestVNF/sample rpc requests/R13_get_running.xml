@@ -1,0 +1,10 @@
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="r13_get_running">
+  <get-config>
+    <source>
+      <running/>
+    </source>
+    <filter type="subtree">
+      <configure xmlns="urn:alcatel-lucent.com:sros:ns:yang:conf-r13"/>
+    </filter>
+  </get-config>
+</rpc>

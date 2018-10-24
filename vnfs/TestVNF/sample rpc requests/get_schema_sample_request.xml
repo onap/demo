@@ -1,0 +1,6 @@
+<rpc message-id="104" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <get-schema xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">
+      <identifier>send-models</identifier>
+      <version>1.0</version>
+  </get-schema>
+</rpc>

@@ -1,0 +1,19 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="<MID>">
+  <data xmlns="http://example.net/send-models-method/1.0">
+	rpc send-models {
+	  description
+	    "The &lt;send-models&gt; operation takes in a content in JSON format and sends the entire content to the specified target address.";
+		
+		container config {
+             leaf target-name {
+                 type string;
+                 description "name of the target to which all the events are to be sent";
+             }
+         }
+	      leaf content {
+	        type string;
+	        description "JSON string to be sent, which contains all the events to be sent";
+	      }
+	}
+	</data>
+</rpc-reply>

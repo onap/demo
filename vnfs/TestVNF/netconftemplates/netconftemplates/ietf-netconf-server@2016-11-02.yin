@@ -1,0 +1,538 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;module name="ietf-netconf-server"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:ncs="urn:ietf:params:xml:ns:yang:ietf-netconf-server"
+        xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types"
+        xmlns:x509c2n="urn:ietf:params:xml:ns:yang:ietf-x509-cert-to-name"
+        xmlns:ss="urn:ietf:params:xml:ns:yang:ietf-ssh-server"
+        xmlns:ts="urn:ietf:params:xml:ns:yang:ietf-tls-server"&gt;
+  &lt;yang-version value="1.1"/&gt;
+  &lt;namespace uri="urn:ietf:params:xml:ns:yang:ietf-netconf-server"/&gt;
+  &lt;prefix value="ncs"/&gt;
+  &lt;import module="ietf-inet-types"&gt;
+    &lt;prefix value="inet"/&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6991: Common YANG Data Types&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/import&gt;
+  &lt;import module="ietf-x509-cert-to-name"&gt;
+    &lt;prefix value="x509c2n"/&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 7407: A YANG Data Model for SNMP Configuration&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/import&gt;
+  &lt;import module="ietf-ssh-server"&gt;
+    &lt;prefix value="ss"/&gt;
+    &lt;revision-date date="2016-11-02"/&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC YYYY: SSH Client and Server Models&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/import&gt;
+  &lt;import module="ietf-tls-server"&gt;
+    &lt;prefix value="ts"/&gt;
+    &lt;revision-date date="2016-11-02"/&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC ZZZZ: TLS Client and Server Models&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/import&gt;
+  &lt;organization&gt;
+    &lt;text&gt;IETF NETCONF (Network Configuration) Working Group&lt;/text&gt;
+  &lt;/organization&gt;
+  &lt;contact&gt;
+    &lt;text&gt;WG Web:   &amp;lt;http://tools.ietf.org/wg/netconf/&amp;gt;
+WG List:  &amp;lt;mailto:netconf@ietf.org&amp;gt;
+
+WG Chair: Mehmet Ersue
+          &amp;lt;mailto:mehmet.ersue@nsn.com&amp;gt;
+
+WG Chair: Mahesh Jethanandani
+          &amp;lt;mailto:mjethanandani@gmail.com&amp;gt;
+
+Editor:   Kent Watsen
+          &amp;lt;mailto:kwatsen@juniper.net&amp;gt;&lt;/text&gt;
+  &lt;/contact&gt;
+  &lt;description&gt;
+    &lt;text&gt;This module contains a collection of YANG definitions for
+configuring NETCONF servers.
+
+Copyright (c) 2014 IETF Trust and the persons identified as
+authors of the code. All rights reserved.
+
+Redistribution and use in source and binary forms, with or
+without modification, is permitted pursuant to, and subject
+to the license terms contained in, the Simplified BSD
+License set forth in Section 4.c of the IETF Trust's
+Legal Provisions Relating to IETF Documents
+(http://trustee.ietf.org/license-info).
+
+This version of this YANG module is part of RFC XXXX; see
+the RFC itself for full legal notices.&lt;/text&gt;
+  &lt;/description&gt;
+  &lt;revision date="2016-11-02"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Initial version&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC XXXX: NETCONF Client and Server Models&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/revision&gt;
+  &lt;feature name="listen"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The 'listen' feature indicates that the NETCONF server
+supports opening a port to accept NETCONF client connections
+using at least one transport (e.g., SSH, TLS, etc.).&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/feature&gt;
+  &lt;feature name="ssh-listen"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The 'ssh-listen' feature indicates that the NETCONF server
+supports opening a port to accept NETCONF over SSH
+client connections.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6242: Using the NETCONF Protocol over Secure Shell (SSH)&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/feature&gt;
+  &lt;feature name="tls-listen"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The 'tls-listen' feature indicates that the NETCONF server
+supports opening a port to accept NETCONF over TLS
+client connections.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 7589: Using the NETCONF Protocol over Transport
+          Layer Security (TLS) with Mutual X.509
+          Authentication&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/feature&gt;
+  &lt;feature name="call-home"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The 'call-home' feature indicates that the NETCONF server
+supports initiating NETCONF call home connections to NETCONF
+clients using at least one transport (e.g., SSH, TLS, etc.).&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC YYYY: NETCONF Call Home and RESTCONF Call Home&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/feature&gt;
+  &lt;feature name="ssh-call-home"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The 'ssh-call-home' feature indicates that the NETCONF
+server supports initiating a NETCONF over SSH call
+home connection to NETCONF clients.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC YYYY: NETCONF Call Home and RESTCONF Call Home&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/feature&gt;
+  &lt;feature name="tls-call-home"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The 'tls-call-home' feature indicates that the NETCONF
+server supports initiating a NETCONF over TLS call
+home connection to NETCONF clients.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC YYYY: NETCONF Call Home and RESTCONF Call Home&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/feature&gt;
+  &lt;grouping name="cert-maps-grouping"&gt;
+    &lt;description&gt;
+      &lt;text&gt;A grouping that defines a container around the
+cert-to-name structure defined in RFC 7407.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;container name="cert-maps"&gt;
+      &lt;description&gt;
+        &lt;text&gt;The cert-maps container is used by a TLS-based NETCONF
+server to map the NETCONF client's presented X.509
+certificate to a NETCONF username.  If no matching and
+valid cert-to-name list entry can be found, then the
+NETCONF server MUST close the connection, and MUST NOT
+accept NETCONF messages over it.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;reference&gt;
+        &lt;text&gt;RFC WWWW: NETCONF over TLS, Section 7&lt;/text&gt;
+      &lt;/reference&gt;
+      &lt;uses name="x509c2n:cert-to-name"/&gt;
+    &lt;/container&gt;
+  &lt;/grouping&gt;
+  &lt;grouping name="endpoints-container"&gt;
+    &lt;description&gt;
+      &lt;text&gt;This grouping is used by both the ssh and tls containers
+for call-home configurations.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;container name="endpoints"&gt;
+      &lt;description&gt;
+        &lt;text&gt;Container for the list of endpoints.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;list name="endpoint"&gt;
+        &lt;key value="name"/&gt;
+        &lt;min-elements value="1"/&gt;
+        &lt;ordered-by value="user"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;User-ordered list of endpoints for this NETCONF client.
+Defining more than one enables high-availability.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;leaf name="name"&gt;
+          &lt;type name="string"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;An arbitrary name for this endpoint.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;leaf name="address"&gt;
+          &lt;type name="inet:host"/&gt;
+          &lt;mandatory value="true"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;The IP address or hostname of the endpoint.  If a
+hostname is configured and the DNS resolution results
+in more than one IP address, the NETCONF server
+will process the IP addresses as if they had been
+explicitly configured in place of the hostname.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;leaf name="port"&gt;
+          &lt;type name="inet:port-number"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;The IP port for this endpoint. The NETCONF server will
+use the IANA-assigned well-known port if no value is
+specified.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+      &lt;/list&gt;
+    &lt;/container&gt;
+  &lt;/grouping&gt;
+  &lt;container name="netconf-server"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Top-level container for NETCONF server configuration.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;container name="session-options"&gt;
+      &lt;description&gt;
+        &lt;text&gt;NETCONF session options, independent of transport
+or connection strategy.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;leaf name="hello-timeout"&gt;
+        &lt;type name="uint16"/&gt;
+        &lt;units name="seconds"/&gt;
+        &lt;default value="600"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;Specifies the maximum number of seconds that a SSH/TLS
+connection may wait for a hello message to be received.
+A connection will be dropped if no hello message is
+received before this number of seconds elapses.  If set
+to zero, then the server will wait forever for a hello
+message.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+    &lt;/container&gt;
+    &lt;container name="listen"&gt;
+      &lt;if-feature name="listen"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Configures listen behavior&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;leaf name="max-sessions"&gt;
+        &lt;type name="uint16"/&gt;
+        &lt;default value="0"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;Specifies the maximum number of concurrent sessions
+that can be active at one time.  The value 0 indicates
+that no artificial session limit should be used.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;leaf name="idle-timeout"&gt;
+        &lt;type name="uint16"/&gt;
+        &lt;units name="seconds"/&gt;
+        &lt;default value="3600"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;Specifies the maximum number of seconds that a NETCONF
+session may remain idle. A NETCONF session will be dropped
+if it is idle for an interval longer than this number of
+seconds.  If set to zero, then the server will never drop
+a session because it is idle.  Sessions that have a
+notification subscription active are never dropped.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;list name="endpoint"&gt;
+        &lt;key value="name"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;List of endpoints to listen for NETCONF connections on.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;leaf name="name"&gt;
+          &lt;type name="string"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;An arbitrary name for the NETCONF listen endpoint.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;choice name="transport"&gt;
+          &lt;mandatory value="true"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;Selects between available transports.&lt;/text&gt;
+          &lt;/description&gt;
+          &lt;case name="ssh"&gt;
+            &lt;if-feature name="ssh-listen"/&gt;
+            &lt;container name="ssh"&gt;
+              &lt;description&gt;
+                &lt;text&gt;SSH-specific listening configuration for inbound
+connections.&lt;/text&gt;
+              &lt;/description&gt;
+              &lt;uses name="ss:listening-ssh-server-grouping"&gt;
+                &lt;refine target-node="port"&gt;
+                  &lt;default value="830"/&gt;
+                &lt;/refine&gt;
+              &lt;/uses&gt;
+            &lt;/container&gt;
+          &lt;/case&gt;
+          &lt;case name="tls"&gt;
+            &lt;if-feature name="tls-listen"/&gt;
+            &lt;container name="tls"&gt;
+              &lt;description&gt;
+                &lt;text&gt;TLS-specific listening configuration for inbound
+connections.&lt;/text&gt;
+              &lt;/description&gt;
+              &lt;uses name="ts:listening-tls-server-grouping"&gt;
+                &lt;refine target-node="port"&gt;
+                  &lt;default value="6513"/&gt;
+                &lt;/refine&gt;
+                &lt;augment target-node="client-auth"&gt;
+                  &lt;description&gt;
+                    &lt;text&gt;Augments in the cert-to-name structure.&lt;/text&gt;
+                  &lt;/description&gt;
+                  &lt;uses name="cert-maps-grouping"/&gt;
+                &lt;/augment&gt;
+              &lt;/uses&gt;
+            &lt;/container&gt;
+          &lt;/case&gt;
+        &lt;/choice&gt;
+      &lt;/list&gt;
+    &lt;/container&gt;
+    &lt;container name="call-home"&gt;
+      &lt;if-feature name="call-home"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Configures call-home behavior&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;list name="netconf-client"&gt;
+        &lt;key value="name"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;List of NETCONF clients the NETCONF server is to initiate
+call-home connections to.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;leaf name="name"&gt;
+          &lt;type name="string"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;An arbitrary name for the remote NETCONF client.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;choice name="transport"&gt;
+          &lt;mandatory value="true"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;Selects between available transports.&lt;/text&gt;
+          &lt;/description&gt;
+          &lt;case name="ssh"&gt;
+            &lt;if-feature name="ssh-call-home"/&gt;
+            &lt;container name="ssh"&gt;
+              &lt;description&gt;
+                &lt;text&gt;Specifies SSH-specific call-home transport
+configuration.&lt;/text&gt;
+              &lt;/description&gt;
+              &lt;uses name="endpoints-container"&gt;
+                &lt;refine target-node="endpoints/endpoint/port"&gt;
+                  &lt;default value="4334"/&gt;
+                &lt;/refine&gt;
+              &lt;/uses&gt;
+              &lt;uses name="ss:non-listening-ssh-server-grouping"/&gt;
+            &lt;/container&gt;
+          &lt;/case&gt;
+          &lt;case name="tls"&gt;
+            &lt;if-feature name="tls-call-home"/&gt;
+            &lt;container name="tls"&gt;
+              &lt;description&gt;
+                &lt;text&gt;Specifies TLS-specific call-home transport
+configuration.&lt;/text&gt;
+              &lt;/description&gt;
+              &lt;uses name="endpoints-container"&gt;
+                &lt;refine target-node="endpoints/endpoint/port"&gt;
+                  &lt;default value="4335"/&gt;
+                &lt;/refine&gt;
+              &lt;/uses&gt;
+              &lt;uses name="ts:non-listening-tls-server-grouping"&gt;
+                &lt;augment target-node="client-auth"&gt;
+                  &lt;description&gt;
+                    &lt;text&gt;Augments in the cert-to-name structure.&lt;/text&gt;
+                  &lt;/description&gt;
+                  &lt;uses name="cert-maps-grouping"/&gt;
+                &lt;/augment&gt;
+              &lt;/uses&gt;
+            &lt;/container&gt;
+          &lt;/case&gt;
+        &lt;/choice&gt;
+        &lt;container name="connection-type"&gt;
+          &lt;description&gt;
+            &lt;text&gt;Indicates the kind of connection to use.&lt;/text&gt;
+          &lt;/description&gt;
+          &lt;choice name="connection-type"&gt;
+            &lt;description&gt;
+              &lt;text&gt;Selects between available connection types.&lt;/text&gt;
+            &lt;/description&gt;
+            &lt;case name="persistent-connection"&gt;
+              &lt;container name="persistent"&gt;
+                &lt;presence value="true"/&gt;
+                &lt;description&gt;
+                  &lt;text&gt;Maintain a persistent connection to the NETCONF
+client. If the connection goes down, immediately
+start trying to reconnect to it, using the
+reconnection strategy.
+
+This connection type minimizes any NETCONF client
+to NETCONF server data-transfer delay, albeit at
+the expense of holding resources longer.&lt;/text&gt;
+                &lt;/description&gt;
+                &lt;leaf name="idle-timeout"&gt;
+                  &lt;type name="uint32"/&gt;
+                  &lt;units name="seconds"/&gt;
+                  &lt;default value="86400"/&gt;
+                  &lt;description&gt;
+                    &lt;text&gt;Specifies the maximum number of seconds that a
+a NETCONF session may remain idle. A NETCONF
+session will be dropped if it is idle for an
+interval longer than this number of seconds.
+If set to zero, then the server will never drop
+a session because it is idle.  Sessions that
+have a notification subscription active are
+never dropped.&lt;/text&gt;
+                  &lt;/description&gt;
+                &lt;/leaf&gt;
+                &lt;container name="keep-alives"&gt;
+                  &lt;description&gt;
+                    &lt;text&gt;Configures the keep-alive policy, to proactively
+test the aliveness of the SSH/TLS client.  An
+unresponsive SSH/TLS client will be dropped after
+approximately max-attempts * max-wait seconds.&lt;/text&gt;
+                  &lt;/description&gt;
+                  &lt;reference&gt;
+                    &lt;text&gt;RFC YYYY: NETCONF Call Home and RESTCONF Call
+Home, Section 3.1, item S6&lt;/text&gt;
+                  &lt;/reference&gt;
+                  &lt;leaf name="max-wait"&gt;
+                    &lt;type name="uint16"&gt;
+                      &lt;range value="1..max"/&gt;
+                    &lt;/type&gt;
+                    &lt;units name="seconds"/&gt;
+                    &lt;default value="30"/&gt;
+                    &lt;description&gt;
+                      &lt;text&gt;Sets the amount of time in seconds after which
+if no data has been received from the SSH/TLS
+client, a SSH/TLS-level message will be sent
+to test the aliveness of the SSH/TLS client.&lt;/text&gt;
+                    &lt;/description&gt;
+                  &lt;/leaf&gt;
+                  &lt;leaf name="max-attempts"&gt;
+                    &lt;type name="uint8"/&gt;
+                    &lt;default value="3"/&gt;
+                    &lt;description&gt;
+                      &lt;text&gt;Sets the maximum number of sequential keep-alive
+messages that can fail to obtain a response from
+the SSH/TLS client before assuming the SSH/TLS
+client is no longer alive.&lt;/text&gt;
+                    &lt;/description&gt;
+                  &lt;/leaf&gt;
+                &lt;/container&gt;
+              &lt;/container&gt;
+            &lt;/case&gt;
+            &lt;case name="periodic-connection"&gt;
+              &lt;container name="periodic"&gt;
+                &lt;presence value="true"/&gt;
+                &lt;description&gt;
+                  &lt;text&gt;Periodically connect to the NETCONF client, so that
+the NETCONF client may deliver messages pending for
+the NETCONF server.  The NETCONF client must close
+the connection when it is ready to release it. Once
+the connection has been closed, the NETCONF server
+will restart its timer until the next connection.&lt;/text&gt;
+                &lt;/description&gt;
+                &lt;leaf name="idle-timeout"&gt;
+                  &lt;type name="uint16"/&gt;
+                  &lt;units name="seconds"/&gt;
+                  &lt;default value="300"/&gt;
+                  &lt;description&gt;
+                    &lt;text&gt;Specifies the maximum number of seconds that a
+a NETCONF session may remain idle. A NETCONF
+session will be dropped if it is idle for an
+interval longer than this number of seconds.
+If set to zero, then the server will never drop
+a session because it is idle.  Sessions that
+have a notification subscription active are
+never dropped.&lt;/text&gt;
+                  &lt;/description&gt;
+                &lt;/leaf&gt;
+                &lt;leaf name="reconnect_timeout"&gt;
+                  &lt;type name="uint16"&gt;
+                    &lt;range value="1..max"/&gt;
+                  &lt;/type&gt;
+                  &lt;units name="minutes"/&gt;
+                  &lt;default value="60"/&gt;
+                  &lt;description&gt;
+                    &lt;text&gt;Sets the maximum amount of unconnected time the
+NETCONF server will wait before re-establishing
+a connection to the NETCONF client.  The NETCONF
+server may initiate a connection before this
+time if desired (e.g., to deliver an event
+notification message).&lt;/text&gt;
+                  &lt;/description&gt;
+                &lt;/leaf&gt;
+              &lt;/container&gt;
+            &lt;/case&gt;
+          &lt;/choice&gt;
+        &lt;/container&gt;
+        &lt;container name="reconnect-strategy"&gt;
+          &lt;description&gt;
+            &lt;text&gt;The reconnection strategy directs how a NETCONF server
+reconnects to a NETCONF client, after discovering its
+connection to the client has dropped, even if due to a
+reboot.  The NETCONF server starts with the specified
+endpoint and tries to connect to it max-attempts times
+before trying the next endpoint in the list (round
+robin).&lt;/text&gt;
+          &lt;/description&gt;
+          &lt;leaf name="start-with"&gt;
+            &lt;type name="enumeration"&gt;
+              &lt;enum name="first-listed"&gt;
+                &lt;description&gt;
+                  &lt;text&gt;Indicates that reconnections should start with
+the first endpoint listed.&lt;/text&gt;
+                &lt;/description&gt;
+              &lt;/enum&gt;
+              &lt;enum name="last-connected"&gt;
+                &lt;description&gt;
+                  &lt;text&gt;Indicates that reconnections should start with
+the endpoint last connected to.  If no previous
+connection has ever been established, then the
+first endpoint configured is used.   NETCONF
+servers SHOULD be able to remember the last
+endpoint connected to across reboots.&lt;/text&gt;
+                &lt;/description&gt;
+              &lt;/enum&gt;
+            &lt;/type&gt;
+            &lt;default value="first-listed"/&gt;
+            &lt;description&gt;
+              &lt;text&gt;Specifies which of the NETCONF client's endpoints the
+NETCONF server should start with when trying to connect
+to the NETCONF client.&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/leaf&gt;
+          &lt;leaf name="max-attempts"&gt;
+            &lt;type name="uint8"&gt;
+              &lt;range value="1..max"/&gt;
+            &lt;/type&gt;
+            &lt;default value="3"/&gt;
+            &lt;description&gt;
+              &lt;text&gt;Specifies the number times the NETCONF server tries to
+connect to a specific endpoint before moving on to the
+next endpoint in the list (round robin).&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/leaf&gt;
+        &lt;/container&gt;
+      &lt;/list&gt;
+    &lt;/container&gt;
+  &lt;/container&gt;
+&lt;/module&gt;
+</data>
+</rpc-reply>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rpc-reply message-id="102" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+<data>
+    <netconf-state xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">
+      <schemas>
+      <schema>
+          <identifier>bar</identifier>
+          <version>2008-06-01</version>
+          <format>yang</format>
+          <namespace>http://example.com/bar</namespace>
+          <location>NETCONF</location>
+        </schema>
+     </schemas>
+    </netconf-state>
+  </data>
+</rpc-reply>
+]]>]]>

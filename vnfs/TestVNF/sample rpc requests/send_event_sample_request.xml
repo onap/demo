@@ -1,0 +1,39 @@
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-2">
+    <send-event xmlns="http://example.net/send-event-method/1.0">
+      <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <target-name>eth5</target-name>
+      </config>
+  <content>
+    {
+    	"event": {
+    		"commonEventHeader": {
+    			"startEpochMicrosec": 1.23456814897E12,
+    			"sourceId": "mmisVnfName",
+    			"sequence": 1910,
+    			"eventId": "ManagedElement=1",
+    			"domain": "other",
+    			"lastEpochMicrosec": 1.53805814897E12,
+    			"eventName": "PM_ManagedElement=1",
+    			"internalHeaderFields": {
+    				"collectorTimeStamp": "Thu, 09 27 2018 02:22:38 GMT"
+    			},
+    			"sourceName": "131.160.203.248:7af9d6a3-5269-4c45-9060-c6ac6f9f3153",
+    			"priority": "Low",
+    			"version": 2,
+    			"reportingEntityName": "ManagedElement=1"
+    		},
+    		"otherField": {
+    			"nameValuePairs": [{
+    				"name": "StartTime",
+    				"value": "2018-1-26 8:49:50"
+    			}, {
+    				"name": "WEB04NY_tej",
+    				"value": "350"
+    			}],
+    			"otherFieldVersion": 2
+    		}
+    	}
+    }
+</content>
+</send-event>
+</rpc>

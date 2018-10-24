@@ -1,0 +1,11 @@
+FROM openjdk:8-jre-alpine
+
+RUN mkdir /app
+
+COPY netconfsystem-jar-with-dependencies.jar /app
+
+EXPOSE 2052
+
+WORKDIR /app
+
+CMD java -cp netconfsystem-jar-with-dependencies.jar com.ericsson.testvnf.server.Server $NETCONFTEMPLATESDIRECTORY $TIMEDELAYFORSENDINGEVENTS

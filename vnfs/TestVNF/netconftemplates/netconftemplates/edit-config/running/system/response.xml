@@ -1,0 +1,7 @@
+<rpc-reply <RPCHEADER>>
+  <data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <system xmlns="http://acme.example.com/system">
+    <host-name>aaaaa</host-name>
+  </system>
+</data>
+</rpc-reply>

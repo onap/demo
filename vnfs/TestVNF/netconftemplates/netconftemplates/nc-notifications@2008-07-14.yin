@@ -1,0 +1,105 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;module name="nc-notifications"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:manageEvent="urn:ietf:params:xml:ns:netmod:notification"
+        xmlns:yang="urn:ietf:params:xml:ns:yang:ietf-yang-types"
+        xmlns:ncEvent="urn:ietf:params:xml:ns:netconf:notification:1.0"&gt;
+  &lt;namespace uri="urn:ietf:params:xml:ns:netmod:notification"/&gt;
+  &lt;prefix value="manageEvent"/&gt;
+  &lt;import module="ietf-yang-types"&gt;
+    &lt;prefix value="yang"/&gt;
+  &lt;/import&gt;
+  &lt;import module="notifications"&gt;
+    &lt;prefix value="ncEvent"/&gt;
+  &lt;/import&gt;
+  &lt;organization&gt;
+    &lt;text&gt;IETF NETCONF WG&lt;/text&gt;
+  &lt;/organization&gt;
+  &lt;contact&gt;
+    &lt;text&gt;netconf@ietf.org&lt;/text&gt;
+  &lt;/contact&gt;
+  &lt;description&gt;
+    &lt;text&gt;Conversion of the 'manageEvent' XSD in the NETCONF
+Notifications RFC.&lt;/text&gt;
+  &lt;/description&gt;
+  &lt;reference&gt;
+    &lt;text&gt;RFC 5277&lt;/text&gt;
+  &lt;/reference&gt;
+  &lt;revision date="2008-07-14"&gt;
+    &lt;description&gt;
+      &lt;text&gt;RFC 5277 version.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/revision&gt;
+  &lt;container name="netconf"&gt;
+    &lt;config value="false"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;Top-level element in the notification namespace&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;container name="streams"&gt;
+      &lt;description&gt;
+        &lt;text&gt;The list of event streams supported by the system. When
+a query is issued, the returned set of streams is
+determined based on user privileges.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;list name="stream"&gt;
+        &lt;key value="name"/&gt;
+        &lt;min-elements value="1"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;Stream name, description and other information.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;leaf name="name"&gt;
+          &lt;type name="ncEvent:streamNameType"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;The name of the event stream. If this is the default
+NETCONF stream, this must have the value 'NETCONF'.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;leaf name="description"&gt;
+          &lt;type name="string"/&gt;
+          &lt;mandatory value="true"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;A description of the event stream, including such
+information as the type of events that are sent over
+this stream.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;leaf name="replaySupport"&gt;
+          &lt;type name="boolean"/&gt;
+          &lt;mandatory value="true"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;A description of the event stream, including such
+information as the type of events that are sent over
+this stream.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;leaf name="replayLogCreationTime"&gt;
+          &lt;type name="yang:date-and-time"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;The timestamp of the creation of the log used to support
+the replay function on this stream. Note that this might
+be earlier then the earliest available notification in
+the log. This object is updated if the log resets for
+some reason.  This object MUST be present if replay is
+supported.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+      &lt;/list&gt;
+    &lt;/container&gt;
+  &lt;/container&gt;
+  &lt;notification name="replayComplete"&gt;
+    &lt;description&gt;
+      &lt;text&gt;This notification is sent to signal the end of a replay
+portion of a subscription.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/notification&gt;
+  &lt;notification name="notificationComplete"&gt;
+    &lt;description&gt;
+      &lt;text&gt;This notification is sent to signal the end of a notification
+subscription. It is sent in the case that stopTime was
+specified during the creation of the subscription..&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/notification&gt;
+&lt;/module&gt;
+</data>
+</rpc-reply>

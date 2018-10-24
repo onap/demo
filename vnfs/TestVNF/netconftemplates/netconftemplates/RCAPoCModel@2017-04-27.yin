@@ -1,0 +1,82 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring"><?xml version="1.0" encoding="UTF-8"?>
+<module name="RCAPoCModel"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:RCAPoCModel="urn:opendaylight:params:xml:ns:yang:oripWnc">
+  <yang-version value="1"/>
+  <namespace uri="urn:opendaylight:params:xml:ns:yang:oripWnc"/>
+  <prefix value="RCAPoCModel"/>
+  <description>
+    <text>simulation of cellConfig iFLB PoC and sleeping eNodeB PoC. This
+model represents a reduced view of /// EnodeB MOC's needed for
+boths sleeping eNodeB PoC and iFLB PoC. Note. This model is not
+a direct mapping from /// ECIM for ///-eNodeB. The mapping is
+done by the smart adapter (SA).</text>
+  </description>
+  <revision date="2017-04-27">
+    <description>
+      <text>Initial revision of oripWnc model</text>
+    </description>
+  </revision>
+  <container name="MME">
+    <description>
+      <text>MME managed element..</text>
+    </description>
+    <leaf name="managedElementId">
+      <description>
+        <text>The MME Managed Element ID</text>
+      </description>
+      <type name="string"/>
+      <config value="true"/>
+    </leaf>
+    <list name="SnmpTargetsV2C">
+      <key value="snmpTargetV2CId"/>
+      <leaf name="snmpTargetV2CId">
+        <type name="string"/>
+      </leaf>
+      <uses name="SnmpTargetV2C"/>
+    </list>
+  </container>
+  <grouping name="SnmpTargetV2C">
+    <description>
+      <text>SnmpTargetV2C</text>
+    </description>
+    <leaf name="community">
+      <config value="true"/>
+      <description>
+        <text>SNMP community string.</text>
+      </description>
+      <type name="string"/>
+    </leaf>
+    <leaf name="address">
+      <config value="true"/>
+      <description>
+        <text>Host address (or DNS name) for the SNMP Trap target.</text>
+      </description>
+      <type name="string"/>
+    </leaf>
+    <leaf name="port">
+      <config value="true"/>
+      <description>
+        <text>UDP port number for this SNMP trap target.</text>
+      </description>
+      <type name="string"/>
+    </leaf>
+    <leaf name="operationalState">
+      <config value="false"/>
+      <description>
+        <text>The operational status of this SNMP target.</text>
+      </description>
+      <type name="string"/>
+    </leaf>
+    <leaf name="administrativeState">
+      <config value="true"/>
+      <description>
+        <text>Administrative state for the SNMP target. When LOCKED, for this MO instance traps will not be sent and access is not allowed.</text>
+      </description>
+      <type name="string"/>
+    </leaf>
+  </grouping>
+</module>
+</data>
+</rpc-reply>

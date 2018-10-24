@@ -1,0 +1,57 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring"><module name="acme-system"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:acme="http://acme.example.com/system">
+  <namespace uri="http://acme.example.com/system"/>
+  <prefix value="acme"/>
+  <organization>
+    <text>ACME Inc.</text>
+  </organization>
+  <contact>
+    <text>joe@acme.example.com</text>
+  </contact>
+  <description>
+    <text>The module for entities implementing the ACME system.</text>
+  </description>
+  <revision date="2007-06-09">
+    <description>
+      <text>Initial revision.</text>
+    </description>
+  </revision>
+  <container name="system">
+    <leaf name="host-name">
+      <type name="string"/>
+      <description>
+        <text>Hostname for this system</text>
+      </description>
+    </leaf>
+    <leaf-list name="domain-search">
+      <type name="string"/>
+      <description>
+        <text>List of domain names to search</text>
+      </description>
+    </leaf-list>
+    <container name="login">
+      <leaf name="message">
+        <type name="string"/>
+        <description>
+          <text>Message given at start of login session</text>
+        </description>
+      </leaf>
+      <list name="user">
+        <key value="name"/>
+        <leaf name="name">
+          <type name="string"/>
+        </leaf>
+        <leaf name="full-name">
+          <type name="string"/>
+        </leaf>
+        <leaf name="class">
+          <type name="string"/>
+        </leaf>
+      </list>
+    </container>
+  </container>
+</module>
+</data>
+</rpc-reply>

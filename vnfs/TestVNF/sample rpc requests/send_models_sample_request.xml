@@ -1,0 +1,184 @@
+<rpc xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-2">
+    <send-models xmlns="http://example.net/send-models-method/1.0">
+      <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
+            <target-name>vesip</target-name>
+      </config>
+  <content>
+    [{
+    	"event": {
+    		"commonEventHeader": {
+    			"startEpochMicrosec": 1.51234513894E12,
+    			"sourceId": "mmisVnfName",
+    			"sequence": 1910,
+    			"eventId": "ManagedElement=1",
+    			"domain": "other",
+    			"lastEpochMicrosec": 1.50234513894E12,
+    			"eventName": "PM_ManagedElement=1",
+    			"internalHeaderFields": {
+    				"collectorTimeStamp": "Thu, 09 27 2018 02:22:28 GMT"
+    			},
+    			"sourceName": "131.160.203.4444:4002",
+    			"priority": "Low",
+    			"version": 2,
+    			"reportingEntityName": "ManagedElement=1"
+    		},
+    		"otherField": {
+    			"nameValuePairs": [{
+    				"name": "StartTime",
+    				"value": "2018-1-26 8:49:50"
+    			}, {
+    				"name": "WEB04NY_tej",
+    				"value": "15"
+    			}],
+    			"otherFieldVersion": 2
+    		}
+    	}
+    },{
+    	"event": {
+    		"commonEventHeader": {
+    			"startEpochMicrosec": 1.51234513894E12,
+    			"sourceId": "mmisVnfName",
+    			"sequence": 1910,
+    			"eventId": "ManagedElement=1",
+    			"domain": "other",
+    			"lastEpochMicrosec": 1.50234513894E12,
+    			"eventName": "PM_ManagedElement=1",
+    			"internalHeaderFields": {
+    				"collectorTimeStamp": "Thu, 09 27 2018 02:22:28 GMT"
+    			},
+    			"sourceName": "131.160.203.000:4002",
+    			"priority": "Low",
+    			"version": 2,
+    			"reportingEntityName": "ManagedElement=1"
+    		},
+    		"otherField": {
+    			"nameValuePairs": [{
+    				"name": "StartTime",
+    				"value": "2018-1-26 8:49:50"
+    			}, {
+    				"name": "WEB04NY_tej",
+    				"value": "150"
+    			}],
+    			"otherFieldVersion": 2
+    		}
+    	}
+    },{
+    	"event": {
+    		"commonEventHeader": {
+    			"startEpochMicrosec": 1.51234513894E12,
+    			"sourceId": "mmisVnfName",
+    			"sequence": 1910,
+    			"eventId": "ManagedElement=1",
+    			"domain": "other",
+    			"lastEpochMicrosec": 1.51234513894E12,
+    			"eventName": "PM_ManagedElement=1",
+    			"internalHeaderFields": {
+    				"collectorTimeStamp": "Thu, 09 27 2018 02:22:28 GMT"
+    			},
+    			"sourceName": "131.160.203.111:4002",
+    			"priority": "Low",
+    			"version": 2,
+    			"reportingEntityName": "ManagedElement=1"
+    		},
+    		"otherField": {
+    			"nameValuePairs": [{
+    				"name": "StartTime",
+    				"value": "2018-1-26 8:49:50"
+    			}, {
+    				"name": "WEB04NY_tej",
+    				"value": "250"
+    			}],
+    			"otherFieldVersion": 2
+    		}
+    	}
+    }, {
+    	"event": {
+    		"commonEventHeader": {
+    			"startEpochMicrosec": 1.52345614897E12,
+    			"sourceId": "mmisVnfName",
+    			"sequence": 1910,
+    			"eventId": "ManagedElement=1",
+    			"domain": "other",
+    			"lastEpochMicrosec": 1.53805814897E12,
+    			"eventName": "PM_ManagedElement=1",
+    			"internalHeaderFields": {
+    				"collectorTimeStamp": "Thu, 09 27 2018 02:22:38 GMT"
+    			},
+    			"sourceName": "131.160.203.222:4002",
+    			"priority": "Low",
+    			"version": 2,
+    			"reportingEntityName": "ManagedElement=1"
+    		},
+    		"otherField": {
+    			"nameValuePairs": [{
+    				"name": "StartTime",
+    				"value": "2018-1-26 8:49:50"
+    			}, {
+    				"name": "WEB04NY_tej",
+    				"value": "350"
+    			}],
+    			"otherFieldVersion": 2
+    		}
+    	}
+    }, {
+    	"event": {
+    		"commonEventHeader": {
+    			"startEpochMicrosec": 1.53456715899E12,
+    			"sourceId": "mmisVnfName",
+    			"sequence": 1910,
+    			"eventId": "ManagedElement=1",
+    			"domain": "other",
+    			"lastEpochMicrosec": 1.53805815899E12,
+    			"eventName": "PM_ManagedElement=1",
+    			"internalHeaderFields": {
+    				"collectorTimeStamp": "Thu, 09 27 2018 02:22:48 GMT"
+    			},
+    			"sourceName": "131.160.203.333:4002",
+    			"priority": "Low",
+    			"version": 2,
+    			"reportingEntityName": "ManagedElement=1"
+    		},
+    		"otherField": {
+    			"nameValuePairs": [{
+    				"name": "StartTime",
+    				"value": "2018-1-26 8:49:50"
+    			}, {
+    				"name": "WEB04NY_tej",
+    				"value": "450"
+    			}],
+    			"otherFieldVersion": 2
+    		}
+    	}
+    },{
+    	"event": {
+    		"commonEventHeader": {
+    			"startEpochMicrosec": 1.51234513894E12,
+    			"sourceId": "mmisVnfName",
+    			"sequence": 1910,
+    			"eventId": "ManagedElement=1",
+    			"domain": "other",
+    			"lastEpochMicrosec": 1.50234513894E12,
+    			"eventName": "PM_ManagedElement=1",
+    			"internalHeaderFields": {
+    				"collectorTimeStamp": "Thu, 09 27 2018 02:22:28 GMT"
+    			},
+    			"sourceName": "131.160.203.5555:4002",
+    			"priority": "Low",
+    			"version": 2,
+    			"reportingEntityName": "ManagedElement=1"
+    		},
+    		"otherField": {
+    			"nameValuePairs": [{
+    				"name": "StartTime",
+    				"value": "2018-1-26 8:49:50"
+    			}, {
+    				"name": "WEB04NY_tej",
+    				"value": "205"
+    			}],
+    			"otherFieldVersion": 2
+    		}
+    	}
+    }]
+</content>
+</send-models>
+</rpc>

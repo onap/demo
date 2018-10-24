@@ -1,0 +1,69 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">module RCAPoCModel {
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:oripWnc";
+    prefix "RCAPoCModel";
+
+
+
+    description "simulation of cellConfig iFLB PoC and sleeping eNodeB PoC. This
+        model represents a reduced view of /// EnodeB MOC's needed for
+        boths sleeping eNodeB PoC and iFLB PoC. Note. This model is not
+        a direct mapping from /// ECIM for ///-eNodeB. The mapping is
+        done by the smart adapter (SA).";
+
+    revision "2017-04-27" {
+        description "Initial revision of oripWnc model";
+    }
+
+
+	container MME {
+		description "MME managed element..";
+		leaf managedElementId {
+			description "The MME Managed Element ID";
+			type string;
+			config true;
+		}
+
+		list SnmpTargetsV2C {
+			key "snmpTargetV2CId";
+			leaf snmpTargetV2CId {
+				type string;
+			}
+			uses SnmpTargetV2C;
+		}
+
+	}
+	
+		
+	grouping SnmpTargetV2C {
+		description "SnmpTargetV2C";
+		leaf community {
+		    config true;
+			description "SNMP community string.";
+			type string;
+		}
+		leaf address {
+		    config true;
+			description "Host address (or DNS name) for the SNMP Trap target.";
+			type string;
+		}
+		leaf port {
+		    config true;
+			description "UDP port number for this SNMP trap target.";
+			type string;
+		}
+		leaf operationalState {
+		    config false;
+			description "The operational status of this SNMP target.";
+			type string;
+		}
+		leaf administrativeState {
+		    config true;
+			description "Administrative state for the SNMP target. When LOCKED, for this MO instance traps will not be sent and access is not allowed.";
+			type string;
+		}
+	}
+}
+</data>
+</rpc-reply>

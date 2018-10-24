@@ -1,0 +1,514 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;module name="ietf-yang-library"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:yanglib="urn:ietf:params:xml:ns:yang:ietf-yang-library"
+        xmlns:yang="urn:ietf:params:xml:ns:yang:ietf-yang-types"
+        xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types"
+        xmlns:ds="urn:ietf:params:xml:ns:yang:ietf-datastores"&gt;
+  &lt;yang-version value="1.1"/&gt;
+  &lt;namespace uri="urn:ietf:params:xml:ns:yang:ietf-yang-library"/&gt;
+  &lt;prefix value="yanglib"/&gt;
+  &lt;import module="ietf-yang-types"&gt;
+    &lt;prefix value="yang"/&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6991: Common YANG Data Types.&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/import&gt;
+  &lt;import module="ietf-inet-types"&gt;
+    &lt;prefix value="inet"/&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6991: Common YANG Data Types.&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/import&gt;
+  &lt;import module="ietf-datastores"&gt;
+    &lt;prefix value="ds"/&gt;
+    &lt;reference&gt;
+      &lt;text&gt;I-D.ietf-revised-datastores:
+Network Management Datastore Architecture.&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/import&gt;
+  &lt;organization&gt;
+    &lt;text&gt;IETF NETCONF (Network Configuration) Working Group&lt;/text&gt;
+  &lt;/organization&gt;
+  &lt;contact&gt;
+    &lt;text&gt;WG Web:   &amp;lt;http://tools.ietf.org/wg/netconf/&amp;gt;
+WG List:  &amp;lt;mailto:netconf@ietf.org&amp;gt;
+
+Author:   Andy Bierman
+          &amp;lt;mailto:andy@yumaworks.com&amp;gt;
+
+Author:   Martin Bjorklund
+          &amp;lt;mailto:mbj@tail-f.com&amp;gt;
+
+Author:   Kent Watsen
+          &amp;lt;mailto:kwatsen@juniper.net&amp;gt;&lt;/text&gt;
+  &lt;/contact&gt;
+  &lt;description&gt;
+    &lt;text&gt;This module contains information about the YANG server
+instance, including the modules and datastores the
+server supports, and which modules are present in
+which datastores.
+
+Copyright (c) 2017 IETF Trust and the persons identified as
+authors of the code.  All rights reserved.
+
+Redistribution and use in source and binary forms, with or
+without modification, is permitted pursuant to, and subject
+to the license terms contained in, the Simplified BSD License
+set forth in Section 4.c of the IETF Trust's Legal Provisions
+Relating to IETF Documents
+(http://trustee.ietf.org/license-info).
+
+This version of this YANG module is part of RFC XXXX; see
+the RFC itself for full legal notices.&lt;/text&gt;
+  &lt;/description&gt;
+  &lt;revision date="2017-08-17"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Updated revision.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC XXXX: YANG Library.&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/revision&gt;
+  &lt;revision date="2016-04-09"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Initial revision.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 7895: YANG Module Library.&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/revision&gt;
+  &lt;typedef name="revision-identifier"&gt;
+    &lt;type name="string"&gt;
+      &lt;pattern value="\d{4}-\d{2}-\d{2}"/&gt;
+    &lt;/type&gt;
+    &lt;description&gt;
+      &lt;text&gt;Represents a specific date in YYYY-MM-DD format.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/typedef&gt;
+  &lt;grouping name="module-identification-leafs"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Parameters for identifying YANG modules and submodules.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="name"&gt;
+      &lt;type name="yang:yang-identifier"/&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;The YANG module or submodule name.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+    &lt;leaf name="revision"&gt;
+      &lt;type name="union"&gt;
+        &lt;type name="revision-identifier"/&gt;
+        &lt;type name="string"&gt;
+          &lt;length value="0"/&gt;
+        &lt;/type&gt;
+      &lt;/type&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;The YANG module or submodule revision date.
+A zero-length string is used if no revision statement
+is present in the YANG module or submodule.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+  &lt;/grouping&gt;
+  &lt;grouping name="schema-leaf"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Common schema leaf parameter for modules and submodules.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="schema"&gt;
+      &lt;type name="inet:uri"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Contains a URL that represents the YANG schema
+resource for this module or submodule.
+This leaf will only be present if there is a URL
+available for retrieval of the schema for this entry.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+  &lt;/grouping&gt;
+  &lt;grouping name="implementation-parameters"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Parameters for describing the implementation of a module.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf-list name="feature"&gt;
+      &lt;type name="yang:yang-identifier"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;List of YANG feature names from this module that are
+supported by the server, regardless whether they are defined
+in the module or any included submodule.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf-list&gt;
+    &lt;list name="deviation"&gt;
+      &lt;key value="name revision"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;List of YANG deviation module names and revisions used by
+this server to modify the conformance of the module
+associated with this entry.  Note that the same module can
+be used for deviations for multiple modules, so the same
+entry MAY appear within multiple 'module' entries.
+
+The deviation module MUST be present in the 'module' list,
+with the same name and revision values.  The
+'conformance-type' value will be 'implement' for the
+deviation module.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;uses name="module-identification-leafs"/&gt;
+    &lt;/list&gt;
+    &lt;leaf name="conformance-type"&gt;
+      &lt;type name="enumeration"&gt;
+        &lt;enum name="implement"&gt;
+          &lt;description&gt;
+            &lt;text&gt;Indicates that the server implements one or more
+protocol-accessible objects defined in the YANG module
+identified in this entry.  This includes deviation
+statements defined in the module.
+
+For YANG version 1.1 modules, there is at most one
+module entry with conformance type 'implement' for a
+particular module name, since YANG 1.1 requires that at
+most one revision of a module is implemented.
+
+For YANG version 1 modules, there SHOULD NOT be more
+than one module entry for a particular module name.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/enum&gt;
+        &lt;enum name="import"&gt;
+          &lt;description&gt;
+            &lt;text&gt;Indicates that the server imports reusable definitions
+from the specified revision of the module, but does not
+implement any protocol accessible objects from this
+revision.
+
+Multiple module entries for the same module name MAY
+exist. This can occur if multiple modules import the
+same module, but specify different revision-dates in the
+import statements.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/enum&gt;
+      &lt;/type&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Indicates the type of conformance the server is claiming
+for the YANG module identified by this entry.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+  &lt;/grouping&gt;
+  &lt;grouping name="yang-library-parameters"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The YANG library data structure is represented as a grouping
+so it can be reused in configuration or another monitoring
+data structure.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;container name="modules"&gt;
+      &lt;description&gt;
+        &lt;text&gt;A container holding a list of modules.  Note, modules being
+listed here does not mean that they are supported by any
+particular datastore.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;list name="module"&gt;
+        &lt;key value="id"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;Each entry represents one revision of one module
+currently supported by the server.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;leaf name="id"&gt;
+          &lt;type name="string"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;A stable identifier, independent of any other part
+of this module instance.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;uses name="module-identification-leafs"/&gt;
+        &lt;uses name="schema-leaf"/&gt;
+        &lt;leaf name="namespace"&gt;
+          &lt;type name="inet:uri"/&gt;
+          &lt;mandatory value="true"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;The XML namespace identifier for this module.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;uses name="implementation-parameters"/&gt;
+        &lt;list name="submodule"&gt;
+          &lt;key value="name revision"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;Each entry represents one submodule within the
+parent module.&lt;/text&gt;
+          &lt;/description&gt;
+          &lt;uses name="module-identification-leafs"/&gt;
+          &lt;uses name="schema-leaf"/&gt;
+        &lt;/list&gt;
+      &lt;/list&gt;
+    &lt;/container&gt;
+    &lt;container name="module-sets"&gt;
+      &lt;description&gt;
+        &lt;text&gt;A container for a list of module-sets.  Module-sets being
+listed here does not mean that they are used by any
+particular datastore.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;list name="module-set"&gt;
+        &lt;key value="id"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;An arbitrary module-set definition provided by the
+server.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;leaf name="id"&gt;
+          &lt;type name="string"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;A system-generated value that uniquely represents the
+referenced set of modules.  Any change to the number
+of modules referenced, or to the modules themselves,
+generates a different value.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;leaf-list name="module"&gt;
+          &lt;type name="leafref"&gt;
+            &lt;path value="../../../modules/module/id"/&gt;
+          &lt;/type&gt;
+          &lt;description&gt;
+            &lt;text&gt;A module-instance supported by the server, including its
+features and deviations.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf-list&gt;
+      &lt;/list&gt;
+    &lt;/container&gt;
+    &lt;container name="datastores"&gt;
+      &lt;description&gt;
+        &lt;text&gt;A container for a list of datastores supported by the
+server.  Each datastore indicates which module-sets it
+supports.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;list name="datastore"&gt;
+        &lt;key value="name"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;A datastore supported by this server.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;leaf name="name"&gt;
+          &lt;type name="identityref"&gt;
+            &lt;base name="ds:datastore"/&gt;
+          &lt;/type&gt;
+          &lt;description&gt;
+            &lt;text&gt;The identity of the datastore.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;leaf name="module-set"&gt;
+          &lt;type name="leafref"&gt;
+            &lt;path value="../../../module-sets/module-set/id"/&gt;
+          &lt;/type&gt;
+          &lt;description&gt;
+            &lt;text&gt;A reference to a module-set supported by this
+datastore&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+      &lt;/list&gt;
+    &lt;/container&gt;
+  &lt;/grouping&gt;
+  &lt;grouping name="module-list"&gt;
+    &lt;status value="deprecated"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;The module data structure is represented as a grouping
+so it can be reused in configuration or another monitoring
+data structure.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;grouping name="common-leafs"&gt;
+      &lt;status value="deprecated"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Common parameters for YANG modules and submodules.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;leaf name="name"&gt;
+        &lt;type name="yang:yang-identifier"/&gt;
+        &lt;status value="deprecated"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;The YANG module or submodule name.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;leaf name="revision"&gt;
+        &lt;type name="union"&gt;
+          &lt;type name="revision-identifier"/&gt;
+          &lt;type name="string"&gt;
+            &lt;length value="0"/&gt;
+          &lt;/type&gt;
+        &lt;/type&gt;
+        &lt;status value="deprecated"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;The YANG module or submodule revision date.
+A zero-length string is used if no revision statement
+is present in the YANG module or submodule.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+    &lt;/grouping&gt;
+    &lt;list name="module"&gt;
+      &lt;key value="name revision"/&gt;
+      &lt;status value="deprecated"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Each entry represents one revision of one module
+currently supported by the server.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;uses name="common-leafs"&gt;
+        &lt;status value="deprecated"/&gt;
+      &lt;/uses&gt;
+      &lt;uses name="schema-leaf"&gt;
+        &lt;status value="deprecated"/&gt;
+      &lt;/uses&gt;
+      &lt;leaf name="namespace"&gt;
+        &lt;type name="inet:uri"/&gt;
+        &lt;mandatory value="true"/&gt;
+        &lt;status value="deprecated"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;The XML namespace identifier for this module.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;leaf-list name="feature"&gt;
+        &lt;type name="yang:yang-identifier"/&gt;
+        &lt;status value="deprecated"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;List of YANG feature names from this module that are
+supported by the server, regardless whether they are
+defined in the module or any included submodule.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf-list&gt;
+      &lt;list name="deviation"&gt;
+        &lt;key value="name revision"/&gt;
+        &lt;status value="deprecated"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;List of YANG deviation module names and revisions
+used by this server to modify the conformance of
+the module associated with this entry.  Note that
+the same module can be used for deviations for
+multiple modules, so the same entry MAY appear
+within multiple 'module' entries.
+
+The deviation module MUST be present in the 'module'
+list, with the same name and revision values.
+The 'conformance-type' value will be 'implement' for
+the deviation module.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;uses name="common-leafs"&gt;
+          &lt;status value="deprecated"/&gt;
+        &lt;/uses&gt;
+      &lt;/list&gt;
+      &lt;leaf name="conformance-type"&gt;
+        &lt;type name="enumeration"&gt;
+          &lt;enum name="implement"&gt;
+            &lt;description&gt;
+              &lt;text&gt;Indicates that the server implements one or more
+protocol-accessible objects defined in the YANG module
+identified in this entry.  This includes deviation
+statements defined in the module.
+
+For YANG version 1.1 modules, there is at most one
+module entry with conformance type 'implement' for a
+particular module name, since YANG 1.1 requires that
+at most one revision of a module is implemented.
+
+For YANG version 1 modules, there SHOULD NOT be more
+than one module entry for a particular module name.&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/enum&gt;
+          &lt;enum name="import"&gt;
+            &lt;description&gt;
+              &lt;text&gt;Indicates that the server imports reusable definitions
+from the specified revision of the module, but does
+not implement any protocol accessible objects from
+this revision.
+
+Multiple module entries for the same module name MAY
+exist. This can occur if multiple modules import the
+same module, but specify different revision-dates in
+the import statements.&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/enum&gt;
+        &lt;/type&gt;
+        &lt;mandatory value="true"/&gt;
+        &lt;status value="deprecated"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;Indicates the type of conformance the server is claiming
+for the YANG module identified by this entry.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;list name="submodule"&gt;
+        &lt;key value="name revision"/&gt;
+        &lt;status value="deprecated"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;Each entry represents one submodule within the
+parent module.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;uses name="common-leafs"&gt;
+          &lt;status value="deprecated"/&gt;
+        &lt;/uses&gt;
+        &lt;uses name="schema-leaf"&gt;
+          &lt;status value="deprecated"/&gt;
+        &lt;/uses&gt;
+      &lt;/list&gt;
+    &lt;/list&gt;
+  &lt;/grouping&gt;
+  &lt;container name="yang-library"&gt;
+    &lt;config value="false"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;Container providing all the YANG meta information the
+server possesses.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;uses name="yang-library-parameters"/&gt;
+    &lt;leaf name="checksum"&gt;
+      &lt;type name="string"/&gt;
+      &lt;config value="false"/&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;A server-generated checksum of the contents of the
+'yang-library' tree.  The server MUST change the value of
+this leaf if the information represented by the
+'yang-library' tree, except yang-library/checksum, has
+changed.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+  &lt;/container&gt;
+  &lt;container name="modules-state"&gt;
+    &lt;config value="false"/&gt;
+    &lt;status value="deprecated"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;Contains YANG module monitoring information.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="module-set-id"&gt;
+      &lt;type name="string"/&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;status value="deprecated"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Contains a server-specific identifier representing
+the current set of modules and submodules.  The
+server MUST change the value of this leaf if the
+information represented by the 'module' list instances
+has changed.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+    &lt;uses name="module-list"&gt;
+      &lt;status value="deprecated"/&gt;
+    &lt;/uses&gt;
+  &lt;/container&gt;
+  &lt;notification name="yang-library-update"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Generated when any YANG library information on the
+server has changed.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/notification&gt;
+  &lt;notification name="yang-library-change"&gt;
+    &lt;status value="deprecated"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;Generated when the set of modules and submodules supported
+by the server has changed.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="module-set-id"&gt;
+      &lt;type name="leafref"&gt;
+        &lt;path value="/yanglib:modules-state/yanglib:module-set-id"/&gt;
+      &lt;/type&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;status value="deprecated"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Contains the module-set-id value representing the
+set of modules and submodules supported at the server
+at the time the notification is generated.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+  &lt;/notification&gt;
+&lt;/module&gt;
+</data>
+</rpc-reply>

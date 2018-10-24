@@ -1,0 +1,152 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;module name="ietf-netconf-with-defaults"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:ncwd="urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults"
+        xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"&gt;
+  &lt;namespace uri="urn:ietf:params:xml:ns:yang:ietf-netconf-with-defaults"/&gt;
+  &lt;prefix value="ncwd"/&gt;
+  &lt;import module="ietf-netconf"&gt;
+    &lt;prefix value="nc"/&gt;
+  &lt;/import&gt;
+  &lt;organization&gt;
+    &lt;text&gt;IETF NETCONF (Network Configuration Protocol) Working Group&lt;/text&gt;
+  &lt;/organization&gt;
+  &lt;contact&gt;
+    &lt;text&gt;WG Web:   &amp;lt;http://tools.ietf.org/wg/netconf/&amp;gt;
+
+WG List:  &amp;lt;netconf@ietf.org&amp;gt;
+
+WG Chair: Bert Wijnen
+          &amp;lt;bertietf@bwijnen.net&amp;gt;
+
+WG Chair: Mehmet Ersue
+          &amp;lt;mehmet.ersue@nsn.com&amp;gt;
+
+Editor: Andy Bierman
+        &amp;lt;andy.bierman@brocade.com&amp;gt;
+
+Editor: Balazs Lengyel
+        &amp;lt;balazs.lengyel@ericsson.com&amp;gt;&lt;/text&gt;
+  &lt;/contact&gt;
+  &lt;description&gt;
+    &lt;text&gt;This module defines an extension to the NETCONF protocol
+that allows the NETCONF client to control how default
+values are handled by the server in particular NETCONF
+operations.
+
+Copyright (c) 2011 IETF Trust and the persons identified as
+the document authors.  All rights reserved.
+
+Redistribution and use in source and binary forms, with or
+without modification, is permitted pursuant to, and subject
+to the license terms contained in, the Simplified BSD License
+set forth in Section 4.c of the IETF Trust's Legal Provisions
+Relating to IETF Documents
+(http://trustee.ietf.org/license-info).
+
+This version of this YANG module is part of RFC 6243; see
+the RFC itself for full legal notices.&lt;/text&gt;
+  &lt;/description&gt;
+  &lt;revision date="2011-06-01"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Initial version.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6243: With-defaults Capability for NETCONF&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/revision&gt;
+  &lt;typedef name="with-defaults-mode"&gt;
+    &lt;type name="enumeration"&gt;
+      &lt;enum name="report-all"&gt;
+        &lt;description&gt;
+          &lt;text&gt;All default data is reported.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;reference&gt;
+          &lt;text&gt;RFC 6243; Section 3.1&lt;/text&gt;
+        &lt;/reference&gt;
+      &lt;/enum&gt;
+      &lt;enum name="report-all-tagged"&gt;
+        &lt;description&gt;
+          &lt;text&gt;All default data is reported.
+Any nodes considered to be default data
+will contain a 'default' XML attribute,
+set to 'true' or '1'.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;reference&gt;
+          &lt;text&gt;RFC 6243; Section 3.4&lt;/text&gt;
+        &lt;/reference&gt;
+      &lt;/enum&gt;
+      &lt;enum name="trim"&gt;
+        &lt;description&gt;
+          &lt;text&gt;Values are not reported if they contain the default.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;reference&gt;
+          &lt;text&gt;RFC 6243; Section 3.2&lt;/text&gt;
+        &lt;/reference&gt;
+      &lt;/enum&gt;
+      &lt;enum name="explicit"&gt;
+        &lt;description&gt;
+          &lt;text&gt;Report values that contain the definition of
+explicitly set data.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;reference&gt;
+          &lt;text&gt;RFC 6243; Section 3.3&lt;/text&gt;
+        &lt;/reference&gt;
+      &lt;/enum&gt;
+    &lt;/type&gt;
+    &lt;description&gt;
+      &lt;text&gt;Possible modes to report default data.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6243; Section 3.&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/typedef&gt;
+  &lt;grouping name="with-defaults-parameters"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Contains the &amp;lt;with-defaults&amp;gt; parameter for control
+of defaults in NETCONF retrieval operations.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="with-defaults"&gt;
+      &lt;type name="with-defaults-mode"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;The explicit defaults processing mode requested.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;reference&gt;
+        &lt;text&gt;RFC 6243; Section 4.5.1&lt;/text&gt;
+      &lt;/reference&gt;
+    &lt;/leaf&gt;
+  &lt;/grouping&gt;
+  &lt;augment target-node="/nc:get-config/nc:input"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Adds the &amp;lt;with-defaults&amp;gt; parameter to the
+input of the NETCONF &amp;lt;get-config&amp;gt; operation.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6243; Section 4.5.1&lt;/text&gt;
+    &lt;/reference&gt;
+    &lt;uses name="with-defaults-parameters"/&gt;
+  &lt;/augment&gt;
+  &lt;augment target-node="/nc:get/nc:input"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Adds the &amp;lt;with-defaults&amp;gt; parameter to
+the input of the NETCONF &amp;lt;get&amp;gt; operation.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6243; Section 4.5.1&lt;/text&gt;
+    &lt;/reference&gt;
+    &lt;uses name="with-defaults-parameters"/&gt;
+  &lt;/augment&gt;
+  &lt;augment target-node="/nc:copy-config/nc:input"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Adds the &amp;lt;with-defaults&amp;gt; parameter to
+the input of the NETCONF &amp;lt;copy-config&amp;gt; operation.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6243; Section 4.5.1&lt;/text&gt;
+    &lt;/reference&gt;
+    &lt;uses name="with-defaults-parameters"/&gt;
+  &lt;/augment&gt;
+&lt;/module&gt;
+</data>
+</rpc-reply>

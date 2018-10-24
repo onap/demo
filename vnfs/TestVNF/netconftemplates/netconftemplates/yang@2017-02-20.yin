@@ -1,0 +1,91 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;module name="yang"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:yang="urn:ietf:params:xml:ns:yang:1"
+        xmlns:md="urn:ietf:params:xml:ns:yang:ietf-yang-metadata"&gt;
+  &lt;namespace uri="urn:ietf:params:xml:ns:yang:1"/&gt;
+  &lt;prefix value="yang"/&gt;
+  &lt;import module="ietf-yang-metadata"&gt;
+    &lt;prefix value="md"/&gt;
+    &lt;revision-date date="2016-08-05"/&gt;
+  &lt;/import&gt;
+  &lt;organization&gt;
+    &lt;text&gt;libyang&lt;/text&gt;
+  &lt;/organization&gt;
+  &lt;contact&gt;
+    &lt;text&gt;Web:    &amp;lt;https://github.com/CESNET/libyang/&amp;gt;
+Author: Radek Krejci &amp;lt;rkrejci@cesnet.cz&amp;gt;&lt;/text&gt;
+  &lt;/contact&gt;
+  &lt;description&gt;
+    &lt;text&gt;This is a kind of fake model with no data, typedefs or anything
+else. libyang uses this module to implement various YANG attributes
+defined in RFC 6020.&lt;/text&gt;
+  &lt;/description&gt;
+  &lt;revision date="2017-02-20"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Added metadata for NETCONF's edit-config manipulation with ordered
+lists and leaf-lists.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 7950: The YANG 1.1 Data Modeling Language&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/revision&gt;
+  &lt;revision date="2016-02-11"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Initial revision&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6020: YANG - A Data Modeling Language for
+the Network Configuration Protocol (NETCONF)&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/revision&gt;
+  &lt;md:annotation name="insert"&gt;
+    &lt;type name="enumeration"&gt;
+      &lt;enum name="first"/&gt;
+      &lt;enum name="last"/&gt;
+      &lt;enum name="before"/&gt;
+      &lt;enum name="after"/&gt;
+    &lt;/type&gt;
+    &lt;description&gt;
+      &lt;text&gt;In user ordered leaf-list, the attribute can be used to control
+where in the leaf-list the entry is inserted. It can be used during
+the NETCONF &amp;lt;edit-config&amp;gt; &amp;quot;create&amp;quot; operations to insert a new list or
+leaf-list entry, or during &amp;quot;merge&amp;quot; or &amp;quot;replace&amp;quot; operations to insert
+a new list or leaf-list entry or move an existing one.
+
+If the value is &amp;quot;before&amp;quot; or &amp;quot;after&amp;quot;, the &amp;quot;value&amp;quot;/&amp;quot;key&amp;quot; attribute
+MUST also be used to specify an existing entry in the list or leaf-list.
+
+If no &amp;quot;insert&amp;quot; attribute is present in the &amp;quot;create&amp;quot; operation, it
+defaults to &amp;quot;last&amp;quot;.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC7950 section 7.8.6. and section 7.7.9.&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/md:annotation&gt;
+  &lt;md:annotation name="value"&gt;
+    &lt;type name="string"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;In user ordered leaf-list, the attribute must be used if the attribute
+insert is used and specifies before/after which existing instance the
+new instance should be inserted.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC7950 section 7.7.9.&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/md:annotation&gt;
+  &lt;md:annotation name="key"&gt;
+    &lt;type name="string"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;In user ordered list, the attribute must be used if the attribute
+insert is used and specifies before/after which existing instance the
+new instance should be inserted.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC7950 section 7.8.6.&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/md:annotation&gt;
+&lt;/module&gt;
+</data>
+</rpc-reply>

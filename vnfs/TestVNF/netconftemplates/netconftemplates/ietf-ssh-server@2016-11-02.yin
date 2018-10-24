@@ -1,0 +1,186 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;module name="ietf-ssh-server"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:sshs="urn:ietf:params:xml:ns:yang:ietf-ssh-server"
+        xmlns:inet="urn:ietf:params:xml:ns:yang:ietf-inet-types"
+        xmlns:ks="urn:ietf:params:xml:ns:yang:ietf-keystore"&gt;
+  &lt;yang-version value="1.1"/&gt;
+  &lt;namespace uri="urn:ietf:params:xml:ns:yang:ietf-ssh-server"/&gt;
+  &lt;prefix value="sshs"/&gt;
+  &lt;import module="ietf-inet-types"&gt;
+    &lt;prefix value="inet"/&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6991: Common YANG Data Types&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/import&gt;
+  &lt;import module="ietf-keystore"&gt;
+    &lt;prefix value="ks"/&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC YYYY: Keystore Model&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/import&gt;
+  &lt;organization&gt;
+    &lt;text&gt;IETF NETCONF (Network Configuration) Working Group&lt;/text&gt;
+  &lt;/organization&gt;
+  &lt;contact&gt;
+    &lt;text&gt;WG Web:   &amp;lt;http://tools.ietf.org/wg/netconf/&amp;gt;
+WG List:  &amp;lt;mailto:netconf@ietf.org&amp;gt;
+
+WG Chair: Mehmet Ersue
+          &amp;lt;mailto:mehmet.ersue@nsn.com&amp;gt;
+
+WG Chair: Mahesh Jethanandani
+          &amp;lt;mailto:mjethanandani@gmail.com&amp;gt;
+
+Editor:   Kent Watsen
+          &amp;lt;mailto:kwatsen@juniper.net&amp;gt;&lt;/text&gt;
+  &lt;/contact&gt;
+  &lt;description&gt;
+    &lt;text&gt;This module defines a reusable grouping for a SSH server that
+can be used as a basis for specific SSH server instances.
+
+Copyright (c) 2014 IETF Trust and the persons identified as
+authors of the code. All rights reserved.
+
+Redistribution and use in source and binary forms, with or
+without modification, is permitted pursuant to, and subject
+to the license terms contained in, the Simplified BSD
+License set forth in Section 4.c of the IETF Trust's
+Legal Provisions Relating to IETF Documents
+(http://trustee.ietf.org/license-info).
+
+This version of this YANG module is part of RFC XXXX; see
+the RFC itself for full legal notices.&lt;/text&gt;
+  &lt;/description&gt;
+  &lt;revision date="2016-11-02"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Initial version&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC XXXX: SSH Client and Server Models&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/revision&gt;
+  &lt;feature name="ssh-x509-certs"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The ssh-x509-certs feature indicates that the NETCONF
+server supports RFC 6187&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;reference&gt;
+      &lt;text&gt;RFC 6187: X.509v3 Certificates for Secure Shell
+Authentication&lt;/text&gt;
+    &lt;/reference&gt;
+  &lt;/feature&gt;
+  &lt;grouping name="non-listening-ssh-server-grouping"&gt;
+    &lt;description&gt;
+      &lt;text&gt;A reusable grouping for a SSH server that can be used as a
+basis for specific SSH server instances.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;container name="host-keys"&gt;
+      &lt;description&gt;
+        &lt;text&gt;The list of host-keys the SSH server will present when
+establishing a SSH connection.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;list name="host-key"&gt;
+        &lt;key value="name"/&gt;
+        &lt;min-elements value="1"/&gt;
+        &lt;ordered-by value="user"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;An ordered list of host keys the SSH server will use to
+construct its ordered list of algorithms, when sending
+its SSH_MSG_KEXINIT message, as defined in Section 7.1
+of RFC 4253.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;reference&gt;
+          &lt;text&gt;RFC 4253: The Secure Shell (SSH) Transport Layer Protocol&lt;/text&gt;
+        &lt;/reference&gt;
+        &lt;leaf name="name"&gt;
+          &lt;type name="string"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;An arbitrary name for this host-key&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;choice name="host-key-type"&gt;
+          &lt;mandatory value="true"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;The type of host key being specified&lt;/text&gt;
+          &lt;/description&gt;
+          &lt;leaf name="public-key"&gt;
+            &lt;type name="leafref"&gt;
+              &lt;path value="/ks:keystore/ks:private-keys/ks:private-key/ks:name"/&gt;
+            &lt;/type&gt;
+            &lt;description&gt;
+              &lt;text&gt;The public key is actually identified by the name of
+its cooresponding private-key in the keystore.&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/leaf&gt;
+          &lt;leaf name="certificate"&gt;
+            &lt;if-feature name="ssh-x509-certs"/&gt;
+            &lt;type name="leafref"&gt;
+              &lt;path value="/ks:keystore/ks:private-keys/ks:private-key/ks:certificate-chains/ks:certificate-chain/ks:name"/&gt;
+            &lt;/type&gt;
+            &lt;description&gt;
+              &lt;text&gt;The name of a certificate in the keystore.&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/leaf&gt;
+        &lt;/choice&gt;
+      &lt;/list&gt;
+    &lt;/container&gt;
+    &lt;container name="client-cert-auth"&gt;
+      &lt;if-feature name="ssh-x509-certs"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;A reference to a list of trusted certificate authority (CA)
+certificates and a reference to a list of trusted client
+certificates.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;leaf name="trusted-ca-certs"&gt;
+        &lt;type name="leafref"&gt;
+          &lt;path value="/ks:keystore/ks:trusted-certificates/ks:name"/&gt;
+        &lt;/type&gt;
+        &lt;description&gt;
+          &lt;text&gt;A reference to a list of certificate authority (CA)
+certificates used by the SSH server to authenticate
+SSH client certificates.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;leaf name="trusted-client-certs"&gt;
+        &lt;type name="leafref"&gt;
+          &lt;path value="/ks:keystore/ks:trusted-certificates/ks:name"/&gt;
+        &lt;/type&gt;
+        &lt;description&gt;
+          &lt;text&gt;A reference to a list of client certificates used by
+the SSH server to authenticate SSH client certificates.
+A clients certificate is authenticated if it is an
+exact match to a configured trusted client certificate.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+    &lt;/container&gt;
+  &lt;/grouping&gt;
+  &lt;grouping name="listening-ssh-server-grouping"&gt;
+    &lt;description&gt;
+      &lt;text&gt;A reusable grouping for a SSH server that can be used as a
+basis for specific SSH server instances.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="address"&gt;
+      &lt;type name="inet:ip-address"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;The IP address of the interface to listen on.  The SSH
+server will listen on all interfaces if no value is
+specified.  Please note that some addresses have special
+meanings (e.g., '0.0.0.0' and '::').&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+    &lt;leaf name="port"&gt;
+      &lt;type name="inet:port-number"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;The local port number on this interface the SSH server
+listens on.  When this grouping is used, it is RECOMMENED
+that refine statement is used to either set a default port
+value or to set mandatory true.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+    &lt;uses name="non-listening-ssh-server-grouping"/&gt;
+  &lt;/grouping&gt;
+&lt;/module&gt;
+</data>
+</rpc-reply>

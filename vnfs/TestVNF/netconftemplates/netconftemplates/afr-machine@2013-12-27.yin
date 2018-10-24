@@ -1,0 +1,281 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="m-1">
+  <data xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;module name="turing-machine"
+        xmlns="urn:ietf:params:xml:ns:yang:yin:1"
+        xmlns:tm="http://example.net/turing-machine"&gt;
+  &lt;namespace uri="http://example.net/turing-machine"/&gt;
+  &lt;prefix value="tm"/&gt;
+  &lt;description&gt;
+    &lt;text&gt;Data model for the Turing Machine.&lt;/text&gt;
+  &lt;/description&gt;
+  &lt;revision date="2013-12-27"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Initial revision.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/revision&gt;
+  &lt;typedef name="tape-symbol"&gt;
+    &lt;type name="string"&gt;
+      &lt;length value="0..1"/&gt;
+    &lt;/type&gt;
+    &lt;description&gt;
+      &lt;text&gt;Type of symbols appearing in tape cells.
+
+A blank is represented as an empty string where necessary.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/typedef&gt;
+  &lt;typedef name="cell-index"&gt;
+    &lt;type name="int64"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;Type for indexing tape cells.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/typedef&gt;
+  &lt;typedef name="state-index"&gt;
+    &lt;type name="uint16"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;Type for indexing states of the control unit.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/typedef&gt;
+  &lt;typedef name="head-dir"&gt;
+    &lt;type name="enumeration"&gt;
+      &lt;enum name="left"/&gt;
+      &lt;enum name="right"/&gt;
+    &lt;/type&gt;
+    &lt;default value="right"/&gt;
+    &lt;description&gt;
+      &lt;text&gt;Possible directions for moving the read/write head, one cell
+to the left or right (default).&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/typedef&gt;
+  &lt;grouping name="tape-cells"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The tape of the Turing Machine is represented as a sparse
+array.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;list name="cell"&gt;
+      &lt;key value="coord"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;List of non-blank cells.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;leaf name="coord"&gt;
+        &lt;type name="cell-index"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;Coordinate (index) of the tape cell.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;leaf name="symbol"&gt;
+        &lt;type name="tape-symbol"&gt;
+          &lt;length value="1"/&gt;
+        &lt;/type&gt;
+        &lt;description&gt;
+          &lt;text&gt;Symbol appearing in the tape cell.
+
+Blank (empty string) is not allowed here because the
+'cell' list only contains non-blank cells.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+    &lt;/list&gt;
+  &lt;/grouping&gt;
+  &lt;container name="turing-machine"&gt;
+    &lt;description&gt;
+      &lt;text&gt;State data and configuration of a Turing Machine.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="state"&gt;
+      &lt;type name="state-index"/&gt;
+      &lt;config value="false"/&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Current state of the control unit.
+
+The initial state is 0.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+    &lt;leaf name="head-position"&gt;
+      &lt;type name="cell-index"/&gt;
+      &lt;config value="false"/&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Position of tape read/write head.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+    &lt;container name="tape"&gt;
+      &lt;config value="false"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;The contents of the tape.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;uses name="tape-cells"/&gt;
+    &lt;/container&gt;
+    &lt;container name="transition-function"&gt;
+      &lt;description&gt;
+        &lt;text&gt;The Turing Machine is configured by specifying the
+transition function.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;list name="delta"&gt;
+        &lt;key value="label"/&gt;
+        &lt;unique tag="input/state input/symbol"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;The list of transition rules.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;leaf name="label"&gt;
+          &lt;type name="string"/&gt;
+          &lt;description&gt;
+            &lt;text&gt;An arbitrary label of the transition rule.&lt;/text&gt;
+          &lt;/description&gt;
+        &lt;/leaf&gt;
+        &lt;container name="input"&gt;
+          &lt;description&gt;
+            &lt;text&gt;Input parameters (arguments) of the transition rule.&lt;/text&gt;
+          &lt;/description&gt;
+          &lt;leaf name="state"&gt;
+            &lt;type name="state-index"/&gt;
+            &lt;mandatory value="true"/&gt;
+            &lt;description&gt;
+              &lt;text&gt;Current state of the control unit.&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/leaf&gt;
+          &lt;leaf name="symbol"&gt;
+            &lt;type name="tape-symbol"/&gt;
+            &lt;mandatory value="true"/&gt;
+            &lt;description&gt;
+              &lt;text&gt;Symbol read from the tape cell.&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/leaf&gt;
+        &lt;/container&gt;
+        &lt;container name="output"&gt;
+          &lt;description&gt;
+            &lt;text&gt;Output values of the transition rule.&lt;/text&gt;
+          &lt;/description&gt;
+          &lt;leaf name="state"&gt;
+            &lt;type name="state-index"/&gt;
+            &lt;description&gt;
+              &lt;text&gt;New state of the control unit. If this leaf is not
+present, the state doesn't change.&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/leaf&gt;
+          &lt;leaf name="symbol"&gt;
+            &lt;type name="tape-symbol"/&gt;
+            &lt;description&gt;
+              &lt;text&gt;Symbol to be written to the tape cell. If this leaf is
+not present, the symbol doesn't change.&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/leaf&gt;
+          &lt;leaf name="head-move"&gt;
+            &lt;type name="head-dir"/&gt;
+            &lt;description&gt;
+              &lt;text&gt;Move the head one cell to the left or right&lt;/text&gt;
+            &lt;/description&gt;
+          &lt;/leaf&gt;
+        &lt;/container&gt;
+      &lt;/list&gt;
+    &lt;/container&gt;
+  &lt;/container&gt;
+  &lt;rpc name="initialize"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Initialize the Turing Machine as follows:
+
+1. Put the control unit into the initial state (0).
+
+2. Move the read/write head to the tape cell with coordinate
+   zero.
+
+3. Write the string from the 'tape-content' input parameter to
+   the tape, character by character, starting at cell 0. The
+   tape is othewise empty.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;input&gt;
+      &lt;leaf name="tape-content"&gt;
+        &lt;type name="string"/&gt;
+        &lt;default value=""/&gt;
+        &lt;description&gt;
+          &lt;text&gt;The string with which the tape shall be initialized. The
+leftmost symbol will be at tape coordinate 0.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+    &lt;/input&gt;
+  &lt;/rpc&gt;
+  &lt;rpc name="run"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Start the Turing Machine operation.&lt;/text&gt;
+    &lt;/description&gt;
+  &lt;/rpc&gt;
+  &lt;rpc name="run-until"&gt;
+    &lt;description&gt;
+      &lt;text&gt;Start the Turing Machine operation and let it run until it is halted
+or ALL the defined breakpoint conditions are satisfied.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;input&gt;
+      &lt;leaf name="state"&gt;
+        &lt;type name="state-index"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;What state the control unit has to be at for the execution to be paused.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;leaf name="head-position"&gt;
+        &lt;type name="cell-index"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;Position of tape read/write head for which the breakpoint applies.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;container name="tape"&gt;
+        &lt;description&gt;
+          &lt;text&gt;What content the tape has to have for the breakpoint to apply.&lt;/text&gt;
+        &lt;/description&gt;
+        &lt;uses name="tape-cells"/&gt;
+      &lt;/container&gt;
+    &lt;/input&gt;
+    &lt;output&gt;
+      &lt;leaf name="step-count"&gt;
+        &lt;type name="uint64"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;The number of steps executed since the last 'run-until' call.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+      &lt;leaf name="halted"&gt;
+        &lt;type name="boolean"/&gt;
+        &lt;description&gt;
+          &lt;text&gt;'True' if the Turing machine is halted, 'false' if it is only paused.&lt;/text&gt;
+        &lt;/description&gt;
+      &lt;/leaf&gt;
+    &lt;/output&gt;
+  &lt;/rpc&gt;
+  &lt;notification name="halted"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The Turing Machine has halted. This means that there is no
+transition rule for the current state and tape symbol.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="state"&gt;
+      &lt;type name="state-index"/&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;The state of the control unit in which the machine has
+halted.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+  &lt;/notification&gt;
+  &lt;notification name="paused"&gt;
+    &lt;description&gt;
+      &lt;text&gt;The Turing machine has reached a breakpoint and was paused.&lt;/text&gt;
+    &lt;/description&gt;
+    &lt;leaf name="state"&gt;
+      &lt;type name="state-index"/&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;State of the control unit in which the machine was paused.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+    &lt;leaf name="head-position"&gt;
+      &lt;type name="cell-index"/&gt;
+      &lt;mandatory value="true"/&gt;
+      &lt;description&gt;
+        &lt;text&gt;Position of tape read/write head when the machine was paused.&lt;/text&gt;
+      &lt;/description&gt;
+    &lt;/leaf&gt;
+    &lt;container name="tape"&gt;
+      &lt;description&gt;
+        &lt;text&gt;Content of the tape when the machine was paused.&lt;/text&gt;
+      &lt;/description&gt;
+      &lt;uses name="tape-cells"/&gt;
+    &lt;/container&gt;
+  &lt;/notification&gt;
+&lt;/module&gt;
+</data>
+</rpc-reply>

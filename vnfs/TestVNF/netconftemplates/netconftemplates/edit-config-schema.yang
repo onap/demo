@@ -1,0 +1,40 @@
+<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="<MID>">
+  <data xmlns="http://example.net/edit-config-method/1.0">
+	rpc edit-config {
+	  description
+	    "The &lt;edit-config&gt; operation can be used to update the target name and target address.
+		container target {
+        description
+          "Particular configuration to edit.";
+        choice config-target {
+          mandatory true;
+          description
+            "The configuration target.";
+          leaf candidate {
+            if-feature "candidate";
+            type empty;
+            description
+              "The candidate configuration is the config target.";
+          }
+
+          leaf running {
+            if-feature "writable-running";
+            type empty;
+            description
+              "The running configuration is the config source.";
+          }
+        }
+      }
+		container config {
+             leaf target-name {
+                 type string;
+                 description "name of the target";
+             }
+			  leaf target-address {
+                 type string;
+                 description "address of the target";
+             }
+         }
+	}
+	</data>
+</rpc-reply>
