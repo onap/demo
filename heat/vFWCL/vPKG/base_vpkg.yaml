@@ -37,7 +37,7 @@ parameters:
     type: string
     label: Image name or ID
     description: Image to be used for compute instance
-  flavor_name:
+  packetgen_flavor_name:
     type: string
     label: Flavor
     description: Type of instance (flavor) to be used
@@ -175,7 +175,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: image_name }
-      flavor: { get_param: flavor_name }
+      flavor: { get_param: packetgen_flavor_name }
       name: { get_param: vpg_name_0 }
       key_name: { get_resource: my_keypair }
       networks:

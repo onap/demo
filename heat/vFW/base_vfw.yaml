@@ -37,10 +37,18 @@ parameters:
     type: string
     label: Image name or ID
     description: Image to be used for compute instance
-  vfw_flavor_name:
+  firewall_flavor_name:
+    type: string
+    label: Firewall Flavor
+    description: Type of instance (flavor) to be used for firewall VM
+  sink_flavor_name:
     type: string
     label: Flavor
-    description: Type of instance (flavor) to be used
+    description: Type of instance (flavor) to be used for vSink VM
+  packetgen_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used for packet generator
   public_net_id:
     type: string
     label: Public network name or ID
@@ -242,7 +250,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: vfw_image_name }
-      flavor: { get_param: vfw_flavor_name }
+      flavor: { get_param: firewall_flavor_name }
       name: { get_param: vfw_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
@@ -317,7 +325,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: vfw_image_name }
-      flavor: { get_param: vfw_flavor_name }
+      flavor: { get_param: packetgen_flavor_name }
       name: { get_param: vpg_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
@@ -389,7 +397,7 @@ resources:
     type: OS::Nova::Server
     properties:
       image: { get_param: vfw_image_name }
-      flavor: { get_param: vfw_flavor_name }
+      flavor: { get_param: sink_flavor_name }
       name: { get_param: vsn_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
