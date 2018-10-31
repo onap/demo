@@ -37,7 +37,7 @@ for dir in $DIRS; do
     cp -r $ROOT_DIR/Artifacts tmp/
     cp -r $ROOT_DIR/Definitions tmp/
     cp -r $ROOT_DIR/TOSCA-Metadata tmp/
-    cp MainServiceTemplate.yaml tmp/Definitions
+    cp tmp/MainServiceTemplate.yaml tmp/Definitions/
     cd $ROOT_DIR/$dir/tmp
 
     # create the csar file
