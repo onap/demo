@@ -267,9 +267,10 @@ topology_template:
             network_interface_requirements:
               interfaceType: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "SR-IOV"}'
             nic_io_requirements:
-              pciVendorId: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "1234"}'
-              pciDeviceId: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "5678"}'
-              pciNumDevices: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "1"}'
+              logical_node_requirements:
+                pciVendorId: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "1234"}'
+                pciDeviceId: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "5678"}'
+                pciNumDevices: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "1"}'
       requirements:
         - virtual_binding: VDU_vgw_0
         - virtual_link: VL_mux_gw_private_net

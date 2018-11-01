@@ -81,8 +81,8 @@ topology_template:
       default: 10.0.11.1
     mr_ip_port:
       type: string
-      label: Message Router Port
       description: IP port of the Message Router that for vDHCP configuration
+      default: "3904"
     dcae_collector_ip:
       type: string
       description: dcae collector ip

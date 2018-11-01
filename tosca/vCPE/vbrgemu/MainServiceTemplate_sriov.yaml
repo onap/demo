@@ -207,9 +207,10 @@ topology_template:
             network_interface_requirements:
               interfaceType: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "SR-IOV"}'
             nic_io_requirements:
-              pciVendorId: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "1234"}'
-              pciDeviceId: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "5678"}'
-              pciNumDevices: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "1"}'
+              logical_node_requirements:
+                pciVendorId: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "1234"}'
+                pciDeviceId: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "5678"}'
+                pciNumDevices: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "1"}'
       requirements:
         - virtual_binding: VDU_vbrgemu_0
         - virtual_link: VL_vbrgemu_bng_private_net
@@ -233,7 +234,7 @@ topology_template:
           max_number_of_instances: 1
           watchdog: none
         inject_files: #TODO SDC bug
-          source_path: ../Artifacts/keys/authorized_keys #SSH authorized_keys
+          source_path: ../Artifcats/keys/authorized_keys #SSH authorized_keys
           dest_path: /home/ubuntu/.ssh/authorized_keys
         meta_data:
           vnf_id: { get_input: vnf_id }
@@ -289,5 +290,5 @@ topology_template:
       artifacts:
         sw_image: #TODO need to put glance image name here
           #file: { get_input: vcpe_image_name }
-          file: ../Artifacats/images/ubuntu_16.04
+          file: ../Artifacts/images/ubuntu_16.04
           type: tosca.artifacts.nfv.SwImage
