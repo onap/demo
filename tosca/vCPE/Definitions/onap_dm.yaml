@@ -623,10 +623,10 @@ node_types:
           relationship: tosca.relationships.nfv.Vdu.AttachedTo
           node: tosca.nodes.nfv.Vdu.VirtualStorage
           occurrences: [ 0, UNBOUNDED ]
-    #artifacts:
-    #  - sw_image:
-    #      file:
-    #      type: tosca.artifacts.nfv.SwImage
+#    artifacts:
+#      - sw_image:
+#          file:
+#          type: tosca.artifacts.nfv.SwImage
   
   tosca.nodes.nfv.Vdu.VirtualStorage:
     derived_from: tosca.nodes.Root

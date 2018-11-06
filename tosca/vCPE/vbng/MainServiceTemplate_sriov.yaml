@@ -8,43 +8,6 @@ description: vCPE_vbng
 imports:
   - onap_dm.yaml
 
-node_types:
-  onap.vcpe_vbng:
-    derived_from: tosca.nodes.nfv.VNF
-    properties:
-      descriptor_id:
-        type: string
-        constraints: [ valid_values: [ b1bb0ce7-5555-4fa7-95ed-4840d70a1177 ] ]
-        default: b1bb0ce7-5555-4fa7-95ed-4840d70a1177
-      provider:
-        type: string
-        constraints: [ valid_values: [ onap ] ]
-        default: onap
-      product_name:
-        type: string
-        constraints: [ valid_values: [ vcpe_vbng ] ]
-        default: vcpe_vbng
-      software_version:
-        type: string
-        constraints: [ valid_values: [ '1.0' ] ]
-        default: '1.0'
-      descriptor_version:
-        type: string
-        constraints: [ valid_values: [ '1.0' ] ]
-        default: '1.0'
-      flavour_id:
-        type: string
-        constraints: [ valid_values: [ simple ] ]  #only one and only allowed one DF in this example
-        default: simple
-      flavour_description:
-        type: string
-        default: simple
-      vnfm_info:
-        type: list
-        entry_schema:
-          type: string
-        default: ['gvnfm']
-
 topology_template:
 #  substitution_mappings:
 #    node_type: onap.vcpe_vbng
@@ -153,6 +116,19 @@ topology_template:
       default: 10.0.7.1
 
   node_templates:
+    LLU_VNF:
+      type: tosca.nodes.nfv.VNF
+      properties:
+        descriptor_id: b1bb0ce7-2222-4fa7-95ed-4840d70a1177
+        provider: onap
+        product_name: vcpe_vbng
+        software_version: '1.0'
+        descriptor_version: '1.0'
+        flavour_id: simple
+        flavour_description: simple
+        vnfm_info: ['gvnfm']
+
+
     #onap public net
 #    VL_public:
 #      type: tosca.nodes.nfv.VnfVirtualLink
@@ -367,7 +343,7 @@ topology_template:
           max_number_of_instances: 1
           watchdog: none
         inject_files: #TODO SDC bug
-          source_path: ../Artifacts/keys/authorized_keys #SSH authorized_keys
+          source_path: ../Artifacts/Deployment/Other/authorized_keys #SSH authorized_keys
           dest_path: /home/ubuntu/.ssh/authorized_keys
         meta_data:
           vnf_id: { get_input: vnf_id }
@@ -442,5 +418,5 @@ topology_template:
       artifacts:
         sw_image: #TODO need to put glance image name here
           #file: { get_input: vcpe_image_name }
-          file: ../Artifacts/images/ubuntu_16.04
+          file: ../Artifacts/Deployment/Other/image
           type: tosca.artifacts.nfv.SwImage
