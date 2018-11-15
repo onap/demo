@@ -43,7 +43,7 @@ apt-get install -y libcurl4-openssl-dev
 git clone http://gerrit.onap.org/r/demo
 wget -O vCPE-vG-MUX-libevel-fixup.patch ${LIBEVEL_PATCH_URL} 
 cd demo
-git checkout 312996e2
+git checkout 3234c8ffab9faf85fd3bccfa720a3869ba39d13c
 patch -p1 < ../vCPE-vG-MUX-libevel-fixup.patch
 cd vnfs/VES5.0/evel/evel-library/bldjobs 
 make
