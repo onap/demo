@@ -10,7 +10,7 @@
 <parent>
     <groupId>org.onap.demo.vnf</groupId>
     <artifactId>hc-onap</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.1-SNAPSHOT</version>
     <relativePath>../parent-pom/pom.xml</relativePath>
 </parent>
 
