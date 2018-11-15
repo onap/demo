@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_26a52253",
+        "filename": "heat/vFW_HPA/vFW/base_vfw.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 2363
+      },
+      "writtenOn": "2018-11-15T11:15:15Z",
+      "side": 1,
+      "message": "Do we use SRIOV-NIC in vFW use case? If we use it, I think we should set the default value \"direct\"",
+      "range": {
+        "startLine": 127,
+        "startChar": 13,
+        "endLine": 127,
+        "endChar": 19
+      },
+      "revId": "fdc0088b5a3e5b3cdc95c40ec346a178ef203457",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
