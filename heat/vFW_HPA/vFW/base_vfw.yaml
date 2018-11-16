@@ -112,24 +112,31 @@ parameters:
   vfw_private_0_port_vnic_type:
     type: string
     description: vfw port 0 vnic type (normal, direct)
+    default: normal
   vfw_private_1_port_vnic_type:
     type: string
     description: vfw port 1 vnic type (normal, direct)
+    default: normal
   vfw_private_2_port_vnic_type:
     type: string
     description: vfw port 2 vnic type (normal, direct)
+    default: normal
   vsn_private_0_port_vnic_type:
     type: string
     description: vsn port 0 vnic type (normal, direct)
+    default: normal
   vsn_private_1_port_vnic_type:
     type: string
     description: vsn port 1 vnic type (normal, direct)
+    default: normal
   vpg_private_0_port_vnic_type:
     type: string
     description: vpg port 0 vnic type (normal, direct)
+    default: normal
   vpg_private_1_port_vnic_type:
     type: string
     description: vpg port 1 vnic type (normal, direct)
+    default: normal
   vfw_name_0:
     type: string
     label: vFirewall name

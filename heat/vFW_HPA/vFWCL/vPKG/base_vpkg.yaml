@@ -92,9 +92,11 @@ parameters:
   vpg_private_0_port_vnic_type:
     type: string
     description: vpg port 0 vnic type (normal, direct)
+    default: normal
   vpg_private_1_port_vnic_type:
     type: string
     description: vpg port 1 vnic type (normal, direct)
+    default: normal
   vpg_name_0:
     type: string
     label: vPacketGenerator name
