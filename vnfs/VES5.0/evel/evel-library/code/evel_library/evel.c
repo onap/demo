@@ -70,7 +70,6 @@ char *functional_role = NULL;
  * @param   topic   The optional topic part of the URL (may be NULL).
  * @param   ring buf size  Ring buffer size
  * @param   secure  Whether to use HTTPS (0=HTTP, 1=HTTPS)
- * @param   activmode  Whether to use ActivStandby(0) collectors or ActiveStandby(1)
  * @param   cert_file_path     Path to client certificate file
  * @param   key_file_path      Path to client key file
  * @param   ca_info            Path to CA cert file
@@ -100,7 +99,6 @@ EVEL_ERR_CODES evel_initialize(const char * const fqdn,
                                const char * const topic,
                                int ring_buf_size,
                                int secure,
-                               int activmode,
                                const char * const cert_file_path,
                                const char * const key_file_path,
                                const char * const ca_info,
@@ -308,7 +306,6 @@ EVEL_ERR_CODES evel_initialize(const char * const fqdn,
                                 bakup_source_ip,
                                 ring_buf_size,
                                 secure,
-                                activmode,
                                 cert_file_path,
                                 key_file_path,
                                 ca_info,

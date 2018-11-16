@@ -120,16 +120,29 @@ int main(int argc, char** argv)
   char* fqdn = argv[1];
   int port = atoi(argv[2]);
   char* vnic = argv[3];
+  char* fqdn2 = NULL;
+  int port2 = 0;
+
+  if(argc == 6)
+  {
+     fqdn2 = argv[3];
+     port2 = atoi(argv[4]);
+     vnic = argv[5];
+  }
+
   MEASUREMENT_VNIC_PERFORMANCE * vnic_performance = NULL;
 
   printf("\nVector Packet Processing (VPP) measurement collection\n");
   fflush(stdout);
 
-  if (argc != 4)
+  if (!((argc == 6) || (argc == 4)))
   {
-    fprintf(stderr, "Usage: %s <FQDN>|<IP address> <port> <interface>\n", argv[0]);
+    fprintf(stderr, "Usage: %s <FQDN>|<IP address> <port> <FQDN>|<IP address> <port> <interface> \n", argv[0]);
+    fprintf(stderr, "OR\n");
+    fprintf(stderr, "Usage: %s <FQDN>|<IP address> <port> <interface> \n", argv[0]);
     exit(-1);
   }
+
   srand(time(NULL));
 
   /**************************************************************************/
@@ -137,23 +150,22 @@ int main(int argc, char** argv)
   /**************************************************************************/
   if(evel_initialize(fqdn,                         /* FQDN                  */
                        port,                         /* Port                  */
-                       "",                           /* Backup FQDN           */
-                       5566,                         /* Backup Port           */
+                       fqdn2,                        /* Backup FQDN           */
+                       port2,                        /* Backup port           */
                        NULL,                         /* optional path         */
                        NULL,                         /* optional topic        */
                        100,                          /* Ring Buffer size      */
                        0,                            /* HTTPS?                */
-                       0,                            /* Active mode           */
                        NULL,                         /* cert file             */
                        NULL,                         /* key  file             */
                        NULL,                         /* ca   info             */
                        NULL,                         /* ca   file             */
                        0,                            /* verify peer           */
                        0,                            /* verify host           */
-                       "",                           /* Username              */
-                       "",                           /* Password              */
-                       "",                           /* Backup Username       */
-                       "",                           /* Backup Password       */
+                       "sample1",                    /* Username              */
+                       "sample1",                    /* Password              */
+                       "sample1",                    /* Username2             */
+                       "sample1",                    /* Password2             */
                        NULL,                         /* Source ip             */
                        NULL,                         /* Backup Source IP      */
                        EVEL_SOURCE_VIRTUAL_MACHINE,  /* Source type           */
