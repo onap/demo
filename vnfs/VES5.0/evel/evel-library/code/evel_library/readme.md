@@ -76,17 +76,30 @@ The following fragment illustrates the above usage:
 
 ```C
 
-  if (evel_initialize(api_fqdn,
-                      api_port,
-                      api_path,
-                      api_topic,
-                      api_secure,
-                      "Alice",
-                      "This isn't very secure!",
-                      EVEL_SOURCE_VIRTUAL_MACHINE,
-                      "EVEL demo client",
-                      verbose_mode))
-  {
+EVEL_ERR_CODES evel_initialize(const char * const fqdn,
+                               int port,
+                               const char * const bakup_fqdn,
+                               int bakup_port,
+                               const char * const path,
+                               const char * const topic,
+                               int ring_buf_size,
+                               int secure,
+                               const char * const cert_file_path,
+                               const char * const key_file_path,
+                               const char * const ca_info,
+                               const char * const ca_file_path,
+                               long verify_peer,
+                               long verify_host,
+                               const char * const username,
+                               const char * const password,
+                               const char * const bakup_username,
+                               const char * const bakup_password,
+                               const char * const source_ip,
+                               const char * const bakup_source_ip,
+                               EVEL_SOURCE_TYPES source_type,
+                               const char * const role,
+                               int verbosity
+                               )  {
     fprintf(stderr, "Failed to initialize the EVEL library!!!");
     exit(-1);
   }
