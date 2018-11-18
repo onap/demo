@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_7552e5de",
+        "filename": "heat/ONAP/cloud-config/docker-compose.yml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 329
+      },
+      "writtenOn": "2018-11-18T17:21:03Z",
+      "side": 1,
+      "message": "I would consider pulling this from the workflow repo to minimize the chances of mismatch.",
+      "revId": "e34c061b3f4e4ca23c92d2d3016f6b3bcc447601",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
