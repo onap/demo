@@ -1494,9 +1494,6 @@ resources:
         - path: /opt/sdc_vm_init.sh
           permissions: '0755'
           content: { get_file: cloud-config/sdc_vm_init.sh }
-        - path: /opt/sdc_wfd_vm_init.sh
-          permissions: '0755'
-          content: { get_file: cloud-config/sdc_wfd_vm_init.sh }
         - path: /etc/init.d/serv.sh
           permissions: '0755'
           content:

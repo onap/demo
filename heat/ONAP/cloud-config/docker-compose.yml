@@ -1,0 +1,41 @@
+version: '3'
+services:
+  
+  workflow-cassandra-init:
+    image: "${REGISTRY}onap/workflow-init:${TAG}"  
+    environment:
+        - CS_HOST=${CS_HOST}
+        - CS_AUTHENTICATE
+        - CS_USER
+        - CS_PASSWORD
+        - CS_PORT=${WF_BE_INIT_CS_PORT}
+
+  workflow-backend:
+    depends_on:
+      - workflow-cassandra-init
+    image: "${REGISTRY}onap/workflow-backend:${TAG}"
+    ports:
+        - "5603:5603"
+        - "${WF_BE_DEBUG_PORT}:${WF_BE_DEBUG_PORT}"
+    environment:
+        - JAVA_OPTIONS=${WF_BE_JAVA_OPTIONS}
+        - CS_HOSTS=${CS_HOST}
+        - CS_USER
+        - CS_PASSWORD
+        - CS_PORT=${WF_BE_CS_PORT}
+        - SDC_PROTOCOL
+        - SDC_ENDPOINT="${SDC_HOST}:8080"
+        - SDC_USER
+        - SDC_PASSWORD
+
+  workflow-frontend:
+    depends_on:
+      - workflow-cassandra-init
+      - workflow-backend
+    image: "${REGISTRY}onap/workflow-frontend:${TAG}"
+    ports:
+        - "${WF_FE_HOST_PORT}:8080"
+        - "${WF_FE_DEBUG_PORT}:${WF_FE_DEBUG_PORT}"
+    environment:
+        - JAVA_OPTIONS=${WF_FE_JAVA_OPTIONS}
+        - BACKEND=http://workflow-backend:8080

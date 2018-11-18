@@ -52,4 +52,15 @@ EOF
 
 # Run docker containers. For openstack Ubuntu 16.04 images this will run as a service after the VM has restarted
 ./sdc_vm_init.sh
-./sdc_wfd_vm_init.sh
+
+#Install docker-compose for workflow installation
+mkdir /opt/docker
+curl -L https://github.com/docker/compose/releases/download/1.23.1/docker-compose-`uname -s`-`uname -m` > /opt/docker/docker-compose
+chmod +x /opt/docker/docker-compose
+
+#Prepare env for docker compose
+IP_ADDRESS=$(cat /opt/config/private_ip.txt)
+sed -i "s/yyy/$IP_ADDRESS/g" .env
+
+#Setup sdc workflow using docker compose
+docker-compose up -d
