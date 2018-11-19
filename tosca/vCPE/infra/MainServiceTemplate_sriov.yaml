@@ -298,7 +298,7 @@ topology_template:
           max_number_of_instances: 1
           watchdog: none
         inject_files: #TODO SDC Bug
-          source_path: ../Artifacts/Deployment/Other/authorized_keys #SSH authorized_keys
+          source_path: ../Artifacts/Deployment/OTHER/authorized_keys #SSH authorized_keys
           dest_path: /home/ubuntu/.ssh/authorized_keys
         meta_data:
           vnf_id: { get_input: vnf_id }
@@ -358,7 +358,7 @@ topology_template:
       artifacts:
         sw_image: #TODO need to put glance image name here
           #file: { get_input: vcpe_image_name }
-          file: ../Artifacts/Deployment/Other/image
+          file: ../Artifacts/Deployment/OTHER/image
           type: tosca.artifacts.nfv.SwImage
 
     # vdns related
@@ -426,7 +426,7 @@ topology_template:
           max_number_of_instances: 1
           watchdog: none
         inject_files: # TODO SDC Bug
-          source_path: ../Artifacts/Deployment/Other/authorized_keys #SSH authorized_keys
+          source_path: ../Artifacts/Deployment/OTHER/authorized_keys #SSH authorized_keys
           dest_path: /home/ubuntu/.ssh/authorized_keys
         meta_data:
           vnf_id: { get_input: vnf_id }
@@ -482,7 +482,7 @@ topology_template:
       artifacts:
         sw_image: #TODO need to put glance image name here
           #file: { get_input: vcpe_image_name }
-          file: ../Artifacts/Deployment/Other/image
+          file: ../Artifacts/Deployment/OTHER/image
           type: tosca.artifacts.nfv.SwImage
 
     # vdhcp related
@@ -550,7 +550,7 @@ topology_template:
           max_number_of_instances: 1
           watchdog: none
         inject_files: #SDC Bug
-          source_path: ../Artifacts/Deployment/Other/authorized_keys #SSH authorized_keys
+          source_path: ../Artifacts/Deployment/OTHER/authorized_keys #SSH authorized_keys
           dest_path: /home/ubuntu/.ssh/authorized_keys
         meta_data:
           vnf_id: { get_input: vnf_id }
@@ -610,7 +610,7 @@ topology_template:
       artifacts:
         sw_image: #TODO need to put glance image name here
           #file: { get_input: vcpe_image_name }
-          file: ../Artifacts/Deployment/Other/image
+          file: ../Artifacts/Deployment/OTHER/image
           type: tosca.artifacts.nfv.SwImage
 
     # vweb related
@@ -678,7 +678,7 @@ topology_template:
           max_number_of_instances: 1
           watchdog: none
         inject_files: # TODO SDC bug
-          source_path: ../Artifacts/Deployment/Other/authorized_keys #SSH authorized_keys
+          source_path: ../Artifacts/Deployment/OTHER/authorized_keys #SSH authorized_keys
           dest_path: /home/ubuntu/.ssh/authorized_keys
         meta_data:
           vnf_id: { get_input: vnf_id }
@@ -734,6 +734,6 @@ topology_template:
       artifacts:
         sw_image: #TODO need to put glance image name here
           #file: { get_input: vcpe_image_name }
-          file: ../Artifacts/Deployment/Other/image
+          file: ../Artifacts/Deployment/OTHER/image
           type: tosca.artifacts.nfv.SwImage
 

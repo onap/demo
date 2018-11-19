@@ -265,5 +265,5 @@ topology_template:
       artifacts:
         sw_image: #TODO need to put glance image name here
           #file: { get_input: vcpe_image_name }
-          file: ../Artifacts/Deployment/Other/image
+          file: ../Artifacts/Deployment/OTHER/image
           type: tosca.artifacts.nfv.SwImage
