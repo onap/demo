@@ -67,9 +67,9 @@ topology_template:
       description: dcae collector ip
       default: 10.0.4.102
     dcae_collector_port:
-      type: integer
+      type: string
       description: dcae collector port
-      default: 8080
+      default: "8080"
     pub_key:
       type: string
       description: ssh public key
@@ -95,9 +95,9 @@ topology_template:
       description: IP address of vGMUX
       default: 10.5.0.20
     vg_vgmux_tunnel_vni:
-      type: integer
+      type: string
       description: vni value of vG-vGMUX vxlan tunnel
-      default: 100
+      default: "100"
     vnf_id:
       type: string
       description: The VNF ID is provided by ONAP

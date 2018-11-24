@@ -52,9 +52,9 @@ topology_template:
       description: dcae collector ip
       default: 10.0.4.102
     dcae_collector_port:
-      type: integer
+      type: string
       description: dcae collector port
-      default: 8080
+      default: "8080"
     nexus_artifact_repo:
       type: string
       description: Root URL for the Nexus repository for Maven artifacts
