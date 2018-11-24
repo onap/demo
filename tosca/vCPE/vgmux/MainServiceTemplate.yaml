@@ -85,9 +85,9 @@ topology_template:
       description: dcae collector ip
       default: 10.0.4.102
     dcae_collector_port:
-      type: integer
+      type: string
       description: dcae collector port
-      default: 8080
+      default: "8080"
     pub_key:
       type: string
       description: ssh public key
