@@ -389,7 +389,7 @@ Below is an example of the parameters file (yaml format), which we call paramete
 		  request-keys: null
 		  response-keys: null
 
-Here is an example of API for the vLB VNF used for this use case. We name the file after the vnf-type contained in SDNC (i.e. Vloadbalancerms..base_vlb..module-0.xml):
+Here is an example of API for the vLB VNF used for this use case. We name the file after the vnf-type contained in SDNC (i.e. Vloadbalancerms..dnsscaling..module-1):
 
 		<vlb-business-vnf-onap-plugin xmlns="urn:opendaylight:params:xml:ns:yang:vlb-business-vnf-onap-plugin">
     		<vdns-instances>
