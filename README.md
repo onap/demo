@@ -9,26 +9,30 @@ The Demo repository contains the HEAT templates and scripts for the instantiatio
  
  - pom.xml: POM file used to build the software hosted in this repository.
  
- - version.properties: current version number of the Demo repository. Format: MAJOR.MINOR.PATCH (e.g. 1.1.0)
+ - version.properties: current version number of the Demo repository. Format: MAJOR.MINOR.PATCH (e.g. 1.3.0)
  
- - The "boot" directory contains the scripts that install and configure ONAP:
+ - The "boot" and "heat/ONAP/cloud-config" directories contain the scripts that install and configure ONAP. This separation is due to size limits imposed by importing files into a VM for cloud-init. The two directories contain:
     - install.sh: sets up the host VM for specific components. This script runs only once, soon after the VM is created.
     - vm\_init.sh: contains component-specific configuration, downloads and runs docker containers. For some components, this script may either call a component-specific script (cloned from Gerrit repository) or call docker-compose.
     - serv.sh: it is installed in /etc/init.d, calls vm\_init.sh at each VM (re)boot.
     - configuration files for the Bind DNS Server installed with ONAP. Currently, both simpledemo.openecomp.org and simpledemo.onap.org domains are supported.
     - sdc\_ext\_volume_partitions.txt: file that contains external volume partitions for SDC.
+    
+ - The "boot" directory also contains a "robot" sub-directory that includes scripts to run Robot from the VM.
  
- - The "docker\_update\_scripts" directory contains scripts that update all the docker containers of an ONAP instance.
+ - The "docker\_update\_scripts" directory contains scripts that update all the docker containers of an ONAP instance (NOT UPDATED SINCE AMSTERDAM RELEASE).
  
  - The "heat" directory contains the following sub-directories:
+
+    - OAM-Network: contains the Heat files for creating the ONAP private management network. This is required only if that network is needed out of the Heat stack.
  
- 	- ONAP: contains the HEAT files for the installation of the ONAP platform. NOTE: onap\_openstack.yaml AND onap\_openstack.env ARE THE HEAT TEMPLATE AND ENVIRONMENT FILE CURRENTLY SUPPORTED. onap\_openstack\_float.yaml, onap\_openstack\_float.env, onap\_openstack\_nofloat.yaml, onap\_openstack\_nofloat.env AND onap\_rackspace.yaml, onap\_rackspace.env AREN'T UPDATED AND THEIR USAGE IS DEPRECATED.
+ 	- ONAP: contains the HEAT files for the installation of the ONAP platform.
  	
  	- vCPE: contains sub-directories with HEAT templates for the installation of vCPE Infrastructure (Radius Server, DHCP, DNS, Web Server), vBNG, vBRG Emulator, vGMUX, and vGW.
  	
- 	- vFW: contains the HEAT template for the instantiation of the vFirewall VNF (base\_vfw.yaml) and the environment file (base\_vfw.env) For Amsterdam release, this template is used for testing and demonstrating VNF instantiation only (no closed-loop).
+ 	- vFW: contains the HEAT template for the instantiation of the vFirewall VNF (base\_vfw.yaml) and the environment file (base\_vfw.env). This template is used for testing and demonstrating VNF instantiation only (no closed-loop).
  	
- 	- vFWCL: contains two sub-directories, one that hosts the HEAT template for the vFirewall and vSink (vFWSNK/base\_vfw.yaml), and one that hosts the HEAT template for the vPacketGenerator (vPKG/base\_vpkg.yaml). For Amsterdam release, these templates are used for testing and demonstrating VNF instantiation and closed-loop.
+ 	- vFWCL: contains two sub-directories, one that hosts the HEAT template for the vFirewall and vSink (vFWSNK/base\_vfw.yaml), and one that hosts the HEAT template for the vPacketGenerator (vPKG/base\_vpkg.yaml). These templates are used for testing and demonstrating VNF instantiation and closed-loop.
  	
  	- vLB: contains the HEAT template for the instantiation of the vPacketGenerator/vLoadBalancer/vDNS VNF (base\_vlb.yaml) and the environment file (base\_vlb.env). The directory also contains the HEAT template for the DNS scaling-up scenario (dnsscaling.yaml) with its environment file (dnsscaling.env).
  	
@@ -40,7 +44,7 @@ The Demo repository contains the HEAT templates and scripts for the instantiatio
  
  - The "tutorials" directory contains tutorials for Clearwater\_IMS and for creating a Netconf mount point in APPC. The "VoLTE" sub-directory is currently not used.
  
- - The "vagrant" directory contains the scripts that install ONAP using Vagrant.
+ - The "vagrant" directory contains the scripts that install ONAP using Vagrant (NOT UPDATED SINCE AMSTERDAM RELEASE).
  	
  - The "vnfs" directory: contains the following directories:
  
@@ -54,25 +58,23 @@ The Demo repository contains the HEAT templates and scripts for the instantiatio
  	
  	- VESreporting_vLB: VES client for vLoadBalancer/vDNS demo application. (DEPRECATED SINCE AMSTERDAM RELEASE)
  	
- 	- VES5.0: source code of the ONAP Vendor Event Listener (VES) Library, version 5.0. (SUPPORTED FOR AMSTERDAM AND BEIJING RELEASES)
+ 	- VES5.0: source code of the ONAP Vendor Event Listener (VES) Library, version 5.0. (CURRENTLY SUPPORTED)
  	
- 	- VESreporting_vFW5.0: VES v5.0 client for vFirewall demo application. (SUPPORTED FOR AMSTERDAM AND BEIJING RELEASES)
+ 	- VESreporting_vFW5.0: VES v5.0 client for vFirewall demo application. (CURRENTLY SUPPORTED)
  	
- 	- VESreporting_vLB5.0: VES v5.0 client for vLoadBalancer/vDNS demo application. (SUPPORTED FOR AMSTERDAM AND BEIJING RELEASES)
+ 	- VESreporting_vLB5.0: VES v5.0 client for vLoadBalancer/vDNS demo application. (CURRENTLY SUPPORTED)
  	
  	- vFW: scripts that download, install and run packages for the vFirewall use case.
  	
  	- vLB: scripts that download, install and run packages for the vLoadBalancer/vDNS use case.
  	
- 	- vLBMS: scripts that download, install and run packages for the vLoadBalancer/vDNS used for Manual Scale Out use case.
+ 	- vLBMS: scripts that download, install and run packages for the vLoadBalancer/vDNS used for the Scale Out use case.
  
 
 ONAP Installation in OpenStack Clouds via HEAT Template
 ---
 
 The ONAP HEAT template spins up the entire ONAP platform in OpenStack-based clouds. The template, onap\_openstack.yaml, comes with an environment file, onap\_openstack.env, in which all the default values are defined.
-
-NOTE: onap\_openstack.yaml AND onap\_openstack.env ARE THE HEAT TEMPLATE AND ENVIRONMENT FILE CURRENTLY SUPPORTED. onap\_openstack\_float.yaml, onap\_openstack\_float.env, onap\_openstack\_nofloat.yaml, onap\_openstack\_nofloat.env AND onap\_rackspace.yaml, onap\_rackspace.env AREN'T UPDATED AND THEIR USAGE IS DEPRECATED. As such, the following description refers to onap\_openstack.yaml and onap\_openstack.env.
 
 The HEAT template is composed of two sections: (i) parameters, and (ii) resources.
 
@@ -147,28 +149,14 @@ Some network parameters must be configured:
         dns_forwarder: PUT THE IP OF DNS FORWARDER FOR ONAP DEPLOYMENT'S OWN DNS SERVER
         oam_network_cidr: 10.0.0.0/16
 
-ONAP installs a DNS server used to resolve IP addresses in the ONAP OAM private network. Unlike Amsterdam Release, ONAP Beijing does not requires OpenStack Designate DNS support for the DCAE platform. For Beijing Release, in fact, all the DCAE containers are installed in a single VM that has access to the OAM network.  Originally, dns\_list and external\_dns were both used to circumvent some limitations of older OpenStack versions. In future releases, the DNS settings and parameters in HEAT will be consolidated.
+ONAP installs a DNS server used to resolve IP addresses in the ONAP OAM private network. Originally, dns\_list and external\_dns were both used to circumvent some limitations of older OpenStack versions.
 
-Due to the new DCAE installation methodology, the following parameters are deprecated and no longer needed for DCAE instantiation:
+DCAE requires a parameter called dcae\_deployment\_profile. It accepts one of the following values:
+ - R3MVP: Installs only the basic DCAE functionalities that will support the vFW/vDNS, vCPE and vVoLTE use cases;
+ - R3: Full DCAE installation;
+ - R3PLUS: This profile deploys the DCAE R3 stretch goal service components.
 
-        dcae_keystone_url: PUT THE MULTIVIM PROVIDED KEYSTONE API URL HERE
-        dcae_centos_7_image: PUT THE CENTOS7 VM IMAGE NAME HERE FOR DCAE LAUNCHED CENTOS7 VM
-        dcae_domain: PUT THE NAME OF DOMAIN THAT DCAE VMS REGISTER UNDER
-        dcae_public_key: PUT THE PUBLIC KEY OF A KEYPAIR HERE TO BE USED BETWEEN DCAE LAUNCHED VMS
-        dcae_private_key: PUT THE SECRET KEY OF A KEYPAIR HERE TO BE USED BETWEEN DCAE LAUNCHED VMS
-        dnsaas_config_enabled: PUT WHETHER TO USE PROXYED DESIGNATE
-        dnsaas_region: PUT THE DESIGNATE PROVIDING OPENSTACK'S REGION HERE
-        dnsaas_keystone_url: PUT THE DESIGNATE PROVIDING OPENSTACK'S KEYSTONE URL HERE
-        dnsaas_tenant_name: PUT THE TENANT NAME IN THE DESIGNATE PROVIDING OPENSTACK HERE (FOR R1 USE THE SAME AS openstack_tenant_name)
-        dnsaas_username: PUT THE DESIGNATE PROVIDING OPENSTACK'S USERNAME HERE
-        dnsaas_password: PUT THE DESIGNATE PROVIDING OPENSTACK'S PASSWORD HERE
-
-For Beijing Release, DCAE requires a new parameter called dcae\_deployment\_profile. It accepts one of the following values:
- - R2MVP: Installs only the basic DCAE functionalities that will support the vFW/vDNS, vCPE and vVoLTE use cases;
- - R2: Full DCAE installation;
- - R2PLUS: This profile deploys the DCAE R2 stretch goal service components.
-
-The recommended DCAE profile for Beijing Release is R2. For more information about DCAE deployment with HEAT, please refer to the ONAP documentation: https://onap.readthedocs.io/en/latest/submodules/dcaegen2.git/docs/sections/installation_heat.html
+The recommended DCAE profile for Casablanca Release is R3. For more information about DCAE deployment with HEAT, please refer to the ONAP documentation: https://onap.readthedocs.io/en/latest/submodules/dcaegen2.git/docs/sections/installation_heat.html
 
 The ONAP platform can be instantiated via Horizon (OpenStack dashboard) or Command Line.
 
@@ -242,7 +230,7 @@ To adjust the traffic volume produced by the packet generator, run the following
 The command above enables 5 streams.
 
 
-vLoadBalancer/vDNS Use Case
+vLoadBalancer/vDNS Use Case (old scale out use case)
 ---
 
 The use case is composed of three VFs: packet generator, load balancer, and DNS server. These VFs run in three separate VMs. The packet generator issues DNS lookup queries that reach the DNS server via the load balancer. DNS replies reach the packet generator via the load balancer as well. The load balancer reports the average amount of traffic per DNS over a time interval to the DCAE collector. When the average amount of traffic per DNS server crosses a predefined threshold, the closed-loop is triggered and a new DNS server is instantiated. 
@@ -316,17 +304,21 @@ The HEAT environment file contains two parameters:
 volume\_size is the size (in gigabytes) of the volume group. nova\_instance is the name or UUID of the VM to which the volume group will be attached. This parameter should be changed appropriately.
 
 
-VNF component Auto Scale Out with Manual Trigger use case via VID and APPC
+VF Module Scale Out Use Case
 ---
 
-The Auto Scale Out with Manual Trigger use case shows how users/network operators can add capacity to an existing VNF. ONAP Beijing release supports scale out of VNF components in two ways, so as to demonstrate flexibility of the ONAP platform and the use case itself. One way involves triggering the scale out operations via the Virtual Infrastructure Deployment (VID) GUI, and uses the Application Controller (APPC) as a generic VNF Manager. This is demonstrated against the vLB/vDNS VNFs. The second example involves triggering scale out operations from the Use case UI (UUI) and uses Virtual Function Controller (VF-C) as generic VNF Manager. This is demonstrated against VoLTE VNFs (MME, SAE-GW, CSCF, TAS). Both scale out blueprints use the Service Orchestrator (SO) as workflow execution engine.
+The Scale Out use case shows how users/network operators can add capacity to an existing VNF. ONAP Casablanca release supports scale out with manual trigger from VID and closed-loop enabled automation from Policy. This is demonstrated against the vLB/vDNS VNFs. For Casablanca, both APPC and SDNC controllers are supported. APPC is the official controller used for this use case and it can be used to scale multiple VNF types. SDNC is experimental for now and it can scale only the vDNS VNF developed for ONAP.
 
-This repository hosts the source code and scripts that implement the vLB/vDNS VNFs for the scale out blueprint that uses VID, SO, and APPC. At high level, the use case works as follows:
- - The user/network operator triggers the scale out operation from the VID portal. VID translates the operation into a call to SO;
- - SO instantiates a new VNF component and sends APPC a request for reconfiguring the VNF;
- - APPC reconfigures the VNF, without interrupting the service.
+This repository hosts the source code and scripts that implement the vLB/vDNS VNFs. The remainder of this section describes the use case at high level, using APPC as VNF controller. 
+
+Scaling VF modules manually requires the user/network operator to trigger the scale out operation from the VID portal. VID translates the operation into a call to SO. Scaling VF modules in an automated manner instead requires the user/network operator to design and deploy a closed loop for scale out that includes policies (e.g. threshold-crossing conditions), guard policies that determine when it's safe to scale out, and microservices that analyze events coming from the network in order to discover situations. Both manual and automated scale out activate the scale out workflow in the Service Orchestrator (SO). The workflow runs as follows: 
+ 
+ - SO sends a request to APPC to run health check against the VNF;
+ - If the VNF is healthy, SO instantiates a new VF module and sends a request to APPC to reconfigure the VNF;
+ - APPC reconfigures the VNF, without interrupting the service;
+ - SO sends a request to APPC to run health check against the VNF again, to validate that the scale out operation didn't impact the running VNF.
 	
-For this use case, we created a modified version of the vLB/vDNS, contained in vnfs/VLBMS. Unlike the vLB/vDNS VNF described before, in this modified version the vLB and the vDNS do not run any automated discovery service. Instead, the vLB has a Northbound API that allows an upstream system (e.g. ONAP) to change the internal configuration by updating the list of active vDNS instances. The Northbound API framework has been built using FD.io-based Honeycomb 1707, and supports both RESTconf and NETCONF protocols. Below is an example of vDNS instances contained in the vLB, in JSON format:
+For this use case, we created a new version of the vLB/vDNS, contained in vnfs/VLBMS. Unlike the vLB/vDNS VNF described before, in this modified version the vLB and the vDNS do not run any automated discovery service. Instead, the vLB has a Northbound API that allows an upstream system (e.g. ONAP) to change the internal configuration by updating the list of active vDNS instances (i.e. VNF reconfiguration). The Northbound API framework has been built using FD.io-based Honeycomb 1707, and supports both RESTconf and NETCONF protocols. Below is an example of vDNS instances contained in the vLB, in JSON format:
 
 		{
     	"vlb-business-vnf-onap-plugin": {
@@ -346,14 +338,22 @@ For this use case, we created a modified version of the vLB/vDNS, contained in v
     	}
     }
 
-According to the flow described above, during an execution of the use case against the vLB/vDNS VNF:
- - The user/network operator triggers the instantiation of a new vDNS from the VID GUI;
- - VID sends the request to SO, which spins up a new vDNS and sends APPC the details about the new vDNS (i.e. ip-addr, oam-ip-addr, enabled);
- - APPC runs a NETCONF operation against the vLB to update the list of vDNS instances with the vDNS just created.
-	
-Although the VNF supports the update of multiple vDNS records in the same call, for Beijing release APPC updates a single vDNS instance at a time.
+The parameters required for VNF reconfiguration (i.e. "ip-addr", "oam-ip-addr", and "enabled" in case of vLB/vDNS) can be specified in the VID GUI when triggering the workflow manually or in CLAMP when designing a closed loop for the automated case. In both cases, the format used for specifying the parameters and their values is a JSON path. SO will use the provided paths to access parameters' name and value in the VF module preload received from SDNC before instantiating a new VF module.
 
-The use case includes design-time and run-time operations. For Beijing release, APPC has a new component called Controller Design Tool (CDT), a design-time tool that allows users to create and on-board VNF templates into the APPC. The template describes which control operation can be executed against the VNF (e.g. scale out, health check, modify configuration, etc.), the protocols that the VNF supports, port numbers, VNF APIs, and credentials for authentication. Being VNF agnostic, APPC uses these templates to "learn" about specific VNFs and the supported operations.  
+VID accepts a JSON array in the "Configuration Parameter" box (see later), for example:
+
+    [{"ip-addr":"$.vf-module-topology.vf-module-parameters.param[10].value","oam-ip-addr":"$.vf-module-topology.vf-module-parameters.param[15].value","enabled":"$.vf-module-topology.vf-module-parameters.param[22].value"}]
+	
+CLAMP, instead, accepts a YAML file in the "Payload" box in the Policy Creation form, for example:
+
+    requestParameters: '{"usePreload":true,"userParams":[]}'
+    configurationParameters: '[{"ip-addr":"$.vf-module-topology.vf-module-parameters.param[10].value","oam-ip-addr":"$.vf-module-topology.vf-module-parameters.param[15].value","enabled":"$.vf-module-topology.vf-module-parameters.param[22].value"}]'
+
+Note that Policy requires an additional object, called "requestParameters" in which "usePreload" should be set to true and the "userParams" array should be left empty.
+
+The JSON path to the parameters used for VNF reconfiguration, including array locations, should be set as described above. Finally, although the VNF supports to update multiple vDNS records in the same call, for Casablanca release APPC updates a single vDNS instance at a time.
+
+When using APPC, before running scale out, the user needs to create a VNF template using the Controller Design Tool (CDT), a design-time tool that allows users to create and on-board VNF templates into the APPC. The template describes which control operation can be executed against the VNF (e.g. scale out, health check, modify configuration, etc.), the protocols that the VNF supports, port numbers, VNF APIs, and credentials for authentication. Being VNF agnostic, APPC uses these templates to "learn" about specific VNFs and the supported operations.  
 
 CDT requires two input: 1) the list of parameters that APPC will receive (ip-addr, oam-ip-addr, enabled in the example above); 2) the VNF API that APPC will use to reconfigure the VNF.
 
@@ -406,17 +406,39 @@ To create the VNF template in CDT, the following steps are required:
  - Click "My VNF" Tab. Create your user ID, if necessary
  - Click "Create new VNF" entering the VNF type as reported in VID or AAI, e.g. vLoadBalancerMS/vLoadBalancerMS 0
  - Select "ConfigScaleOut" action
- - Create a new template identifier using the vnf-type name in SDNC as template name, e.g. Vloadbalancerms..base_vlb..module-0
+ - Create a new template identifier using the vnf-type name in SDNC as template name, e.g. Vloadbalancerms..dnsscaling..module-1
  - Select protocol (Netconf-XML), VNF username (admin), and VNF port number (2831 for NETCONF)
  - Click "Parameter Definition" Tab and upload the parameters (.yaml) file
  - Click "Template Tab" and upload API template (.yaml) file
  - Click "Reference Data" Tab
  - Click "Save All to APPC"
 
-Finally, log into the APPC controller container and set the VNF password (ConfigScaleOut.password) in /opt/onap/appc/data/properties/appc_southbound.properties to admin. Note that in an ONAP instance created with OOM, APPC may use redundancy to make the controller resilient to failures. For Beijing, CDT only updates one replica of APPC. As such, in a multi-replica environment, the property file should be copied over to the other replicas. If redundancy is used, APPC has 3 replicas. CDT typically updates APPC-0 only, so the property file should be copied over to APPC-1 and APPC-2. This will be addressed in future ONAP releases.
+For health check operation, we just need to specify the protocol, the port number and username of the VNF (REST, 8183, and "admin" respectively, in the case of vLB/vDNS) and the API. For the vLB/vDNS, the API is: 
 
-To trigger the scale out workflow, the user/network operator can log into VID from the ONAP Portal (demo/demo123456! as username/password), select "VNF Changes" and then the "New (+)" button. The user/network operator needs to fill in the "VNF Change Form" by selecting Subscriber, Service Type, NF Role, Model Version, VNF, Scale Out from the Workflow drop down window, and APPC from the Controller drop down window. After clicking "Next", in the following window the user/network operator has to select the VF Module to scale by clicking on the VNF and then on the appropriate VF Module checkbox. Finally, by clicking on the "Schedule" button, the scale out use case will run as described above.
+    restconf/operational/health-vnf-onap-plugin:health-vnf-onap-plugin-state/health-check
 
+Note that we don't need to create a VNF template for health check, so the "Template" flag can be set to "N". Again, the user has to click "Save All to APPC" to update the APPC database.
+
+At this time, CDT doesn't allow users to provide VNF password from the GUI. To update the VNF password we need to log into the APPC Maria DB container and change the password manually:
+
+    mysql -u sdnctl -p (type "gamma" when password is prompted)
+    use sdnctl;
+    UPDATE DEVICE_AUTHENTICATION SET PASSWORD='admin' WHERE VNF_TYPE='vLoadBalancerMS/vLoadBalancerMS 0'; (use your VNF type)
+
+To trigger the scale out workflow manually, the user/network operator can log into VID from the ONAP Portal (demo/demo123456! as username/password), select "VNF Changes" and then the "New (+)" button. The user/network operator needs to fill in the "VNF Change Form" by selecting Subscriber, Service Type, NF Role, Model Version, VNF, Scale Out from the Workflow dropdown window, and insert the JSON path array described above in the "Configuration Parameter" box. After clicking "Next", in the following window the user/network operator has to select the VF Module to scale by clicking on the VNF and then on the appropriate VF Module checkbox. Finally, by clicking on the "Schedule" button, the scale out use case will run as described above.
+
+Automated scale out requires the user to onboard a DCAE blueprint in SDC when creating the service. To design a closed loop for scale out, the user needs to access the CLAMP GUI (https://clamp.api.simpledemo.onap.org:30258/designer/index.html) and execute the following operations:
+- Click the "Closed loop" dropdown window and select "Open CL"
+- Select the closed loop model and click "OK"
+- In the next screen, click the "Policy" box to create a policy for closed loop, including guard policies
+- After creating the policies, click "TCA" and review the blueprint uploaded during service creation and distributed by SDC to CLAMP
+- Click the "Manage" dropdown and then "Submit" to push the policies to the Policy Engine
+- From the same "Manage" dropdown, click "Deploy" to deploy the TCA blueprint to DCAE
+
+The vLB/vDNS VNF generates traffic and reports metrics to the VES collector in the DCAE platform. The number of incoming packets to the vLB is used to evaluate the policy defined for closed loop. If the provided threshold is crossed, DCAE generates an event that reaches the Policy Engine, which in turn activates the scale out closed loop described above.
+
+For more information about scale out, known issues and resolution, and material used for running the use case, please look at the wiki page: https://wiki.onap.org/display/DW/Running+Scale+Out+Use+Case+for+Casablanca
+ 
 
 ONAP Use Cases HEAT Templates
 ---
@@ -459,7 +481,7 @@ The change management workflow is defined as a composition of building blocks th
 
  - The CM workflow for the in-place software upgrade is defined and executed by the service orchestrator (SO). 
  - A&AI is used to lock/unlock the NF instance 
- - The pre/post health checks and software upgrade execution are implemented in App-C (L4+ NFs) and SDN-C (L1-L3 NFs) by leveraging Ansible services to communicate with the NF instances. 
+ - The pre/post health checks and software upgrade execution are implemented in APPC (L4+ NFs) and SDNC (L1-L3 NFs) by leveraging Ansible services to communicate with the NF instances. 
  - The user (or, operator) interfaces with the CM workflow using ONAP's VID. SO communicates with A&AI using a REST API and with the controllers SDNC/APPC via DMaaP. 
 
 We setup the use case demonstration for the software upgrade on the virtual gateway (vGW) as part of the vCPE use case in ONAP's Beijing release.
