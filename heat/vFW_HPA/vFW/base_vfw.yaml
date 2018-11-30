@@ -192,15 +192,6 @@ parameters:
   sec_group:
     type: string
     description: ONAP Security Group
-  sdnc_model_name:
-    type: string
-    description: SDNC Model Name metatada
-  sdnc_model_version:
-    type: string
-    description: SDNC Model Version metatada
-  sdnc_artifact_name:
-    type: string
-    description: SDNC Artifact Name metatada
 
 #############
 #           #
