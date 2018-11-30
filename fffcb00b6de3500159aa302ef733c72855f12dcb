@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_e0458770",
+        "filename": "vnfs/VESreporting_vLB5.0/go-client.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 55
+      },
+      "writtenOn": "2018-11-30T15:10:51Z",
+      "side": 1,
+      "message": "remove # at the beginning of the line",
+      "revId": "fffcb00b6de3500159aa302ef733c72855f12dcb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
