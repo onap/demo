@@ -68,6 +68,11 @@ update-rc.d v_dns.sh defaults
 # Install Bind
 mkdir /etc/bind/zones
 sed -i "s/OPTIONS=.*/OPTIONS=\"-4 -u bind\"/g" /etc/default/bind9
+mv db_demo_onap_org /etc/bind/zones/db.demo.onap.org
+mv named.conf.options /etc/bind/
+mv named.conf.local /etc/bind/
+sleep 1
+
 
 # Rename network interface in openstack Ubuntu 16.04 images. Then, reboot the VM to pick up changes
 if [[ $CLOUD_ENV != "rackspace" ]]
