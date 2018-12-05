@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_4f02770c",
+        "filename": "heat/vFW_HPA/vFW_SRIOV_NIC/base_vfw.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 2363
+      },
+      "writtenOn": "2018-12-05T05:19:54Z",
+      "side": 1,
+      "message": "Can you tell me which port is SRIOV-NIC, If the port is SRIOV, you should set the default value \"direct\"",
+      "range": {
+        "startLine": 127,
+        "startChar": 13,
+        "endLine": 127,
+        "endChar": 19
+      },
+      "revId": "fef48de39d7843e5b4018a4c3f618f84d30047b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
