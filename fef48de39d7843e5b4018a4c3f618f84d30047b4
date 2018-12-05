@@ -22,6 +22,30 @@
       "revId": "fef48de39d7843e5b4018a4c3f618f84d30047b4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_61c50f8d",
+        "filename": "heat/vFW_HPA/vFW_SRIOV_NIC/base_vfw.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 2395
+      },
+      "writtenOn": "2018-12-05T18:33:35Z",
+      "side": 1,
+      "message": "It depends on the policy being tested. Not all ports are SRIOV but some will be. So I cannot set the default value to direct, the person testing has to determine which ports should be set to direct based on the policy.",
+      "parentUuid": "9adffdf1_4f02770c",
+      "range": {
+        "startLine": 127,
+        "startChar": 13,
+        "endLine": 127,
+        "endChar": 19
+      },
+      "revId": "fef48de39d7843e5b4018a4c3f618f84d30047b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
