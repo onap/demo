@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_61dc2fe5",
+        "filename": "vnfs/vCPE/scripts/named.conf.options",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 55
+      },
+      "writtenOn": "2018-12-05T22:03:14Z",
+      "side": 1,
+      "message": "When does x.x.x.x get replaced by a real IP address? I don\u0027t see an instructions for that in vm_init.sh or install.sh",
+      "revId": "89a2f92d3b36f26bf7facd9509db1e67aeae9db1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
