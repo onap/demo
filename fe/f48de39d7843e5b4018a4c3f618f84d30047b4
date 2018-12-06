@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Eric Multanen <eric.w.multanen@intel.com>
+Code-Review+1: Huang Haibin <haibin.huang@intel.com>
+Code-Review+2: Marco Platania <platania@research.att.com>
+Submitted-by: Marco Platania <platania@research.att.com>
+Submitted-at: Thu, 06 Dec 2018 17:38:45 +0000
+Reviewed-on: https://gerrit.onap.org/r/74237
+Project: demo
+Branch: refs/heads/casablanca
