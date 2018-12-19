@@ -82,14 +82,14 @@ apt-get update
 apt-get install -y vpp vpp-dpdk-dkms vpp-lib vpp-dbg vpp-plugins vpp-dev
 sleep 1
 
-# Install honeycomb daily reboot script (workaround due to honeycomb file handle leak)
-cat > /etc/cron.daily/honeycomb <<EOF
+# Install honeycomb restart script (workaround due to honeycomb file handle leak)
+cat > /etc/cron.hourly/honeycomb <<EOF
 #!/bin/bash
 VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 pkill java
 /opt/honeycomb/sample-distribution-$VERSION/honeycomb &>/dev/null &disown
 EOF
-chmod +x /etc/cron.daily/honeycomb
+chmod +x /etc/cron.hourly/honeycomb
 
 # Run instantiation script
 cd /opt
