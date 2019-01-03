@@ -48,7 +48,18 @@ then
 fi
 
 # clean up old network configuration in docker engine
-docker network rm config_default
+set +e
+if [ -n "$(docker ps -q -a)" ]; then
+  docker stop $(docker ps -q -a)
+  docker update --restart=no $(docker ps -a -q)
+  systemctl restart docker
+  docker rm $(docker ps -q -a)
+  if [ -n "$(docker network ls | grep 'config_default')" ]; then
+    docker network rm config_default
+  fi
+fi
+set -e
+
 
 docker login -u "$NEXUS_USER" -p "$NEXUS_PASSWORD" "$NEXUS_DOCKER_REPO"
 
