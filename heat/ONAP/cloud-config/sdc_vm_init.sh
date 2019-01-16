@@ -12,6 +12,7 @@ git pull
 
 cd /opt
 cp sdc/sdc-os-chef/environments/Template.json /data/environments
+cp sdc/sdc-os-chef/environments/plugins-configuration.yaml /data/environments
 cp sdc/sdc-os-chef/scripts/docker_run.sh /data/scripts
 cp sdc/sdc-os-chef/scripts/docker_health.sh /data/scripts
 chmod +x /data/scripts/docker_run.sh
@@ -23,6 +24,7 @@ cat /data/environments/Template.json | sed "s/yyy/"$IP_ADDRESS"/g" > /data/envir
 sed -i "s/xxx/"$ENV_NAME"/g" /data/environments/$ENV_NAME.json
 sed -i "s/\"ueb_url_list\":.*/\"ueb_url_list\": \""$MR_IP_ADDR","$MR_IP_ADDR"\",/g" /data/environments/$ENV_NAME.json
 sed -i "s/\"fqdn\":.*/\"fqdn\": [\""$MR_IP_ADDR"\", \""$MR_IP_ADDR"\"]/g" /data/environments/$ENV_NAME.json
+sed -i "s/yyy/"$IP_ADDRESS"/g" /data/environments/plugins-configuration.yaml
 
 docker login -u $NEXUS_USERNAME -p $NEXUS_PASSWD $NEXUS_DOCKER_REPO
 bash /data/scripts/docker_run.sh -r $RELEASE
