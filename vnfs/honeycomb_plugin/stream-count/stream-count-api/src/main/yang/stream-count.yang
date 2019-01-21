@@ -1,0 +1,67 @@
+//*************************************************************//
+//
+// Copyright © 2019 AT&T Intellectual Property. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+//******************************************************************
+
+module stream-count {
+
+    yang-version 1;
+    namespace "urn:opendaylight:params:xml:ns:yang:stream-count";
+    prefix "stream-count";
+
+    description
+        "This YANG module defines the generic configuration and
+        operational data for stream-count in vPacketGen to be
+    	operated by ONAP controllers";
+
+    revision "2019-01-18" {
+        description "Initial revision of stream-count model";
+    }
+
+    typedef streamNum {
+        type uint32 {
+            range 1..10;
+        }
+    }
+
+    container stream-count {
+        uses stream-count-params;
+        description "Configuration data of stream-count in Honeycomb";
+
+        // READ
+        // curl -u admin:admin http://localhost:8181/restconf/config/stream-count:stream-count
+
+        // WRITE
+        // curl http://localhost:8181/restconf/operational/stream-count:stream-count
+
+    }
+
+    container stream-count-state {
+        config false;
+        uses stream-count-params;
+        description "Operational data of stream-count persisted in Honeycomb";
+
+        // READ
+        // curl -u admin:admin  http://localhost:8181/restconf/operational/stream-count:stream-count-state
+    }
+
+    grouping stream-count-params {
+    	container streams {
+            leaf active-streams {
+                type streamNum;
+            }
+        }
+    }
+}

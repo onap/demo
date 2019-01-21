@@ -41,7 +41,7 @@
 
   <modules>
     <module>boot</module>
-    <module>vnfs/honeycomb_plugin/sample_plugin/parent-pom</module>
+    <module>vnfs/honeycomb_plugin/parent-pom</module>
     <module>vnfs/vFW/pg_streams</module>
     <module>vnfs/vLB/dns_streams</module>
     <module>vnfs/vLB/DNSClient</module>
@@ -57,9 +57,6 @@
     <module>vnfs/vFW/scripts</module>
     <module>vnfs/vLB/scripts</module>
     <module>vnfs/vLBMS/scripts</module>
-    <!--module>vnfs/vLBMS/apis/vlb-business-vnf-onap-plugin</module>
-    <module>vnfs/vLBMS/apis/health-vnf-onap-plugin</module>
-    <module>vnfs/vLBMS/apis/vlb-vnf-onap-distribution</module-->
   </modules>
 
   <properties>

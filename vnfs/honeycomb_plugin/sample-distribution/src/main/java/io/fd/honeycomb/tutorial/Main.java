@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/*
+ * Modifications copyright (c) 2019 AT&T Intellectual Property
+ */
+
 package io.fd.honeycomb.vpp.integration.distro;
 
 import com.google.common.collect.Lists;
@@ -35,6 +39,7 @@ public class Main {
         sampleModules.add(new LispModule());
         sampleModules.add(new VppNshModule());
         sampleModules.add(new io.fd.honeycomb.tutorial.Module());
+        sampleModules.add(new io.fd.honeycomb.lcmapi.Module());
 
         io.fd.honeycomb.infra.distro.Main.init(sampleModules);
     }

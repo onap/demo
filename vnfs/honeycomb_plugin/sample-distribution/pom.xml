@@ -92,6 +92,11 @@
       <artifactId>sample-plugin-impl</artifactId>
       <version>${honeycomb.infra.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.fd.honeycomb.lcmapi</groupId>
+      <artifactId>stream-count-impl</artifactId>
+      <version>${honeycomb.infra.version}</version>
+    </dependency>
   </dependencies>
 
 </project>
