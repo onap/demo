@@ -1,0 +1,3 @@
+--Documentation for stream-count --
+
+TODO Replace with general description whats the purpose of stream-count and how it works

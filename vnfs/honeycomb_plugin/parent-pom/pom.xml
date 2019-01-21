@@ -69,8 +69,10 @@ done
 
     <!-- Generate executable shell script -->
   <modules>
-    <module>../sample-plugin-api</module>
-    <module>../sample-plugin-impl</module>
+    <module>../sample-plugin/sample-plugin-api</module>
+    <module>../sample-plugin/sample-plugin-impl</module>
+    <module>../stream-count/stream-count-api</module>
+    <module>../stream-count/stream-count-impl</module>
     <module>../sample-distribution</module>
   </modules>
 
