@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 public final class ElementCustomizer implements WriterCustomizer<Streams> {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ElementCustomizer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ElementCustomizer.class);
 
     private final CrudService<Streams> crudService;
 
@@ -55,10 +55,11 @@ public final class ElementCustomizer implements WriterCustomizer<Streams> {
         //invoked by PUT operation,if provided data doesn't exist in Config data
         crudService.writeData(id, dataAfter);
         try {
-        	runScript(dataAfter.getActiveStreams().getValue());
+            runScript(dataAfter.getActiveStreams().getValue());
         }
         catch (IOException e) {
-            LOG.error("Write operation failed: " + e);
+            String message = "Write operation failed " + e;
+            LOG.error(message);
         }
     }
 
@@ -67,13 +68,14 @@ public final class ElementCustomizer implements WriterCustomizer<Streams> {
                                         @Nonnull final Streams dataBefore,
                                         @Nonnull final Streams dataAfter, @Nonnull final WriteContext writeContext)
             throws WriteFailedException {
-    	//invoked by PUT operation,if provided data does exist in Config data
-    	crudService.updateData(id, dataBefore, dataAfter);
-    	try {
-        	runScript(dataAfter.getActiveStreams().getValue());
+        //invoked by PUT operation,if provided data does exist in Config data
+        crudService.updateData(id, dataBefore, dataAfter);
+        try {
+            runScript(dataAfter.getActiveStreams().getValue());
         }
         catch (IOException e) {
-            LOG.error("Update operation failed: " + e);
+            String message = "Write operation failed " + e;
+            LOG.error(message);
         }
     }
 
@@ -90,7 +92,7 @@ public final class ElementCustomizer implements WriterCustomizer<Streams> {
     //Update the number of running streams running a custom script that uses the old vPacketGen REST APIs
     private void runScript(long streams) throws IOException {
 
-    	String script = new String("bash /opt/update_running_streams.sh " + streams);
+        String script = new String("bash /opt/update_running_streams.sh " + streams);
         Runtime.getRuntime().exec(script);
         String message = "Number of running streams updated to " + streams;
         LOG.info(message);
