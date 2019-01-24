@@ -59,7 +59,7 @@ unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip v_dns_init.sh > /opt/v_
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip vdns.sh > /opt/vdns.sh
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip dnsclient.sh > /opt/dnsclient.sh
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip set_gre_tunnel.sh > /opt/set_gre_tunnel.sh
-wget -O dns-client-$DEMO_ARTIFACTS_VERSION-dns-client.jar "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vlb&a=dns-client&e=jar&v=$DEMO_ARTIFACTS_VERSION"
+wget -O dns-client-$DEMO_ARTIFACTS_VERSION.jar "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vlb&a=dns-client&e=jar&v=$DEMO_ARTIFACTS_VERSION"
 
 mv dns-client-$DEMO_ARTIFACTS_VERSION.jar /opt/FDclient/
 mv dnsclient.sh /opt/FDclient/
