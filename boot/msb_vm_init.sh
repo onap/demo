@@ -156,6 +156,9 @@ curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud-titaniumcloud", "version": "v0", "url": "/api/multicloud-titaniumcloud/v0","protocol": "REST",  "nodes": [ {"ip": "'$MULTISERV_IP'","port": "9005"}]}' "http://$MULTISERV_IP:10081/api/microservices/v1/services"
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud-titaniumcloud", "version": "v1", "url": "/api/multicloud-titaniumcloud/v1","protocol": "REST",  "nodes": [ {"ip": "'$MULTISERV_IP'","port": "9005"}]}' "http://$MULTISERV_IP:10081/api/microservices/v1/services"
 
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud-pike", "version": "v0", "url": "/api/multicloud-starlingx/v0","protocol": "REST",  "nodes": [ {"ip": "'$MULTISERV_IP'","port": "9008"}]}' "http://$MULTISERV_IP:10081/api/microservices/v0/services"
+curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "multicloud-pike", "version": "v1", "url": "/api/multicloud-starlingx/v1","protocol": "REST",  "nodes": [ {"ip": "'$MULTISERV_IP'","port": "9008"}]}' "http://$MULTISERV_IP:10081/api/microservices/v1/services"
+
 #VF-C
 curl -X POST -H "Content-Type: application/json" -d '{"serviceName": "nslcm", "version": "v1", "url": "/api/nslcm/v1","protocol": "REST",  "nodes": [ {"ip": "'$MULTISERV_IP'","port": "8403"}]}' "http://$MULTISERV_IP:10081/api/microservices/v1/services"
 
