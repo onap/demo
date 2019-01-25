@@ -69,7 +69,7 @@ unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip vlb.sh > /opt/vlb.sh
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip dnsmembership.sh > /opt/dnsmembership.sh
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip add_dns.sh > /opt/add_dns.sh
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip remove_dns.sh > /opt/remove_dns.sh
-wget -O dns-manager-$DEMO_ARTIFACTS_VERSION-dns-manager.jar "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vlb&a=dns-manager&e=jar&v=$DEMO_ARTIFACTS_VERSION"
+wget -O dns-manager-$DEMO_ARTIFACTS_VERSION.jar "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vlb&a=dns-manager&e=jar&v=$DEMO_ARTIFACTS_VERSION"
 wget -O ves-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.ves5&a=ves&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
 wget -O ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.ves5&a=ves_vlb_reporting&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
 
