@@ -129,6 +129,8 @@ int main(int argc, char** argv)
      port2 = atoi(argv[4]);
      vnic = argv[5];
   }
+  else
+     vnic = argv[3];
 
   MEASUREMENT_VNIC_PERFORMANCE * vnic_performance = NULL;
 
@@ -233,7 +235,7 @@ int main(int argc, char** argv)
     }
 
     vpp_m = evel_new_measurement(READ_INTERVAL,"vLoadBalancer","TrafficStats_1.2.3.4");
-    vnic_performance = (MEASUREMENT_VNIC_PERFORMANCE *)evel_measurement_new_vnic_performance("eth0", "true");
+    vnic_performance = (MEASUREMENT_VNIC_PERFORMANCE *)evel_measurement_new_vnic_performance(vnic, "true");
     evel_meas_vnic_performance_add(vpp_m, vnic_performance);
 
     if(vpp_m != NULL) {

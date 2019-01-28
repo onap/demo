@@ -1,0 +1,20 @@
+{
+   "tmp_directParameters": {
+       "eventName": "syslog_vFirewall-AT&T_connectionReset",
+       "eventType": "applicationVnf",
+       "nfcNamingCode": "AFX",
+       "nfNamingCode": "AFX",
+       "nfVendorName": "AT&T",
+       "reportingEntityId": "cc305d54-75b4-431b-adb2-eb6b9e541234",
+       "reportingEntityName": "ibcx0001vm002oam001",
+       "sourceId": "de305d54-75b4-431b-adb2-eb6b9e546014",
+       "sourceName": "scfx0001vm002cap001",
+       "timeZoneOffset": "UTC-05:30",
+       "eventSourceType": "virtualMachine",
+       "syslogProc": "vSyslog",
+       "syslogTag": "peer reset"
+    },
+    "tmp_indirectParameters":   {
+       "tmp_syslogFile": "/var/log/syslog"
+   }
+}

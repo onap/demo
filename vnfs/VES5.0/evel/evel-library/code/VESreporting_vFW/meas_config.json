@@ -1,0 +1,50 @@
+{
+   "tmp_directParameters": {
+       "eventName": "Measurement_vFirewall-AT&T_nicPerformance",
+       "eventType": "applicationVnf",
+       "nfcNamingCode": "AFX",
+       "nfNamingCode": "AFX",
+       "priority": "Low",
+       "reportingEntityId": "cc305d54-75b4-431b-adb2-eb6b9e541234",
+       "reportingEntityName": "ibcx0001vm002oam001",
+       "sourceId": "de305d54-75b4-431b-adb2-eb6b9e546014",
+       "sourceName": "scfx0001vm002cap001",
+       "measurementInterval": 20,
+       "tmp_device": ["lo", "enp0s3", "docker0"]
+
+    },
+    "tmp_indirectParameters":   {
+       "tmp_init":{
+              "tmp_t0BytesIn": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f2",
+               "tmp_t0BytesOut": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f10", 
+               "tmp_t0PacketsIn": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f3", 
+               "tmp_t0PacketsOut": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f11" 
+       },
+       "vNicPerformance": {
+           "tmp_vnic_command": {
+               "tmp_t1BytesIn": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f2", 
+               "tmp_t1BytesOut": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f10", 
+               "tmp_t1PacketsIn": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f3", 
+               "tmp_t1PacketsOut": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f11" 
+           },
+           "receivedOctetsDelta": "$(tmp_t1BytesIn - tmp_t0BytesIn)",
+           "receivedTotalPacketsDelta": "$(tmp_t1PacketsIn - tmp_t0PacketsIn)",
+           "transmittedOctetsDelta": "$(tmp_t1BytesOut - tmp_t0BytesOut)",
+           "transmittedTotalPacketsDelta": "$(tmp_t1PacketsOut - tmp_t0PacketsOut)",
+           "valuesAreSuspect": "true",
+           "vNicIdentifier": "$tmp_device"
+       }
+       "cpuUsage": {
+           "tmp_cpuuse_command": {
+                "tmp_cpuUseCmd": "/usr/bin/top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 | cut -d ':' -f2",
+                "tmp_cpuIdle": "/usr/bin/top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 |cut -d ':' -f2 | cut -d ',' -f4 | cut -b 1-5",
+                "tmp_cpuUsageSystem": "/usr/bin/top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 |cut -d ':' -f2 | cut -d ',' -f2 | cut -b 1-5",
+                "tmp_cpuUsageUser": "/usr/bin/top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 |cut -d ':' -f2 | cut -d ',' -f1 | cut -b 1-5"
+           },
+           "cpuIdentifier": "Cpu1",
+           "cpuIdle": "$tmp_cpuIdle",
+           "cpuUsageSystem": "$tmp_cpuUsageSystem",
+           "cpuUsageUser": "$tmp_cpuUsageUser"
+       }
+   }
+}

@@ -1,7 +1,7 @@
 
 /*************************************************************************//**
  *
- * Copyright © 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright © 2019 AT&T Intellectual Property. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,128 +36,13 @@ typedef struct dummy_vpp_metrics_struct {
 
 void read_vpp_metrics(vpp_metrics_struct *, char *);
 
-unsigned long long epoch_start = 0;
-
-#ifdef DOCKER
-int measure_traffic() 
-{
-
-  EVEL_ERR_CODES evel_rc = EVEL_SUCCESS;
-  FILE *fp;
-  int status;
-  char count[10];
-  time_t rawtime;
-  struct tm * timeinfo;
-  char period [21];
-  char cmd [100];
-  int concurrent_sessions = 0;
-  int configured_entities = 0;
-  double mean_request_latency = 0;
-  double measurement_interval = 1;
-  double memory_configured = 0;
-  double memory_used = 0;
-  int request_rate=0;
-  char secs [3];
-  int sec;
-  double loadavg;
-
-  printf("Checking app traffic\n");
-  time (&rawtime);
-  timeinfo = localtime (&rawtime);
-  strftime(period,21,"%d/%b/%Y:%H:%M:",timeinfo);
-  strftime(secs,3,"%S",timeinfo);
-  sec = atoi(secs);
-  if (sec == 0) sec = 59;
-  sprintf(secs, "%02d", sec);
-  strncat(period, secs, 21);
-  // ....x....1....x....2.
-  // 15/Oct/2016:17:51:19
-  strcpy(cmd, "sudo docker logs vHello | grep -c ");
-  strncat(cmd, period, 100);
-
-  fp = popen(cmd, "r");
-  if (fp == NULL) {
-    EVEL_ERROR("popen failed to execute command");
-  }
-
-  if (fgets(count, 10, fp) != NULL) {
-    request_rate = atoi(count);
-    printf("Reporting request rate for second: %s as %d\n", period, request_rate);
-
-    }
-    else {
-      EVEL_ERROR("New Measurement failed");
-    }
-    printf("Processed measurement\n");
-  
-  status = pclose(fp);
-  if (status == -1) {
-    EVEL_ERROR("pclose returned an error");
-  }
-  return request_rate;
-}
-
-#endif
-
-
-
-/**************************************************************************//**
- * tap live cpu stats
- *****************************************************************************/
-void evel_get_cpu_stats(EVENT_MEASUREMENT * measurement)
-{
-  FILE *fp;
-  char path[1024];
-  double usage=0.0;
-  double idle;
-  double intrpt;
-  double nice;
-  double softirq;
-  double steal;
-  double sys;
-  double user;
-  double wait;
-  MEASUREMENT_CPU_USE *cpu_use = NULL;
-
-  /* Open the command for reading. */
-  //fp = popen("/bin/ls /etc/", "r");
-  fp = popen("/usr/bin/top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 ", "r");
-  if (fp == NULL) {
-    printf("Failed to run command\n" );
-    exit(1);
-  }
-
-  /* Read the output a line at a time - output it. */
-  while (fgets(path, sizeof(path)-1, fp) != NULL) {
-    printf("%s", path+10);
-    sscanf(path+10," %lf us, %lf sy,  %lf ni,  %lf id,  %lf wa,  %lf hi,  %lf si,  %lf st",
-    &user,&sys,&nice,&idle,&wait,&intrpt,&softirq,&steal);
-  }
-
-  /* close */
-  pclose(fp);
-
-  cpu_use = evel_measurement_new_cpu_use_add(measurement, "cpu1", usage);
-  if( cpu_use != NULL ){
-  evel_measurement_cpu_use_idle_set(cpu_use,idle);
-  //evel_measurement_cpu_use_interrupt_set(cpu_use,intrpt);
-  //evel_measurement_cpu_use_nice_set(cpu_use,nice);
-  //evel_measurement_cpu_use_softirq_set(cpu_use,softirq);
-  //evel_measurement_cpu_use_steal_set(cpu_use,steal);
-  evel_measurement_cpu_use_system_set(cpu_use,sys);
-  evel_measurement_cpu_use_usageuser_set(cpu_use,user);
-  //evel_measurement_cpu_use_wait_set(cpu_use,wait);
-  //evel_measurement_cpu_use_add(measurement, "cpu2", usage,idle,intrpt,nice,softirq,steal,sys,user,wait);
-  }
-}
-
-
-
 int main(int argc, char** argv)
 {
   EVEL_ERR_CODES evel_rc = EVEL_SUCCESS;
   EVENT_MEASUREMENT* vpp_m = NULL;
   EVENT_HEADER* vpp_m_header = NULL;
+  EVENT_HEADER* batch_header = NULL;
+  MEASUREMENT_VNIC_PERFORMANCE * vnic_performance = NULL;
   int bytes_in_this_round;
   int bytes_out_this_round;
   int packets_in_this_round;
@@ -165,64 +50,70 @@ int main(int argc, char** argv)
   vpp_metrics_struct* last_vpp_metrics = malloc(sizeof(vpp_metrics_struct));
   vpp_metrics_struct* curr_vpp_metrics = malloc(sizeof(vpp_metrics_struct));
   struct timeval time_val;
-  //time_t start_epoch;
-  //time_t last_epoch;
+  time_t start_epoch;
+  time_t last_epoch;
   char hostname[BUFSIZE];
-  char* fqdn = argv[1];
-  int port = atoi(argv[2]);
-  char* vnic = argv[3];
+  char eventName[BUFSIZE];
+  char eventId[BUFSIZE];
   char* fqdn2 = NULL;
   int port2 = 0;
+  char * vnic = NULL;
+  memset(eventName, 0, BUFSIZE);
+  memset(eventId, 0, BUFSIZE);
+  memset(hostname, 0, BUFSIZE);
 
-  MEASUREMENT_VNIC_PERFORMANCE * vnic_performance = NULL;
-  //struct timeval tv_start;
+  strcpy(eventName, "measurement_vFirewall-Att-Linkdownerr");
+  strcpy(eventId, "mvfs00000001");
 
+  char* fqdn = argv[1];
+  int port = atoi(argv[2]);
   if(argc == 6)
   {
      fqdn2 = argv[3];
      port2 = atoi(argv[4]);
      vnic = argv[5];
   }
+  else
+     vnic = argv[3];
 
   printf("\nVector Packet Processing (VPP) measurement collection\n");
   fflush(stdout);
 
-  if (!((argc == 6) || (argc == 4)))
+  if (!((argc == 4) || (argc == 6)))
   {
     fprintf(stderr, "Usage: %s <FQDN>|<IP address> <port> <FQDN>|<IP address> <port> <interface> \n", argv[0]);
     fprintf(stderr, "OR\n");
-    fprintf(stderr, "Usage: %s <FQDN>|<IP address> <port> <interface> \n", argv[0]);
+    fprintf(stderr, "Usage: %s <FQDN>|<IP address> <port> <interface>\n", argv[0]);
     exit(-1);
   }
-
-  srand(time(NULL));
 
   /**************************************************************************/
   /* Initialize                                                             */
   /**************************************************************************/
   if(evel_initialize(fqdn,                         /* FQDN                  */
-                       port,                         /* Port                  */
-                     fqdn2,                        /* Backup FQDN           */
-                     port2,                        /* Backup port           */
-                       NULL,                         /* optional path         */
-                       NULL,                         /* optional topic        */
-                       100,                          /* Ring Buffer size      */
-                       0,                            /* HTTPS?                */
-                       NULL,                         /* cert file             */
-                       NULL,                         /* key  file             */
-                       NULL,                         /* ca   info             */
-                       NULL,                         /* ca   file             */
-                       0,                            /* verify peer           */
-                       0,                            /* verify host           */
+                     port, 	                   /* Port                  */
+                     fqdn2, 	                   /* Backup FQDN           */
+                     port2, 	                   /* Backup port           */
+                     NULL,                         /* optional path         */
+                     NULL,                         /* optional topic        */
+                     100,                          /* Ring Buffer size      */
+                     0,                            /* HTTPS?                */
+                     NULL,                         /* cert file             */
+                     NULL,                         /* key  file             */
+                     NULL,                         /* ca   info             */
+                     NULL,                         /* ca   file             */
+                     0,                            /* verify peer           */
+                     0,                            /* verify host           */
                      "sample1",                    /* Username              */
                      "sample1",                    /* Password              */
                      "sample1",                    /* Username2             */
                      "sample1",                    /* Password2             */
-                       NULL,                         /* Source ip             */
-                       NULL,                         /* Backup Source IP      */
-                       EVEL_SOURCE_VIRTUAL_MACHINE,  /* Source type           */
-                       "vFirewall",                  /* Role                  */
-                       1))                           /* Verbosity             */
+                     NULL,                         /* Source ip             */
+                     NULL,                         /* Source ip2            */
+                     EVEL_SOURCE_VIRTUAL_MACHINE,  /* Source type           */
+                     "vFirewall",      	           /* Role                  */
+                     1))                           /* Verbosity             */
+
   {
     fprintf(stderr, "\nFailed to initialize the EVEL library!!!\n");
     exit(-1);
@@ -236,7 +127,7 @@ int main(int argc, char** argv)
   memset(last_vpp_metrics, 0, sizeof(vpp_metrics_struct));
   read_vpp_metrics(last_vpp_metrics, vnic);
   gettimeofday(&time_val, NULL);
-  epoch_start = time_val.tv_sec * 1000000 + time_val.tv_usec;
+  start_epoch = time_val.tv_sec * 1000000 + time_val.tv_usec;
   sleep(READ_INTERVAL);
 
   /***************************************************************************/
@@ -271,45 +162,33 @@ int main(int argc, char** argv)
       packets_out_this_round = 0;
     }
 
-    vpp_m = evel_new_measurement(READ_INTERVAL,"vFirewallBroadcastPackets","TrafficStats_1.2.3.4");
-    vnic_performance = (MEASUREMENT_VNIC_PERFORMANCE *)evel_measurement_new_vnic_performance("eth0", "true");
-    evel_meas_vnic_performance_add(vpp_m, vnic_performance);
+    vpp_m = evel_new_measurement(READ_INTERVAL, eventName, eventId);
 
     if(vpp_m != NULL) {
       printf("New measurement report created...\n");
-
-      evel_measurement_type_set(vpp_m, "HTTP request rate");
-      evel_measurement_request_rate_set(vpp_m, rand()%10000);
-
+      vnic_performance = (MEASUREMENT_VNIC_PERFORMANCE *)evel_measurement_new_vnic_performance(vnic, "true");
+      evel_meas_vnic_performance_add(vpp_m, vnic_performance);
       evel_vnic_performance_rx_total_pkt_delta_set(vnic_performance, packets_in_this_round);
       evel_vnic_performance_tx_total_pkt_delta_set(vnic_performance, packets_out_this_round);
 
       evel_vnic_performance_rx_octets_delta_set(vnic_performance, bytes_in_this_round);
       evel_vnic_performance_tx_octets_delta_set(vnic_performance, bytes_out_this_round);
-      evel_get_cpu_stats(vpp_m);
 
       /***************************************************************************/
       /* Set parameters in the MEASUREMENT header packet                         */
       /***************************************************************************/
-      struct timeval tv_now;
-      gettimeofday(&tv_now, NULL);
-      unsigned long long epoch_now = tv_now.tv_usec + 1000000 * tv_now.tv_sec;
-
-      //last_epoch = start_epoch + READ_INTERVAL * 1000000;
+      last_epoch = start_epoch + READ_INTERVAL * 1000000;
       vpp_m_header = (EVENT_HEADER *)vpp_m;
-      //vpp_m_header->start_epoch_microsec = start_epoch;
-      //vpp_m_header->last_epoch_microsec = last_epoch;
-      evel_start_epoch_set(&vpp_m->header, epoch_start);
-      evel_last_epoch_set(&vpp_m->header, epoch_now);
-      epoch_start = epoch_now;
-
-      evel_nfcnamingcode_set(&vpp_m->header, "vVNF");
-      evel_nfnamingcode_set(&vpp_m->header, "vVNF");
-      //strcpy(vpp_m_header->reporting_entity_id.value, "No UUID available");
-      //strcpy(vpp_m_header->reporting_entity_name, hostname);
-      evel_reporting_entity_name_set(&vpp_m->header, "fwll");
-      evel_reporting_entity_id_set(&vpp_m->header, "No UUID available");
-      evel_rc = evel_post_event(vpp_m_header);
+      vpp_m_header->start_epoch_microsec = start_epoch;
+      vpp_m_header->last_epoch_microsec = last_epoch;
+      evel_reporting_entity_id_set(vpp_m_header, "No UUID available");
+printf("1111\n");
+      evel_reporting_entity_name_set(vpp_m_header, hostname);
+printf("1111\n");
+     // evel_rc = evel_post_event(vpp_m_header);
+      batch_header = evel_new_batch("batch_event_name", "bevent_id");
+      evel_batch_add_event(batch_header, vpp_m_header);
+      evel_rc = evel_post_event(batch_header);
 
       if(evel_rc == EVEL_SUCCESS) {
         printf("Measurement report correctly sent to the collector!\n");
@@ -326,8 +205,8 @@ int main(int argc, char** argv)
     last_vpp_metrics->bytes_out = curr_vpp_metrics->bytes_out;
     last_vpp_metrics->packets_in = curr_vpp_metrics->packets_in;
     last_vpp_metrics->packets_out = curr_vpp_metrics->packets_out;
-    //gettimeofday(&time_val, NULL);
-    //start_epoch = time_val.tv_sec * 1000000 + time_val.tv_usec;
+    gettimeofday(&time_val, NULL);
+    start_epoch = time_val.tv_sec * 1000000 + time_val.tv_usec;
 
     sleep(READ_INTERVAL);
   }
