@@ -1,0 +1,71 @@
+{
+   "tmp_directParameters": {
+       "eventType": "applicationVnf",
+       "nfcNamingCode": "AFX",
+       "nfNamingCode": "AFX",
+       "priority": "Low",
+       "reportingEntityId": "cc305d54-75b4-431b-adb2-eb6b9e541234",
+       "reportingEntityName": "ibcx0001vm002oam001",
+       "sourceId": "de305d54-75b4-431b-adb2-eb6b9e546014",
+       "sourceName": "scfx0001vm002cap001",
+       "vfStatus": "Idle",
+       "tmp_device": ["lo", "enp0s3", "docker0"]
+
+    },
+    "tmp_indirectParameters":   [
+       "tmp_faultInstance01": {
+          "eventName": "Fault_vFirewall-AT&T_linkDownError",
+          "eventCategory": "link",
+          "eventSourceType": "router",
+          "tmp_init":{
+      	       "tmp_t0BytesIn": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f2",
+               "tmp_t0BytesOut": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f10", 
+               "tmp_t0PacketsIn": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f3", 
+               "tmp_t0PacketsOut": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f11" 
+          },
+          "alarmInterfaceA": "$tmp_device",
+          "tmp_faultCheckInterval": 20,
+          "tmp_lowWaterMark": 100,
+          "tmp_command": {
+               "tmp_t1BytesIn": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f2", 
+               "tmp_t1BytesOut": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f10", 
+               "tmp_t1PacketsIn": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f3", 
+               "tmp_t1PacketsOut": "sudo cat /proc/net/dev | grep $tmp_device | tr -s ' ' | cut -d ':' -f2 | cut -d ' ' -f11" 
+          },
+          "tmp_BytesIn": "$(tmp_t1BytesIn - tmp_t0BytesIn)",
+          "tmp_PacketsIn": "$(tmp_t1PacketsIn - tmp_t0PacketsIn)",
+          "tmp_BytesOut": "$(tmp_t1BytesOut - tmp_t0BytesOut)",
+          "tmp_PacketsOut": "$(tmp_t1PacketsOut - tmp_t0PacketsOut)",
+          "tmp_alarmSetParameters": {
+               "specificProblem": "physical or logical connection to a remote router is down",
+               "eventSeverity": "MAJOR",
+               "alarmCondition": "link down trap_alarm"
+          },
+          "tmp_alarmClearParameters": {
+               "specificProblem": "physical or logical connection to a remote router is up",
+               "eventSeverity": "NORMAL",
+               "alarmCondition": "link up trap_alarm"
+          }
+       },
+       "tmp_faultInstance02": {
+          "eventName": "Fault_vFirewall-AT&T_serviceDownError",
+          "alarmInterfaceA": "afx@input.service",
+          "eventCategory": "other",
+          "eventSourceType": "virtualMachine",
+          "tmp_faultCheckInterval": 10,
+          "tmp_command": {
+               "tmp_cmd1": "/bin/systemctl is-active afx@input* |grep -E 'inactive|failed' | wc -l"
+          },
+          "tmp_alarmSetParameters": {
+               "specificProblem": "service is down",
+               "eventSeverity": "MAJOR",
+               "alarmCondition": "service down trap_alarm"
+          },
+          "tmp_alarmClearParameters": {
+               "specificProblem": "service is up",
+               "eventSeverity": "NORMAL",
+               "alarmCondition": "service up trap_alarm"
+          }
+       }
+   ]
+}

@@ -1622,6 +1622,22 @@ EVENT_HEADER * evel_new_heartbeat(void);
  *****************************************************************************/
 EVENT_HEADER * evel_new_heartbeat_nameid(const char* ev_name, const char *ev_id);
 
+/**************************************************************************//**
+ * Create a new Heartbeat fields event.
+ *
+ * @note    The mandatory fields on the Heartbeat fields must be supplied to
+ *          this factory function and are immutable once set.  Optional fields
+ *          have explicit setter functions, but again values may only be set
+ *          once so that the event has immutable properties.
+ * @param ev_name  Unique Event Name confirming Domain AsdcModel Description
+ * @param ev_id    A universal identifier of the event for: troubleshooting correlation, analysis, etc
+ * @param interval    heartbeat interval
+ * @returns pointer to the newly manufactured ::EVENT_HEARTBEAT_FIELD.  If the event
+ *          is not used (i.e. posted) it must be released using
+ *          ::evel_free_hrtbt_field.
+ * @retval  NULL  Failed to create the event.
+ *****************************************************************************/
+EVENT_HEARTBEAT_FIELD * evel_new_heartbeat_field(int interval,const char* ev_name, const char *ev_id);
 
 /**************************************************************************//**
  * Free an event header.
@@ -1706,6 +1722,17 @@ void evel_reporting_entity_name_set(EVENT_HEADER * const header,
                                     const char * const entity_name);
 
 /**************************************************************************//**
+ * Set the Source Name property of the event header.
+ *
+ * @note The Source Name defaults to the OpenStack VM Name.
+ *
+ * @param header        Pointer to the ::EVENT_HEADER.
+ * @param entity_name   The source name to set.
+ *****************************************************************************/
+void evel_source_name_set(EVENT_HEADER * const header,
+                          const char * const source_name);
+
+/**************************************************************************//**
  * Set the Reporting Entity Id property of the event header.
  *
  * @note The Reporting Entity Id defaults to the OpenStack VM UUID.
@@ -1715,6 +1742,17 @@ void evel_reporting_entity_name_set(EVENT_HEADER * const header,
  *****************************************************************************/
 void evel_reporting_entity_id_set(EVENT_HEADER * const header,
                                   const char * const entity_id);
+
+/**************************************************************************//**
+ * Set the Source Id property of the event header.
+ *
+ * @note The Source Id defaults to the OpenStack VM UUID.
+ *
+ * @param header        Pointer to the ::EVENT_HEADER.
+ * @param entity_id     The Source id to set.
+ *****************************************************************************/
+void evel_source_id_set(EVENT_HEADER * const header,
+                        const char * const source_id);
 
 /**************************************************************************//**
  * Set the NFC Naming code property of the event header.

@@ -1,6 +1,6 @@
 #############################################################################
 #
-# Copyright © 2017 AT&T Intellectual Property. All rights reserved.
+# Copyright © 2019 AT&T Intellectual Property. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,31 +16,37 @@
 #############################################################################
 
 CC=gcc
-
 ARCH=$(shell getconf LONG_BIT)
 CODE_ROOT=$(CURDIR)/../..
+#CODE_ROOT=../code/evel-library
 LIBS_DIR=$(CODE_ROOT)/libs/x86_$(ARCH)
-INCLUDE_DIR=$(CODE_ROOT)/code/evel_library
+#LIBS_DIR=/usr/lib
+INCLUDE_DIR= -I $(CODE_ROOT)/code/evel_library -I . 
 
 #******************************************************************************
 # Standard compiler flags.                                                    *
 #******************************************************************************
 CPPFLAGS=
 CFLAGS=-Wall -g -fPIC
+FILEOBJLIST= jsmn.o vpp_measurement_reporter.o
 
 all:	vpp_measurement_reporter
 
 clean:
-	rm -f vpp_measurement_reporter
+	rm -f  *.o vpp_measurement_reporter
 
-vpp_measurement_reporter: vpp_measurement_reporter.c
+%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(INCLUDE_DIR) -c $< -o $@
+
+jsmn.o: jsmn.c jsmn.h
+vpp_measurement_reporter.o: vpp_measurement_reporter.c
+
+vpp_measurement_reporter: $(FILEOBJLIST)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o vpp_measurement_reporter \
                                     -L $(LIBS_DIR) \
-                                    -I $(INCLUDE_DIR) \
-                               vpp_measurement_reporter.c \
+                               $(FILEOBJLIST) \
                               -lpthread \
                               -level \
-                              -lm \
                               -lcurl
 
 

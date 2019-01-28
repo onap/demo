@@ -1,6 +1,5 @@
 
 PROJECT DESCRIPTION
-
 ---
 This project contains the source code and scripts for the periodic generation of network measurement reports. The folder contains:
 
@@ -22,5 +21,6 @@ To run the vpp_measurement_reporter, please execute the following steps:
  - Make the go-client.sh script executable
         chmod +x go-client.sh
 
- - Run the go-client.sh script
+ - Run one of the scripts based on one collector or 2 collector
         ./go-client.sh  
+        ./go-client_2_collector.sh

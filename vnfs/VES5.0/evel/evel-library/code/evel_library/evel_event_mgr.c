@@ -64,6 +64,7 @@ static bool evel_token_equals_string(const MEMORY_CHUNK * const chunk,
                                      const jsmntok_t * const json_token,
                                      const char * check_string);
 static EVEL_ERR_CODES evel_setup_curl();
+static EVEL_ERR_CODES evel_send_to_another_collector(const EVEL_EVENT_DOMAINS evel_domain, char * json_body, size_t json_size);
 
 /**************************************************************************//**
  * Buffers for error strings from libcurl.
@@ -135,8 +136,8 @@ static char * evel_password = NULL;
 static char * evel_username2 = NULL;
 static char * evel_password2 = NULL;
 
-static int http_response_code = 0;
-static int evel_collector_id = 0;
+static long http_response_code = 0;
+static int evel_collector_id = 1;
 /**************************************************************************//**
  * Initialize the event handler.
  *
@@ -224,7 +225,7 @@ EVEL_ERR_CODES event_handler_initialize(const char * const event_api_url,
   }
 
   /***************************************************************************/
-  /* Store other parameters
+  /* Store other parameters                                                  */
   /***************************************************************************/
   evel_secure = secure;
   evel_verbosity = verbosity;
@@ -349,10 +350,10 @@ static EVEL_ERR_CODES evel_setup_curl()
 
   EVEL_ENTER();
 
-  if (evel_collector_id > 4)
+  if (evel_collector_id > 2)
   {
     rc = EVEL_CURL_LIBRARY_FAIL;
-    log_error_state("Wrong evel_collector- value > 4");
+    log_error_state("Wrong evel_collector- value > 2");
     goto exit_label;
   }
 
@@ -374,21 +375,6 @@ static EVEL_ERR_CODES evel_setup_curl()
      username = evel_username2;
      password = evel_password2;
   }
-  else if (evel_collector_id == 3)
-  {
-     api_url = evel_batch_api_url;
-     source_ip = evel_source_ip;
-     username = evel_username;
-     password = evel_password;
-  }
-  else if (evel_collector_id == 4)
-  {
-     api_url = evel_bbatch_api_url;
-     source_ip = evel_source_ip_bakup;
-     username = evel_username2;
-     password = evel_password2;
-  }
-
   /***************************************************************************/
   /* Clean-up the cURL library.                                              */
   /***************************************************************************/
@@ -1021,6 +1007,57 @@ exit_label:
 }
 
 /**************************************************************************//**
+ * Send event to another collector
+ *
+ * Identify the next collector and try sending the event to that collector
+ ****************************************************************************/
+static EVEL_ERR_CODES evel_send_to_another_collector(
+                        const EVEL_EVENT_DOMAINS evel_domain, 
+                        char * json_body, 
+                        size_t json_size)
+{
+  int rc = EVEL_SUCCESS;
+  CURLcode curl_rc;
+
+  EVEL_ENTER();
+
+  if ((evel_collector_id == 1) && (curr_global_handles == 2))
+  {
+     evel_collector_id =2;
+  }
+  else if (evel_collector_id == 2)
+  {
+     evel_collector_id =1;
+  }
+
+  rc = evel_setup_curl();
+
+  if ( rc == EVEL_SUCCESS)
+  {
+     if (evel_collector_id == 1)
+     {
+        if (evel_domain == EVEL_DOMAIN_BATCH)
+           curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_batch_api_url);
+        else
+           curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_event_api_url);
+     }
+     else if (evel_collector_id == 2)
+     {
+        if (evel_domain == EVEL_DOMAIN_BATCH)
+           curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_bbatch_api_url);
+        else
+           curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_bevent_api_url);
+     }
+
+     rc = evel_post_api(json_body, json_size);
+  }
+
+  EVEL_EXIT();
+
+  return rc;
+}
+
+/**************************************************************************//**
  * Callback function to provide data to send.
  *
  * Copy data into the supplied buffer, read_callback::ptr, checking size
@@ -1135,6 +1172,50 @@ static void * event_handler(void * arg __attribute__ ((unused)))
     EVEL_ERROR("Event Handler State was not INACTIVE at start-up - "
                "Handler will exit immediately!");
   }
+  /***************************************************************************/
+  /* Set the connection to collector                                         */
+  /***************************************************************************/
+  while (true)
+  {
+     evel_collector_id = 1;
+     rc = evel_setup_curl();
+
+     if ( rc != EVEL_SUCCESS)
+     {
+        EVEL_ERROR("Failed to setup the first collector. Error code=%d", rc);
+        if (curr_global_handles == 2)
+        {
+           EVEL_DEBUG("Switching to other collector");
+
+           evel_collector_id = 2;
+
+           rc = evel_setup_curl();
+           if ( rc != EVEL_SUCCESS)
+           {
+              EVEL_ERROR("Failed to setup the connection to second collector also, Error code%d", rc);
+              sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
+              collector_down_count = collector_down_count + 1;
+              EVEL_ERROR("Collectors setup issue- retry count=%d", collector_down_count);
+           }
+           else
+           {
+              collector_down_count = 0;
+              break;
+           }
+        }
+        else
+        {
+           sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
+           collector_down_count = collector_down_count + 1;
+           EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
+         }
+     }
+     else
+     {
+        collector_down_count = 0;
+        break;
+     }
+  }
 
   while (evt_handler_state == EVT_HANDLER_ACTIVE)
   {
@@ -1158,54 +1239,9 @@ static void * event_handler(void * arg __attribute__ ((unused)))
       json_size = evel_json_encode_batch_event(json_body, EVEL_MAX_JSON_BODY, msg);
 
       /***************************************************************************/
-      /* Set the connection to collector                                         */
-      /***************************************************************************/
-      while (true)
-      {
-         evel_collector_id =3;
-         rc = evel_setup_curl();
-
-         if ( rc != EVEL_SUCCESS)
-         {
-             EVEL_ERROR("Failed to setup the first collector. Error code=%d", rc);
-             if (curr_global_handles == 2)
-             {
-                EVEL_DEBUG("Switching to other collector");
-
-                evel_collector_id = 4;
-
-                rc = evel_setup_curl();
-                if ( rc != EVEL_SUCCESS)
-                {
-                   EVEL_ERROR("Failed to setup the connection to second collector also, Error code%d", rc);
-                   sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
-                   collector_down_count = collector_down_count + 1;
-                   EVEL_ERROR("Collectors setup issue- retry count=%d", collector_down_count);
-                }
-                else
-                {
-                   break;
-                   collector_down_count = 0;
-                }
-             }
-             else
-             {
-                sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
-                collector_down_count = collector_down_count + 1;
-                EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
-             }
-         }
-         else
-         {
-            break;
-            collector_down_count = 0;
-         }
-      }
-
-      /***************************************************************************/
       /* Set the URL for the API.                                                */
       /***************************************************************************/
-      if (evel_collector_id == 3)
+      if (evel_collector_id == 1)
       {
          curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_batch_api_url);
       }
@@ -1242,45 +1278,51 @@ static void * event_handler(void * arg __attribute__ ((unused)))
 
         while (true)
         {
-           if ((evel_collector_id == 3) && (curr_global_handles == 2))
+           if (curr_global_handles == 2)
            {
-             evel_collector_id =4;
-           }
-           else if (evel_collector_id == 4)
-           {
-             evel_collector_id =3;
-           }
+              rc = evel_send_to_another_collector(msg->event_domain, json_body, json_size);
 
-           rc = evel_setup_curl();
-
-           if ( rc != EVEL_SUCCESS)
-           {
-             sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
-             collector_down_count = collector_down_count + 1;
-             EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
-             continue;
+              switch_coll = 0;
+              if ((rc == EVEL_SUCCESS) && ((http_response_code / 100) != 2))
+              {
+                 switch_coll = 1;
+                 if (http_response_code == 400) // 400 - Bad JSON related return code
+                    switch_coll = 0;
+              }
+              if ((rc != EVEL_SUCCESS)  || (switch_coll == 1))
+              {
+                 sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
+                 collector_down_count = collector_down_count + 1;
+                 EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
+              }
+              else
+              {
+                 break;
+              }
            }
-
-           if (evel_collector_id == 3)
-           {
-              curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_batch_api_url);
-           }
-           else if (evel_collector_id == 4)
-           {
-              curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_bbatch_api_url);
-           }
-
-           rc = evel_post_api(json_body, json_size);
-           if ( rc != EVEL_SUCCESS)
+           else
            {
               sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
               collector_down_count = collector_down_count + 1;
               EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
-              continue;
+           }
+
+           rc = evel_send_to_another_collector(msg->event_domain, json_body, json_size);
+
+           switch_coll = 0;
+           if ((rc == EVEL_SUCCESS) && ((http_response_code / 100) != 2))
+           {
+              switch_coll = 1;
+              if (http_response_code == 400) // 400 - Bad JSON related return code
+                 switch_coll = 0;
+           }
+           if ((rc != EVEL_SUCCESS)  || (switch_coll == 1))
+           {
+              collector_down_count = collector_down_count + 1;
+              EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
            }
            else
            {
-              EVEL_DEBUG("Successfully sent msg after retry=%d", collector_down_count);
               break;
            }
         }
@@ -1296,57 +1338,12 @@ static void * event_handler(void * arg __attribute__ ((unused)))
       json_size = evel_json_encode_event(json_body, EVEL_MAX_JSON_BODY, msg);
 
       /***************************************************************************/
-      /* Set the connection to collector                                         */
-      /***************************************************************************/
-      while (true)
-      {
-         evel_collector_id = 1;
-         rc = evel_setup_curl();
-
-         if ( rc != EVEL_SUCCESS)
-         {
-             EVEL_ERROR("Failed to setup the first collector. Error code=%d", rc);
-             if (curr_global_handles == 2)
-             {
-                EVEL_DEBUG("Switching to other collector");
-
-                evel_collector_id = 2;
-
-                rc = evel_setup_curl();
-                if ( rc != EVEL_SUCCESS)
-                {
-                   EVEL_ERROR("Failed to setup the connection to second collector also, Error code%d", rc);
-                   sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
-                   collector_down_count = collector_down_count + 1;
-                   EVEL_ERROR("Collectors setup issue- retry count=%d", collector_down_count);
-                }
-                else
-                {
-                   break;
-                   collector_down_count = 0;
-                }
-             }
-             else
-             {
-                sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
-                collector_down_count = collector_down_count + 1;
-                EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
-             }
-         }
-         else
-         {
-            break;
-            collector_down_count = 0;
-         }
-      }
-      /***************************************************************************/
       /* Set the URL for the API.                                                */
       /***************************************************************************/
       if (evel_collector_id == 1)
          curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_event_api_url);
       else
          curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_bevent_api_url);
-
       if (curl_rc != CURLE_OK)
       {
         rc = EVEL_CURL_LIBRARY_FAIL;
@@ -1375,45 +1372,51 @@ static void * event_handler(void * arg __attribute__ ((unused)))
 
         while (true)
         {
-           if ((evel_collector_id == 1) && (curr_global_handles == 2))
+           if (curr_global_handles == 2)
            {
-             evel_collector_id =2;
-           }
-           else if (evel_collector_id == 2)
-           {
-             evel_collector_id =1;
-           }
+              rc = evel_send_to_another_collector(msg->event_domain, json_body, json_size);
 
-           rc = evel_setup_curl();
-
-           if ( rc != EVEL_SUCCESS)
-           {
-             sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
-             collector_down_count = collector_down_count + 1;
-             EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
-             continue;
+              switch_coll = 0;
+              if ((rc == EVEL_SUCCESS) && ((http_response_code / 100) != 2))
+              {
+                 switch_coll = 1;
+                 if (http_response_code == 400) // 400 - Bad JSON related return code
+                    switch_coll = 0;
+              }
+              if ((rc != EVEL_SUCCESS)  || (switch_coll == 1))
+              {
+                 sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
+                 collector_down_count = collector_down_count + 1;
+                 EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
+              }
+              else
+              {
+                 break;
+              }
            }
-
-           if (evel_collector_id == 1)
-           {
-              curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_event_api_url);
-           }
-           else if (evel_collector_id == 2)
-           {
-              curl_rc = curl_easy_setopt(curl_handle, CURLOPT_URL, evel_bevent_api_url);
-           }
-
-           rc = evel_post_api(json_body, json_size);
-           if ( rc != EVEL_SUCCESS)
+           else
            {
               sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
               collector_down_count = collector_down_count + 1;
               EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
-              continue;
+           }
+
+           rc = evel_send_to_another_collector(msg->event_domain, json_body, json_size);
+
+           switch_coll = 0;
+           if ((rc == EVEL_SUCCESS) && ((http_response_code / 100) != 2))
+           {
+              switch_coll = 1;
+              if (http_response_code == 400) // 400 - Bad JSON related return code
+                 switch_coll = 0;
+           }
+           if ((rc != EVEL_SUCCESS)  || (switch_coll == 1))
+           {
+              collector_down_count = collector_down_count + 1;
+              EVEL_ERROR("Collector setup issue-retry count=%d", collector_down_count);
            }
            else
            {
-              EVEL_DEBUG("Successfully sent msg after retry=%d", collector_down_count);
               break;
            }
         }

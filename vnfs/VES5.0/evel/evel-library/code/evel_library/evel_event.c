@@ -411,6 +411,35 @@ void evel_reporting_entity_name_set(EVENT_HEADER * const header,
 }
 
 /**************************************************************************//**
+ * Set the Source Name property of the event header.
+ *
+ * @note The Source Name defaults to the OpenStack VM Name.
+ *
+ * @param header        Pointer to the ::EVENT_HEADER.
+ * @param entity_name   The source name to set.
+ *****************************************************************************/
+void evel_source_name_set(EVENT_HEADER * const header,
+                                    const char * const source_name)
+{
+  EVEL_ENTER();
+
+  /***************************************************************************/
+  /* Check preconditions and assign the new value.                           */
+  /***************************************************************************/
+  assert(header != NULL);
+  assert(source_name != NULL);
+
+  /***************************************************************************/
+  /* Free the previously allocated memory and replace it with a copy of the  */
+  /* provided one.                                                           */
+  /***************************************************************************/
+  free(header->source_name);
+  header->source_name = strdup(source_name);
+
+  EVEL_EXIT();
+}
+
+/**************************************************************************//**
  * Set the Reporting Entity Id property of the event header.
  *
  * @note The Reporting Entity Id defaults to the OpenStack VM UUID.
@@ -435,6 +464,35 @@ void evel_reporting_entity_id_set(EVENT_HEADER * const header,
   /***************************************************************************/
   evel_free_option_string(&header->reporting_entity_id);
   evel_force_option_string(&header->reporting_entity_id, entity_id);
+
+  EVEL_EXIT();
+}
+
+/**************************************************************************//**
+ * Set the Source Id property of the event header.
+ *
+ * @note The Source Id defaults to the OpenStack VM UUID.
+ *
+ * @param header        Pointer to the ::EVENT_HEADER.
+ * @param entity_id     The Source id to set.
+ *****************************************************************************/
+void evel_source_id_set(EVENT_HEADER * const header,
+                        const char * const source_id)
+{
+  EVEL_ENTER();
+
+  /***************************************************************************/
+  /* Check preconditions and assign the new value.                           */
+  /***************************************************************************/
+  assert(header != NULL);
+  assert(source_id != NULL);
+
+  /***************************************************************************/
+  /* Free the previously allocated memory and replace it with a copy of the  */
+  /* provided one.  Note that evel_force_option_string strdups entity_id.    */
+  /***************************************************************************/
+  evel_free_option_string(&header->source_id);
+  evel_force_option_string(&header->source_id, source_id);
 
   EVEL_EXIT();
 }

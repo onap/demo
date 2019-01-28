@@ -1,0 +1,62 @@
+{
+    "event": {
+        "commonEventHeader": {
+            "domain": "measurementsForVfScaling",
+            "eventId": "mvfs000000002",
+            "eventName": "Measurement_vFirewall-AT&T_nicPerformance",
+            "eventType": "applicationVnf",
+            "lastEpochMicrosec": 1548492802113484,
+            "nfNamingCode": "AFX",
+            "nfcNamingCode": "AFX",
+            "priority": "Normal",
+            "reportingEntityId": "cc305d54-75b4-431b-adb2-eb6b9e541234",
+            "reportingEntityName": "ibcx0001vm002oam001",
+            "sequence": 0,
+            "sourceId": "de305d54-75b4-431b-adb2-eb6b9e546014",
+            "sourceName": "scfx0001vm002cap001",
+            "startEpochMicrosec": 1548492780026901,
+            "version": 3.0
+        },
+        "measurementsForVfScalingFields": {
+            "cpuUsageArray": [
+                {
+                    "cpuIdentifier": "Cpu1",
+                    "cpuIdle": 33.3,
+                    "cpuUsageSystem": 0.0,
+                    "cpuUsageUser": 66.7,
+                    "percentUsage": 0.0
+                }
+            ],
+            "measurementInterval": 20,
+            "measurementsForVfScalingVersion": 2.0,
+            "requestRate": 0,
+            "vNicPerformanceArray": [
+                {
+                    "receivedOctetsDelta": 2721.0,
+                    "receivedTotalPacketsDelta": 18.0,
+                    "transmittedOctetsDelta": 2721.0,
+                    "transmittedTotalPacketsDelta": 18.0,
+                    "vNicIdentifier": "lo",
+                    "valuesAreSuspect": "true"
+                },
+                {
+                    "receivedOctetsDelta": 531.0,
+                    "receivedTotalPacketsDelta": 6.0,
+                    "transmittedOctetsDelta": 525.0,
+                    "transmittedTotalPacketsDelta": 6.0,
+                    "vNicIdentifier": "enp0s3",
+                    "valuesAreSuspect": "true"
+                },
+                {
+                    "receivedOctetsDelta": 0.0,
+                    "receivedTotalPacketsDelta": 0.0,
+                    "transmittedOctetsDelta": 0.0,
+                    "transmittedTotalPacketsDelta": 0.0,
+                    "vNicIdentifier": "docker0",
+                    "valuesAreSuspect": "true"
+                }
+            ]
+        }
+    }
+}
+

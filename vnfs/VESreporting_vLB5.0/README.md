@@ -22,5 +22,6 @@ To run the vpp_measurement_reporter, please execute the following steps:
  - Make the go-client.sh script executable
         chmod +x go-client.sh
 
- - Run the go-client.sh script
+ - Run one of the scripts based on one collector or 2 collectors
         ./go-client.sh  
+        ./go-client_2_collector.sh
