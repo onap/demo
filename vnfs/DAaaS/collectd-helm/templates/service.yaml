@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: collectd-prometheus-metrics-endpoint
+  labels:
+    app: collectd
+    collector: collectd
+spec:
+  ports:
+  - name: collectd-prometheus
+    port: {{ .Values.prometheus_port }}
+    targetPort: collectd
+  selector:
+    app: {{ template "name" . }}
+    collector: collectd
+    release: {{ .Release.Name }}
+  type: ClusterIP
