@@ -1,7 +1,7 @@
 ##########################################################################
 #
 #==================LICENSE_START==========================================
-# 
+#
 #
 # Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
 #
@@ -41,6 +41,22 @@ parameters:
     type: string
     label: Flavor
     description: Type of instance (flavor) to be used
+  vdns_image_name:
+    type: string
+    label: Image name or ID
+    description: Image to be used for compute instance
+  vdns_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used
+  vpg_image_name:
+    type: string
+    label: Image name or ID
+    description: Image to be used for compute instance
+  vpg_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used
   public_net_id:
     type: string
     label: Public network name or ID
@@ -73,31 +89,31 @@ parameters:
     type: string
     label: ONAP private network CIDR
     description: The CIDR of the protected private network
-  vlb_private_ip_0:
+  vlb_int_private_ip_0:
     type: string
     label: vLoadBalancer private IP address towards the private network
     description: Private IP address that is assigned to the vLoadBalancer to communicate with the vDNSs
-  vlb_private_ip_1:
+  vlb_onap_private_ip_0:
     type: string
     label: vLoadBalancer private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vLoadBalancer to communicate with ONAP components
-  vlb_private_ip_2:
+  vlb_int_pktgen_private_ip_0:
     type: string
     label: vLoadBalancer private IP address towards the vPacketGen network
     description: Private IP address that is assigned to the vLoadBalancer to communicate with vPacketGen
-  vdns_private_ip_0:
+  vdns_int_private_ip_0:
     type: string
     label: vDNS private IP address towards the private network
     description: Private IP address that is assigned to the vDNS to communicate with the vLoadBalancer
-  vdns_private_ip_1:
+  vdns_onap_private_ip_0:
     type: string
     label: vDNS private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vDNS to communicate with ONAP components
-  vpg_private_ip_0:
+  vpg_int_pktgen_private_ip_0:
     type: string
     label: vPacketGen private IP address towards the vPacketGen private network
     description: Private IP address that is assigned to the vPacketGen to communicate with the vLoadBalancer
-  vpg_private_ip_1:
+  vpg_onap_private_ip_0:
     type: string
     label: vPacketGen private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vPacketGen to communicate with ONAP components
@@ -129,6 +145,10 @@ parameters:
     type: string
     label: VNF ID
     description: The VNF ID is provided by ONAP
+  vnf_name:
+    type: string
+    label: VNF NAME
+    description: The VNF NAME is provided by ONAP
   vf_module_id:
     type: string
     label: vFirewall module ID
@@ -168,13 +188,15 @@ parameters:
   nexus_artifact_repo:
     type: string
     description: Root URL for the Nexus repository for Maven artifacts.
-    default: "https://nexus.onap.org"
+    # Default parameters prohibited
+    # default: "https://nexus.onap.org"
   sec_group:
     type: string
     description: ONAP Security Group
-  dns_enabled:
-    type: string
-    description: Enable/disable DNS (by default use true)
+  # all params must be used
+  #dns_enabled:
+  #  type: string
+  #  description: Enable/disable DNS (by default use true)
 
 #############
 #           #
@@ -184,106 +206,140 @@ parameters:
 
 resources:
 
-  random-str:
+  random-str_0:
     type: OS::Heat::RandomString
     properties:
       length: 4
 
-  my_keypair:
+  my_keypair_0:
     type: OS::Nova::KeyPair
     properties:
-      name: 
+      name:
         str_replace:
-          template: base_rand
+          template: vnfname_base_rand
           params:
             base: { get_param: key_name }
-            rand: { get_resource: random-str }  
+            rand: { get_resource: random-str_0 }
+            vnfname: { get_param: vnf_name }
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  vlb_private_network:
+  # NETWORK_ROLE: private
+  int_private_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: vlb_private_net_id }
+      name:
+        str_replace:
+          template: vnfname_privatenetid
+          params:
+            privatenetid: { get_param: vlb_private_net_id }
+            vnfname: { get_param: vnf_name }
 
-  vlb_private_subnet:
+  # NETWORK_ROLE: private
+  int_private_subnet_0:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: vlb_private_net_id }
-      network_id: { get_resource: vlb_private_network }
+      name:
+        str_replace:
+          template: vnfname_privatenetid_subnet
+          params:
+            privatenetid: { get_param: vlb_private_net_id }
+            vnfname: { get_param: vnf_name }
+      network: { get_resource: int_private_network }
       cidr: { get_param: vlb_private_net_cidr }
 
-  pktgen_private_network:
+  # NETWORK_ROLE: pktgen_private
+  int_pktgen_private_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: pktgen_private_net_id }
+      name:
+        str_replace:
+          template: vnfname_privatenetid
+          params:
+            privatenetid: { get_param: pktgen_private_net_id }
+            vnfname: { get_param: vnf_name }
 
-  pktgen_private_subnet:
+  # NETWORK_ROLE: pktgen_private
+  int_pktgen_private_subnet_0:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: pktgen_private_net_id }
-      network_id: { get_resource: pktgen_private_network }
+      name:
+        str_replace:
+          template: vnfname_privatenetid_subnet
+          params:
+            privatenetid: { get_param: pktgen_private_net_id }
+            vnfname: { get_param: vnf_name }
+      network: { get_resource: int_pktgen_private_network }
       cidr: { get_param: pktgen_private_net_cidr }
 
-  vlb_private_0_port:
+  # NETWORK_ROLE: private
+  # VM_TYPE: vlb
+  # PORT_TYPE: internal
+  vlb_0_int_private_port_0:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: vlb_private_network }
-      fixed_ips: [{"subnet": { get_resource: vlb_private_subnet }, "ip_address": { get_param: vlb_private_ip_0 }}]
+      network: { get_resource: int_private_network }
+      fixed_ips: [{"subnet": { get_resource: int_private_subnet_0 }, "ip_address": { get_param: vlb_int_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vlb_private_1_port:
+  # NETWORK_ROLE: onap_private
+  # VM_TYPE: vlb
+  # PORT_TYPE: external
+  vlb_0_onap_private_port_0:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vlb_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vlb_onap_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vlb_private_2_port:
+  vlb_0_int_pktgen_private_port_0:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: pktgen_private_network }
-      fixed_ips: [{"subnet": { get_resource: pktgen_private_subnet }, "ip_address": { get_param: vlb_private_ip_2 }}]
+      network: { get_resource: int_pktgen_private_network }
+      fixed_ips: [{"subnet": { get_resource: int_pktgen_private_subnet_0 }, "ip_address": { get_param: vlb_int_pktgen_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vlb_0:
+  vlb_server_0:
     type: OS::Nova::Server
     properties:
       image: { get_param: vlb_image_name }
       flavor: { get_param: vlb_flavor_name }
       name: { get_param: vlb_name_0 }
-      key_name: { get_resource: my_keypair }
+      key_name: { get_resource: my_keypair_0 }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vlb_private_0_port }
-        - port: { get_resource: vlb_private_1_port }
-        - port: { get_resource: vlb_private_2_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+        - port: { get_resource: vlb_0_int_private_port_0 }
+        - port: { get_resource: vlb_0_onap_private_port_0 }
+        - port: { get_resource: vlb_0_int_pktgen_private_port_0 }
+      metadata:
+        vnf_id: { get_param: vnf_id }
+        vf_module_id: { get_param: vf_module_id }
+        vnf_name: { get_param: vnf_name }
       user_data_format: RAW
       user_data:
         str_replace:
           params:
             __dcae_collector_ip__: { get_param: dcae_collector_ip }
             __dcae_collector_port__: { get_param: dcae_collector_port }
-            __ip_to_dns_net__: { get_param: vlb_private_ip_0 }
-            __ip_to_pktgen_net__: { get_param: vlb_private_ip_2 }
-            __oam_vpktgen_ip__: { get_param: vpg_private_ip_1 }
-            __oam_vdns_ip__: { get_param: vdns_private_ip_1 }
+            __ip_to_dns_net__: { get_param: vlb_int_private_ip_0 }
+            __ip_to_pktgen_net__: { get_param: vlb_int_pktgen_private_ip_0 }
+            __oam_vpktgen_ip__: { get_param: vpg_onap_private_ip_0 }
+            __oam_vdns_ip__: { get_param: vdns_onap_private_ip_0 }
             __vip__: { get_param: vip }
             __gre_ipaddr__: { get_param: gre_ipaddr }
-            __pktgen_ipaddr__: { get_param: vpg_private_ip_0 }
-            __vdns_ipaddr__: { get_param: vdns_private_ip_0 }
-            __oam_private_ipaddr__: { get_param: vlb_private_ip_1 }
+            __pktgen_ipaddr__: { get_param: vpg_int_pktgen_private_ip_0 }
+            __vdns_ipaddr__: { get_param: vdns_int_private_ip_0 }
+            __oam_private_ipaddr__: { get_param: vlb_onap_private_ip_0 }
             __demo_artifacts_version__: { get_param: demo_artifacts_version }
             __nb_api_version__: { get_param: nb_api_version }
             __install_script_version__: { get_param: install_script_version }
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
             __pktgen_private_net_cidr__: { get_param: pktgen_private_net_cidr }
-            __pktgen_mac__: { get_attr: [vpg_private_0_port, mac_address] }
+            __pktgen_mac__: { get_attr: [vpg_0_int_pktgen_private_port_0, mac_address] }
             __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
@@ -323,43 +379,46 @@ resources:
             ./v_lb_install.sh
 
 
-  vdns_private_0_port:
+  vdns_0_int_private_port_0:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: vlb_private_network }
-      fixed_ips: [{"subnet": { get_resource: vlb_private_subnet }, "ip_address": { get_param: vdns_private_ip_0 }}]
+      network: { get_resource: int_private_network }
+      fixed_ips: [{"subnet": { get_resource: int_private_subnet_0 }, "ip_address": { get_param: vdns_int_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vdns_private_1_port:
+  vdns_0_onap_private_port_0:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vdns_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vdns_onap_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vdns_0:
+  vdns_server_0:
     type: OS::Nova::Server
     properties:
-      image: { get_param: vlb_image_name }
-      flavor: { get_param: vlb_flavor_name }
+      image: { get_param: vdns_image_name }
+      flavor: { get_param: vdns_flavor_name }
       name: { get_param: vdns_name_0 }
-      key_name: { get_resource: my_keypair }
+      key_name: { get_resource: my_keypair_0 }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vdns_private_0_port }
-        - port: { get_resource: vdns_private_1_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+        - port: { get_resource: vdns_0_int_private_port_0 }
+        - port: { get_resource: vdns_0_onap_private_port_0 }
+      metadata:
+        vnf_id: { get_param: vnf_id }
+        vf_module_id: { get_param: vf_module_id }
+        vnf_name: { get_param: vnf_name }
       user_data_format: RAW
       user_data:
         str_replace:
           params:
-            __lb_oam_int__: { get_param: vlb_private_ip_1 }
-            __lb_private_ipaddr__: { get_param: vlb_private_ip_0 }
-            __lb_to_pktgen_if__: { get_param: vlb_private_ip_2}
-            __local_private_ipaddr__: { get_param: vdns_private_ip_0 }
-            __oam_private_ipaddr__: { get_param: vdns_private_ip_1 }
+            __lb_oam_int__: { get_param: vlb_onap_private_ip_0 }
+            __lb_private_ipaddr__: { get_param: vlb_int_private_ip_0 }
+            __lb_to_pktgen_if__: { get_param: vlb_int_pktgen_private_ip_0}
+            __local_private_ipaddr__: { get_param: vdns_int_private_ip_0 }
+            __oam_private_ipaddr__: { get_param: vdns_onap_private_ip_0 }
             __nb_api_version__: { get_param: nb_api_version }
             __install_script_version__: { get_param: install_script_version }
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
@@ -394,47 +453,51 @@ resources:
             ./v_dns_install.sh
 
 
-  vpg_private_0_port:
+  vpg_0_int_pktgen_private_port_0:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: pktgen_private_network }
-      fixed_ips: [{"subnet": { get_resource: pktgen_private_subnet }, "ip_address": { get_param: vpg_private_ip_0 }}]
+      network: { get_resource: int_pktgen_private_network }
+      fixed_ips: [{"subnet": { get_resource: int_pktgen_private_subnet_0 }, "ip_address": { get_param: vpg_int_pktgen_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vpg_private_1_port:
+  vpg_0_onap_private_port_0:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vpg_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vpg_onap_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vpg_0:
+  vpg_server_0:
     type: OS::Nova::Server
     properties:
-      image: { get_param: vlb_image_name }
-      flavor: { get_param: vlb_flavor_name }
+      image: { get_param: vpg_image_name }
+      flavor: { get_param: vpg_flavor_name }
       name: { get_param: vpg_name_0 }
-      key_name: { get_resource: my_keypair }
+      key_name: { get_resource: my_keypair_0 }
+      metadata:
+        vnf_id: { get_param: vnf_id }
+        vf_module_id: { get_param: vf_module_id }
+        vnf_name: { get_param: vnf_name }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vpg_private_0_port }
-        - port: { get_resource: vpg_private_1_port }
+        - port: { get_resource: vpg_0_int_pktgen_private_port_0 }
+        - port: { get_resource: vpg_0_onap_private_port_0 }
       user_data_format: RAW
       user_data:
         str_replace:
           params:
-            __local_private_ipaddr__: { get_param: vpg_private_ip_0 }
-            __oam_private_ipaddr__: { get_param: vpg_private_ip_1 }
+            __local_private_ipaddr__: { get_param: vpg_int_pktgen_private_ip_0 }
+            __oam_private_ipaddr__: { get_param: vpg_onap_private_ip_0 }
             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
             __pktgen_private_net_cidr__: { get_param: pktgen_private_net_cidr }
-            __vlb_ipaddr__: { get_param: vlb_private_ip_2 }
+            __vlb_ipaddr__: { get_param: vlb_int_pktgen_private_ip_0 }
             __demo_artifacts_version__: { get_param: demo_artifacts_version }
             __nb_api_version__: { get_param: nb_api_version }
             __install_script_version__: { get_param: install_script_version }
             __pg_int__: { get_param: pg_int }
-            __vlb_mac__: { get_attr: [vlb_private_2_port, mac_address] }
+            __vlb_mac__: { get_attr: [vlb_0_int_pktgen_private_port_0, mac_address] }
             __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
@@ -464,3 +527,9 @@ resources:
             cd /opt
             chmod +x v_packetgen_install.sh
             ./v_packetgen_install.sh
+
+outputs:
+  int_private_subnet_id:
+    value: { get_resource: int_private_subnet_0 }
+  int_private_net_id:
+    value: { get_resource: int_private_network }
