@@ -1,0 +1,3 @@
+unset http_proxy
+unset https_proxy
+sudo ./afx_ves_reporter 198.18.18.101 8080
