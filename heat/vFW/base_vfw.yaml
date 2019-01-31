@@ -41,6 +41,22 @@ parameters:
     type: string
     label: Flavor
     description: Type of instance (flavor) to be used
+  vpg_image_name:
+    type: string
+    label: Image name or ID
+    description: Image to be used for compute instance
+  vpg_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used
+  vsn_image_name:
+    type: string
+    label: Image name or ID
+    description: Image to be used for compute instance
+  vsn_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used
   public_net_id:
     type: string
     label: Public network name or ID
@@ -73,31 +89,35 @@ parameters:
     type: string
     label: ONAP private network CIDR
     description: The CIDR of the protected private network
-  vfw_private_ip_0:
+  vfw_int_unprotected_private_ip_0:
     type: string
     label: vFirewall private IP address towards the unprotected network
     description: Private IP address that is assigned to the vFirewall to communicate with the vPacketGenerator
-  vfw_private_ip_1:
+  vfw_int_protected_private_ip_0:
     type: string
     label: vFirewall private IP address towards the protected network
     description: Private IP address that is assigned to the vFirewall to communicate with the vSink
-  vfw_private_ip_2:
+  vfw_onap_private_ip_0:
     type: string
     label: vFirewall private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vFirewall to communicate with ONAP components
-  vpg_private_ip_0:
+  vfw_int_protected_private_floating_ip:
+    type: string
+    label: same value as vpg_int_unprotected_private_ip_0  
+    description: IP to inform OpenStack to enable vfw protected private port to allow packets coming from the packet generator
+  vpg_int_unprotected_private_ip_0:
     type: string
     label: vPacketGenerator private IP address towards the unprotected network
     description: Private IP address that is assigned to the vPacketGenerator to communicate with the vFirewall
-  vpg_private_ip_1:
+  vpg_onap_private_ip_0:
     type: string
     label: vPacketGenerator private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vPacketGenerator to communicate with ONAP components
-  vsn_private_ip_0:
+  vsn_int_protected_private_ip_0:
     type: string
     label: vSink private IP address towards the protected network
     description: Private IP address that is assigned to the vSink to communicate with the vFirewall
-  vsn_private_ip_1:
+  vsn_onap_private_ip_0:
     type: string
     label: vSink private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vSink to communicate with ONAP components
@@ -117,6 +137,10 @@ parameters:
     type: string
     label: VNF ID
     description: The VNF ID is provided by ONAP
+  vnf_name:
+    type: string
+    label: VNF NAME
+    description: The VNF NAME is provided by ONAP
   vf_module_id:
     type: string
     label: vFirewall module ID
@@ -148,7 +172,8 @@ parameters:
   nexus_artifact_repo:
     type: string
     description: Root URL for the Nexus repository for Maven artifacts.
-    default: "https://nexus.onap.org"
+    # default values prohibited
+    #default: "https://nexus.onap.org"
   cloud_env:
     type: string
     label: Cloud environment
@@ -156,15 +181,16 @@ parameters:
   sec_group:
     type: string
     description: ONAP Security Group
-  sdnc_model_name:
-    type: string
-    description: SDNC Model Name metatada
-  sdnc_model_version:
-    type: string
-    description: SDNC Model Version metatada
-  sdnc_artifact_name:
-    type: string
-    description: SDNC Artifact Name metatada
+  # Unused in template
+  #sdnc_model_name:
+  #  type: string
+  #  description: SDNC Model Name metatada
+  #sdnc_model_version:
+  #  type: string
+  #  description: SDNC Model Version metatada
+  #sdnc_artifact_name:
+  #  type: string
+  #  description: SDNC Artifact Name metatada
 
 #############
 #           #
@@ -183,62 +209,93 @@ resources:
     properties:
       name:
         str_replace:
-          template: base_rand
+          template: vnfname_base_rand
           params:
             base: { get_param: key_name }
             rand: { get_resource: random-str }
+            vnfname: { get_param: vnf_name }
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  unprotected_private_network:
+  # NETWORK_ROLE: unprotected_private
+  # NETWORK_TYPE: internal
+  int_unprotected_private_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: unprotected_private_net_id }
+      name:
+        str_replace:
+          template: vnfname_netid
+          params:
+            netid: { get_param: unprotected_private_net_id }
+            vnfname: { get_param: vnf_name }
 
-  protected_private_network:
+  # NETWORK_ROLE: protected_private
+  # NETWORK_TYPE: internal
+  int_protected_private_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: protected_private_net_id }
+      name:
+        str_replace:
+          template: vnfname_netid
+          params:
+            netid: { get_param: protected_private_net_id }
+            vnfname: { get_param: vnf_name }
 
-  unprotected_private_subnet:
+  # NETWORK_ROLE: unprotected_private
+  # NETWORK_TYPE: internal
+  int_unprotected_private_subnet:
     type: OS::Neutron::Subnet
     properties:
-      network_id: { get_resource: unprotected_private_network }
+      network: { get_resource: int_unprotected_private_network }
       cidr: { get_param: unprotected_private_net_cidr }
 
-  protected_private_subnet:
+  # NETWORK_ROLE: protected_private
+  # NETWORK_TYPE: internal
+  int_protected_private_subnet:
     type: OS::Neutron::Subnet
     properties:
-      network_id: { get_resource: protected_private_network }
+      network: { get_resource: int_protected_private_network }
       cidr: { get_param: protected_private_net_cidr }
 
-  # Virtual Firewall instantiation
-  vfw_private_0_port:
+  ### Virtual Firewall instantiation ###
+
+  # VM_TYPE: vfw
+  # NETWORK_ROLE: protected_private
+  # NETWORK_TYPE: internal
+  vfw_0_int_unprotected_private_port_0:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: unprotected_private_network }
-      fixed_ips: [{"subnet": { get_resource: unprotected_private_subnet }, "ip_address": { get_param: vfw_private_ip_0 }}]
+      network: { get_resource: int_unprotected_private_network }
+      fixed_ips: [{"subnet": { get_resource: int_unprotected_private_subnet }, "ip_address": { get_param: vfw_int_unprotected_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vfw_private_1_port:
+  # VM_TYPE: vfw
+  # NETWORK_ROLE: protected_private
+  # NETWORK_TYPE: internal
+  vfw_0_int_protected_private_port_0:
     type: OS::Neutron::Port
     properties:
-      allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
-      network: { get_resource: protected_private_network }
-      fixed_ips: [{"subnet": { get_resource: protected_private_subnet }, "ip_address": { get_param: vfw_private_ip_1 }}]
+      # this is a violation
+      allowed_address_pairs: [{ "ip_address": { get_param: vfw_int_protected_private_floating_ip }}]
+      network: { get_resource: int_protected_private_network }
+      fixed_ips: [{"subnet": { get_resource: int_protected_private_subnet }, "ip_address": { get_param: vfw_int_protected_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vfw_private_2_port:
+  # VM_TYPE: vfw
+  # NETWORK_ROLE: onap_private
+  # NETWORK_TYPE: external
+  vfw_0_onap_private_port_0:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vfw_private_ip_2 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vfw_onap_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vfw_0:
+  # VM_TYPE: vfw
+  vfw_server_0:
     type: OS::Nova::Server
     properties:
       image: { get_param: vfw_image_name }
@@ -247,10 +304,13 @@ resources:
       key_name: { get_resource: my_keypair }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vfw_private_0_port }
-        - port: { get_resource: vfw_private_1_port }
-        - port: { get_resource: vfw_private_2_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+        - port: { get_resource: vfw_0_int_unprotected_private_port_0 }
+        - port: { get_resource: vfw_0_int_protected_private_port_0 }
+        - port: { get_resource: vfw_0_onap_private_port_0 }
+      metadata:
+        vnf_id: { get_param: vnf_id }
+        vf_module_id: { get_param: vf_module_id }
+        vnf_name: { get_param: vnf_name }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -259,9 +319,9 @@ resources:
             __dcae_collector_port__ : { get_param: dcae_collector_port }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
-            __vfw_private_ip_0__ : { get_param: vfw_private_ip_0 }
-            __vfw_private_ip_1__ : { get_param: vfw_private_ip_1 }
-            __vfw_private_ip_2__ : { get_param: vfw_private_ip_2 }
+            __vfw_private_ip_0__ : { get_param: vfw_int_unprotected_private_ip_0 }
+            __vfw_private_ip_1__ : { get_param: vfw_int_protected_private_ip_0 }
+            __vfw_private_ip_2__ : { get_param: vfw_onap_private_ip_0 }
             __unprotected_private_net_cidr__ : { get_param: unprotected_private_net_cidr }
             __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
@@ -296,46 +356,50 @@ resources:
             ./v_firewall_install.sh
 
 
-  # Virtual Packet Generator instantiation
-  vpg_private_0_port:
+  ### Virtual Packet Generator instantiation ###
+
+  vpg_0_int_unprotected_private_port_0:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: unprotected_private_network }
-      fixed_ips: [{"subnet": { get_resource: unprotected_private_subnet }, "ip_address": { get_param: vpg_private_ip_0 }}]
+      network: { get_resource: int_unprotected_private_network }
+      fixed_ips: [{"subnet": { get_resource: int_unprotected_private_subnet }, "ip_address": { get_param: vpg_int_unprotected_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vpg_private_1_port:
+  vpg_0_onap_private_port_0:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vpg_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vpg_onap_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vpg_0:
+  vpg_server_0:
     type: OS::Nova::Server
     properties:
-      image: { get_param: vfw_image_name }
-      flavor: { get_param: vfw_flavor_name }
+      image: { get_param: vpg_image_name }
+      flavor: { get_param: vpg_flavor_name }
       name: { get_param: vpg_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vpg_private_0_port }
-        - port: { get_resource: vpg_private_1_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+        - port: { get_resource: vpg_0_int_unprotected_private_port_0 }
+        - port: { get_resource: vpg_0_onap_private_port_0 }
+      metadata:
+        vnf_id: { get_param: vnf_id }
+        vf_module_id: { get_param: vf_module_id }
+        vnf_name: { get_param: vnf_name }
       user_data_format: RAW
       user_data:
         str_replace:
           params:
-            __fw_ipaddr__: { get_param: vfw_private_ip_0 }
+            __fw_ipaddr__: { get_param: vfw_int_unprotected_private_ip_0 }
             __protected_net_cidr__: { get_param: protected_private_net_cidr }
-            __sink_ipaddr__: { get_param: vsn_private_ip_0 }
+            __sink_ipaddr__: { get_param: vsn_int_protected_private_ip_0 }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
-            __vpg_private_ip_0__ : { get_param: vpg_private_ip_0 }
-            __vpg_private_ip_1__ : { get_param: vpg_private_ip_1 }
+            __vpg_private_ip_0__ : { get_param: vpg_int_unprotected_private_ip_0 }
+            __vpg_private_ip_1__ : { get_param: vpg_onap_private_ip_0 }
             __unprotected_private_net_cidr__ : { get_param: unprotected_private_net_cidr }
             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
             __cloud_env__ : { get_param: cloud_env }
@@ -368,44 +432,48 @@ resources:
             ./v_packetgen_install.sh
 
 
-  # Virtual Sink instantiation
-  vsn_private_0_port:
+  ### Virtual Sink instantiation ###
+
+  vsn_0_int_protected_private_port_0:
     type: OS::Neutron::Port
     properties:
-      network: { get_resource: protected_private_network }
-      fixed_ips: [{"subnet": { get_resource: protected_private_subnet }, "ip_address": { get_param: vsn_private_ip_0 }}]
+      network: { get_resource: int_protected_private_network }
+      fixed_ips: [{"subnet": { get_resource: int_protected_private_subnet }, "ip_address": { get_param: vsn_int_protected_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vsn_private_1_port:
+  vsn_0_onap_private_port_0:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vsn_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vsn_onap_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vsn_0:
+  vsn_server_0:
     type: OS::Nova::Server
     properties:
-      image: { get_param: vfw_image_name }
-      flavor: { get_param: vfw_flavor_name }
+      image: { get_param: vsn_image_name }
+      flavor: { get_param: vsn_flavor_name }
       name: { get_param: vsn_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vsn_private_0_port }
-        - port: { get_resource: vsn_private_1_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+        - port: { get_resource: vsn_0_int_protected_private_port_0 }
+        - port: { get_resource: vsn_0_onap_private_port_0 }
+      metadata:
+        vnf_id: { get_param: vnf_id }
+        vf_module_id: { get_param: vf_module_id }
+        vnf_name: { get_param: vnf_name }
       user_data_format: RAW
       user_data:
         str_replace:
           params:
-            __protected_net_gw__: { get_param: vfw_private_ip_1 }
+            __protected_net_gw__: { get_param: vfw_int_protected_private_ip_0 }
             __unprotected_net__: { get_param: unprotected_private_net_cidr }
             __install_script_version__ : { get_param: install_script_version }
-            __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
-            __vsn_private_ip_1__ : { get_param: vsn_private_ip_1 }
+            __vsn_private_ip_0__ : { get_param: vsn_int_protected_private_ip_0 }
+            __vsn_private_ip_1__ : { get_param: vsn_onap_private_ip_0 }
             __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
             __cloud_env__ : { get_param: cloud_env }
