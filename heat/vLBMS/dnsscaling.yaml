@@ -128,13 +128,9 @@ parameters:
   nexus_artifact_repo:
     type: string
     description: Root URL for the Nexus repository for Maven artifacts.
-    #default: "https://nexus.onap.org"
   sec_group:
     type: string
     description: ONAP Security Group
-  #dns_enabled:
-  #  type: string
-  #  description: Enable/disable DNS (by default use true)
 
 #############
 #           #

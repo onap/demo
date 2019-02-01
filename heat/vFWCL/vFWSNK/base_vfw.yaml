@@ -160,7 +160,6 @@ parameters:
   nexus_artifact_repo:
     type: string
     description: Root URL for the Nexus repository for Maven artifacts.
-    #default: "https://nexus.onap.org"
   cloud_env:
     type: string
     label: Cloud environment

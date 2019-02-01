@@ -172,8 +172,6 @@ parameters:
   nexus_artifact_repo:
     type: string
     description: Root URL for the Nexus repository for Maven artifacts.
-    # default values prohibited
-    #default: "https://nexus.onap.org"
   cloud_env:
     type: string
     label: Cloud environment
@@ -181,16 +179,6 @@ parameters:
   sec_group:
     type: string
     description: ONAP Security Group
-  # Unused in template
-  #sdnc_model_name:
-  #  type: string
-  #  description: SDNC Model Name metatada
-  #sdnc_model_version:
-  #  type: string
-  #  description: SDNC Model Version metatada
-  #sdnc_artifact_name:
-  #  type: string
-  #  description: SDNC Artifact Name metatada
 
 #############
 #           #
