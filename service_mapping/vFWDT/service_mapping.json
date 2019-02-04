@@ -1,0 +1,24 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vFWDT" : ["vFWDT/vFWSNK", "vFWDT/vPKG"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vFWDT"  : ["vFWSNK", "vPKG", "vFWSNK"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+    "vFWDT": []
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vFWDT": []
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vFWDT": [{"isBase" : "true",   "template" : "vfwdt_vfw0_preload.template", "name_pattern": "base_vfw0"},
+                 {"isBase" : "true",   "template" : "vfwdt_vfw1_preload.template", "name_pattern": "base_vfw1"},
+                 {"isBase" : "true",  "template" : "vfwdt_vfwsnk0_preload.template", "name_pattern": "base_vsnk0"},
+                 {"isBase" : "true",  "template" : "vfwdt_vfwsnk1_preload.template", "name_pattern": "base_vsnk1"},
+                 {"isBase" : "true",  "template" : "vfwdt_vpkg_preload.template", "name_pattern": "base_vpkg"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+	   "vFWDT": "vfw_name_0"
+   } 
+}
