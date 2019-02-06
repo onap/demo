@@ -1,0 +1,20 @@
+---
+
+- name: Apply role kolla
+  gather_facts: false
+  hosts:
+    - deploy
+  tags:
+    - kolla
+  roles:
+    - role: kolla
+
+- name: Apply role onap
+  gather_facts: false
+  hosts:
+    - deploy
+  tags:
+    - onap
+  roles:
+    - role: onap
+

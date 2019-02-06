@@ -1,0 +1,96 @@
+---
+
+# OS that deploy host is running [centos, ubuntu]
+os: "centos"
+
+container_config_directory: "/opt/onapDevEnv/config_files"
+
+
+###################
+# Kolla options
+###################
+
+# Change Not Needed - Valid options are [ centos, oraclelinux, ubuntu ]
+dev_kolla_base_distro: "centos"
+# Change Not Needed - Valid options are [ binary, source ]
+dev_kolla_install_type: "binary"
+# Change Not Needed - OpenStack Release to use
+dev_kolla_openstack_release: "pike"
+
+### Change Required - # This should be a VIP, an unused IP on your network that will float between
+## the hosts running keepalived for high-availability. If you want to run an
+## All-In-One without haproxy and keepalived, you can set enable_haproxy to no
+## in "OpenStack options" section, and set this value to the IP of your
+## 'network_interface' as set in the Networking section below.
+dev_kolla_internal_vip: "10.10.10.254"
+
+### Change Required - must be unique on network # Arbitrary unique number from 0..255
+dev_kolla_keepalived_router_id: "210"
+
+dev_keystone_admin_password: "OZzD0e9rPt49fFj87WRFm5ASw7LERQBgWe6hH2uc"
+
+# Kolla Deploy Host Specification - hostname or IP Address # These hostnames must be resolvable from
+## your deployment host
+control01: "kolla-host neutron_external_interface=eth0 api_interface=em1 storage_interface=em1 tunnel_interface=em1"
+control02:
+control03:
+network01:
+network02:
+compute01:
+compute02:
+compute03:
+compute04:
+compute05:
+compute06:
+monitoring01:
+storage01:
+deployment: "localhost       ansible_connection=local"
+
+kolla_bootstrap: "no"
+
+###################
+# Rancher options
+###################
+
+### Change Required - specify OpenStack Project Options
+OS_PROJECT_ID: 1e097c6713e74fd7ac8e4295e605ee1e
+OS_PROJECT_NAME: DEV-01
+OS_USER_DOMAIN_NAME: Default
+OS_USERNAME: demo
+OS_PASSWORD: onapdemo
+OS_AUTH_URL: http://10.12.25.2:5000/v3
+OS_IDENTITY_API_VERSION: 3
+OS_REGION_NAME: RegionOne
+OS_INTERFACE: public
+
+
+
+###################
+# ONAP options
+###################
+onap_version: "casablanca"
+
+### Change Required - Specify ONAP Deploy Options
+ubuntu_1604_image: "ubuntu-16-04-cloud-amd64"
+ubuntu_1404_image: "ubuntu-14-04-cloud-amd64"
+
+apt_proxy: linux-ftp.jf.intel.com/pub/mirrors/ubuntu/
+docker_proxy: nexus3.onap.org
+rancher_vm_flavor: m1.large
+k8s_vm_flavor: m1.xlarge
+etcd_vm_flavor: m1.medium
+orch_vm_flavor: m1.medium
+
+public_net_id: 971040b2-7059-49dc-b220-4fab50cb2ad4
+
+oam_network_cidr: 10.0.0.0/16
+
+integration_gerrit_branch: master
+
+helm_deploy_delay: 2.5m
+
+### Change Required - Integration Override Variables
+openStackKeyStoneUrl: "http://10.166.34.133:5000/v2.0"
+vnfPubKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKXDgoo3+WOqcUG8/5uUbk81+yczgwC4Y8ywTmuQqbNxlY1oQ0YxdMUqUnhitSXs5S/yRuAVOYHwGg2mCs20oAINrP+mxBI544AMIb9itPjCtgqtE2EWo6MmnFGbHB4Sx3XioE7F4VPsh7japsIwzOjbrQe+Mua1TGQ5d4nfEOQaaglXLLPFfuc7WbhbJbK6Q7rHqZfRcOwAMXgDoBqlyqKeiKwnumddo2RyNT8ljYmvB6buz7KnMinzo7qB0uktVT05FH9Rg0CTWH5norlG5qXgP2aukL0gk1ph8iAt7uYLf1ktp+LJI2gaF6L0/qli9EmVCSLr1uJ38Q8CBflhkh"
+demoArtifactsVersion: "1.3.0"
+scriptVersion: "1.3.0"
