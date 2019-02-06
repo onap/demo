@@ -1,0 +1,134 @@
+---
+
+- name: Update Hosts
+  command: "{{ 'yum' if os == 'centos' else ('apt-get' if os == 'ubuntu') }} update -y"
+  when: inventory_hostname in groups['kube-master', 'kube-node']
+  ignore_errors: yes
+
+# Install krd dependencies on targets
+- name: Unarchive Go
+  unarchive:
+    src: https://dl.google.com/go/{{ go_tarball }}
+    dest: /usr/local/
+    remote_src: yes
+  when: inventory_hostname in groups['kube-master', 'kube-node']
+  environment: "{{proxy_env}}"
+
+- name: Put Go In Path
+  command: |
+    sed -i "s|^PATH=.*|PATH=\"$PATH\"|" /etc/environment
+  when: inventory_hostname in groups['kube-master', 'kube-node']
+
+- name: Install docker
+  package:
+    name: "{{ 'docker' if os == 'centos' else ('docker.io' if os == 'ubuntu') }}"
+    state: present
+  when: inventory_hostname in groups['kube-master', 'kube-node']
+  environment: "{{proxy_env}}"
+  ignore_errors: yes
+
+- name: Install python pip
+  package:
+    name: "python-pip"
+    state: present
+  when: inventory_hostname in groups['kube-master', 'kube-node']
+  environment: "{{proxy_env}}"
+
+- name: Install ansible
+  package:
+    name: "ansible"
+    state: present
+
+- name: Upgrade pip
+  pip:
+    name: "pip"
+    extra_args: "--upgrade"
+  when: inventory_hostname in groups['kube-master', 'kube-node']
+  when: inventory_hostname in groups['krd']
+
+- name: Upgrade Ansible to latest
+  pip:
+    name: "ansible"
+    extra_args: "--upgrade"
+  when: inventory_hostname in groups['kube-master', 'kube-node']
+
+- name: Set Environment Variables
+  command: |
+    echo "export OVN_CENTRAL_ADDRESS={{ ovn_central_address }}:6641" | tee --append /etc/environment
+    echo "export KUBE_CONFIG_DIR=/opt/kubeconfig" | tee --append /etc/environment
+  when: inventory_hostname in groups['kube-master', 'kube-node']
+
+# Install Kubespray and dependencies on deploy host
+- name: Unarchive Kubespray
+  unarchive:
+    src: https://github.com/kubernetes-incubator/kubespray/archive/{{ kubespray_tarball }}
+    dest: /opt/
+    remote_src: yes
+  when: inventory_hostname in groups['deploy']
+
+- name: Install kubespray Requirements
+  pip:
+    requirements: "{{ kubespray_install_dir }}/requirements.txt"
+  when: inventory_hostname in groups['deploy']
+
+- name: Create group_vars directory
+  file: 
+    path: "{{ kubespray_install_dir }}/inventory/group_vars/"
+    state: directory 
+    mode: 0755
+  ignore_errors: yes
+  when: inventory_hostname in groups['deploy']
+
+- name: Create group_vars/all directory
+  file:
+    path: "{{ kubespray_install_dir }}/inventory/group_vars/all"
+    state: directory
+    mode: 0755
+  ignore_errors: yes
+  when: inventory_hostname in groups['deploy']
+
+- name: Create group_vars/k8s directory
+  file:
+    path: "{{ kubespray_install_dir }}/inventory/group_vars/k8s-cluster"
+    state: directory
+    mode: 0755
+  ignore_errors: yes
+  when: inventory_hostname in groups['deploy']
+
+- name: Create Ansible Directory
+  file:
+    path: /etc/ansible/log/
+    state: directory
+    mode: 0755
+  ignore_errors: yes
+  when: inventory_hostname in groups['deploy']
+
+- name: Create Ansible Log File
+  file: 
+    path: /etc/ansible/log/ansible.log 
+    state: touch 
+    mode: 0755
+  ignore_errors: yes
+  when: inventory_hostname in groups['deploy']
+
+  # Install and Update KRD Config Files
+- name: Copying over krd config files
+  template:
+    src: "{{ role_path }}/templates/{{ item }}.j2"
+    dest: "{{ kubespray_install_dir }}/inventory/{{ 'group_vars/all/' if item == 'all.yml' else ('group_vars/k8s-cluster/' if item == 'k8s-cluster.yml' else '')}}{{ item }}"
+    force: yes
+    backup: yes
+  with_items:
+    - "multinode"
+    - "all.yml"
+    - "k8s-cluster.yml"
+  when: inventory_hostname in groups['deploy']
+
+- name: Clone ONAP Multicloud K8s
+  git:
+    repo: 'https://gerrit.onap.org/r/multicloud/k8s'
+    dest: "/opt/onap-deploy/multicloud/k8s"
+    clone: yes
+   # update: yes
+    version: "{{ onap_version }}"
+  when: inventory_hostname in groups['deploy']

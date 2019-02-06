@@ -1,0 +1,53 @@
+---
+###################################
+# Kolla (OpenStack Deploy) Options
+###################################
+
+# Change Not Needed - Valid options are [ centos, oraclelinux, ubuntu ]
+dev_kolla_base_distro: "centos"
+# Change Not Needed - Valid options are [ binary, source ]
+dev_kolla_install_type: "binary"
+# Change Not Needed - OpenStack Release to use
+dev_kolla_openstack_release: "pike"
+
+### Change Required - # This should be a VIP, an unused IP on your network that will float between
+## the hosts running keepalived for high-availability. If you want to run an
+## All-In-One without haproxy and keepalived, you can set enable_haproxy to no
+## in "OpenStack options" section, and set this value to the IP of your
+## 'network_interface' as set in the Networking section below.
+dev_kolla_internal_vip: "10.100.100.254"
+
+### Change Required - must be unique on network # Arbitrary unique number from 0..255
+dev_kolla_keepalived_router_id: "210"
+
+dev_keystone_admin_password: "OZzD0e9rPt49fFj87WRFm5ASw7LERQBgWe6hH2uc"
+
+# Kolla Deploy Host Specification - hostname or IP Address # These hostnames must be resolvable from
+## your deployment host
+control01: "kolla-host neutron_external_interface=eth0 api_interface=em1 storage_interface=em1 tunnel_interface=em1"
+control02:
+control03:
+network01:
+network02:
+compute01:
+compute02:
+compute03:
+compute04:
+compute05:
+compute06:
+compute07:
+compute08:
+compute09:
+compute10:
+compute11:
+compute12:
+compute13:
+compute14:
+compute15:
+compute16:
+monitoring01:
+storage01:
+deployment: "localhost       ansible_connection=local"
+
+kolla_bootstrap: "no"
+

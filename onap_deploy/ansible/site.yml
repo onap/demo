@@ -1,0 +1,42 @@
+---
+
+- name: Apply role kolla
+  gather_facts: false
+  hosts:
+    - deploy
+  tags:
+    - kolla
+  roles:
+    - role: kolla
+  vars_files:
+    - deploy-vars.yml
+    - kolla-vars.yml
+  environment: "{{proxy_env}}"
+
+- name: Apply role KRD
+  gather_facts: false
+  hosts:
+    - deploy
+    - krd
+  tags:
+    - krd
+  roles:
+    - role: krd
+  vars_files:
+    - deploy-vars.yml
+    - krd-vars.yml
+  environment: "{{proxy_env}}"
+
+- name: Apply role onap
+  gather_facts: false
+  hosts:
+    - deploy
+  tags:
+    - onap
+  roles:
+    - role: onap
+  vars_files:
+    - deploy-vars.yml
+    - onap-vars.yml
+  environment: "{{proxy_env}}"
+

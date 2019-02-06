@@ -1,0 +1,36 @@
+[all]
+{{ kubemaster01 + ' bin_dir=/usr/local/bin' | default('') }}
+{{ kubemaster02 + ' bin_dir=/usr/local/bin' | default('') }}
+{{ kubemaster03 + ' bin_dir=/usr/local/bin' | default('') }}
+{{ kubenode01 + ' bin_dir=/usr/local/bin' | default('') }}
+{{ kubenode02 + ' bin_dir=/usr/local/bin' | default('') }}
+
+[kube-master]
+{{ kubemaster01 | default('') }}
+{{ kubemaster02 | default('') }}
+{{ kubemaster03 | default('') }}
+
+[kube-node]
+{{ kubenode01 | default('') }}
+{{ kubenode02 | default('') }}
+
+[etcd]
+{{ kubemaster01 | default('') }}
+{{ kubemaster02 | default('') }}
+{{ kubemaster03 | default('') }}
+
+[ovn-central]
+{{ kubemaster01 | default('') }}
+
+[ovn-controller]
+{{ kubemaster02 | default('') }}
+{{ kubemaster03 | default('') }}
+{{ kubenode01 | default('') }}
+{{ kubenode02 | default('') }}
+
+[virtlet]
+{{ kubenode01 | default('') }}
+
+[k8s-cluster:children]
+kube-master
+kube-node

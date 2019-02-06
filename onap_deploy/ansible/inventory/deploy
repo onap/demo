@@ -1,0 +1,11 @@
+[deploy]
+localhost
+
+[kube-master]
+ao11-04 ansible_host=localhost  ip=10.11.22.4 #etcd_member_name=etcd1
+#ao11-37 ansible_host=localhost  # ip=10.3.0.2 etcd_member_name=etcd2
+#ao11-33 ansible_host=localhost  # ip=10.3.0.3 etcd_member_name=etcd3
+[kube-node]
+ao11-27 ansible_host=localhost  ip=10.11.22.27 #etcd_member_name=etcd4
+#ao11-11 ansible_host=localhost  # ip=10.3.0.5 etcd_member_name=etcd5
+

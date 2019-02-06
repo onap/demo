@@ -1,0 +1,68 @@
+---
+#############################################
+# Kubernetes Reference Deploy (KRD) Options
+#############################################
+kube_api_password: "test"
+
+deploy_os: centos
+
+ovn_central_address: "10.11.25.3"
+
+### ONAP Multicloud K8s Plugin Container Tag to pull <beijing|casablanca|master>
+onap_version: "casablanca"
+
+### Edit inventory/onap-dev-env with hostnames comment out lines not using below
+kubemaster01: "{{ hostvars[groups['kube-master'][0]].inventory_hostname}} {{ 'ip=' + hostvars[groups['kube-master'][0]].ip  | default('') }}"
+#kubemaster02: "{{ hostvars[groups['kube-master'][1]].inventory_hostname}} {{ 'ip=' + hostvars[groups['kube-master'][1]].ip | default('') }}"
+#kubemaster03: "{{ hostvars[groups['kube-master'][2]].inventory_hostname}} {{ 'ip=' + hostvars[groups['kube-master'][2]].ip | default('') }}"
+kubenode01: "{{ hostvars[groups['kube-node'][0]].inventory_hostname}}  {{ 'ip=' + hostvars[groups['kube-node'][0]].ip  | default('') }}"
+#kubenode02: "{{ hostvars[groups['kube-node'][1]].inventory_hostname}} {{ 'ip=' + hostvars[groups['kube-node'][1]].ip  | default('') }}"
+
+base_dest: "/tmp"
+
+multus_dest: "{{ base_dest }}/multus-cni"
+multus_source_type: "source"
+multus_version: "366f2120cb88c85deab6343b7062fd38fdb0ece9"
+multus_url: "https://github.com/ritusood/multus-cni"
+
+ovn_kubernetes_dest: "{{ base_dest }}/ovn-kubernetes"
+ovn_kubernetes_source_type: "tarball"
+ovn_kubernetes_version: "0.3.0"
+ovn_kubernetes_url: "https://github.com/openvswitch/ovn-kubernetes/archive/v{{ ovn_kubernetes_version }}.tar.gz"
+
+criproxy_dest: "{{ base_dest }}/criproxy"
+criproxy_source_type: "binary"
+criproxy_version: "0.14.0"
+criproxy_url: "https://github.com/Mirantis/criproxy/releases/download/v{{ criproxy_version }}/criproxy"
+
+virtlet_dest: "{{ base_dest }}/virtlet"
+virtlet_source_type: "binary"
+virtlet_version: "1.4.3"
+virtlet_url: "https://github.com/Mirantis/virtlet/releases/download/v{{ virtlet_version }}/virtletctl"
+
+nfd_dest: "{{ base_dest }}/nfd"
+nfd_source_type: "source"
+nfd_version: "175305b1ad73be7301ac94add475cec6fef797a9"
+nfd_url: "https://github.com/kubernetes-incubator/node-feature-discovery"
+
+istio_dest: "{{ base_dest }}/istio"
+istio_source_type: "tarball"
+istio_version: "1.0.3"
+istio_url: "https://github.com/istio/istio/releases/download/{{ istio_version }}/istio-{{ istio_version }}-linux.tar.gz"
+
+go_path: "{{ base_dest }}/go"
+ovn4nfv_dest: "{{ go_path }}/src/ovn4nfv-k8s-plugin"
+ovn4nfv_source_type: "source"
+ovn4nfv_version: "5026d1d89b05eac5e004279b742df6745a73d93a"
+ovn4nfv_url: "https://git.opnfv.org/ovn4nfv-k8s-plugin/"
+
+go_version: "1.11"
+go_tarball: "go{{ go_version }}.linux-amd64.tar.gz"
+
+kubespray_version: "2.8.2"
+kubespray_tarball: "v{{ kubespray_version }}.tar.gz"
+kubespray_install_dir: "/opt/kubespray-{{ kubespray_version }}"
+
+kubectl_version: "1.12.2"
+helm_client_version: "2.9.1"
+

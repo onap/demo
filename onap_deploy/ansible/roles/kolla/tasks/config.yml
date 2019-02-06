@@ -1,0 +1,75 @@
+---
+
+- name: Update Deploy host
+  command: "{{ 'yum' if os == 'centos' else ('apt-get' if os == 'ubuntu') }} update -y"
+
+# Install kolla and dependencies
+- name: Install python developement libraries
+  package:
+    name: "{{ 'python-devel' if os  == 'centos' else ('python-dev' if os  == 'ubuntu') }}"
+    state: present
+
+- name: Install libffi developement libraries
+  package:
+    name: "{{ 'libffi-devel' if os == 'centos' else ('libffi-dev' if os == 'ubuntu') }}"
+    state: present
+
+- name: Install gcc developement libraries
+  package:
+    name: "gcc"
+    state: present
+
+- name: Install openssl developement libraries
+  package:
+    name: "{{ 'openssl-devel' if os == 'centos' else ('libssl-dev' if os  == 'ubuntu') }}"
+    state: present
+
+- name: Install selinux python developement libraries
+  package:
+    name: "{{ 'libselinux-python' if os == 'centos' else ('python-selinux' if os == 'ubuntu') }}"
+    state: present
+
+- name: Install python setup tools
+  package:
+    name: "python-setuptools"
+    state: present
+  when: "os  == 'ubuntu'"
+
+- name: Install python pip
+  package:
+    name: "python-pip"
+    state: present
+
+- name: Install ansible
+  package:
+    name: "ansible"
+    state: present
+
+- name: Upgrade pip
+  pip:
+    name: "pip"
+    extra_args: "--upgrade"
+
+- name: Upgrade Ansible to latest
+  pip:
+    name: "ansible"
+    extra_args: "--upgrade"
+
+- name: Install and upgrade kolla-ansible to latest
+  pip:
+    name: "kolla-ansible"
+    extra_args: "--upgrade"
+    version: "5.0.4"
+
+# Install and Update Kolla Config Files
+- name: Copying over kolla config files
+  template:
+    src: "{{ role_path }}/templates/{{ item }}.j2"
+    dest: "/etc/kolla/{{ item }}"
+    force: yes
+    backup: yes
+  with_items:
+  - "globals.yml"
+  - "passwords.yml"
+  - "multinode"
+

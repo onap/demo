@@ -1,0 +1,49 @@
+---
+#################################
+# Rancher (ONAP Deploy) Options
+#################################
+
+### Change Required - specify OpenStack Project Options
+OS_PROJECT_ID: 1e097c6713e74fd7ac8e4295e605ee1e
+OS_PROJECT_NAME: DEV-01
+OS_USER_DOMAIN_NAME: Default
+OS_USERNAME: demo
+OS_PASSWORD: onapdemo
+OS_AUTH_URL: http://10.12.25.2:5000/v3
+OS_IDENTITY_API_VERSION: 3
+OS_REGION_NAME: RegionOne
+OS_INTERFACE: public
+
+
+
+##############################
+# ONAP (ONAP Deploy) options
+##############################
+### ONAP Container Tag  to pull <beijing|casablanca|master>
+onap_version: "casablanca"
+
+### Change Required - Specify ONAP Deploy Options
+ubuntu_1604_image: "ubuntu-16-04-cloud-amd64"
+ubuntu_1404_image: "ubuntu-14-04-cloud-amd64"
+
+apt_proxy: linux-ftp.jf.intel.com/pub/mirrors/ubuntu/
+docker_proxy: nexus3.onap.org
+rancher_vm_flavor: m1.large
+k8s_vm_flavor: m1.xlarge
+etcd_vm_flavor: m1.medium
+orch_vm_flavor: m1.medium
+
+public_net_id: 971040b2-7059-49dc-b220-4fab50cb2ad4
+
+oam_network_cidr: 10.0.0.0/16
+
+integration_gerrit_branch: master
+
+helm_deploy_delay: 2.5m
+
+### Change Required - Integration Override Variables
+openStackKeyStoneUrl: "http://10.166.34.133:5000/v2.0"
+vnfPubKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKXDgoo3+WOqcUG8/5uUbk81+yczgwC4Y8ywTmuQqbNxlY1oQ0YxdMUqUnhitSXs5S/yRuAVOYHwGg2mCs20oAINrP+mxBI544AMIb9itPjCtgqtE2EWo6MmnFGbHB4Sx3XioE7F4VPsh7japsIwzOjbrQe+Mua1TGQ5d4nfEOQaaglXLLPFfuc7WbhbJbK6Q7rHqZfRcOwAMXgDoBqlyqKeiKwnumddo2RyNT8ljYmvB6buz7KnMinzo7qB0uktVT05FH9Rg0CTWH5norlG5qXgP2aukL0gk1ph8iAt7uYLf1ktp+LJI2gaF6L0/qli9EmVCSLr1uJ38Q8CBflhkh"
+demoArtifactsVersion: "1.3.0"
+scriptVersion: "1.3.0"
+

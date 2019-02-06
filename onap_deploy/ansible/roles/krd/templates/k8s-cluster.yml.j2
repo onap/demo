@@ -1,0 +1,10 @@
+kube_api_anonymous_auth: true
+rbac_enabled: true
+kube_api_pwd: "{{ kube_api_password }}"
+kube_users:
+  kube:
+    pass: "{{ kube_api_password }}"
+    role: admin
+  root:
+    pass: "{{ kube_api_password }}"
+    role: admin

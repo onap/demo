@@ -1,0 +1,22 @@
+---
+- include: config.yml
+
+- name: Kolla Prepare Bootstrap Servers
+  command: kolla-ansible -i /etc/kolla/multinode bootstrap-servers
+  when: "kolla_bootstrap == 'yes'"
+  register: kolla_bootstrap
+- debug: 
+    var: kolla_bootstrap
+
+- name: Kolla Pre-Deployment Checks
+  command: kolla-ansible -i /etc/kolla/multinode prechecks
+  register: kolla_pre
+- debug: 
+    var: kolla_pre
+
+- name: Kolla Deploy
+  command: kolla-ansible -i /etc/kolla/multinode deploy
+  register: kolla
+- debug: 
+    var: kolla
+

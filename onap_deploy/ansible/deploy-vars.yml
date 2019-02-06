@@ -1,0 +1,19 @@
+---
+
+# OS that deploy host is running [centos, ubuntu]
+os: "centos"
+
+container_config_directory: "/opt/onapDevEnv/config_files"
+
+debug: "true"
+
+###################
+# Proxy Options
+###################
+proxy_env:
+    socks_proxy: ""
+    http_proxy: "http://proxy-jf.intel.com:911"
+    https_proxy: "http://proxy-jf.intel.com:911"
+    no_proxy: "localhost,<ip addresses of nodes>"
+    proxy_exceptions: ""
+

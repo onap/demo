@@ -1,0 +1,7 @@
+kube_log_level: {{ '5' if debug == 'true' else '2' }}
+kubeadm_enabled: true
+{{ ('http_proxy: ' + proxy_env.http_proxy) if proxy_env.http_proxy != '' }}
+{{ ('https_proxy: ' + proxy_env.https_proxy) if proxy_env.https_proxy != '' }}
+{{ ('no_proxy: ' + proxy_env.no_proxy) if proxy_env.no_proxy != '' }}
+boostrap_os: "{{ deploy_os }}
+bin_dir: /usr/local/bin
