@@ -1,0 +1,5 @@
+---
+- include: config.yml
+
+- name: Run ONAP Deploy Script
+  command: /opt/onap-deploy/integration/deployment/heat/onap-oom/scripts/deploy.sh -m docker-manifest.csv -q /opt/onap-deploy/onap-oom.env

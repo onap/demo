@@ -1,0 +1,18 @@
+# Install and Update ONAP Config Files
+- name: Copying over ONAP config files
+  template:
+    src: "{{ role_path }}/templates/{{ item }}.j2"
+    dest: "/opt/onap-deploy/{{ item }}"
+    force: yes
+    backup: yes
+  with_items:
+  - "onap-oom.env"
+  - "openstack-openrc"
+
+- name: Clone ONAP Integration Project
+  git:
+    repo: 'https://gerrit.onap.org/r/integration'
+    dest: "/opt/onap-deploy/integration"
+    clone: yes
+    update: yes
+    version: "{{ onap_version }}"

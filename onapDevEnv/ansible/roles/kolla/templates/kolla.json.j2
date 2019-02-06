@@ -1,0 +1,10 @@
+{
+    "config_files": [
+        {
+            "source": "{{ container_config_directory }}/td-agent.conf",
+            "dest": "/etc/td-agent/td-agent.conf",
+            "owner": "td-agent",
+            "perm": "0600"
+        },
+    ]
+}

@@ -1,0 +1,22 @@
+---
+
+- name: Apply role kolla
+  gather_facts: false
+  hosts:
+    - deploy
+  tags:
+    - kolla
+  roles:
+    - role: kolla
+  when: action == "kolla"
+
+- name: Apply role onap
+  gather_facts: false
+  hosts:
+    - deploy
+  tags:
+    - onap
+  roles:
+    - role: onap
+  when: action == "onap"
+
