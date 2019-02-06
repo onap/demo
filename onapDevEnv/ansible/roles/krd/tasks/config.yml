@@ -1,0 +1,86 @@
+---
+
+- name: Update Hosts
+  command: "{{ 'yum' if os == 'centos' else ('apt-get' if os == 'ubuntu') }} update -y"
+  when: inventory_hostname in groups['krd']
+
+# Install krd dependencies on targets
+- name: Unarchive Go
+  unarchive:
+    src: https://dl.google.com/go/{{ go_tarball }}
+    dest: /usr/local/
+    remote_src: yes
+  when: inventory_hostname in groups['krd']
+
+- name: Put Go In Path
+  command: |
+    sed -i "s|^PATH=.*|PATH=\"$PATH\"|" /etc/environment
+  when: inventory_hostname in groups['krd']
+
+- name: Install docker
+    name: "{{ 'docker' if os == 'centos' else ('docker.io' if os == 'ubuntu') }}"
+    state: present
+  when: inventory_hostname in groups['krd']
+
+- name: Install python pip
+  package:
+    name: "python-pip"
+    state: present
+  when: inventory_hostname in groups['krd']
+
+- name: Install ansible
+  package:
+    name: "ansible"
+    state: present
+  when: inventory_hostname in groups['krd']
+
+- name: Upgrade pip
+  pip:
+    name: "pip"
+    extra_args: "--upgrade"
+      when: inventory_hostname in groups['krd']
+
+- name: Upgrade Ansible to latest
+  pip:
+    name: "ansible"
+    extra_args: "--upgrade"
+  when: inventory_hostname in groups['krd']
+
+- name: Set Environment Variables
+  command: |
+    echo "export OVN_CENTRAL_ADDRESS={{ ovn_central_address }}:6641" | tee --append /etc/environment
+    echo "export KUBE_CONFIG_DIR=/opt/kubeconfig" | tee --append /etc/environment
+  when: inventory_hostname in groups['krd']
+
+# Install Kubespray and dependencies on deploy host
+- name: Unarchive Kubespray
+  unarchive:
+    src: https://github.com/kubernetes-incubator/kubespray/archive/{{ kubespray_tarball }}
+    dest: /opt/
+    remote_src: yes
+  when: inventory_hostname in groups['deploy']
+
+- name: Install kubespray Requirements
+  pip:
+    requirements: {{ kubespray_install_dir }}/kubespray-{{ kubespray_version }}/requirements.txt
+  when: inventory_hostname in groups['deploy']
+
+  # Install and Update KRD Config Files
+- name: Copying over kolla config files
+  template:
+    src: "{{ role_path }}/templates/{{ item }}.j2"
+    dest: "{{ kubespray_install_dir }}/inventory/{{ 'group_vars/' if item == 'all.yml'}}{{ item }}"
+    force: yes
+    backup: yes
+  with_items:
+    - "multinode"
+    - "all.yml"
+  when: inventory_hostname in groups['deploy']
+
+- name: Clone ONAP Multicloud K8s
+  git:
+    repo: 'https://gerrit.onap.org/r/multicloud/k8s'
+    dest: "/opt/onap-deploy/multicloud/k8s"
+    clone: yes
+    update: yes
+    version: "{{ onap_version }}"

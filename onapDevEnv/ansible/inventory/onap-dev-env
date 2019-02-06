@@ -1,0 +1,9 @@
+[deploy]
+localhost
+
+[krd]
+krd_host1 ansible_host=localhost  # ip=10.3.0.1 etcd_member_name=etcd1
+krd_host2 ansible_host=localhost  # ip=10.3.0.2 etcd_member_name=etcd2
+krd_host3 ansible_host=localhost  # ip=10.3.0.3 etcd_member_name=etcd3
+krd_host4 ansible_host=localhost  # ip=10.3.0.4 etcd_member_name=etcd4
+krd_host5 ansible_host=localhost  # ip=10.3.0.5 etcd_member_name=etcd5

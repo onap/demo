@@ -1,0 +1,36 @@
+[all]
+{{ kubemaster01 }}
+{{ kubemaster02 }}
+{{ kubemaster03 }}
+{{ kubenode01 }}
+{{ kubenode02 }}
+
+[kube-master]
+{{ kubemaster01 }}
+{{ kubemaster02 }}
+{{ kubemaster03 }}
+
+[kube-node]
+{{ kubenode01 }}
+{{ kubenode02 }}
+
+[etcd]
+{{ kubemaster01 }}
+{{ kubemaster02 }}
+{{ kubemaster03 }}
+
+[ovn-central]
+{{ kubemaster01 }}
+
+[ovn-controller]
+{{ kubemaster02 }}
+{{ kubemaster03 }}
+{{ kubenode01 }}
+{{ kubenode02 }}
+
+[virtlet]
+{{ kubenode01 }}
+
+[k8s-cluster:children]
+kube-master
+kube-node

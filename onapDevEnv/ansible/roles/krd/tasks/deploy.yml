@@ -1,0 +1,29 @@
+---
+- include: config.yml
+
+- name: Kubespray Deploy
+  command: "ansible-playbook {{ '-vvv' if debug == 'true' }} -i {{ kubespray_install_dir }}/inventory/multinode {{ kubespray_install_dir }}/kubespray-{{ kubespray_version }}/cluster.yml --become --become-user=root | tee /var/log/krd/setup-kubernetes.log"
+  when: inventory_hostname in groups['deploy']
+
+- name: Copy Kube Config
+  template:
+    src: "{{ kubespray_install_dir }}/inventory/artifacts/admin.conf"
+    dest: "{{ ansible_env.HOME }}/.kube/config"
+    force: yes
+    backup: yes
+  when: inventory_hostname in groups['deploy']
+
+- name: Install Addon Reqs.
+  command: "ansible-galaxy install $verbose -r /opt/onap-deploy/multicloud/k8s/galaxy-requirements.yml --ignore-errors"
+  when: inventory_hostname in groups['deploy']
+
+- name: Configure KRD
+  command: "ansible-playbook {{ '-vvv' if debug == 'true' }} -i {{ kubespray_install_dir }}/inventory/multinode /opt/onap-deploy/multicloud/k8s/playbooks/configure-krd.yml --become --become-user=root | tee /var/log/krd/setup-krd.log"
+  when: inventory_hostname in groups['deploy']
+
+- name: Addon Install
+  command: "ansible-playbook {{ '-vvv' if debug == 'true' }} -i {{ kubespray_install_dir }}/inventory/multinode /opt/onap-deploy/multicloud/k8s/playbooks/configure-{{ item }}.yml --become --become-user=root | tee /var/log/krd/setup-{{ item }}.log"
+  when: inventory_hostname in groups['deploy']
+  with_items:
+    - "virtlet"
+    - "ovn4nfv"

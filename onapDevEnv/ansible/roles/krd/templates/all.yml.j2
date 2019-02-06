@@ -1,0 +1,4 @@
+kube_log_level: {{ '5' if debug == 'true' else '2' }}
+kubeadm_enabled: true
+{{ ('http_proxy: ' + http_proxy) if http_proxy != '' }}
+{{ ('https_proxy: ' + https_proxy) if https_proxy != '' }}
