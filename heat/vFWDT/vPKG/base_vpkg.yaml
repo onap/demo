@@ -134,14 +134,9 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-  repo_url_blob:
+  nexus_artifact_repo:
     type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
-  repo_url_artifacts:
-    type: string
-    label: Repository URL
-    description: URL of the repository that hosts the demo packages
+    description: Root URL for the Nexus repository for Maven artifacts.
   install_script_version:
     type: string
     label: Installation script version number
@@ -257,8 +252,6 @@ resources:
             __fw_ipaddr__: { get_param: vfw_private_ip_0 }
             __protected_net_cidr__: { get_param: protected_private_net_cidr }
             __sink_ipaddr__: { get_param: vsn_private_ip_0 }
-            __repo_url_blob__ : { get_param: repo_url_blob }
-            __repo_url_artifacts__ : { get_param: repo_url_artifacts }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
             __vpg_private_ip_0__ : { get_param: vpg_private_ip_0 }
@@ -266,6 +259,7 @@ resources:
             __vpg_private_ip_2__ : { get_param: vpg_private_ip_2 }
             __unprotected_private_net_cidr__ : { get_param: unprotected_private_net_cidr }
             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
             __cloud_env__ : { get_param: cloud_env }
           template: |
             #!/bin/bash
@@ -275,8 +269,6 @@ resources:
             echo "__fw_ipaddr__" > /opt/config/fw_ipaddr.txt
             echo "__protected_net_cidr__" > /opt/config/protected_net_cidr.txt
             echo "__sink_ipaddr__" > /opt/config/sink_ipaddr.txt
-            echo "__repo_url_blob__" > /opt/config/repo_url_blob.txt
-            echo "__repo_url_artifacts__" > /opt/config/repo_url_artifacts.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
@@ -284,10 +276,15 @@ resources:
             echo "__vpg_private_ip_2__" > /opt/config/vpg_private_ip_2.txt
             echo "__unprotected_private_net_cidr__" > /opt/config/unprotected_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
 
             # Download and run install script
-            curl -k __repo_url_blob__/org.onap.demo/vnfs/vfw/__install_script_version__/v_packetgen_install.sh -o /opt/v_packetgen_install.sh
+            apt-get update
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vfw&a=vfw-scripts&e=zip&v=__install_script_version__" -o /opt/vfw-scripts-__install_script_version__.zip
+            unzip -j /opt/vfw-scripts-__install_script_version__.zip -d /opt v_packetgen_install.sh
             cd /opt
             chmod +x v_packetgen_install.sh
             ./v_packetgen_install.sh
