@@ -1,1 +1,2 @@
-1. Collect Charts
+1. Collect Charts has been installed
+2. Collectd prometheus metrics endpoint {{ .Values.collectd_prometheus.service.port}}

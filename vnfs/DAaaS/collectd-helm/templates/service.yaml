@@ -8,10 +8,9 @@ metadata:
 spec:
   ports:
   - name: collectd-prometheus
-    port: {{ .Values.prometheus_port }}
-    targetPort: collectd
+    port: {{ .Values.collectd_prometheus.service.port }}
+    protocol: TCP
+    targetPort: {{ .Values.collectd_prometheus.service.targetPort }}
   selector:
-    app: {{ template "name" . }}
-    collector: collectd
-    release: {{ .Release.Name }}
+{{ include "rangeskipempty" .Values.collectd_prometheus.service.selector | indent 4 }}
   type: ClusterIP

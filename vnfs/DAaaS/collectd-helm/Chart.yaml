@@ -13,6 +13,7 @@
 # limitations under the License.
 
 apiVersion: v1
+appVersion: "0.1.0"
 description: Collectd Helm Chart
 name: collectd
 version: 0.1.0

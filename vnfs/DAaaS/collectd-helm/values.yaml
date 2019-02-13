@@ -17,4 +17,10 @@ resources: {}
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
-prometheus_port: 9103
+collectd_prometheus:
+  service:
+    port: 9103
+    targetPort: 9103
+    selector:
+      app: collectd
+      collector: collectd
