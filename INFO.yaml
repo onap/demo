@@ -3,11 +3,11 @@ project: 'demo'
 project_creation_date: '2017-02-10'
 lifecycle_state: 'Incubation'
 project_lead: &onap_releng_ptl
-    name: 'Helen Chen'
-    email: 'helen.chen@huawei.com'
-    id: 'helenc878'
+    name: 'Yang Xu'
+    email: 'yang.xu3@huawei.com'
+    id: 'xuyang11'
     company: 'Huawei'
-    timezone: 'America/Santa Clara'
+    timezone: 'America/New York'
 primary_contact: *onap_releng_ptl
 issue_tracking:
     type: 'jira'
@@ -83,5 +83,10 @@ committers:
         company: 'Huawei'
         id: 'xingxiaocheng'
         timezone: 'China/Xian'
+    - name: 'Brian Freeman'
+        email: 'bf1936@att.com'
+        company: 'AT&T'
+        id: 'bdfreeman1421'
+        timezone: 'America/New York'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
