@@ -145,6 +145,7 @@ void evel_free_batch(EVENT_HEADER * event)
     evel_free_event(batch_field);
     batch_field = dlist_pop_last(&event->batch_events);
   }
+  evel_free_header(event); 
 
   EVEL_EXIT();
 }
