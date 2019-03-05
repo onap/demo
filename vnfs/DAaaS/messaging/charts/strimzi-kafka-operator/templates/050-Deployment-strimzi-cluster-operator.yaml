@@ -1,0 +1,70 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: strimzi-cluster-operator
+  labels:
+    app: {{ template "strimzi.name" . }}
+    chart: {{ template "strimzi.chart" . }}
+    component: deployment
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: strimzi-cluster-operator
+    spec:
+      serviceAccountName: strimzi-cluster-operator
+      containers:
+        - name: strimzi-cluster-operator
+          image: {{ default .Values.image.repository .Values.imageRepositoryOverride }}/{{ .Values.image.name }}:{{ default .Values.image.tag .Values.imageTagOverride }}
+          imagePullPolicy: {{ .Values.image.imagePullPolicy | quote }}
+          env:
+            - name: STRIMZI_NAMESPACE
+              {{- if .Values.watchNamespaces -}}
+              {{- $ns := .Values.watchNamespaces -}}
+              {{- $ns := append $ns .Release.Namespace }}
+              value: "{{ join "," $ns }}"
+              {{- else }}
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+              {{- end }}
+            - name: STRIMZI_FULL_RECONCILIATION_INTERVAL_MS
+              value: {{ .Values.fullReconciliationIntervalMs | quote }}
+            - name: STRIMZI_OPERATION_TIMEOUT_MS
+              value: {{ .Values.operationTimeoutMs | quote }}
+            - name: STRIMZI_DEFAULT_ZOOKEEPER_IMAGE
+              value: "{{ default .Values.zookeeper.image.repository .Values.imageRepositoryOverride }}/{{ .Values.zookeeper.image.name }}:{{ default .Values.zookeeper.image.tag .Values.imageTagOverride }}-kafka-2.0.0"
+            {{- template "strimzi.kafka.image.map" . }}
+            - name: STRIMZI_DEFAULT_TOPIC_OPERATOR_IMAGE
+              value: "{{ default .Values.topicOperator.image.repository .Values.imageRepositoryOverride }}/{{ .Values.topicOperator.image.name }}:{{ default .Values.topicOperator.image.tag .Values.imageTagOverride }}"
+            - name: STRIMZI_DEFAULT_USER_OPERATOR_IMAGE
+              value: "{{ default .Values.userOperator.image.repository .Values.imageRepositoryOverride }}/{{ .Values.userOperator.image.name }}:{{ default .Values.userOperator.image.tag .Values.imageTagOverride }}"
+            - name: STRIMZI_DEFAULT_KAFKA_INIT_IMAGE
+              value: "{{ default .Values.kafkaInit.image.repository .Values.imageRepositoryOverride }}/{{ .Values.kafkaInit.image.name }}:{{ default .Values.kafkaInit.image.tag .Values.imageTagOverride }}"
+            - name: STRIMZI_DEFAULT_TLS_SIDECAR_ZOOKEEPER_IMAGE
+              value: "{{ default .Values.tlsSidecarZookeeper.image.repository .Values.imageRepositoryOverride }}/{{ .Values.tlsSidecarZookeeper.image.name }}:{{ default .Values.tlsSidecarZookeeper.image.tag .Values.imageTagOverride }}"
+            - name: STRIMZI_DEFAULT_TLS_SIDECAR_KAFKA_IMAGE
+              value: "{{ default .Values.tlsSidecarKafka.image.repository .Values.imageRepositoryOverride }}/{{ .Values.tlsSidecarKafka.image.name }}:{{ default .Values.tlsSidecarKafka.image.tag .Values.imageTagOverride }}"
+            - name: STRIMZI_DEFAULT_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE
+              value: "{{ default .Values.tlsSidecarEntityOperator.image.repository .Values.imageRepositoryOverride }}/{{ .Values.tlsSidecarEntityOperator.image.name }}:{{ default .Values.tlsSidecarEntityOperator.image.tag .Values.imageTagOverride }}"
+            - name: STRIMZI_LOG_LEVEL
+              value: {{ .Values.logLevel | quote }}
+          livenessProbe:
+            httpGet:
+              path: /healthy
+              port: 8080
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+  strategy:
+    type: Recreate

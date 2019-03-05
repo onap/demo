@@ -1,0 +1,29 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: Kafka
+metadata:
+  name: {{ .Values.cluster_name }}
+spec:
+  kafka:
+    version: {{ .Values.version }}
+    replicas: {{ .Values.replicas }}
+    listeners:
+      plain: {}
+      tls: {}
+    config:
+      offsets.topic.replication.factor: {{ .Values.topic.replicationFactor }}
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      log.message.format.version: "2.1"
+    storage:
+      type: persistent-claim
+      size: {{ .Values.storage }}
+      deleteClaim: false
+  zookeeper:
+    replicas: {{ .Values.zookeeper.replicas }}
+    storage:
+      type: persistent-claim
+      size: {{ .Values.zookeeper.storage }}
+      deleteClaim: false
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}

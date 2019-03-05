@@ -1,0 +1,88 @@
+# Default values for strimzi-kafka-operator.
+
+watchNamespaces: []
+
+image:
+  repository: strimzi
+  name: cluster-operator
+  tag: 0.11.0
+  imagePullPolicy: IfNotPresent
+logLevel: INFO
+fullReconciliationIntervalMs: 120000
+operationTimeoutMs: 300000
+# Docker images that operator uses to provision various components of Strimzi.  To use your own registry prefix the
+# repository name with your registry URL.
+# Ex) repository: registry.xyzcorp.com/strimzi/zookeeper
+zookeeper:
+  image:
+    repository: strimzi
+    name: zookeeper
+    tag: 0.11.0
+kafka:
+  image:
+    repository: strimzi
+    name: kafka
+    tagPrefix: 0.11.0
+kafkaConnect:
+  image:
+    repository: strimzi
+    name: kafka-connect
+    tagPrefix: 0.11.0
+kafkaConnects2i:
+  image:
+    repository: strimzi
+    name: kafka-connect-s2i
+    tagPrefix: 0.11.0
+topicOperator:
+  image:
+    repository: strimzi
+    name: topic-operator
+    tag: 0.11.0
+userOperator:
+  image:
+    repository: strimzi
+    name: user-operator
+    tag: 0.11.0
+kafkaInit:
+  image:
+    repository: strimzi
+    name: kafka-init
+    tag: 0.11.0
+tlsSidecarZookeeper:
+  image:
+    repository: strimzi
+    name: zookeeper-stunnel
+    tag: 0.11.0
+tlsSidecarKafka:
+  image:
+    repository: strimzi
+    name: kafka-stunnel
+    tag: 0.11.0
+tlsSidecarEntityOperator:
+  image:
+    repository: strimzi
+    name: entity-operator-stunnel
+    tag: 0.11.0
+kafkaMirrorMaker:
+  image:
+    repository: strimzi
+    name: kafka-mirror-maker
+    tagPrefix: 0.11.0
+resources:
+  limits:
+    memory: 256Mi
+    cpu: 1000m
+  requests:
+    memory: 256Mi
+    cpu: 200m
+livenessProbe:
+  initialDelaySeconds: 10
+  periodSeconds: 30
+readinessProbe:
+  initialDelaySeconds: 10
+  periodSeconds: 30
+
+# Override the docker image repository used by all Strimzi images
+# imageRepositoryOverride: foobar
+# Override the docker image tag used by all Strimzi images
+# imageTagOverride: latest
