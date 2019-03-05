@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "671e6cd8_52c600d6",
+        "filename": "heat/vLB_CDS/MANIFEST.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3013
+      },
+      "writtenOn": "2019-03-05T22:44:59Z",
+      "side": 1,
+      "message": "the MANIFEST file isn\u0027t need to onboard into SDC . It\u0027s not going to hurt anything to include it, but I don\u0027t think it\u0027s used anymore.",
+      "revId": "de925f3f62aa689bc27727f0c20850307277e450",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e93872f_ce9799a4",
+        "filename": "heat/vLB_CDS/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 3013
+      },
+      "writtenOn": "2019-03-05T22:44:59Z",
+      "side": 1,
+      "message": "vf_module_id and vnf_id are not used in this template, did you want to pass them through as output parameters too?",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 47
+      },
+      "revId": "de925f3f62aa689bc27727f0c20850307277e450",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "acbc34d3_60e85731",
+        "filename": "heat/vLB_CDS/vlb.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 3013
+      },
+      "writtenOn": "2019-03-05T22:44:59Z",
+      "side": 1,
+      "message": "This will need to be changed now that vpg_0_int_pktgen_private_port_0 is being created in a different template, otherwise it will cause a stack failure. \n\nDoes the vLB server still need the mac addr for the pktgen VM? OS::Neutron::Port does accept mac_address as a property, so it would be possible to pre-define the mac in the base, pass it through as an output paramter, and assign it in each module as a parameter, similar to how the IPs are being passed now.",
+      "range": {
+        "startLine": 259,
+        "startChar": 41,
+        "endLine": 259,
+        "endChar": 72
+      },
+      "revId": "de925f3f62aa689bc27727f0c20850307277e450",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be513dac_0592f141",
+        "filename": "heat/vLB_CDS/vpkg.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 3013
+      },
+      "writtenOn": "2019-03-05T22:44:59Z",
+      "side": 1,
+      "message": "This has the same issue as the vLB server.",
+      "range": {
+        "startLine": 200,
+        "startChar": 38,
+        "endLine": 200,
+        "endChar": 69
+      },
+      "revId": "de925f3f62aa689bc27727f0c20850307277e450",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
