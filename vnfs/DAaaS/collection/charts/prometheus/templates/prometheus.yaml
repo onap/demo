@@ -1,0 +1,45 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: {{ template "prometheus.fullname" . }}-prometheus
+  labels:
+    app: {{ template "prometheus.name" . }}-prometheus
+spec:
+  serviceMonitorSelector:
+    matchLabels:
+      app: collectd
+      release: {{ .Release.Name }}
+  serviceMonitorNamespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace | quote }}
+
+  # TODO: Templatizing multiple remote read/write.
+  # Especially Kafka adapater.
+  remoteRead:
+  - url: "{{ .Values.m3db.url }}/api/v1/prom/remote/read"
+    # To test reading even when local Prometheus has the data
+    readRecent: true
+  remoteWrite:
+  - url: "{{ .Values.m3db.url }}/api/v1/prom/remote/write"
+    # To differentiate between local and remote storage we will add a storage label
+    writeRelabelConfigs:
+      - targetLabel: metrics_storage
+        replacement: m3db_remote
+  - url: "{{ .Values.kafkaAdapter.url }}/receive"
+  containers:
+  - name: {{ template "prometheus.name" . }}-adapter
+    image: "{{ .Values.kafkaAdapter.image.repository }}:{{ .Values.kafkaAdapter.image.tag }}"
+    imagePullPolicy: {{ .Values.kafkaAdapter.image.pullPolicy }}
+    env:
+    - name: KAFKA_BROKER_LIST
+      value: {{ .Values.kafkaAdapter.broker }}
+    - name: KAFKA_TOPIC
+      value: {{ .Values.kafkaAdapter.topic }}
+    - name: SERIALIZATION_FORMAT
+      value: {{ .Values.kafkaAdapter.serializationFormat }}
+    - name: PORT
+      value: {{ quote .Values.kafkaAdapter.port }}
+    - name: LOG_LEVEL
+      value: {{ .Values.kafkaAdapter.logLevel }}
+    resources:
+{{ toYaml .Values.kafkaAdapter.resources | indent 6 }}

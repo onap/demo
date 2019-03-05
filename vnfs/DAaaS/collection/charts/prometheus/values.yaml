@@ -1,0 +1,62 @@
+## Deploy a Prometheus instance
+##
+prometheus:
+  additionalServiceMonitors:
+    - name: service-monitor-collectd
+      additionalLabels:
+        collector: collectd
+      jobLabel: collectd
+      selector:
+        matchLabels:
+          app: collectd
+          release: "${RELEASE_NAME}"
+      namespaceSelector:
+        matchNames:
+          - "${RELEASE_NAMESPACE}"
+      endpoints:
+        - port: collectd-prometheus
+          interval: 10s
+          path: /metrics
+ 
+  service:
+    annotations: {}
+    labels: {}
+    clusterIP: ""
+
+    ## To be used with a proxy extraContainer port
+    targetPort: 9090
+
+    ## List of IP addresses at which the Prometheus server service is available
+    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    ##
+    externalIPs: []
+
+    ## Port to expose on each node
+    ## Only used if service.type is 'NodePort'
+    ##
+    nodePort: 90
+
+    ## Loadbalancer IP
+    ## Only use if service.type is "loadbalancer"
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    ## Service type
+    ##
+    type: NodePort
+
+    sessionAffinity: ""
+m3db:
+  url: http://m3coordinator-m3db.m3db-operator.svc.cluster.local:7201
+
+kafkaAdapter:
+  image: 
+    repository: telefonica/prometheus-kafka-adapter
+    tag: 1.2.0
+    pullPolicy: IfNotPresent
+  url: http://localhost:8080
+  port: 8080
+  broker: my-cluster-kafka-bootstrap.msg.svc.cluster.local:9092
+  topic: orders
+  serializationFormat: json
+  logLevel: debug
+  resources: {}
