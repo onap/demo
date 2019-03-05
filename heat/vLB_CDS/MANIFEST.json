@@ -1,0 +1,50 @@
+{
+    "name": "virtualLoadBalancer",
+    "description": "",
+    "data": [
+        {
+            "file": "base_template.yaml",
+            "type": "HEAT",
+            "isBase": "true",
+            "data": [
+                {
+                    "file": "base_template.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "vlb.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "vlb.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "vdns.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "vdns.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "vpkg.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "vpkg.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        }
+    ]
+}
