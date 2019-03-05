@@ -1,0 +1,172 @@
+##########################################################################
+#
+#==================LICENSE_START==========================================
+#
+#
+# Copyright (c) 2019 AT&T Intellectual Property. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#==================LICENSE_END============================================
+#
+# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+#
+##########################################################################
+
+heat_template_version: 2013-05-23
+
+description: Heat template that deploys common resources
+
+##############
+#            #
+# PARAMETERS #
+#            #
+##############
+
+parameters:
+
+  vlb_private_net_id:
+    type: string
+    label: vLoadBalancer private network name or ID
+    description: Private network that connects vLoadBalancer with vDNSs
+  pktgen_private_net_id:
+    type: string
+    label: vPacketGen private network name or ID
+    description: Private network that connects vLoadBalancer with vPacketGen
+  vlb_private_net_cidr:
+    type: string
+    label: vLoadBalancer private network CIDR
+    description: The CIDR of the vLoadBalancer private network
+  pktgen_private_net_cidr:
+    type: string
+    label: vPacketGen private network CIDR
+    description: The CIDR of the vPacketGen private network
+  vnf_id:
+    type: string
+    label: VNF ID
+    description: The VNF ID is provided by ONAP
+  vnf_name:
+    type: string
+    label: VNF NAME
+    description: The VNF NAME is provided by ONAP
+  vlb_0_int_pktgen_private_port_0_mac:
+    type: string
+    label: vLB MAC address
+    description: MAC address of the vLB used by the vPacketGen VM
+  vpg_0_int_pktgen_private_port_0_mac:
+    type: string
+    label: vPacketGen MAC address
+    description: MAC address of the vPacketGen used by the vLB VM
+  key_name:
+    type: string
+    label: Key pair name
+    description: Public/Private key pair name
+  pub_key:
+    type: string
+    label: Public key
+    description: Public key to be installed on the compute instance
+
+
+#############
+#           #
+# RESOURCES #
+#           #
+#############
+
+resources:
+
+  random-str_0:
+    type: OS::Heat::RandomString
+    properties:
+      length: 4
+
+  my_keypair_0:
+    type: OS::Nova::KeyPair
+    properties:
+      name:
+        str_replace:
+          template: vnfname_base_rand
+          params:
+            base: { get_param: key_name }
+            rand: { get_resource: random-str_0 }
+            vnfname: { get_param: vnf_name }
+      public_key: { get_param: pub_key }
+      save_private_key: false
+
+  # NETWORK_ROLE: private
+  int_private_network:
+    type: OS::Neutron::Net
+    properties:
+      name:
+        str_replace:
+          template: vnfname_privatenetid
+          params:
+            privatenetid: { get_param: vlb_private_net_id }
+            vnfname: { get_param: vnf_name }
+
+  # NETWORK_ROLE: private
+  int_private_subnet_0:
+    type: OS::Neutron::Subnet
+    properties:
+      name:
+        str_replace:
+          template: vnfname_privatenetid_subnet
+          params:
+            privatenetid: { get_param: vlb_private_net_id }
+            vnfname: { get_param: vnf_name }
+      network: { get_resource: int_private_network }
+      cidr: { get_param: vlb_private_net_cidr }
+
+  # NETWORK_ROLE: pktgen_private
+  int_pktgen_private_network:
+    type: OS::Neutron::Net
+    properties:
+      name:
+        str_replace:
+          template: vnfname_privatenetid
+          params:
+            privatenetid: { get_param: pktgen_private_net_id }
+            vnfname: { get_param: vnf_name }
+
+  # NETWORK_ROLE: pktgen_private
+  int_pktgen_private_subnet_0:
+    type: OS::Neutron::Subnet
+    properties:
+      name:
+        str_replace:
+          template: vnfname_privatenetid_subnet
+          params:
+            privatenetid: { get_param: pktgen_private_net_id }
+            vnfname: { get_param: vnf_name }
+      network: { get_resource: int_pktgen_private_network }
+      cidr: { get_param: pktgen_private_net_cidr }
+
+
+outputs:
+  int_private_subnet_id:
+    value: { get_resource: int_private_subnet_0 }
+  int_private_net_id:
+    value: { get_resource: int_private_network }
+  int_pktgen_private_subnet_id:
+    value: { get_resource: int_pktgen_private_subnet_0 }
+  int_pktgen_private_net_id:
+    value: { get_resource: int_pktgen_private_network }
+  keypair:
+    value: { get_resource: my_keypair_0 }
+  vnf_id:
+    value: { get_param: vnf_id }
+  vnf_name:
+    value: { get_param: vnf_name }
+  vlb_0_mac_address:
+    value: { get_param: vlb_0_int_pktgen_private_port_0_mac }
+  vpg_0_mac_address:
+    value: { get_param: vpg_0_int_pktgen_private_port_0_mac }
