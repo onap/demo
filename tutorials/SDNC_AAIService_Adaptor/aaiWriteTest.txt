@@ -1,0 +1,22 @@
+curl -X POST \
+  http://10.12.5.253:30202/restconf/operations/SLI-API:execute-graph \
+  -H 'Content-Type: application/json' \
+  -H 'Postman-Token: 1b684beb-d0f1-427c-85d8-b92b29754220' \
+  -H 'cache-control: no-cache' \
+  -d '{
+    "input": {
+        "module-name": "AAI_WRITE_TEST",
+        "rpc-name": "aaiWriteTest",
+        "mode": "sync",
+        "sli-parameter": [
+            {
+                "parameter-name": "service-id",
+                "string-value": "00000000-1111-2222-3333-444444555555"
+            },
+            {
+                "parameter-name": "service-description",
+                "string-value": "Test-Service"
+            }
+        ]
+    }
+}'

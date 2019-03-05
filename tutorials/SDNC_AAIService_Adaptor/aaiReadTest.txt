@@ -1,0 +1,19 @@
+curl -X POST \
+  http://10.12.5.253:30202/restconf/operations/SLI-API:execute-graph \
+  -H 'Authorization: Basic YWRtaW46S3A4Yko0U1hzek0wV1hsaGFrM2VIbGNzZTJnQXc4NHZhb0dHbUp2VXkyVQ==' \
+  -H 'Content-Type: application/json' \
+  -H 'Postman-Token: 04a25312-5513-4667-a621-934cff51e289' \
+  -H 'cache-control: no-cache' \
+  -d '{
+    "input": {
+        "module-name": "AAI_READ_TEST",
+        "rpc-name": "aaiReadTest",
+        "mode": "sync",
+        "sli-parameter": [
+            {
+                "parameter-name": "aai-service-id",
+                "string-value": "792be903-6572-4306-8ae0-be884f7740b4"
+            }
+        ]
+    }
+}'

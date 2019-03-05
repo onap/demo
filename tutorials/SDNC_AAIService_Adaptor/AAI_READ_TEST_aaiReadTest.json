@@ -1,0 +1,111 @@
+[
+    {
+        "id": "9004f35e.82aaf",
+        "type": "dgstart",
+        "name": "DGSTART",
+        "outputs": 1,
+        "x": 151,
+        "y": 136,
+        "z": "f80284e0.3417a8",
+        "wires": [
+            [
+                "c678a15d.374ce"
+            ]
+        ]
+    },
+    {
+        "id": "c678a15d.374ce",
+        "type": "service-logic",
+        "name": "AAI_READ_TEST 1",
+        "module": "AAI_READ_TEST",
+        "version": "1",
+        "comments": "",
+        "xml": "<service-logic xmlns='http://www.onap.org/sdnc/svclogic' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.onap.org/sdnc/svclogic ./svclogic.xsd' module='AAI_READ_TEST' version='1'>",
+        "outputs": 1,
+        "x": 376,
+        "y": 136,
+        "z": "f80284e0.3417a8",
+        "wires": [
+            [
+                "f7fb1b43.16c978"
+            ]
+        ]
+    },
+    {
+        "id": "f7fb1b43.16c978",
+        "type": "method",
+        "name": "method",
+        "xml": "<method rpc='aaiReadTest' mode='sync'>\n",
+        "comments": "",
+        "outputs": 1,
+        "x": 585,
+        "y": 136,
+        "z": "f80284e0.3417a8",
+        "wires": [
+            [
+                "ca1bb9f7.661a68"
+            ]
+        ]
+    },
+    {
+        "id": "ca1bb9f7.661a68",
+        "type": "block",
+        "name": "block",
+        "xml": "<block>\n",
+        "atomic": "false",
+        "comments": "",
+        "outputs": 1,
+        "x": 751,
+        "y": 136,
+        "z": "f80284e0.3417a8",
+        "wires": [
+            [
+                "e873afab.3db4",
+                "5462eeec.c1708",
+                "9af02e4e.2771f"
+            ]
+        ]
+    },
+    {
+        "id": "e873afab.3db4",
+        "type": "record",
+        "name": "record",
+        "xml": "<record plugin='org.onap.ccsdk.sli.core.sli.recording.Slf4jRecorder'>\n<parameter name=\"logger\" value=\"message-log\" />\n<parameter name=\"level\" value=\"info\" />\n<parameter name=\"field1\" value=\"__TIMESTAMP__\" />\n<parameter name=\"field2\" value=\"AAI GET\"/>\n<parameter name=\"field3\" value=\"`$aai-service-id`\"/>",
+        "comments": "",
+        "outputs": 1,
+        "x": 909,
+        "y": 89,
+        "z": "f80284e0.3417a8",
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5462eeec.c1708",
+        "type": "get-resource",
+        "name": "get-resource",
+        "xml": "<get-resource plugin='org.onap.ccsdk.sli.adaptors.aai.AAIService'\nresource=\"service\"\nkey='service.service-id = $aai-service-id'\npfx='aai.data.read' local-only='false'>\n",
+        "comments": "",
+        "outputs": 1,
+        "x": 922,
+        "y": 136,
+        "z": "f80284e0.3417a8",
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9af02e4e.2771f",
+        "type": "record",
+        "name": "record",
+        "xml": "<record plugin='org.onap.ccsdk.sli.core.sli.recording.Slf4jRecorder'>\n<parameter name=\"logger\" value=\"message-log\" />\n<parameter name=\"level\" value=\"info\" />\n<parameter name=\"field1\" value=\"__TIMESTAMP__\" />\n<parameter name=\"field2\" value=\"AAI GET\"/>\n<parameter name=\"field3\" value=\"Service type:\"/>\n<parameter name=\"field4\" value=\"`$aai.data.read.service-description`\"/>",
+        "comments": "",
+        "outputs": 1,
+        "x": 910,
+        "y": 187,
+        "z": "f80284e0.3417a8",
+        "wires": [
+            []
+        ]
+    }
+]
