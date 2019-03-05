@@ -1,0 +1,96 @@
+[
+    {
+        "id": "87de78ad.d84798",
+        "type": "dgstart",
+        "name": "DGSTART",
+        "outputs": 1,
+        "x": 132,
+        "y": 141,
+        "z": "915a2fa8.a1505",
+        "wires": [
+            [
+                "5ae14c99.6f40a4"
+            ]
+        ]
+    },
+    {
+        "id": "5ae14c99.6f40a4",
+        "type": "service-logic",
+        "name": "AAI_WRITE_TEST 1",
+        "module": "AAI_WRITE_TEST",
+        "version": "1",
+        "comments": "",
+        "xml": "<service-logic xmlns='http://www.onap.org/sdnc/svclogic' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.onap.org/sdnc/svclogic ./svclogic.xsd' module='AAI_WRITE_TEST' version='1'>",
+        "outputs": 1,
+        "x": 352,
+        "y": 141,
+        "z": "915a2fa8.a1505",
+        "wires": [
+            [
+                "27a5dff6.0d64b"
+            ]
+        ]
+    },
+    {
+        "id": "27a5dff6.0d64b",
+        "type": "method",
+        "name": "method",
+        "xml": "<method rpc='aaiWriteTest' mode='sync'>\n",
+        "comments": "",
+        "outputs": 1,
+        "x": 585,
+        "y": 141,
+        "z": "915a2fa8.a1505",
+        "wires": [
+            [
+                "72c5f21f.8ff9bc"
+            ]
+        ]
+    },
+    {
+        "id": "72c5f21f.8ff9bc",
+        "type": "block",
+        "name": "block",
+        "xml": "<block>\n",
+        "atomic": "false",
+        "comments": "",
+        "outputs": 1,
+        "x": 775,
+        "y": 141,
+        "z": "915a2fa8.a1505",
+        "wires": [
+            [
+                "4f1bf235.a8ceec",
+                "c70f3ff5.db33"
+            ]
+        ]
+    },
+    {
+        "id": "4f1bf235.a8ceec",
+        "type": "save",
+        "name": "save",
+        "xml": "<save plugin='org.onap.ccsdk.sli.adaptors.aai.AAIService'\nresource=\"service\" key=\"service-id = $service-id\" force=\"true\" pfx=\"tmp.aai-data.service\">\n<parameter name='service-id' value='`$service-id`' />\n<parameter name='service-description' value='`$service-description`' />",
+        "comments": "",
+        "outputs": 1,
+        "x": 967,
+        "y": 190,
+        "z": "915a2fa8.a1505",
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c70f3ff5.db33",
+        "type": "record",
+        "name": "record",
+        "xml": "<record plugin='org.onap.ccsdk.sli.core.sli.recording.Slf4jRecorder'>\n<parameter name=\"logger\" value=\"message-log\" />\n<parameter name=\"level\" value=\"info\" />\n<parameter name=\"field1\" value=\"__TIMESTAMP__\" />\n<parameter name=\"field2\" value=\"Create service\"/>\n<parameter name=\"field3\" value=\"`$service-id`\"/>\n<parameter name=\"field4\" value=\"`$service-description`\"/>",
+        "comments": "",
+        "outputs": 1,
+        "x": 968,
+        "y": 82,
+        "z": "915a2fa8.a1505",
+        "wires": [
+            []
+        ]
+    }
+]
