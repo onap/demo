@@ -567,7 +567,7 @@ prometheusOperator:
   ## Port to expose on each node
   ## Only used if service.type is 'NodePort'
   ##
-    nodePort: 38080
+    nodePort: 30080
 
 
   ## Loadbalancer IP
@@ -726,7 +726,7 @@ prometheus:
     ## Port to expose on each node
     ## Only used if service.type is 'NodePort'
     ##
-    nodePort: 39090
+#    nodePort: 39090
 
     ## Loadbalancer IP
     ## Only use if service.type is "loadbalancer"
@@ -776,7 +776,7 @@ prometheus:
       #     - prometheus.example.com
 
   serviceMonitor:
-    selfMonitor: true
+    selfMonitor: false
 
   ## Settings affecting prometheusSpec
   ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec

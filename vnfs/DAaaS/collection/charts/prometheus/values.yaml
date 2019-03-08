@@ -9,10 +9,10 @@ prometheus:
       selector:
         matchLabels:
           app: collectd
-          release: "${RELEASE_NAME}"
+          release: "cp"
       namespaceSelector:
         matchNames:
-          - "${RELEASE_NAMESPACE}"
+          - "edge1"
       endpoints:
         - port: collectd-prometheus
           interval: 10s
@@ -51,7 +51,7 @@ m3db:
 kafkaAdapter:
   image: 
     repository: telefonica/prometheus-kafka-adapter
-    tag: 1.2.0
+    tag: 1.2.0 
     pullPolicy: IfNotPresent
   url: http://localhost:8080
   port: 8080

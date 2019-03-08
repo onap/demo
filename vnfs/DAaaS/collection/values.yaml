@@ -16,7 +16,7 @@
 # Global configuration defaults.
 #################################################################
 global:
-  nodePortPrefix: 390
+  nodePortPrefix: 300
   repository: nexus3.onap.org:10001
   readinessRepository: oomk8s
   readinessImage: readiness-check:2.0.0

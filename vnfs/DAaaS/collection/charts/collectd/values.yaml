@@ -23,4 +23,4 @@ collectd_prometheus:
     targetPort: 9103
     selector:
       app: collectd
-      jobLabel: collectd
+      collector: collectd
