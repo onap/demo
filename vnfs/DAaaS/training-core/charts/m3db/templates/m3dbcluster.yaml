@@ -1,0 +1,22 @@
+apiVersion: operator.m3db.io/v1alpha1
+kind: M3DBCluster
+metadata:
+  name: {{ .Values.m3dbCluster.name }}
+spec:
+  image: {{ .Values.m3dbCluster.image.repository }}:{{ .Values.m3dbCluster.image.tag }}
+  replicationFactor: {{ .Values.m3dbCluster.replicationFactor }}
+  numberOfShards: {{ .Values.m3dbCluster.numberOfShards }}
+  isolationGroups:
+{{ toYaml .Values.m3dbCluster.isolationGroups | indent 4 }}
+  namespaces:
+{{ toYaml .Values.m3dbCluster.namespaces | indent 4 }}
+  configMapName: {{ .Values.m3dbCluster.configMapName }}
+  resources:
+    requests:
+      memory: 4Gi
+      cpu: '1'
+    limits:
+      memory: 12Gi
+      cpu: '4'
+
+  
