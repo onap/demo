@@ -17,6 +17,21 @@ prometheus:
         - port: collectd-prometheus
           interval: 10s
           path: /metrics
+    - name: service-monitor-cadvisor
+      additionalLabels:
+        collector: cadvisor
+      jobLabel: cadvisor
+      selector:
+        matchLabels:
+          app: cadvisor
+          release: "cp"
+      namespaceSelector:
+        matchNames:
+          - "edge1"
+      endpoints:
+        - port: cadvisor-prometheus
+          interval: 10s
+          path: /metrics
  
   service:
     annotations: {}
