@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "hdfs-k8s.client.fullname" . }}
+  labels:
+    app: {{ template "hdfs-k8s.client.name" . }}
+    chart: {{ template "hdfs-k8s.subchart" . }}
+    release: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "hdfs-k8s.client.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "hdfs-k8s.client.name" . }}
+        release: {{ .Release.Name }}
+      {{- if .Values.podAnnotations }}
+      annotations:
+{{ toYaml .Values.podAnnotations | indent 8 }}
+      {{- end }}
+    spec:
+      containers:
+        - name: hdfs-client
+          image: uhopper/hadoop:2.7.2
+          env:
+            - name: HADOOP_CUSTOM_CONF_DIR
+              value: /etc/hadoop-custom-conf
+            - name: MULTIHOMED_NETWORK
+              value: "0"
+          command: ['/bin/sh', '-c']
+          args:
+            - /entrypoint.sh /usr/bin/tail -f /var/log/dmesg
+          volumeMounts:
+            - name: hdfs-config
+              mountPath: /etc/hadoop-custom-conf
+              readOnly: true
+            {{- if .Values.global.kerberosEnabled }}
+            - name: kerberos-config
+              mountPath: /etc/krb5.conf
+              subPath: {{ .Values.global.kerberosConfigFileName }}
+              readOnly: true
+            {{- end }}
+      restartPolicy: Always
+      volumes:
+        - name: hdfs-config
+          configMap:
+            name: {{ template "hdfs-k8s.config.fullname" . }}
+        {{- if .Values.global.kerberosEnabled }}
+        - name: kerberos-config
+          configMap:
+            name: {{ template "krb5-configmap" . }}
+        {{- end }}
