@@ -1,0 +1,43 @@
+apiVersion: "sparkoperator.k8s.io/v1beta1"
+kind: SparkApplication
+metadata:
+  name: {{ .Values.nameOfTheSparkApp }}
+  namespace: {{ .Release.Namespace  }}
+spec:
+  type: {{ .Values.programmingLanguageType }}
+  mode: {{ .Values.modeOfSparkApp | default "cluster" }}
+  image: {{ quote .Values.image }}
+  imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" }}
+  mainClass: {{ .Values.mainClassOfTheSparkApp }}
+  mainApplicationFile: {{ .Values.mainApplicationFileOfTheSparkApp }}
+  arguments:  
+	{{- range .Values.argumentsOfTheSparkProgram }}
+   - {{ . }}
+    {{ end }}
+  hadoopConfigMap: {{ .Values.hadoopConfigMap }}
+  restartPolicy:
+    type: {{ .Values.restartPolicy | default "Never" }}
+  volumes:
+    - name: {{ quote .Values.volumesName | default "test-volume" }}
+      hostpath:
+        path: {{ quote .Values.hostpath | default "/tmp" }}
+        type: {{ .Values.hostpathType | default "Directory" }}
+  driver:
+     cores: {{ .Values.driverCores | default 0.1 }}
+     coreLimit: {{ quote .Values.driverCoreLimit | default "200m" }}
+     memory: {{ quote .Values.driverMemory | default "1024m" }}
+     labels:
+       version: 2.4.0
+     serviceAccount: spark
+     volumeMounts:
+       - name: {{ quote .Values.driverVolumeMountsName | default "test-volume" }}
+         mountPath: {{ quote .Values.driverVolumeMountPath | default "/tmp" }}
+  executor:
+    cores: {{ .Values.executorCores | default 1 }}
+    instances: {{ .Values.executorInstances | default 1 }}
+    memory: {{ quote .Values.executorMemory | default "512m" }}
+    labels:
+      version: 2.4.0
+    volumeMounts:
+      - name: {{ quote .Values.executorVolumeMountsName | default "test-volume" }}
+        mountPath: {{ quote .Values.executorVolumeMountPath | default "/tmp" }}
