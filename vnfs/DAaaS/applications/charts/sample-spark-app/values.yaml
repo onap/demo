@@ -1,0 +1,57 @@
+# Default values for sample-spark-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+#===========================KUBERNETES POD RELATED CONFIGs========================
+image: spark-tf-keras-horo:latest
+imagePullPolicy: Never
+restartPolicy: Never
+volumesName: test-volume
+hostpath: /tmp
+hostpathType: Directory
+
+
+
+#============================SPARK APP RELATED CONFIGs=============================
+
+nameOfTheSparkApp: spark-apache-logs2 
+# Python or Scala supported.
+programmingLanguageType: Scala
+modeOfSparkApp: cluster
+mainClassOfTheSparkApp: ApacheLogAnalysis
+# can be http path, s3 path, minio path
+mainApplicationFileOfTheSparkApp: https://github.com/mohanraj1311/ApacheLogAnalysisJar/raw/master/analysisofapachelogs_2.11-0.1.jar 
+argumentsOfTheSparkProgram:
+    - hdfs://hdfs-1-namenode-1.hdfs-1-namenode.hdfs1.svc.cluster.local:8020/data/apache-logs 
+
+
+
+#============================SPARK DRIVER RELATED CONFIGs=========================
+driverCores: 0.1
+driverCoreLimit: 200m
+driverMemory: 1024m
+driverVolumeMountsName: test-volume
+driverVolumeMountPath: /tmp 
+
+
+
+#============================SPARK EXECUTOR RELATED CONFIGs=======================
+executorCores: 1 
+executorInstances: 1 
+executorMemory: 512m
+executorVolumeMountsName: test-volume
+executorVolumeMountPath: /tmp
+
+
+
+#===========================HADOOP RELATED CONFIGs===============================
+# config map of the hdfs
+hadoopConfigMap: hdfs-1-config
+
+
+###################################################################################
+
+
+
+

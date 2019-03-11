@@ -1,0 +1,20 @@
+sudo: required
+
+env:
+  - CASES=_basic.sh
+  - CASES=_basic-subcharts.sh
+  - CASES=_kerberos.sh
+  - CASES=_single-namenode.sh
+
+before_script:
+# Required for K8s v1.10.x. See
+# https://github.com/kubernetes/kubernetes/issues/61058#issuecomment-372764783
+- sudo mount --make-shared / && sudo service docker restart
+- USE_MINIKUBE_DRIVER_NONE=true USE_SUDO_MINIKUBE=true tests/setup.sh
+
+script:
+- tests/run.sh
+
+after_script:
+- tests/cleanup.sh
+- tests/teardown.sh
