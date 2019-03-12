@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21751a08_b8bc7681",
+        "filename": "vnfs/DAaaS/collection/charts/cadvisor/templates/NOTES.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-03-12T05:36:55Z",
+      "side": 1,
+      "message": "If there is any service ports available to access(nodeport/Ingress etc.) please mention it here. Refer to ONAP oom guidelines.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 18
+      },
+      "revId": "c6b20d8643137d0062329775473ebcf0a015e873",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0dea27c9_a85a2d1b",
+        "filename": "vnfs/DAaaS/collection/charts/cadvisor/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-03-12T05:36:55Z",
+      "side": 1,
+      "message": "Is this used?",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 18
+      },
+      "revId": "c6b20d8643137d0062329775473ebcf0a015e873",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d0b5542_631d29a0",
+        "filename": "vnfs/DAaaS/collection/charts/prometheus/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-03-12T05:36:55Z",
+      "side": 1,
+      "message": "We need to change it into a flat structure for both collectd and cadvisor. And each key needs to be read from the prometheus yaml file. And for release name and namespace should be read from inbuilt helm template.",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 24
+      },
+      "revId": "c6b20d8643137d0062329775473ebcf0a015e873",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
