@@ -1,6 +1,7 @@
 # Default values for strimzi-kafka-operator.
 
-watchNamespaces: []
+watchNamespaces:
+  - "*"
 
 image:
   repository: strimzi
