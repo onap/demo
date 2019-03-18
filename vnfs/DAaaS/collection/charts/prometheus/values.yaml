@@ -9,10 +9,6 @@ prometheus:
       selector:
         matchLabels:
           app: collectd
-          release: "cp"
-      namespaceSelector:
-        matchNames:
-          - "edge1"
       endpoints:
         - port: collectd-prometheus
           interval: 10s
