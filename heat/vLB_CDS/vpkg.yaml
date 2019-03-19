@@ -135,15 +135,6 @@ parameters:
   sec_group:
     type: string
     description: ONAP Security Group
-  sdnc_model_name:
-    type: string
-    description: SDNC Model Name metatada
-  sdnc_model_version:
-    type: string
-    description: SDNC Model Version metatada
-  sdnc_artifact_name:
-    type: string
-    description: SDNC Artifact Name metatada
 
 #############
 #           #
@@ -186,9 +177,6 @@ resources:
         vnf_id: { get_param: vnf_id }
         vf_module_id: { get_param: vf_module_id }
         vnf_name: { get_param: vnf_name }
-        sdnc_model_name: { get_param: sdnc_model_name }
-        sdnc_model_version: { get_param: sdnc_model_version }
-        sdnc_artifact_name: { get_param: sdnc_artifact_name }
       networks:
         - network: { get_param: public_net_id }
         - port: { get_resource: vpg_0_int_pktgen_private_port_0 }
