@@ -21,11 +21,10 @@ items:
     {{- if .jobLabel }}
       jobLabel: {{ .jobLabel }}
     {{- end }}
-    {{- if .namespaceSelector }}
       namespaceSelector:
-{{ toYaml .namespaceSelector | indent 8 }}
-    {{- end }}
+        matchNames:
+          - {{ $.Release.Namespace | quote }}
       selector:
-{{ toYaml .selector | indent 8 }}
+{{ toYaml .selector  | indent 8  }}  release: {{ $.Release.Name | quote }}
 {{- end }}
 {{- end }}
