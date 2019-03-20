@@ -9,7 +9,6 @@ metadata:
 spec:
   serviceMonitorSelector:
     matchLabels:
-      app: {{ template "prometheus.name" . }}-prometheus
       release: {{ .Release.Name }}
   serviceMonitorNamespaceSelector:
     matchNames:
