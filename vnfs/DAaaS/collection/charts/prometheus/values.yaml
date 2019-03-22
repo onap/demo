@@ -13,6 +13,16 @@ prometheus:
         - port: collectd-prometheus
           interval: 10s
           path: /metrics
+    - name: service-monitor-node-exporter
+      additionalLabels:
+        collector: prometheus-node-exporter
+      jobLabel: node-exporter
+      selector:
+        matchLabels:
+          app: prometheus-node-exporter
+      endpoints:
+        - port: metrics
+          interval: 30s
  
   service:
     annotations: {}
