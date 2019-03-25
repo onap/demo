@@ -23,6 +23,17 @@ prometheus:
       endpoints:
         - port: metrics
           interval: 30s
+    - name: service-monitor-cadvisor
+      additionalLabels:
+        collector: cadvisor
+      jobLabel: cadvisor
+      selector:
+        matchLabels:
+          app: cadvisor
+      endpoints:
+        - port: cadvisor-prometheus
+          interval: 10s
+          path: /metrics
  
   service:
     annotations: {}
