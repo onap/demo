@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4d4f4a7_aca7a855",
+        "filename": "onapDevEnv/ansible/roles/krd/tasks/config.yml",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 5033
+      },
+      "writtenOn": "2019-03-25T23:26:06Z",
+      "side": 1,
+      "message": "Hi Marcus, KRD is now rebranded to KUD -\u003e KUbernetes Deploy.",
+      "revId": "2d1ce766ce2533a408c84ef50c129d32b0696d9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
