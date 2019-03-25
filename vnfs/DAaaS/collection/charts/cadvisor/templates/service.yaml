@@ -17,16 +17,18 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: collectd
+  name: cadvisor 
   labels:
-    app: collectd
+    app: cadvisor
     release: {{ .Release.Name }}
 spec:
-  ports:
-  - name: collectd-prometheus
-    port: {{ .Values.collectd_prometheus.service.port }}
-    protocol: TCP
-    targetPort: {{ .Values.collectd_prometheus.service.targetPort }}
+  type: NodePort
+  externalTrafficPolicy: Local
   selector:
-{{ include "rangeskipempty" .Values.collectd_prometheus.service.selector | indent 4 }}
-  type: ClusterIP
+{{ include "rangeskipempty" .Values.cadvisor_prometheus.service.selector | indent 4 }}
+  ports:
+  - name: cadvisor-prometheus 
+    protocol: TCP
+    port: {{ .Values.cadvisor_prometheus.service.port }}
+    nodePort: {{ .Values.cadvisor_prometheus.service.nodePort }}
+    targetPort: {{ .Values.cadvisor_prometheus.service.targetPort }}

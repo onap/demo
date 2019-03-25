@@ -18,17 +18,17 @@
 {{- range .Values.ingress.hosts }}
   http://{{ . }}
 {{- end }}
-{{- else if contains "NodePort" .Values.collectd_prometheus.service.type }}
+{{- else if contains "NodePort" .Values.cadvisor_prometheus.service.type }}
   NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "name" . }})
   NODE_IPS=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[*].status.addresses[0].address}")
   visit http://NODE_IP:NODE_PORT
-{{- else if contains "LoadBalancer" .Values.collectd_prometheus.service.type }}
+{{- else if contains "LoadBalancer" .Values.cadvisor_prometheus.service.type }}
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
            You can watch the status of by running 'kubectl get svc -w {{ include "name" . }}'
   export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "name" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
   echo http://$SERVICE_IP:{{ .Values.service.externalPort }}
-{{- else if contains "ClusterIP" .Values.collectd_prometheus.service.type }}
-  CLUSTER_NODE_IPS=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[*].status.addresses[0].address}")
-  CLUSTER_NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].port}" services {{ include "name" . }})
-  visit http://CLUSTER_NODE_IP:CLUSTER_NODE_PORT
+{{- else if contains "ClusterIP" .Values.cadvisor_prometheus.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace={{ .Release.Namespace }} -l "app={{ template "name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl port-forward $POD_NAME 8080:{{ .Values.cadvisor_prometheus.service.targetPort }}
 {{- end }}
