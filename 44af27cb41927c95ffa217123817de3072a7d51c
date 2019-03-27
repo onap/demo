@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f62ab45_858c9589",
+        "filename": "vnfs/DAaaS/operator/charts/prometheus-operator/requirements.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-03-27T18:14:31Z",
+      "side": 1,
+      "message": "Can this file be removed? If we are not using any dependencies from requirement.yaml?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 30
+      },
+      "revId": "44af27cb41927c95ffa217123817de3072a7d51c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
