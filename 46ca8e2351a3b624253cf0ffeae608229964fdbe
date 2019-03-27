@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd01eaa9_80fb893c",
+        "filename": "vnfs/DAaaS/collection/charts/cadvisor/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-03-27T18:18:14Z",
+      "side": 1,
+      "message": "By default can we make it ClusterIP?",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 18
+      },
+      "revId": "46ca8e2351a3b624253cf0ffeae608229964fdbe",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
