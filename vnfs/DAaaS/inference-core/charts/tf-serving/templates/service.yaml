@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "tf-serving.fullname" . }}
+  labels:
+    app: {{ include "tf-serving.name" . }}
+    release: {{ .Release.Name }}
+    modelName: {{ .Values.modelName }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.tensorflowServingPort }}
+      targetPort: tf-serving
+      protocol: TCP
+      name: tf-serving
+    - port: {{ .Values.service.tensorboardPort }}
+      targetPort: tensorboard
+      protocol: TCP
+      name: tensorboard
+  selector:
+    app: {{ include "tf-serving.name" . }}
+    release: {{ .Release.Name }}
+    modelName: {{ .Values.modelName }}
