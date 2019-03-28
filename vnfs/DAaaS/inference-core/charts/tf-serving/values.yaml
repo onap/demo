@@ -1,0 +1,71 @@
+# Default values for tf-serving.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  tensorflowServing:
+    repository: tensorflow/serving
+    tag: latest
+  tensorboard:
+    repository: tensorflow/tensorflow
+    tag: latest
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+## Model information for tf-serving
+modelName: "mnist"
+modelBasePath: "s3://models/mnist"
+
+## Model repository information (Minio)
+minio:
+  existingSecret: ""
+  accessKey: "onapdaas"
+  secretKey: "onapsecretdaas"
+  environment:
+    AWS_REGION: ""
+    S3_REGION: ""
+    S3_ENDPOINT: "minio.minio.svc.cluster.local:9000"
+    AWS_ENDPOINT_URL: "http://minio.minio.svc.cluster.local:9000"
+    S3_USE_HTTPS: 0
+    S3_VERIFY_SSL: 0
+
+
+## Service account for tf-serving to use.
+serviceAccount:
+  create: true
+  name: ""
+
+service:
+  type: ClusterIP
+  tensorflowServingPort: 8500
+  tensorboardPort: 6006
+
+ingress:
+  enabled: false
+  annotations: {}
+  paths: []
+  hosts:
+    - chart-example.local
+  tls: []
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
