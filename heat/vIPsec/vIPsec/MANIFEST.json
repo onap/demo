@@ -1,0 +1,17 @@
+{
+    "name": "virtualIPsecurity",
+    "description": "",
+    "data": [
+        {
+            "file": "base_vipsec.yaml",
+            "type": "HEAT",
+            "isBase": "true",
+            "data": [
+                {
+                    "file": "base_vipsec.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        }
+    ]
+}
