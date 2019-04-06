@@ -1,0 +1,783 @@
+##########################################################################
+#
+#==================LICENSE_START==========================================
+#
+#
+# Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#==================LICENSE_END============================================
+#
+# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+#
+##########################################################################
+
+heat_template_version: 2013-05-23
+
+description: Heat template that deploys vIPsec demo app for ONAP
+
+##############
+#            #
+# PARAMETERS #
+#            #
+##############
+
+parameters:
+  vipsec_image_name:
+    type: string
+    label: Image name or ID
+    description: Image to be used for compute instance
+  ipsec_flavor_name:
+    type: string
+    label: IPsec Flavor
+    description: Type of instance (flavor) to be used for IPsec VM
+  sink_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used for vSink VM
+  packetgen_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used for packet generator
+  public_net_id:
+    type: string
+    label: Public network name or ID
+    description: Public network that enables remote connection to VNF
+  external_net_id:
+    type: string
+    label: External network name or ID
+    description: External network that connects the two IPsec gateways
+  protected_clientA_private_net_id:
+    type: string
+    label: Unprotected private network name or ID
+    description: Private network that connects vPacketGenerator with vIPsec gateway A
+  protected_clientB_private_net_id:
+    type: string
+    label: Protected private network name or ID
+    description: Private network that connects vIPsec gateway B with vSink
+  onap_private_net_id:
+    type: string
+    label: ONAP management network name or ID
+    description: Private network that connects ONAP components and the VNF
+  onap_private_subnet_id:
+    type: string
+    label: ONAP management sub-network name or ID
+    description: Private sub-network that connects ONAP components and the VNF
+  ipsec_private_net_id:
+    type: string
+    label: IPsec private network name or ID
+    description: Private network that connects the two IPsec VNFs
+  ipsec_private_subnet_id:
+    type: string
+    label: IPsec sub-network name or ID
+    description: Private sub-network that connects the two IPsec VNFs
+  protected_clientA_private_net_cidr:
+    type: string
+    label: Unprotected private network CIDR
+    description: The CIDR of the protected private network for clientA
+  protected_clientB_private_net_cidr:
+    type: string
+    label: Protected private network CIDR
+    description: The CIDR of the protected private network for clientB
+  onap_private_net_cidr:
+    type: string
+    label: ONAP private network CIDR
+    description: The CIDR of the protected private network
+  ipsec_private_net_cidr:
+    type: string
+    label: IPsec private network CIDR
+    description: The CIDR of the protected IPsec private network
+  vipsec_A_private_ip_0:
+    type: string
+    label: vIPsec private IP address towards the protected network A
+    description: Private IP address that is assigned to the vIPsec gateway A to communicate with the vPacketGenerator
+  vipsec_A_private_ip_1:
+    type: string
+    label: vIPsec private IP address towards the ONAP management network
+    description: Private IP address that is assigned to the vIPsec A to communicate with ONAP components
+  vipsec_A_private_ip_2:
+    type: string
+    label: vIPsec private IP address towards the IPsec external network
+    description: Private IP address that is assigned to the vIPsec A to communicate with vIPsec B
+  vipsec_B_private_ip_0:
+    type: string
+    label: vIPsec private IP address towards the protected network B
+    description: Private IP address that is assigned to the vIPsec gateway B to communicate with the vSink
+  vipsec_B_private_ip_1:
+    type: string
+    label: vIPsec private IP address towards the ONAP management network
+    description: Private IP address that is assigned to the vIPsec B to communicate with ONAP components
+  vipsec_B_private_ip_2:
+    type: string
+    label: vIPsec private IP address towards the IPsec external network
+    description: Private IP address that is assigned to the vIPsec B to communicate with vIPsec A
+  vpg_private_ip_0:
+    type: string
+    label: vPacketGenerator private IP address towards the protected network A
+    description: Private IP address that is assigned to the vPacketGenerator to communicate with the vIPsec gateway A
+  vpg_private_ip_1:
+    type: string
+    label: vPacketGenerator private IP address towards the ONAP management network
+    description: Private IP address that is assigned to the vPacketGenerator to communicate with ONAP components
+  vsn_private_ip_0:
+    type: string
+    label: vSink private IP address towards the protected network
+    description: Private IP address that is assigned to the vSink to communicate with the vIPsec gateway B
+  vsn_private_ip_1:
+    type: string
+    label: vSink private IP address towards the ONAP management network
+    description: Private IP address that is assigned to the vSink to communicate with ONAP components
+  vipsec_A_private_0_port_vnic_type:
+    type: string
+    description: vipsec port 0 vnic type (normal, direct)
+    default: normal
+  vipsec_private_1_port_vnic_type:
+    type: string
+    description: vipsec port 1 vnic type (normal, direct)
+    default: normal
+  vipsec_B_private_0_port_vnic_type:
+    type: string
+    description: vipsec port 0 vnic type (normal, direct)
+    default: normal
+  vipsec_private_2_port_vnic_type:
+    type: string
+    description: vipsec port 2 vnic type (normal, direct)
+    default: normal
+  vsn_private_0_port_vnic_type:
+    type: string
+    description: vsn port 0 vnic type (normal, direct)
+    default: normal
+  vsn_private_1_port_vnic_type:
+    type: string
+    description: vsn port 1 vnic type (normal, direct)
+    default: normal
+  vpg_private_0_port_vnic_type:
+    type: string
+    description: vpg port 0 vnic type (normal, direct)
+    default: normal
+  vpg_private_1_port_vnic_type:
+    type: string
+    description: vpg port 1 vnic type (normal, direct)
+    default: normal
+  vipsec_name_0:
+    type: string
+    label: vIPsec name
+    description: Name of the vIPsec gateway A
+  vipsec_name_1:
+    type: string
+    label: vIPsec name
+    description: Name of the vIPsec gateway B
+  vpg_name_0:
+    type: string
+    label: vPacketGenerator name
+    description: Name of the vPacketGenerator
+  vsn_name_0:
+    type: string
+    label: vSink name
+    description: Name of the vSink
+  vnf_id:
+    type: string
+    label: VNF ID
+    description: The VNF ID is provided by ONAP
+  vf_module_id:
+    type: string
+    label: vIPsec module ID
+    description: The vIPsec Module ID is provided by ONAP
+  dcae_collector_ip:
+    type: string
+    label: DCAE collector IP address
+    description: IP address of the DCAE collector
+  dcae_collector_port:
+    type: string
+    label: DCAE collector port
+    description: Port of the DCAE collector
+  key_name:
+    type: string
+    label: Key pair name
+    description: Public/Private key pair name
+  pub_key:
+    type: string
+    label: Public key
+    description: Public key to be installed on the compute instance
+  install_script_version:
+    type: string
+    label: Installation script version number
+    description: Version number of the scripts that install the vIPsec demo app
+  demo_artifacts_version:
+    type: string
+    label: Artifacts version used in demo vnfs
+    description: Artifacts (jar, tar.gz) version used in demo vnfs
+  nexus_artifact_repo:
+    type: string
+    description: Root URL for the Nexus repository for Maven artifacts.
+    default: "https://nexus.onap.org"
+  cloud_env:
+    type: string
+    label: Cloud environment
+    description: Cloud environment (e.g., openstack, rackspace)
+  sec_group:
+    type: string
+    description: ONAP Security Group
+  sdnc_model_name:
+    type: string
+    description: SDNC Model Name metatada
+  sdnc_model_version:
+    type: string
+    description: SDNC Model Version metatada
+  sdnc_artifact_name:
+    type: string
+    description: SDNC Artifact Name metatada
+  input_device_interface_A:
+    type: string
+    description: Device BDF name for the interface
+  input_device_interface_B:
+    type: string
+    description: Device BDF name for the interface
+  output_device_interface_A:
+    type: string
+    description: Device BDF name for the interface
+  output_device_interface_B:
+    type: string
+    description: Device BDF name for the interface
+  input_interface_A:
+    type: string
+    description: Device BDF num for the interface
+  input_interface_B:
+    type: string
+    description: Device BDF num for the interface
+  output_interface_A:
+    type: string
+    description: Device BDF num for the interface
+  output_interface_B:
+    type: string
+    description: Device BDF num for the interface
+  vpp_config:
+    type: string
+    description: Name of the vpp config
+  ipsec_config:
+    type: string
+    description: Name of the ipsec config
+  ipsec_A_MAC_address:
+    type: string
+    description: MAC address of ipsec gateway A
+  ipsec_B_MAC_address:
+    type: string
+    description: MAC address of ipsec gateway B
+
+#############
+#           #
+# RESOURCES #
+#           #
+#############
+
+resources:
+  random-str:
+    type: OS::Heat::RandomString
+    properties:
+      length: 4
+
+  my_keypair:
+    type: OS::Nova::KeyPair
+    properties:
+      name:
+        str_replace:
+          template: base_rand
+          params:
+            base: { get_param: key_name }
+            rand: { get_resource: random-str }
+      public_key: { get_param: pub_key }
+      save_private_key: false
+
+  protected_clientA_private_network:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: protected_clientA_private_net_id }
+
+  protected_clientB_private_network:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: protected_clientB_private_net_id }
+
+  protected_clientA_private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: protected_clientA_private_network }
+      cidr: { get_param: protected_clientA_private_net_cidr }
+
+  protected_clientB_private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: protected_clientB_private_network }
+      cidr: { get_param: protected_clientB_private_net_cidr }
+
+  # Virtual IPsec instantiation
+  vipsec_A_private_0_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: protected_clientA_private_network }
+      binding:vnic_type: { get_param: vipsec_A_private_0_port_vnic_type}
+      fixed_ips: [{"subnet": { get_resource: protected_clientA_private_subnet}, "ipaddress": { get_param: vipsec_A_private_ip_0 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vipsec_A_private_1_port:
+    type: OS::Neutron::Port
+    properties:
+      #allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
+      network: { get_param: onap_private_net_id }
+      binding:vnic_type: { get_param: vipsec_private_1_port_vnic_type}
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vipsec_A_private_ip_1 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vipsec_A_private_2_port:
+    type: OS::Neutron::Port
+    properties:
+      #allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
+      network: { get_param: ipsec_private_net_id }
+      binding:vnic_type: { get_param: vipsec_private_2_port_vnic_type}
+      fixed_ips: [{"subnet": { get_param: ipsec_private_subnet_id }, "ip_address": { get_param: vipsec_A_private_ip_2 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vipsec_B_private_0_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: protected_clientB_private_network }
+      binding:vnic_type: { get_param: vipsec_B_private_0_port_vnic_type}
+      fixed_ips: [{"subnet": { get_resource: protected_clientB_private_subnet}, "ipaddress": { get_param: vipsec_B_private_ip_0 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vipsec_B_private_1_port:
+    type: OS::Neutron::Port
+    properties:
+      #allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
+      network: { get_param: onap_private_net_id }
+      binding:vnic_type: { get_param: vipsec_private_1_port_vnic_type}
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vipsec_B_private_ip_1 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vipsec_B_private_2_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: ipsec_private_net_id }
+      binding:vnic_type: { get_param: vipsec_private_2_port_vnic_type}
+      fixed_ips: [{"subnet": { get_param: ipsec_private_subnet_id }, "ip_address": { get_param: vipsec_B_private_ip_2 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vipsec_0:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: vipsec_image_name }
+      flavor: { get_param: ipsec_flavor_name }
+      name: { get_param: vipsec_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: vipsec_A_private_0_port }
+        - port: { get_resource: vipsec_A_private_1_port }
+      metadata: { vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __dcae_collector_ip__ : { get_param: dcae_collector_ip }
+            __dcae_collector_port__ : { get_param: dcae_collector_port }
+            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
+            __install_script_version__ : { get_param: install_script_version }
+            __vipsec_A_private_ip_0__ : { get_param: vipsec_A_private_ip_0 }
+            __vipsec_A_private_ip_1__ : { get_param: vipsec_A_private_ip_1 }
+            __protected_clientA_private_net_cidr__ : { get_param: protected_clientA_private_net_cidr }
+            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
+            __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+            __vpp_config__: { get_param: vpp_config }
+            __ipsec_config__: { get_param: ipsec_config }
+            __input_interface_num__: { get_param: input_interface_A }
+            __output_interface_num__: { get_param: output_interface_A }
+            __input_interface__: { get_param: input_device_interface_A }
+            __output_interface__: { get_param: output_device_interface_A }
+            __ipsec_B_MAC_address__: { get_param: ipsec_B_MAC_address }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir /opt/config
+            echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
+            echo "__dcae_collector_port__" > /opt/config/dcae_collector_port.txt
+            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__vipsec_A_private_ip_0__" > /opt/config/vipsec_A_private_ip_0.txt
+            echo "__vipsec_A_private_ip_1__" > /opt/config/vipsec_A_private_ip_1.txt
+            echo "__protected_clientA_private_net_cidr__" > /opt/config/protected_clientA_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+            echo "__input_interface_num__" > /opt/config/input_interface_A_BDF_num.txt
+            echo "__output_interface_num__" > /opt/config/output_interface_A_BDF_num.txt
+            echo "__input_interface__" > /opt/config/input_interface_A.txt
+            echo "__output_interface__" > /opt/config/output_interface_A.txt
+            echo "__ipsec_B_MAC_address__" > /opt/config/ipsec_B_mac_address.txt
+            echo "__vpp_config__" > /opt/config/vpp_config.txt
+            echo "__ipsec_config__" > /opt/config/ipsec_config.txt
+
+            # Download and run install script
+            apt-get update
+            cd /root/comms/dpdk/x86_64-native-linuxapp-gcc/kmod
+            modeprobe uio
+            insmod igb_uio.ko
+            cd /opt
+            cat > __vpp_config__<< NEWFILE
+
+            unix {
+                    exec __ipsec_config__
+                    nodaemon
+                    cli-listen /run/vpp/cli.sock
+                    log /tmp/vpp.log
+                 }
+
+            cpu {
+                   main-core 0
+                   corelist-workers 1
+                }
+
+            dpdk {
+                    socket-mem 512
+                    log-level debug
+                    no-tx-checksum-offload
+                    dev default{
+                            num-tx-desc 512
+                            num-rx-desc 512
+                    }
+                    dev __input_interface_num__
+                    {
+                            workers 0
+                    }
+                    dev __output_interface_num__
+                    {
+                            workers 0
+                    }
+                    vdev crypto_aesni_gcm0
+
+                    num-mbufs 370000
+                    no-multi-seg
+                 }
+
+            NEWFILE
+
+            cat > __ipsec_config__<< NEWFILE
+           
+            set interface state __input_interface__ up
+            set interface state __output_interface__ up
+
+            set interface ip address __input_interface__ 1.0.0.1/8
+            set interface ip address __output_interface__ 255.0.0.128/8
+
+            set int promiscuous on __input_interface__
+            set int promiscuous on __output_interface__
+
+            set ip arp __output_interface__ 255.0.0.129 __ipsec_B_MAC_address
+            set ip arp __input_interface__ 1.0.0.2 11:11:11:11:00:11
+
+            ip route add count 1 104.0.0.0/32 via 255.0.0.129 __output_interface__
+            ip route add count 1 004.0.0.0/32 via 1.0.0.2 __input_interface__
+
+            ipsec spd add 1
+            set interface ipsec spd __output_interface__ 1
+            ipsec sa add 1 spi 25500128 esp tunnel-src 255.0.0.128 tunnel-dst 255.0.0.129 crypto-key 2b7e151628aed2a6abf7158809cf4f3d crypto-alg aes-cbc-128 integ-key 6867666568676665686766656867666568676669 integ-alg sha1-96
+            ipsec sa add 2 spi 25500129 esp tunnel-src 255.0.0.129 tunnel-dst 255.0.0.128 crypto-key 2b7e151628aed2a6abf7158809cf4f3d crypto-alg aes-cbc-128 integ-key 6867666568676665686766656867666568676669 integ-alg sha1-96
+            ipsec policy add spd 1 outbound priority 100 action protect sa 1 remote-ip-range 104.0.0.0-104.0.0.0
+            ipsec policy add spd 1 inbound priority 100 action protect sa 2 remote-ip-range 004.0.0.0-004.0.0.0
+            ipsec policy add spd 1 inbound priority 90 protocol 50 action bypass
+            ipsec policy add spd 1 outbound priority 90 protocol 50 action bypass
+            
+            NEWFILE
+
+            vpp -c __vpp_config__
+
+  vipsec_1:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: vipsec_image_name }
+      flavor: { get_param: ipsec_flavor_name }
+      name: { get_param: vipsec_name_1 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: vipsec_B_private_0_port }
+        - port: { get_resource: vipsec_B_private_1_port }
+      metadata: { vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __dcae_collector_ip__ : { get_param: dcae_collector_ip }
+            __dcae_collector_port__ : { get_param: dcae_collector_port }
+            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
+            __install_script_version__ : { get_param: install_script_version }
+            __vipsec_A_private_ip_0__ : { get_param: vipsec_B_private_ip_0 }
+            __vipsec_A_private_ip_1__ : { get_param: vipsec_B_private_ip_1 }
+            __protected_clientA_private_net_cidr__ : { get_param: protected_clientB_private_net_cidr }
+            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
+            __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+            __vpp_config__: { get_param: vpp_config }
+            __ipsec_config__: { get_param: ipsec_config }
+            __input_interface_num__: { get_param: input_interface_B }
+            __output_interface_num__: { get_param: output_interface_B }
+            __input_interface__: { get_param: input_device_interface_B }
+            __output_interface__: { get_param: output_device_interface_B }
+            __ipsec_A_MAC_address__: { get_param: ipsec_A_MAC_address }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir /opt/config
+            echo "__dcae_collector_ip__" > /opt/config/dcae_collector_ip.txt
+            echo "__dcae_collector_port__" > /opt/config/dcae_collector_port.txt
+            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__vipsec_B_private_ip_0__" > /opt/config/vipsec_B_private_ip_0.txt
+            echo "__vipsec_B_private_ip_1__" > /opt/config/vipsec_B_private_ip_1.txt
+            echo "__protected_clientA_private_net_cidr__" > /opt/config/protected_clientB_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+            echo "__input_interface_num__" > /opt/config/input_interface_B_BDF_num.txt
+            echo "__output_interface_num__" > /opt/config/output_interface_B_BDF_num.txt
+            echo "__input_interface__" > /opt/config/input_interface_B.txt
+            echo "__output_interface__" > /opt/config/output_interface_B.txt
+            echo "__ipsec_A_MAC_address__" > /opt/config/ipsec_A_mac_address.txt
+            echo "__vpp_config__" > /opt/config/vpp_config.txt
+            echo "__ipsec_config__" > /opt/config/ipsec_config.txt
+
+            # Download and run install script
+            apt-get update
+            cd /root/comms/dpdk/x86_64-native-linuxapp-gcc/kmod
+            modeprobe uio
+            insmod igb_uio.ko
+            cd /opt
+            cat > __vpp_config__<< NEWFILE
+
+            unix {
+                    exec __ipsec_config__
+                    nodaemon
+                    cli-listen /run/vpp/cli.sock
+                    log /tmp/vpp.log
+                 }
+
+            cpu {
+                   main-core 0
+                   corelist-workers 1
+                }
+
+            dpdk {
+                    socket-mem 512
+                    log-level debug
+                    no-tx-checksum-offload
+                    dev default{
+                            num-tx-desc 512
+                            num-rx-desc 512
+                    }
+                    dev __input_interface_num__
+                    {
+                            workers 0
+                    }
+                    dev __output_interface_num__
+                    {
+                            workers 0
+                    }
+                    vdev crypto_aesni_gcm0
+
+                    num-mbufs 370000
+                    no-multi-seg
+                 }
+
+            NEWFILE
+
+            cat > __ipsec_config__<< NEWFILE
+           
+            set interface state __input_interface__ up
+            set interface state __output_interface__ up
+
+            set interface ip address __input_interface__ 1.0.0.1/8
+            set interface ip address __output_interface__ 255.0.0.128/8
+
+            set int promiscuous on __input_interface__
+            set int promiscuous on __output_interface__
+
+            set ip arp __output_interface__ 255.0.0.129 __ipsec_A_MAC_address
+            set ip arp __input_interface__ 1.0.0.2 11:11:11:11:00:11
+
+            ip route add count 1 104.0.0.0/32 via 255.0.0.129 __output_interface__
+            ip route add count 1 004.0.0.0/32 via 1.0.0.2 __input_interface__
+
+            ipsec spd add 1
+            set interface ipsec spd __output_interface__ 1
+            ipsec sa add 1 spi 25500128 esp tunnel-src 255.0.0.128 tunnel-dst 255.0.0.129 crypto-key 2b7e151628aed2a6abf7158809cf4f3d crypto-alg aes-cbc-128 integ-key 6867666568676665686766656867666568676669 integ-alg sha1-96
+            ipsec sa add 2 spi 25500129 esp tunnel-src 255.0.0.129 tunnel-dst 255.0.0.128 crypto-key 2b7e151628aed2a6abf7158809cf4f3d crypto-alg aes-cbc-128 integ-key 6867666568676665686766656867666568676669 integ-alg sha1-96
+            ipsec policy add spd 1 outbound priority 100 action protect sa 1 remote-ip-range 104.0.0.0-104.0.0.0
+            ipsec policy add spd 1 inbound priority 100 action protect sa 2 remote-ip-range 004.0.0.0-004.0.0.0
+            ipsec policy add spd 1 inbound priority 90 protocol 50 action bypass
+            ipsec policy add spd 1 outbound priority 90 protocol 50 action bypass
+            
+            NEWFILE
+
+            vpp -c __vpp_config__
+
+
+  # Virtual Packet Generator instantiation
+  vpg_private_0_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: protected_clientA_private_network}
+      binding:vnic_type: { get_param: vpg_private_0_port_vnic_type}
+      fixed_ips: [{"subnet": { get_resource: protected_clientA_private_subnet }, "ip_address": { get_param: vpg_private_ip_0 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vpg_private_1_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: onap_private_net_id }
+      binding:vnic_type: { get_param: vpg_private_1_port_vnic_type}
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vpg_private_ip_1 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vpg_0:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: vipsec_image_name }
+      flavor: { get_param: packetgen_flavor_name }
+      name: { get_param: vpg_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: vpg_private_0_port }
+        - port: { get_resource: vpg_private_1_port }
+      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __ipsec_ipaddr__: { get_param: vipsec_A_private_ip_0 }
+            __protected_clientB_net_cidr__: { get_param: protected_clientB_private_net_cidr }
+            __sink_ipaddr__: { get_param: vsn_private_ip_0 }
+            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
+            __install_script_version__ : { get_param: install_script_version }
+            __vpg_private_ip_0__ : { get_param: vpg_private_ip_0 }
+            __vpg_private_ip_1__ : { get_param: vpg_private_ip_1 }
+            __protected_clientA_net_cidr__ : { get_param: protected_clientA_private_net_cidr }
+            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
+            __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir /opt/config
+            echo "__ipsec_ipaddr__" > /opt/config/fw_ipaddr.txt
+            echo "__protected_clientB_net_cidr__" > /opt/config/protected_clientB_net_cidr.txt
+            echo "__sink_ipaddr__" > /opt/config/sink_ipaddr.txt
+            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
+            echo "__vpg_private_ip_1__" > /opt/config/vpg_private_ip_1.txt
+            echo "__protected_clientB_private_net_cidr__" > /opt/config/protected_clientA_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+
+            # Download and run install script
+            apt-get update
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
+            unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_packetgen_install.sh
+            cd /opt
+            chmod +x v_packetgen_install.sh
+            ./v_packetgen_install.sh
+
+
+  # Virtual Sink instantiation
+  vsn_private_0_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_resource: protected_clientB_private_network }
+      binding:vnic_type: { get_param: vsn_private_0_port_vnic_type}
+      fixed_ips: [{"subnet": { get_resource: protected_clientB_private_subnet }, "ip_address": { get_param: vsn_private_ip_0 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vsn_private_1_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: onap_private_net_id }
+      binding:vnic_type: { get_param: vsn_private_1_port_vnic_type}
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vsn_private_ip_1 }}]
+      security_groups:
+      - { get_param: sec_group }
+
+  vsn_0:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: vipsec_image_name }
+      flavor: { get_param: sink_flavor_name }
+      name: { get_param: vsn_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: vsn_private_0_port }
+        - port: { get_resource: vsn_private_1_port }
+      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __protected_net_gw__: { get_param: vipsec_B_private_ip_0 }
+            __protected_net_A__: { get_param: protected_clientA_private_net_cidr }
+            __install_script_version__ : { get_param: install_script_version }
+            __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
+            __vsn_private_ip_1__ : { get_param: vsn_private_ip_1 }
+            __protected_clientB_private_net_cidr__ : { get_param: protected_clientB_private_net_cidr }
+            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
+            __cloud_env__ : { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir /opt/config
+            echo "__protected_net_gw__" > /opt/config/protected_net_gw.txt
+            echo "__protected_net_A__" > /opt/config/protected_net_A.txt
+            echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__vsn_private_ip_0__" > /opt/config/vsn_private_ip_0.txt
+            echo "__vsn_private_ip_1__" > /opt/config/vsn_private_ip_1.txt
+            echo "__protected_clientB_private_net_cidr__" > /opt/config/protected_clientB_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+
+            # Download and run install script
+            apt-get update
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
+            unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_sink_install.sh
+            cd /opt
+            chmod +x v_sink_install.sh
+            ./v_sink_install.sh
