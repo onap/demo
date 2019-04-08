@@ -16,7 +16,7 @@ cadvisor_prometheus:
   service:
     type: NodePort
     port: 80
-    nodePort: 30091
+    nodePort: 91
     targetPort: 8080
     selector:
       app: cadvisor
