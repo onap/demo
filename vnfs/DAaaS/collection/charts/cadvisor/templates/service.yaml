@@ -28,7 +28,10 @@ spec:
 {{ include "rangeskipempty" .Values.cadvisor_prometheus.service.selector | indent 4 }}
   ports:
   - name: cadvisor-prometheus 
+    {{- if eq .Values.cadvisor_prometheus.service.type "NodePort" }}
+    nodePort: {{ .Values.global.nodePortPrefix }}{{ .Values.cadvisor_prometheus.service.nodePort }}
+    {{- end }}
     protocol: TCP
     port: {{ .Values.cadvisor_prometheus.service.port }}
-    nodePort: {{ .Values.cadvisor_prometheus.service.nodePort }}
+    nodePort: {{ .Values.global.nodePortPrefix }}{{ .Values.cadvisor_prometheus.service.nodePort }}
     targetPort: {{ .Values.cadvisor_prometheus.service.targetPort }}
