@@ -19,8 +19,9 @@
 CC=gcc
 
 ARCH=$(shell getconf LONG_BIT)
+MACHINE_ARCH=$(shell uname -m)
 CODE_ROOT=$(CURDIR)/../../..
-LIBS_DIR=$(CODE_ROOT)/libs/x86_$(ARCH)
+LIBS_DIR=$(CODE_ROOT)/libs/$(MACHINE_ARCH)
 INCLUDE_DIR=$(CODE_ROOT)/code/evel_library
 
 #******************************************************************************

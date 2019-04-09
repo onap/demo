@@ -26,13 +26,14 @@
 #******************************************************************************
 
 ARCH=$(shell getconf LONG_BIT)
+MACHINE_ARCH=$(shell uname -m)
 CODE_ROOT=$(CURDIR)/..
 EVELLIB_ROOT=$(CODE_ROOT)/code/evel_library
 EVELDEMO_ROOT=$(CODE_ROOT)/code/evel_demo
 EVELUNIT_ROOT=$(CODE_ROOT)/code/evel_unit
 EVELTRAINING_ROOT=$(CODE_ROOT)/code/evel_training
-LIBS_DIR=$(CODE_ROOT)/libs/x86_$(ARCH)
-OUTPUT_DIR=$(CODE_ROOT)/output/x86_$(ARCH)
+LIBS_DIR=$(CODE_ROOT)/libs/$(MACHINE_ARCH)
+OUTPUT_DIR=$(CODE_ROOT)/output/$(MACHINE_ARCH)
 DOCS_ROOT=$(CODE_ROOT)/docs
 CC=gcc
 SCP=scp
@@ -46,8 +47,13 @@ PLANTFLAGS=-tsvg
 # Standard compiler flags.                                                    *
 #******************************************************************************
 CPPFLAGS=-I $(EVELLIB_ROOT)
-CFLAGS=-Wall -Wextra -m$(ARCH) -g -fPIC
-LIBCFLAGS=-Wall -Wextra -m$(ARCH) -g -shared -fPIC
+ifeq ($(MACHINE_ARCH), aarch64)
+	CFLAGS=-Wall -Wextra -march=native -g -fPIC
+	LIBCFLAGS=-Wall -Wextra -march=native -g -shared -fPIC
+else
+	CFLAGS=-Wall -Wextra -m$(ARCH) -g -fPIC
+	LIBCFLAGS=-Wall -Wextra -m$(ARCH) -g -shared -fPIC
+endif
 
 #******************************************************************************
 # The testbed is a VM instance where we can install the EVEL example under    *
@@ -251,7 +257,7 @@ evel_test_centos: evel_install_centos
 	@echo Testing EVEL Demo application on CentOS...
 	@$(SSH) $(VNF_TESTBED_CENTOS_USER)@$(VNF_TESTBED_CENTOS) \
            source .bash_profile \; \
-           $(TESTBED_CENTOS_INSTALL_PATH)/output/x86_$(ARCH)/evel_demo \
+           $(TESTBED_CENTOS_INSTALL_PATH)/output/$(MACHINE_ARCH)/evel_demo \
                                                  --fqdn $(VNF_COLLECTOR_HOST) \
                                                  --port $(VNF_COLLECTOR_PORT) \
                                                  --verbose
@@ -265,7 +271,7 @@ evel_test_ubuntu: evel_install_ubuntu
 	@echo Testing EVEL Demo application on Ubuntu...
 	@$(SSH) $(VNF_TESTBED_UBUNTU_USER)@$(VNF_TESTBED_UBUNTU) \
            source .profile \; \
-           $(TESTBED_UBUNTU_INSTALL_PATH)/output/x86_$(ARCH)/evel_demo \
+           $(TESTBED_UBUNTU_INSTALL_PATH)/output/$(MACHINE_ARCH)/evel_demo \
                                                  --fqdn $(VNF_COLLECTOR_HOST) \
                                                  --port $(VNF_COLLECTOR_PORT) \
                                                  --verbose
@@ -293,8 +299,8 @@ package: api_library_clean \
 	@cd $(CODE_ROOT) && tar cfz output/evel-library-package.tgz  bldjobs \
                                                       code \
                                                       docs \
-                                                      libs/x86_64/README \
-                                                      output/x86_64/README \
+                                                      libs/$(MACHINE_ARCH)/README \
+                                                      output/$(MACHINE_ARCH)/README \
                                                       readme.md
 
 package_clean:
