@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5389734_fbb3e5a1",
+        "filename": "vnfs/DAaaS/collection/charts/collectd/resources/config/plugins.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-04-11T19:09:41Z",
+      "side": 1,
+      "message": "Rename this file to collectd.conf",
+      "revId": "e78ad213f7a2b97821e1fdf7242c8d8f1b090406",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4f2e090_0b73d9c4",
+        "filename": "vnfs/DAaaS/collection/charts/collectd/templates/configmap.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-04-11T19:09:41Z",
+      "side": 1,
+      "message": "This is part of the collectd.conf",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 20
+      },
+      "revId": "e78ad213f7a2b97821e1fdf7242c8d8f1b090406",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
