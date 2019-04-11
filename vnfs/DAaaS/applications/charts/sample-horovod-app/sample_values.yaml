@@ -1,0 +1,44 @@
+---
+#useHostNetwork: true
+
+ssh:
+  useSecrets: true
+  hostKey: |-
+    -----BEGIN RSA PRIVATE KEY-----
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
+    -----END RSA PRIVATE KEY-----
+
+  hostKeyPub: |-
+    ssh-rsa ThisIsPublicKeyThisIsPublicKeyThisIsPublicKeyThisIsPublicKeyThisIsPublicKey
+    ThisIsPublicKeyThisIsPublicKeyThisIsPublicKeyThisIsPublicKeyThisIsPublicKey
+    ThisIsPublicKeyThisIsPublicKeyThisIsPublicKeyThisIsPublicKeyThisIsPublicKey
+    ThisIsPublicKeyThisIsPublicKeyThisIsPublicKeyThisIsPublicKey user@openSource
+
+resources: {}
+
+worker:
+  number: 2
+  image:
+    repository: spark-tf-keras-horovod-pytorch
+    tag: latest
+    pullPolicy: Never 
+master:
+  image:
+    repository: spark-tf-keras-horovod-pytorch 
+    tag: latest
+    pullPolicy: Never
+  args:
+    - "mpirun -np 3 --hostfile /horovod/generated/hostfile --mca orte_keep_fqdn_hostnames t --allow-run-as-root --display-map --tag-output --timestamp-output sh -c '/opt/conda/envs/tf_env/bin/python /opt/spark/examples/src/main/python/tensorflow/keras_mnist_advanced_modified.py'"
