@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3eb7650d_661b369d",
+        "filename": "onap_deploy/ansible/inventory/deploy",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 667
+      },
+      "writtenOn": "2019-04-15T22:15:01Z",
+      "side": 1,
+      "message": "Cleanup these to generic names.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 69
+      },
+      "revId": "9f783daf52ac5bbef5e59fe5d6be0e58738fea30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19347913_4c722306",
+        "filename": "onap_deploy/ansible/site.retry",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 667
+      },
+      "writtenOn": "2019-04-15T22:15:01Z",
+      "side": 1,
+      "message": "Should be deleted.",
+      "revId": "9f783daf52ac5bbef5e59fe5d6be0e58738fea30",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
