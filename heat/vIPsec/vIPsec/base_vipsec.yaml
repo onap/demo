@@ -688,14 +688,14 @@ resources:
 
             # Create configuration files
             mkdir /opt/config
-            echo "__ipsec_ipaddr__" > /opt/config/fw_ipaddr.txt
+            echo "__ipsec_ipaddr__" > /opt/config/vipsec_ipaddr.txt
             echo "__protected_clientB_net_cidr__" > /opt/config/protected_clientB_net_cidr.txt
             echo "__sink_ipaddr__" > /opt/config/sink_ipaddr.txt
             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
             echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
             echo "__vpg_private_ip_1__" > /opt/config/vpg_private_ip_1.txt
-            echo "__protected_clientB_private_net_cidr__" > /opt/config/protected_clientA_net_cidr.txt
+            echo "__protected_clientA__net_cidr__" > /opt/config/protected_clientA_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
             echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
