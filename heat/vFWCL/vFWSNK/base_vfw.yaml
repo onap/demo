@@ -125,6 +125,10 @@ parameters:
     type: string
     label: VNF NAME
     description: The VNF NAME is provided by ONAP
+  net_prefix:
+    type: string
+    label: Network prefix
+    description: Prefix for private network names - Workaround for Dublin
   vnf_id:
     type: string
     label: VNF ID
@@ -201,7 +205,7 @@ resources:
           template: vnfname_netid
           params:
             netid: { get_param: int_unprotected_private_net_id }
-            vnfname: { get_param: vnf_name }
+            vnfname: { get_param: net_prefix }
 
   int_unprotected_private_subnet:
     type: OS::Neutron::Subnet
@@ -211,7 +215,7 @@ resources:
           template: vnfname_subnetid
           params:
             subnetid: { get_param: int_unprotected_private_subnet_id }
-            vnfname: { get_param: vnf_name }
+            vnfname: { get_param: net_prefix }
       network: { get_resource: int_unprotected_private_network }
       cidr: { get_param: unprotected_private_net_cidr }
 
@@ -223,7 +227,7 @@ resources:
           template: vnfname_netid
           params:
             netid: { get_param: int_protected_private_net_id }
-            vnfname: { get_param: vnf_name }
+            vnfname: { get_param: net_prefix }
 
   int_protected_private_subnet:
     type: OS::Neutron::Subnet
@@ -233,7 +237,7 @@ resources:
           template: vnfname_subnetid
           params:
             subnetid: { get_param: int_protected_private_subnet_id }
-            vnfname: { get_param: vnf_name }
+            vnfname: { get_param: net_prefix }
       network: { get_resource: int_protected_private_network }
       cidr: { get_param: protected_private_net_cidr }
 
