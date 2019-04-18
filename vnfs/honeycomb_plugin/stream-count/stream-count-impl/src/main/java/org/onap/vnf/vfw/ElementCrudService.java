@@ -18,7 +18,7 @@
  * Modifications copyright (c) 2019 AT&T Intellectual Property
  */
 
-package io.fd.honeycomb.lcmapi;
+package org.onap.vnf.vfw;
 
 import io.fd.honeycomb.translate.read.ReadFailedException;
 import io.fd.honeycomb.translate.write.WriteFailedException;

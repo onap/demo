@@ -16,26 +16,15 @@
   <parent>
     <groupId>io.fd.honeycomb.common</groupId>
     <artifactId>api-parent</artifactId>
-    <version>1.16.9</version>
+    <version>1.18.10</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>io.fd.honeycomb.lcmapi</groupId>
+  <groupId>org.onap.vnf.vfw</groupId>
   <artifactId>stream-count-api</artifactId>
-  <version>1.16.9</version>
+  <name>stream-count-api</name>
+  <version>1.18.10</version>
   <packaging>bundle</packaging>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.opendaylight.mdsal.model</groupId>
-        <artifactId>mdsal-model-artifacts</artifactId>
-        <version>0.8.2-Beryllium-SR2</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
     <dependency>

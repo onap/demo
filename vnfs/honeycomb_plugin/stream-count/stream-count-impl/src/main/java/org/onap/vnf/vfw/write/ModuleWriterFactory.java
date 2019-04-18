@@ -18,13 +18,13 @@
  * Modifications copyright (c) 2019 AT&T Intellectual Property
  */
 
-package io.fd.honeycomb.lcmapi.write;
+package org.onap.vnf.vfw.write;
 
-import static io.fd.honeycomb.lcmapi.ModuleConfiguration.ELEMENT_SERVICE_NAME;
+import static org.onap.vnf.vfw.ModuleConfiguration.ELEMENT_SERVICE_NAME;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import io.fd.honeycomb.lcmapi.CrudService;
+import org.onap.vnf.vfw.CrudService;
 import io.fd.honeycomb.translate.impl.write.GenericWriter;
 import io.fd.honeycomb.translate.write.WriterFactory;
 import io.fd.honeycomb.translate.write.registry.ModifiableWriterRegistryBuilder;

@@ -18,26 +18,22 @@
  * Modifications copyright (c) 2019 AT&T Intellectual Property
  */
 
-package io.fd.honeycomb.lcmapi.write;
+package org.onap.vnf.vfw.write;
 
-import io.fd.honeycomb.lcmapi.CrudService;
+import org.onap.vnf.vfw.CrudService;
 import io.fd.honeycomb.translate.spi.write.WriterCustomizer;
 import io.fd.honeycomb.translate.write.WriteContext;
 import io.fd.honeycomb.translate.write.WriteFailedException;
-
-import java.io.IOException;
-
 import javax.annotation.Nonnull;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.params.xml.ns.yang.stream.count.rev190118.stream.count.params.Streams;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
-
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Writer for {@link Element} list node from our YANG model.
  */
-
 public final class ElementCustomizer implements WriterCustomizer<Streams> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ElementCustomizer.class);
@@ -92,7 +88,7 @@ public final class ElementCustomizer implements WriterCustomizer<Streams> {
     //Update the number of running streams running a custom script that uses the old vPacketGen REST APIs
     private void runScript(long streams) throws IOException {
 
-        String script = new String("bash /opt/update_running_streams.sh " + streams);
+        String script = new String("bash /opt/enable_disable_streams.sh " + streams);
         Runtime.getRuntime().exec(script);
         String message = "Number of running streams updated to " + streams;
         LOG.info(message);

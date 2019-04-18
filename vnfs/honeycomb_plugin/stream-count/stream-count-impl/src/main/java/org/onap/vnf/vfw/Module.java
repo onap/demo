@@ -18,16 +18,15 @@
  * Modifications copyright (c) 2019 AT&T Intellectual Property
  */
 
-package io.fd.honeycomb.lcmapi;
+package org.onap.vnf.vfw;
 
-import static io.fd.honeycomb.lcmapi.ModuleConfiguration.ELEMENT_SERVICE_NAME;
+import static org.onap.vnf.vfw.ModuleConfiguration.ELEMENT_SERVICE_NAME;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
-import io.fd.honeycomb.lcmapi.init.ConfigDataInitializer;
-import io.fd.honeycomb.lcmapi.write.ModuleWriterFactory;
+import org.onap.vnf.vfw.write.ModuleWriterFactory;
 import io.fd.honeycomb.data.init.DataTreeInitializer;
 import io.fd.honeycomb.translate.write.WriterFactory;
 import net.jmob.guice.conf.core.ConfigurationModule;
@@ -60,11 +59,5 @@ public final class Module extends AbstractModule {
         // can hold multiple binding for separate yang modules
         final Multibinder<WriterFactory> writerFactoryBinder = Multibinder.newSetBinder(binder(), WriterFactory.class);
         writerFactoryBinder.addBinding().to(ModuleWriterFactory.class);
-
-        // create initializer binding
-        // can hold multiple binding for separate yang modules
-        final Multibinder<DataTreeInitializer> initializerBinder =
-                Multibinder.newSetBinder(binder(), DataTreeInitializer.class);
-        initializerBinder.addBinding().to(ConfigDataInitializer.class);
     }
 }

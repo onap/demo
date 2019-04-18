@@ -61,7 +61,7 @@ cd /opt
 unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip v_packetgen_init.sh > /opt/v_packetgen_init.sh
 unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip vpacketgen.sh > /opt/vpacketgen.sh
 unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip run_traffic_fw_demo.sh > /opt/run_traffic_fw_demo.sh
-unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip update_running_streams.sh > /opt/update_running_streams.sh
+unzip -p -j /opt/vfw-scripts-$INSTALL_SCRIPT_VERSION.zip enable_disable_streams.sh > /opt/enable_disable_streams.sh
 wget -O sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf&a=sample-distribution&c=hc&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
 wget -O vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vfw&a=vfw_pg_streams&c=demo&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
 
@@ -69,12 +69,12 @@ tar -zmxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
 tar -zmxvf vfw_pg_streams-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv vfw_pg_streams-$DEMO_ARTIFACTS_VERSION pg_streams
 mv sample-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
-sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/sample-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/sample-distribution-$DEMO_ARTIFACTS_VERSION/config/restconf.json
 rm *.tar.gz
 chmod +x v_packetgen_init.sh
 chmod +x vpacketgen.sh
 chmod +x run_traffic_fw_demo.sh
-chmod +x update_running_streams.sh
+chmod +x enable_disable_streams.sh
 
 # Install VPP
 export UBUNTU="trusty"
