@@ -6,29 +6,22 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <!--parent>
+  <parent>
     <groupId>org.onap.demo.vnf</groupId>
     <artifactId>hc-onap</artifactId>
     <version>1.4.0-SNAPSHOT</version>
     <relativePath>../parent-pom/pom.xml</relativePath>
-  </parent-->
-
-  <parent>
-    <groupId>io.fd.honeycomb.common</groupId>
-    <artifactId>minimal-distribution-parent</artifactId>
-    <version>1.18.10</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.onap.vnf.vfw</groupId>
   <artifactId>sample-distribution</artifactId>
-  <version>1.4.0-SNAPSHOT</version>
-
-  <!--modelVersion>4.0.0</modelVersion>
-  <artifactId>sample-distribution</artifactId-->
 
   <properties>
     <exec.parameters>-Xms256m -Xmx256m</exec.parameters>
+    <exec.parameters.minimal>
+      -client -Xms20m -Xmx32m -XX:MetaspaceSize=5m -XX:MaxMetaspaceSize=32m -XX:MaxMetaspaceExpansion=1m -Xss512k -XX:+UseSerialGC -Djava.compiler=NONE -Xverify:none -noverify
+    </exec.parameters.minimal>
+    <random.seed.file>/dev/./urandom</random.seed.file>
     <main.class>io.fd.honeycomb.infra.distro.Main</main.class>
     <interfaces.mapping.version>1.18.10</interfaces.mapping.version>
     <honeycomb.min.distro.version>1.18.10</honeycomb.min.distro.version>
@@ -46,6 +39,125 @@
   </properties>
 
   <build>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main.class}</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions>
+                            <classpathMavenRepositoryLayout>true</classpathMavenRepositoryLayout>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>config/ cert/ modules/ yang-mapping/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <!--  Dependencies are copied by parent project  -->
+                    <execution>
+                        <id>unpack-configuration</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includes>**/honeycomb-minimal-resources/</includes>
+                            <outputDirectory>${project.build.outputDirectory}/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--  Generate shell script  -->
+            <!--  Extract modules started by distribution  -->
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>distribution-module-assembly</id>
+                        <!--phase changed from package to earlier phase to generate module descriptor before distribution jar is created,
+                             to include descriptor in the jar,to be accessible to children distributions-->
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                              io.fd.honeycomb.common.scripts.ModulesListGenerator.generate(project, properties, log)
+                            </source>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-module-to-yang-index</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                              io.fd.honeycomb.common.scripts.ModuleYangIndexGenerator.pairDistributionModulesWithYangModules(project, log)
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.fd.honeycomb.common</groupId>
+                        <artifactId>common-scripts</artifactId>
+                        <version>1.18.01</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!--  Build archives  -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.3</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.fd.honeycomb.common</groupId>
+                        <artifactId>minimal-assembly-descriptor</artifactId>
+                        <version>1.18.01</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>honeycomb-minimal</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--http://stackoverflow.com/questions/18107375/getting-skipping-jacoco-execution-due-to-missing-execution-data-file-upon-exec-->
+                    <argLine>
+                      ${argLine} -Djava.security.egd=file:${random.seed.file}
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
