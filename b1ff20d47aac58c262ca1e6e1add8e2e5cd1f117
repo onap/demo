@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "555bc708_6c212d2f",
+        "filename": "preload_data/vFWDT/preload_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 55
+      },
+      "writtenOn": "2019-04-22T18:08:55Z",
+      "side": 1,
+      "message": "this parameter is duplicated. is this ok?",
+      "range": {
+        "startLine": 53,
+        "startChar": 13,
+        "endLine": 53,
+        "endChar": 43
+      },
+      "revId": "b1ff20d47aac58c262ca1e6e1add8e2e5cd1f117",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
