@@ -136,96 +136,116 @@ topology_template:
 #      type: tosca.nodes.nfv.VnfVirtualLink
 #      properties:
 #        connectivity_type:
-#          layer_protocol: ipv4
+#          layer_protocols: [ipv4]
 #        vl_profile:
-#          max_bit_rate_requirements:
+#          max_bitrate_requirements:
 #            root: 10000000
 #            leaf: 10000000
-#          min_bit_rate_requirements:
+#          min_bitrate_requirements:
 #            root: 10000000
 #            leaf: 10000000
-#          networkName: { get_input: public_net_id }
+#          virtual_link_protocol_data:
+#            - associated_layer_protocol: ipv4
+#              l3_protocol_data:
+#                ip_version: ipv4
+#                name: { get_input: public_net_id }
 #
 #    #onap oam net
 #    VL_onap_private:
 #      type: tosca.nodes.nfv.VnfVirtualLink
 #      properties:
 #        connectivity_type:
-#          layer_protocol: ipv4
+#          layer_protocols: [ipv4]
 #        vl_profile:
-#          max_bit_rate_requirements:
+#          max_bitrate_requirements:
 #            root: 10000000
 #            leaf: 10000000
-#          min_bit_rate_requirements:
+#          min_bitrate_requirements:
 #            root: 10000000
 #            leaf: 10000000
-#          networkName: { get_input: onap_private_net_id }
-#          cidr: { get_input: onap_private_net_cidr }
+#          virtual_link_protocol_data:
+#            - associated_layer_protocol: ipv4
+#              l3_protocol_data:
+#                ip_version: ipv4
+#                name: { get_input: onap_private_net_id }
+#                cidr: { get_input: onap_private_net_cidr }
 
     #Private network that connects vBRG to vBNG
     VL_brgemu_bng_private_net:
       type: tosca.nodes.nfv.VnfVirtualLink
       properties:
         connectivity_type:
-          layer_protocol: ipv4
+          layer_protocols: [ipv4]
         vl_profile:
-          max_bit_rate_requirements:
+          max_bitrate_requirements:
             root: 10000000
             leaf: 10000000
-          min_bit_rate_requirements:
+          min_bitrate_requirements:
             root: 10000000
             leaf: 10000000
-          networkName: { get_input: brgemu_bng_private_net_id}
-          cidr: { get_input: brgemu_bng_private_net_cidr }
-          dhcpEnabled: false
+          virtual_link_protocol_data:
+            - associated_layer_protocol: ipv4
+              l3_protocol_data:
+                ip_version: ipv4
+                name: { get_input: brgemu_bng_private_net_id}
+                cidr: { get_input: brgemu_bng_private_net_cidr }
+                dhcp_enabled: false
 
     #cpe signal network
     VL_cpe_signal:
       type: tosca.nodes.nfv.VnfVirtualLink
       properties:
         connectivity_type:
-          layer_protocol: ipv4
+          layer_protocols: [ipv4]
         vl_profile:
-          max_bit_rate_requirements:
+          max_bitrate_requirements:
             root: 10000000
             leaf: 10000000
-          min_bit_rate_requirements:
+          min_bitrate_requirements:
             root: 10000000
             leaf: 10000000
-          networkName: { get_input: cpe_signal_net_id}
-          cidr: { get_input: cpe_signal_private_net_cidr }
-          dhcpEnabled: false
+          virtual_link_protocol_data:
+            - associated_layer_protocol: ipv4
+              l3_protocol_data:
+                ip_version: ipv4
+                name: { get_input: cpe_signal_net_id}
+                cidr: { get_input: cpe_signal_private_net_cidr }
+                dhcp_enabled: false
 
     #Private network that connects vBNG to vGMUX
     VL_bng_gmux_private_net:
       type: tosca.nodes.nfv.VnfVirtualLink
       properties:
         connectivity_type:
-          layer_protocol: ipv4
+          layer_protocols: [ipv4]
         vl_profile:
-          max_bit_rate_requirements:
+          max_bitrate_requirements:
             root: 10000000
             leaf: 10000000
-          min_bit_rate_requirements:
+          min_bitrate_requirements:
             root: 10000000
             leaf: 10000000
-          networkName: { get_input: bng_gmux_private_net_id}
-          cidr: { get_input: bng_gmux_private_net_cidr }
-          dhcpEnabled: false
+          virtual_link_protocol_data:
+            - associated_layer_protocol: ipv4
+              l3_protocol_data:
+                ip_version: ipv4
+                name: { get_input: bng_gmux_private_net_id}
+                cidr: { get_input: bng_gmux_private_net_cidr }
+                dhcp_enabled: false
 
     # vbng related
     Cp_vbng_public:
       type: tosca.nodes.nfv.VduCp
       properties:
-        layer_protocol: [ipv4]
+        layer_protocols: [ipv4]
         trunk_mode: false
-        protocol_data:
-          - asscociated_layer_protocol: ipv4
+        protocol:
+          - associated_layer_protocol: ipv4
             address_data:
-              address_type: ip_address
-              l3_address_data:
-                ip_address_assignment: false
-                floating_ip_activated: false
+              - address_type: ip_address
+                l3_address_data:
+                  ip_address_assignment: false
+                  floating_ip_activated: false
       requirements:
         - virtual_binding: VDU_vbng_0
         #- virtual_link: VL_public
@@ -233,17 +253,17 @@ topology_template:
     Cp_vbng_onap_private:
       type: tosca.nodes.nfv.VduCp
       properties:
-        layer_protocol: [ipv4]
+        layer_protocols: [ipv4]
         trunk_mode: false
-        protocol_data:
-          - asscociated_layer_protocol: ipv4
+        protocol:
+          - associated_layer_protocol: ipv4
             address_data:
-              address_type: ip_address
-              l3_address_data:
-                ip_address_assignment: false
-                floating_ip_activated: false
-                fixed_ip_address:
-                  - { get_input: vbng_private_ip_1 }
+              - address_type: ip_address
+                l3_address_data:
+                  ip_address_assignment: false
+                  floating_ip_activated: false
+                  fixed_ip_address:
+                    - { get_input: vbng_private_ip_1 }
       requirements:
         - virtual_binding: VDU_vbng_0
         #- virtual_link: VL_onap_private
@@ -251,21 +271,20 @@ topology_template:
     Cp_vbng_brgemu_bng_private_net:
       type: tosca.nodes.nfv.VduCp
       properties:
-        layer_protocol: [ipv4]
+        layer_protocols: [ipv4]
         trunk_mode: false
-        protocol_data:
-          - asscociated_layer_protocol: ipv4
+        protocol:
+          - associated_layer_protocol: ipv4
             address_data:
-              address_type: ip_address
-              l3_address_data:
-                ip_address_assignment: false
-                floating_ip_activated: false
-                fixed_ip_address:
-                  - { get_input: vbng_private_ip_0 }
+              - address_type: ip_address
+                l3_address_data:
+                  ip_address_assignment: false
+                  floating_ip_activated: false
+                  fixed_ip_address:
+                    - { get_input: vbng_private_ip_0 }
         virtual_network_interface_requirements:
           - name: dpdk support
             support_mandatory: true
-            # TODO HPA
             network_interface_requirements:
               dataProcessingAccelerationLibrary: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "DPDK"}'
       requirements:
@@ -275,17 +294,17 @@ topology_template:
     Cp_vbng_cpe_signal:
       type: tosca.nodes.nfv.VduCp
       properties:
-        layer_protocol: [ipv4]
+        layer_protocols: [ipv4]
         trunk_mode: false
-        protocol_data:
-          - asscociated_layer_protocol: ipv4
+        protocol:
+          - associated_layer_protocol: ipv4
             address_data:
-              address_type: ip_address
-              l3_address_data:
-                ip_address_assignment: false
-                floating_ip_activated: false
-                fixed_ip_address:
-                  - { get_input: vbng_private_ip_2 }
+              - address_type: ip_address
+                l3_address_data:
+                  ip_address_assignment: false
+                  floating_ip_activated: false
+                  fixed_ip_address:
+                    - { get_input: vbng_private_ip_2 }
       requirements:
         - virtual_binding: VDU_vbng_0
         - virtual_link: VL_cpe_signal
@@ -293,41 +312,31 @@ topology_template:
     Cp_vbng_bng_gmux_private_net:
       type: tosca.nodes.nfv.VduCp
       properties:
-        layer_protocol: [ipv4]
+        layer_protocols: [ipv4]
         trunk_mode: false
-        protocol_data:
-          - asscociated_layer_protocol: ipv4
+        protocol:
+          - associated_layer_protocol: ipv4
             address_data:
-              address_type: ip_address
-              l3_address_data:
-                ip_address_assignment: false
-                floating_ip_activated: false
-                fixed_ip_address:
-                  - { get_input: vbng_private_ip_3 }
+              - address_type: ip_address
+                l3_address_data:
+                  ip_address_assignment: false
+                  floating_ip_activated: false
+                  fixed_ip_address:
+                    - { get_input: vbng_private_ip_3 }
         virtual_network_interface_requirements:
           - name: dpdk support
             support_mandatory: true
-            # TODO HPA
             network_interface_requirements:
               dataProcessingAccelerationLibrary: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "DPDK"}'
       requirements:
         - virtual_binding: VDU_vbng_0
         - virtual_link: VL_bng_gmux_private_net
 
-    VirtualStorage_root_all:
-      # this indicate the VDU root storage size
-      type: tosca.nodes.nfv.Vdu.VirtualStorage
-      properties:
-        type_of_storage: root
-        size_of_storage: 40 GB
-
     VDU_vbng_0:
       type: tosca.nodes.nfv.Vdu.Compute
       properties:
         name: { get_input: vbng_name_0 }
         description: vbng
-        configurable_properties:
-          additional_vnfc_configurable_properties: {}
         vdu_profile:
           min_number_of_instances: 1
           max_number_of_instances: 1
@@ -354,7 +363,7 @@ topology_template:
           sdnc_ip: { get_input: sdnc_ip_addr }
           cloud_env: { get_input: cloud_env }
           nexus_artifact_repo: { get_input: nexus_artifact_repo }
-        user_data: |
+        boot_data: |
           #!/bin/bash
           METADATA=`curl -s http://169.254.169.254/openstack/2012-08-10/meta_data.json`
           apt-get -y install jq
@@ -396,15 +405,14 @@ topology_template:
           properties:
             virtual_memory:
               virtual_mem_size: 4096 MB
-              # HPA requirements
-              vdu_memory_requirements:
+              vdu_mem_requirements:
                 memoryPageSize: '{"schemaVersion": "0", "schemaSelector": "", "hardwarePlatform": "generic", "mandatory": "true", "configurationValue": "2 MB"}'
                 numberOfPages: '{"schemaVersion": "0","schemaSelector": "","hardwarePlatform": "generic","mandatory": "true", "configurationValue": "1024"}'
             virtual_cpu:
               num_virtual_cpu: 2
               cpu_architecture: generic
-      requirements:
-        - virtual_storage: VirtualStorage_root_all
+            virtual_local_storage:
+              - size_of_storage: 40 GB
       artifacts:
         sw_image: #TODO need to put glance image name here
           #file: { get_input: vcpe_image_name }
