@@ -173,7 +173,7 @@ topology_template:
 #            root: 10000000
 #            leaf: 10000000
 #          min_bitrate_requirements:
-#            root 10000000
+#            root: 10000000
 #            leaf: 10000000
 #          virtual_link_protocol_data:
 #            - associated_layer_protocol: ipv4
