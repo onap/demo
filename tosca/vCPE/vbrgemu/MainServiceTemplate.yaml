@@ -3,6 +3,7 @@ metadata:
   template_name: vCPE_vbrgemu
   template_version: "1.0"
   template_author: onap
+  VNFD_SCHEMA_VERSION: "2.5.1+1"
 description: vCPE_vbrgemu
 
 imports:
