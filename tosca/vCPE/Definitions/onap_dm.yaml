@@ -1334,7 +1334,7 @@ node_types:
         description: Describes the type of the virtual network interface realizing the CPs instantiated from this CPD
         required: false
         constraints:
-        - valid_values: [ normal, virtio, direct-physical ]
+        - valid_values: [ direct, normal, virtio, direct ]
       vnic_name: # Introduced from Beijing release, aligned with ONAP resource IM, outside the scope of SOL001 v2.5.1
         type: string
         required: false
