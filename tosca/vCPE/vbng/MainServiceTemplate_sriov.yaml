@@ -285,7 +285,7 @@ topology_template:
                   floating_ip_activated: false
                   fixed_ip_address:
                     - { get_input: vbng_private_ip_0 }
-        vnic_type: "direct-physical"
+        vnic_type: "direct"
         virtual_network_interface_requirements:
           - name: "sriov-support"
             support_mandatory: true
@@ -332,7 +332,7 @@ topology_template:
                   floating_ip_activated: false
                   fixed_ip_address:
                     - { get_input: vbng_private_ip_3 }
-        vnic_type: "direct-physical"
+        vnic_type: "direct"
         virtual_network_interface_requirements:
           - name: "sriov-support"
             support_mandatory: true
