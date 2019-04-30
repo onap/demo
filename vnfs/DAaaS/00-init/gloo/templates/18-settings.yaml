@@ -1,0 +1,30 @@
+{{ if .Values.settings.create }}
+
+apiVersion: gloo.solo.io/v1
+kind: Settings
+metadata:
+  name: default
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": pre-install
+spec:
+  bindAddr: 0.0.0.0:{{ .Values.gloo.deployment.xdsPort }}
+  discoveryNamespace: {{ .Values.settings.writeNamespace }}
+  kubernetesArtifactSource: {}
+  kubernetesConfigSource: {}
+  kubernetesSecretSource: {}
+  refreshRate: 60s
+
+{{- if .Values.settings.extensions }}
+  extensions:
+{{- toYaml .Values.settings.extensions | nindent 4 }}
+{{- end }}
+
+{{- with .Values.settings.watchNamespaces }}
+  watchNamespaces:
+  {{- range . }}
+  - {{ . }}
+  {{- end }}
+{{- end }}
+
+{{- end }}

@@ -1,0 +1,40 @@
+{{- if or (.Values.ingress.enabled) (.Values.settings.integrations.knative.enabled) }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: gloo
+    gloo: ingress
+  name: ingress
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.ingress.deployment.replicas }}
+  selector:
+    matchLabels:
+      gloo: ingress
+  template:
+    metadata:
+      labels:
+        gloo: ingress
+    spec:
+      containers:
+      - image: "{{ .Values.ingress.deployment.image.repository }}:{{ .Values.ingress.deployment.image.tag }}"
+        imagePullPolicy: {{ .Values.ingress.deployment.image.pullPolicy }}
+        name: ingress
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+{{- if .Values.settings.integrations.knative.enabled }}
+        - name: "ENABLE_KNATIVE_INGRESS"
+          value: "true"
+{{- end }}
+
+{{- if not (.Values.ingress.enabled) }}
+        - name: "DISABLE_KUBE_INGRESS"
+          value: "true"
+{{- end }}
+
+
+{{- end }}

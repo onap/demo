@@ -1,0 +1,35 @@
+{{- if .Values.gateway.enabled }}
+{{- range $key, $spec := .Values.gatewayProxies }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: gloo
+    gloo: {{ $key }}
+  name: {{ $key }}
+  namespace: {{ $.Release.Namespace }}
+  {{- with $spec.service.extraAnnotations }}
+  annotations:
+{{toYaml  . | indent 8}}{{- end }}
+spec:
+  ports:
+  - port: {{ $spec.service.httpPort }}
+    targetPort: {{ $spec.deployment.httpPort }}
+    protocol: TCP
+    name: http
+  - port: {{ $spec.service.httpsPort }}
+    targetPort: {{ $spec.deployment.httpsPort }}
+    protocol: TCP
+    name: https
+  selector:
+    gloo: {{ $key }}
+  type: {{ $spec.service.type }}
+  {{- if and (eq $spec.service.type "ClusterIP") $spec.service.clusterIP }}
+  clusterIP: {{ $spec.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq $spec.service.type "LoadBalancer") $spec.service.loadBalancerIP }}
+  loadBalancerIP: {{ $spec.service.loadBalancerIP }}
+  {{- end }}
+{{- end }}
+{{- end }}

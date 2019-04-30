@@ -1,0 +1,54 @@
+{{- if .Values.gateway.enabled }}
+{{- range $key, $spec := .Values.gatewayProxies }}
+---
+# config_map
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $key }}-envoy-config
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: gloo
+    gloo: {{ $key }}
+data:
+{{ if (empty $spec.configMap.data) }}
+  envoy.yaml: |
+    node:
+      cluster: gateway
+      id: "{{ "{{" }}.PodName{{ "}}" }}.{{ "{{" }}.PodNamespace{{ "}}" }}"
+      metadata:
+        # this line must match !
+        role: "{{ "{{" }}.PodNamespace{{ "}}" }}~gateway-proxy"
+    static_resources:
+      clusters:
+      - name: gloo.{{ $.Release.Namespace }}.svc.cluster.local:{{ $.Values.gloo.deployment.xdsPort }}
+        connect_timeout: 5.000s
+        load_assignment:
+          cluster_name: gloo.{{ $.Release.Namespace }}.svc.cluster.local:{{ $.Values.gloo.deployment.xdsPort }}
+          endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: gloo.{{ $.Release.Namespace }}.svc.cluster.local
+                    port_value: {{ $.Values.gloo.deployment.xdsPort }}
+        http2_protocol_options: {}
+        type: STRICT_DNS
+    dynamic_resources:
+      ads_config:
+        api_type: GRPC
+        grpc_services:
+        - envoy_grpc: {cluster_name: gloo.{{ $.Release.Namespace }}.svc.cluster.local:{{ $.Values.gloo.deployment.xdsPort }}}
+      cds_config:
+        ads: {}
+      lds_config:
+        ads: {}
+    admin:
+      access_log_path: /dev/null
+      address:
+        socket_address:
+          address: 127.0.0.1
+          port_value: 19000
+{{- else}}{{ toYaml $spec.configMap.data | indent 2}}{{- end}}
+{{- end }}
+{{- end }}
