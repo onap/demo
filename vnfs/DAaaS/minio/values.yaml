@@ -105,10 +105,9 @@ service:
 
 ingress:
   enabled: true
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  path: /
+  annotations: 
+    kubernetes.io/ingress.class: gloo
+  path: /.*
   hosts:
     - minio.modelrepo
   tls: []
