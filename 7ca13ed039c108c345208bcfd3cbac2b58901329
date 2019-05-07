@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95a769bd_94e275fb",
+        "filename": "vnfs/vLBMS/scripts/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 35
+      },
+      "writtenOn": "2019-05-07T22:38:36Z",
+      "side": 1,
+      "message": "This should probably remain -SNAPSHOT as well.",
+      "revId": "7ca13ed039c108c345208bcfd3cbac2b58901329",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
