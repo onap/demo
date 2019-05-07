@@ -1,0 +1,10 @@
+kafka:
+  bootStrapServers:
+  group_id:
+  key_deserialize_class:
+  value_deserialize_class:
+  topic:
+
+hdfs:
+  hdfsURL:
+  hdfs_remote_file:

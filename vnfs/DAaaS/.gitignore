@@ -1,0 +1,7 @@
+*.iml
+.idea
+target/
+dependency-reduced-pom.xml
+File2hdfsApp.java
+copyScript.sh
+sample_configs.yaml
