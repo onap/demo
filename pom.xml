@@ -57,6 +57,8 @@
     <module>vnfs/vFW/scripts</module>
     <module>vnfs/vLB/scripts</module>
     <module>vnfs/vLBMS/scripts</module>
+    <module>vnfs/vIPSEC/pg_streams</module>
+    <module>vnfs/vIPSEC/scripts</module>
   </modules>
 
   <properties>
