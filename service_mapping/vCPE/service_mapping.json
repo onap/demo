@@ -1,0 +1,20 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vCPE" : ["vCPE/infra", "vCPE/vbng", "vCPE/vbrgemu", "vCPE/vgmux", "vCPE/vgw"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vCPE"  : ["vCPE"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vCPE" :[]
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vCPE" :[]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vCPE" : [{"isBase" : "true",  "template" : "vcpe_preload.template", "vnf_index": "0", "name_pattern": "base_clearwater"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vCPE" : "vgw_name_0"
+   } 
+}

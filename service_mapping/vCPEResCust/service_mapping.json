@@ -1,0 +1,20 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vCPEResCust" : ["vCPE/vgw"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vCPEResCust"  : ["vCPEvGW"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vCPEResCust" : []
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vCPEResCust" :[]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vCPEResCust" : [{"isBase" : "true",  "template" : "vcpe_vgw_preload.template", "vnf_index": "0", "name_pattern": "base_vgw"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vCPEResCust" : "vgw_name_0"
+   } 
+}
