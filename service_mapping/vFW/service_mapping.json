@@ -1,0 +1,20 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vFW" : ["vFW"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vFW"  : ["vFW"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vFW" :[]
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vFW" :[]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vFW"  : [{"isBase" : "true", "template" : "vfw_preload.template", "vnf_index": "0", "name_pattern": "base_vfw"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vFW" : "vfw_name_0"
+   } 
+}

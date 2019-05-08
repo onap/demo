@@ -1,0 +1,20 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vCPEInfra" : ["vCPE/infra"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vCPEInfra"  : ["vCPEInfra"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vCPEInfra" : ["CPE_SIGNAL","CPE_PUBLIC"]
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vCPEInfra" :[]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vCPEInfra" : [{"isBase" : "true",  "template" : "vcpe_infra_preload.template", "vnf_index": "0", "name_pattern": "base_infra"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vCPEInfra" : ""
+   } 
+}

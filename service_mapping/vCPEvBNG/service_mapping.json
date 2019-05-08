@@ -1,0 +1,20 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vCPEvBNG" : ["vCPE/vbng"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vCPEvBNG"  : ["vCPEvBNG"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vCPEvBNG" : ["BRG_BNG", "BNG_MUX"]
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vCPEvBNG" :[]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vCPEvBNG" : [{"isBase" : "true",  "template" : "vcpe_vbng_preload.template", "vnf_index": "0", "name_pattern": "base_vbng"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vCPEvBNG" : ""
+   } 
+}

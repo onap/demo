@@ -1,0 +1,20 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vCPEvGMUX" : ["vCPE/vgmux"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vCPEvGMUX"  : ["vCPEvGMUX"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vCPEvGMUX" : ["MUX_GW"]
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vCPEvGMUX" :[]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vCPEvGMUX" : [{"isBase" : "true",  "template" : "vcpe_vgmux_preload.template", "vnf_index": "0", "name_pattern": "base_vgmux"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vCPEvGMUX" : "vgmux_name_0"
+   } 
+}

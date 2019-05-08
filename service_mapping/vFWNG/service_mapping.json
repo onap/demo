@@ -1,0 +1,20 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vLB" : ["vFWNG/templates"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vFWNG"  : ["vFWNG"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vFWNG" :[]
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vFWNG" :[]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vFWNG"  : []
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vFWNG" : ""
+   } 
+}

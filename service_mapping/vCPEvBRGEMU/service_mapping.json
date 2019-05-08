@@ -1,0 +1,20 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vCPEvBRGEMU" : ["vCPE/vbrgemu"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vCPEvBRGEMU"  : ["vCPEvBRGEMU"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vCPEvBRGEMU" : []
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vCPEvBRGEMU" :[]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vCPEvBRGEMU" : [{"isBase" : "true",  "template" : "vcpe_vbrgemu_preload.template", "vnf_index": "0", "name_pattern": "base_vbrgemu"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vCPEvBRGEMU" : ""
+   } 
+}
