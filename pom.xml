@@ -40,7 +40,6 @@
   </properties-->
 
   <modules>
-    <module>boot</module>
     <module>vnfs/honeycomb_plugin/parent-pom</module>
     <module>vnfs/vFW/pg_streams</module>
     <module>vnfs/vLB/dns_streams</module>
