@@ -85,14 +85,17 @@ apt-get update
 apt-get install -y vpp vpp-dpdk-dkms vpp-lib vpp-dbg vpp-plugins vpp-dev
 sleep 1
 
-# Install honeycomb restart script (workaround due to honeycomb file handle leak)
-cat > /etc/cron.hourly/honeycomb <<EOF
+# Install honeycomb restart script (workaround due to honeycomb file handle leak - check every 5 minutes if honeycomb is up)
+cat > /opt/start_honeycomb.sh <<EOF
 #!/bin/bash
-VERSION=$(cat /opt/config/demo_artifacts_version.txt)
-pkill java
-/opt/honeycomb/sample-distribution-$VERSION/honeycomb &>/dev/null &disown
+PID=$(ps -u root | grep honeycomb | awk '{printf $1}')
+if [[ -z $PID ]]; then
+  VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+  bash /opt/honeycomb/sample-distribution-$VERSION/honeycomb &>/dev/null &disown
+fi
 EOF
-chmod +x /etc/cron.hourly/honeycomb
+chmod +x /opt/start_honeycomb.sh
+(crontab -l 2>/dev/null; echo "*/5 * * * * /opt/start_honeycomb.sh") | crontab -
 
 # Run instantiation script
 cd /opt
