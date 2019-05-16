@@ -62,7 +62,7 @@ int main(int argc, char** argv)
   memset(eventId, 0, BUFSIZE);
   memset(hostname, 0, BUFSIZE);
 
-  strcpy(eventName, "measurement_vFirewall-Att-Linkdownerr");
+  strcpy(eventName, "vFirewallBroadcastPackets");
   strcpy(eventId, "mvfs00000001");
 
   char* fqdn = argv[1];
@@ -182,10 +182,10 @@ int main(int argc, char** argv)
       vpp_m_header->start_epoch_microsec = start_epoch;
       vpp_m_header->last_epoch_microsec = last_epoch;
       evel_reporting_entity_id_set(vpp_m_header, "No UUID available");
-printf("1111\n");
+      printf("1111\n");
       evel_reporting_entity_name_set(vpp_m_header, hostname);
-printf("1111\n");
-     // evel_rc = evel_post_event(vpp_m_header);
+      printf("1111\n");
+      // evel_rc = evel_post_event(vpp_m_header);
       batch_header = evel_new_batch("batch_event_name", "bevent_id");
       evel_batch_add_event(batch_header, vpp_m_header);
       evel_rc = evel_post_event(batch_header);
