@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61f45d9c_70ee49c9",
+        "filename": "vnfs/DAaaS/applications/sample-horovod-app/keras_mnist_advanced_modified.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 4960
+      },
+      "writtenOn": "2019-05-20T18:46:03Z",
+      "side": 1,
+      "message": "are these options 2\u00263 only for reference ?",
+      "revId": "08d610ca498dc89997fd138d6b7fd4eb341c21ff",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
