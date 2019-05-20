@@ -3,6 +3,7 @@
 
 ssh:
   useSecrets: true
+  port: 22
   hostKey: |-
     -----BEGIN RSA PRIVATE KEY-----
     ThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKeyThisIsPrivateKey
@@ -42,3 +43,20 @@ master:
     pullPolicy: Never
   args:
     - "mpirun -np 3 --hostfile /horovod/generated/hostfile --mca orte_keep_fqdn_hostnames t --allow-run-as-root --display-map --tag-output --timestamp-output sh -c '/opt/conda/envs/tf_env/bin/python /opt/spark/examples/src/main/python/tensorflow/keras_mnist_advanced_modified.py'"
+
+## Model repository information (Minio)
+minio:
+  existingSecret: ""
+  accessKey: "onapdaas"
+  secretKey: "onapsecretdaas"
+  environment:
+    AWS_REGION: "us-west-1"
+    S3_REGION: "us-west-1"
+    S3_ENDPOINT: "minio.edge1.svc.cluster.local:9000"
+    AWS_ENDPOINT_URL: "http://minio.edge1.svc.cluster.local:9000"
+    S3_USE_HTTPS: 0
+    S3_VERIFY_SSL: 0
+    AWS_LOG_LEVEL: 3
+    TF_CPP_MIN_LOG_LEVEL: 3
+    MODEL_NAME: "mnist"
+    MODEL_BASE_PATH: "s3://models/mnist/export/"

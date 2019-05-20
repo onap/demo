@@ -70,6 +70,20 @@ spec:
            value: "{{ $value }}"
        {{- end }}
        {{- end }}
+         - name: AWS_ACCESS_KEY_ID
+           valueFrom:
+             secretKeyRef:
+               name: {{ if .Values.minio.existingSecret }}{{ .Values.minio.existingSecret }}{{ else }}{{ template "horovod.fullname" . }}-minio{{ end }}
+               key: accesskey
+         - name: AWS_SECRET_ACCESS_KEY
+           valueFrom:
+             secretKeyRef:
+               name: {{ if .Values.minio.existingSecret }}{{ .Values.minio.existingSecret }}{{ else }}{{ template "horovod.fullname" . }}-minio{{ end }}
+               key: secretkey
+         {{- range $key, $val := .Values.minio.environment }}
+         - name: {{ $key }}
+           value: {{ $val | quote }}
+         {{- end}}
 {{- if .Values.master.privileged }}
         securityContext:
           privileged: true

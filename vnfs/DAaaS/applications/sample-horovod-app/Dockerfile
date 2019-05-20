@@ -121,7 +121,7 @@ COPY ${spark_jars} /opt/spark/jars
 COPY bin /opt/spark/bin
 COPY sbin /opt/spark/sbin
 COPY ${img_path}/spark/entrypoint.sh /opt/
-COPY examples /opt/spark/examples
+
 COPY ${k8s_tests} /opt/spark/tests
 COPY data /opt/spark/data
 ENV SPARK_HOME /opt/spark
@@ -135,6 +135,7 @@ ENV PATH /opt/conda/envs/tf_env/bin:$PATH
 RUN echo "export PATH=/opt/conda/envs/tf_env/bin:$PATH" >> ~/.bashrc
 #    echo "activate tf_env\n" >> ~/.bashrc
 RUN pip install petastorm
+COPY examples /opt/spark/examples
 WORKDIR /opt/spark/work-dir
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
