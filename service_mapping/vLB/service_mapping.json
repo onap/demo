@@ -1,0 +1,25 @@
+<<<<<<< HEAD   (85db8d Correct event name in vFW telemetry)
+=======
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "vLB" : ["vLBMS"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "vLB"  : ["vLB"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vLB" :[]
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vLB" :["k8s-tca-clamp-policy-05082019.yaml"]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vLB"  : [{"isBase" : "true",   "template" : "vlb_preload.template", "vnf_index": "0", "name_pattern": "base_vlb"},
+              {"isBase" : "false",  "template" : "dnsscaling_preload.template", "vnf_index": "1", "name_pattern": "dnsscaling", "prefix" : "vDNS_"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vLB" : "vlb_name_0",
+                                 "vDNS" : "vdns_name_0"
+   } 
+}
+>>>>>>> CHANGE (aeece2 Fix issues with vLB use case)
