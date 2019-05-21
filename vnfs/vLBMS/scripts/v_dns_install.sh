@@ -65,7 +65,7 @@ sed -i 's/vnfc=.*/vnfc=vDNS/g' /opt/config/properties.conf
 mkdir honeycomb-api
 git init honeycomb-api
 cd honeycomb-api
-git remote add origin https://gerrit.onap.org/r/p/demo.git
+git remote add origin https://gerrit.onap.org/r/demo.git
 git config core.sparsecheckout true
 echo "vnfs/vLBMS/apis" >> .git/info/sparse-checkout
 git pull --depth=1 origin master
