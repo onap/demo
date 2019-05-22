@@ -1,0 +1,40 @@
+# Common
+.DS_Store
+.vscode
+*-workspace
+.tox/
+.*.swp
+*.log
+coverage.html
+docs/build
+.Makefile.bk
+
+# Directories
+pkg
+bin
+target
+src/github.com
+src/golang.org
+src/k8splugin/vendor
+src/k8splugin/.vendor-new/
+src/k8splugin/kubeconfig/*
+deployments/k8plugin
+
+# Binaries
+*.so
+src/k8splugin/csar/mock_plugins/*.so
+src/k8splugin/plugins/**/*.so
+
+# Tests
+*.test
+*.out
+
+# KRD
+.vagrant/
+kud/hosting_providers/vagrant/inventory/hosts.ini
+kud/hosting_providers/vagrant/inventory/artifacts
+kud/hosting_providers/vagrant/inventory/group_vars/all.yml
+kud/hosting_providers/vagrant/config/pdf.yml
+kud/hosting_providers/vagrant/sources.list
+*.retry
+*.vdi
