@@ -20,8 +20,6 @@ vendor
 src/github.com
 src/golang.org
 
-
-
 # Temporary Build Files
 build/_output
 build/_test
