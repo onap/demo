@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "75276f30_ae52c679",
+        "filename": "vnfs/DAaaS/GoApps/src/hdfs-writer/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-05-23T21:25:53Z",
+      "side": 1,
+      "message": "Minor NIT: Not needed?",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 62
+      },
+      "revId": "1e28945a7d45de4f2b092112f0b2b8f6d166b6b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "811915b2_4da466cd",
+        "filename": "vnfs/DAaaS/GoApps/src/hdfs-writer/Makefile",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-05-23T21:25:53Z",
+      "side": 1,
+      "message": "NIT: not needed I believe.",
+      "range": {
+        "startLine": 34,
+        "startChar": 1,
+        "endLine": 34,
+        "endChar": 28
+      },
+      "revId": "1e28945a7d45de4f2b092112f0b2b8f6d166b6b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52adf9d3_1d7fbdfd",
+        "filename": "vnfs/DAaaS/GoApps/src/hdfs-writer/cmd/main.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-05-23T21:25:53Z",
+      "side": 1,
+      "message": "I guess this will be taken care as part of Dockerfile and Helm charts? HDFS namenode service URL should be coming in from the container/pod as environment variable.",
+      "range": {
+        "startLine": 18,
+        "startChar": 24,
+        "endLine": 18,
+        "endChar": 93
+      },
+      "revId": "1e28945a7d45de4f2b092112f0b2b8f6d166b6b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
