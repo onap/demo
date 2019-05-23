@@ -1,1 +1,3 @@
-module /Users/rajamoha/projects/demo/vnfs/DAaaS/GoApps/src/hdfs-writer
+module hdfs-writer
+
+require github.com/colinmarc/hdfs/v2 v2.0.0 // indirect
