@@ -1,0 +1,10 @@
+apiVersion: onap.org/v1alpha1
+kind: CollectdPlugin
+metadata:
+  name: example-collectdplugin
+spec:
+  # Add fields here
+  pluginName: "cpu"
+  pluginConf: |
+    <Plugin "cpu">
+    </Plugin>

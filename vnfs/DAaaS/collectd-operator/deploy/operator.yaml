@@ -16,15 +16,13 @@ spec:
       containers:
         - name: collectd-operator
           # Replace this with the built image name
-          image: REPLACE_IMAGE
+          image: dcr.cluster.local:31976/collectd-operator:latest
           command:
           - collectd-operator
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
+              value: ""
             - name: POD_NAME
               valueFrom:
                 fieldRef:

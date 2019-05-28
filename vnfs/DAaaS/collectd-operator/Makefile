@@ -19,6 +19,8 @@ export GO111MODULE=on
 
 all: clean
 	GOOS=linux GOARCH=amd64
+	operator-sdk generate k8s --verbose
+	operator-sdk generate openapi --verbose
 	#@go build -o ${COP} -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor demo/vnfs/DAaaS/collectd-operator/cmd/manager
 	@operator-sdk build ${IMAGE_NAME} --verbose
 
@@ -41,9 +43,6 @@ format:
 clean:
 	@echo "Deleting the collectd-operator binary"
 	@rm -rf ${PWD}/build/_output/bin/collectd-operator
-	if [ -x "${OUTDIR}" ]; then \
-        rm -r ${OUTDIR}; \
-    fi \
 	@echo "Deleting the collectd-operator docker image"
 	@docker rmi ${IMAGE_NAME}
 
