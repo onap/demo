@@ -12,7 +12,7 @@ curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.1.7 sh -
 3. Install all the Istio Custom Resource Definitions (CRDs) using kubectl apply
 
 
-   “helm template install/kubernetes/helm/istio-init --name istio-init --namespace istio-system | kubectl apply -f -”.
+   “helm template istio-init --name istio-init --namespace istio-system | kubectl apply -f -”.
 
 4. Verify that all 53 Istio CRDs were committed to the Kubernetes api-server using the following command:
 
@@ -20,7 +20,7 @@ curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.1.7 sh -
 
 5. Install istio with the sds as the configuration profile.
 
-   “helm template install/kubernetes/helm/istio --name istio --namespace istio-system --values install/kubernetes/helm/istio/values-istio-sds-auth.yaml | kubectl apply -f -”
+   “helm template istio --name istio --namespace istio-system --values istio/values-istio-sds-auth.yaml | kubectl apply -f -”
 
 6.  Verify the Installation
 
