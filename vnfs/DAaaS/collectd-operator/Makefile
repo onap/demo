@@ -7,17 +7,22 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
 
+# Common
+VERSION := $(shell git describe --tags)
+BUILD := $(shell git rev-parse --short HEAD)
+PROJECTNAME := $(shell basename "$(PWD)")
+
 GOPATH := $(shell realpath "$(PWD)/../../../../../")
 COP = ${PWD}/build/_output/bin/collectd-operator
-IMAGE_NAME = dcr.cluster.local:31976/collectd-operator:latest
+IMAGE_NAME = dcr.cluster.local/collectd-operator:latest
 
 export GOPATH ...
 export GO111MODULE=on
 
 .PHONY: clean plugins
 
-
-all: clean
+## all: Generate the k8s and openapi artifacts using operator-sdk
+all: clean vendor
 	GOOS=linux GOARCH=amd64
 	operator-sdk generate k8s --verbose
 	operator-sdk generate openapi --verbose
@@ -28,9 +33,11 @@ all: clean
 # no need to create a static binary with additional flags. However, for generating binary, additional build flags are necessary. This if used with
 # mock plugin errors out for unit tests. So the seperation avoids the error.
 
+## build: clean the
 build: clean test cover
 deploy: build publish
-
+vendor:
+	@go mod vendor
 publish:
 	@docker push ${IMAGE_NAME}
 .PHONY: test
@@ -50,3 +57,14 @@ clean:
 cover:
 	@go test ./... -coverprofile=coverage.out
 	@go tool cover -html=coverage.out -o coverage.html
+
+.PHONY: help
+## help: Print help message
+help: Makefile
+	@echo
+	@echo " Requires -\\t Operator SDK v0.8.0+, go1.12.5+"
+	@echo
+	@echo " Choose a command run in "$(PROJECTNAME)":"
+	@echo
+	@sed -n 's/^## //p' $< | column -t -s ':' |  sed -e 's/^/ /'
+	@echo
