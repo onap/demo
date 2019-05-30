@@ -10,7 +10,7 @@
 #### Download Framework
 ```bash
 git clone https://github.com/onap/demo.git
-DA_WORKING_DIR=$PWD/demo/vnfs/DAaaS
+DA_WORKING_DIR=$PWD/demo/vnfs/DAaaS/deploy
 cd $DA_WORKING_DIR
 ```
 
