@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 
-	onapv1alpha1 "demo/vnfs/DAaaS/collectd-operator/pkg/apis/onap/v1alpha1"
+	onapv1alpha1 "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1"
 
 	corev1 "k8s.io/api/core/v1"
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
