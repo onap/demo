@@ -13,9 +13,9 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"demo/vnfs/DAaaS/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPlugin":       schema_pkg_apis_onap_v1alpha1_CollectdPlugin(ref),
-		"demo/vnfs/DAaaS/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginSpec":   schema_pkg_apis_onap_v1alpha1_CollectdPluginSpec(ref),
-		"demo/vnfs/DAaaS/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginStatus": schema_pkg_apis_onap_v1alpha1_CollectdPluginStatus(ref),
+		"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPlugin":       schema_pkg_apis_onap_v1alpha1_CollectdPlugin(ref),
+		"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginSpec":   schema_pkg_apis_onap_v1alpha1_CollectdPluginSpec(ref),
+		"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginStatus": schema_pkg_apis_onap_v1alpha1_CollectdPluginStatus(ref),
 	}
 }
 
@@ -46,19 +46,19 @@ func schema_pkg_apis_onap_v1alpha1_CollectdPlugin(ref common.ReferenceCallback) 
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("demo/vnfs/DAaaS/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginSpec"),
+							Ref: ref("demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("demo/vnfs/DAaaS/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginStatus"),
+							Ref: ref("demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"demo/vnfs/DAaaS/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginSpec", "demo/vnfs/DAaaS/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginSpec", "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 

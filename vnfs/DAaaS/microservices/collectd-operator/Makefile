@@ -12,7 +12,7 @@ VERSION := $(shell git describe --tags)
 BUILD := $(shell git rev-parse --short HEAD)
 PROJECTNAME := $(shell basename "$(PWD)")
 
-GOPATH := $(shell realpath "$(PWD)/../../../../../")
+GOPATH := $(shell realpath "$(PWD)/../../../../../../")
 COP = ${PWD}/build/_output/bin/collectd-operator
 IMAGE_NAME = dcr.cluster.local/collectd-operator:latest
 
@@ -26,7 +26,7 @@ all: clean vendor
 	GOOS=linux GOARCH=amd64
 	operator-sdk generate k8s --verbose
 	operator-sdk generate openapi --verbose
-	#@go build -o ${COP} -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor demo/vnfs/DAaaS/collectd-operator/cmd/manager
+	#@go build -o ${COP} -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor demo/vnfs/DAaaS/microservices/collectd-operator/cmd/manager
 	@operator-sdk build ${IMAGE_NAME} --verbose
 
 # The following is done this way as each patch on CI runs build and each merge runs deploy. So for build we don't need to build binary and hence

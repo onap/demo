@@ -10,8 +10,8 @@ import (
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
-	"demo/vnfs/DAaaS/collectd-operator/pkg/apis"
-	"demo/vnfs/DAaaS/collectd-operator/pkg/controller"
+	"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis"
+	"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/controller"
 
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	"github.com/operator-framework/operator-sdk/pkg/leader"

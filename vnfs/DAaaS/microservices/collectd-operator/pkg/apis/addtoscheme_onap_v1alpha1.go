@@ -1,7 +1,7 @@
 package apis
 
 import (
-	"demo/vnfs/DAaaS/collectd-operator/pkg/apis/onap/v1alpha1"
+	"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1"
 )
 
 func init() {
