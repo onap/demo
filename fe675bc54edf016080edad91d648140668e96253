@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05ce0685_b0a22cec",
+        "filename": "vnfs/DAaaS/lib/promql_api/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-05-31T19:25:34Z",
+      "side": 1,
+      "message": "Provide a link to the Prometheus docs for querying. For custom and advanced querying https://prometheus.io/docs/prometheus/latest/querying/api/",
+      "revId": "fe675bc54edf016080edad91d648140668e96253",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1078675b_195766a0",
+        "filename": "vnfs/DAaaS/lib/promql_api/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-05-31T19:25:34Z",
+      "side": 1,
+      "message": "nit: list",
+      "range": {
+        "startLine": 2,
+        "startChar": 56,
+        "endLine": 2,
+        "endChar": 60
+      },
+      "revId": "fe675bc54edf016080edad91d648140668e96253",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39abf3a8_1e5aef0a",
+        "filename": "vnfs/DAaaS/lib/promql_api/prom_ql_api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-05-31T19:25:34Z",
+      "side": 1,
+      "message": "Create a Jira task for query_range support.",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 9
+      },
+      "revId": "fe675bc54edf016080edad91d648140668e96253",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e148c0e_60b2f344",
+        "filename": "vnfs/DAaaS/lib/promql_api/prom_ql_api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-05-31T19:25:34Z",
+      "side": 1,
+      "message": "Avoid ambiguity with Prometheus labels.",
+      "range": {
+        "startLine": 35,
+        "startChar": 10,
+        "endLine": 35,
+        "endChar": 16
+      },
+      "revId": "fe675bc54edf016080edad91d648140668e96253",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93cf9009_ebbec183",
+        "filename": "vnfs/DAaaS/lib/promql_api/prom_ql_api.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-05-31T19:25:34Z",
+      "side": 1,
+      "message": "Response parsing and validation - parameters like status, resultType can be utilized to make it more robust.",
+      "range": {
+        "startLine": 77,
+        "startChar": 12,
+        "endLine": 81,
+        "endChar": 47
+      },
+      "revId": "fe675bc54edf016080edad91d648140668e96253",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
