@@ -1,0 +1,216 @@
+##########################################################################
+#
+#==================LICENSE_START==========================================
+# 
+#
+# Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#==================LICENSE_END============================================
+#
+# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+#
+##########################################################################
+
+heat_template_version: 2013-05-23
+
+description: Heat template to deploy a vDNS for ONAP (scaling-up scenario)
+
+##############
+#            #
+# PARAMETERS #
+#            #
+##############
+
+parameters:
+  vlb_image_name:
+    type: string
+    label: Image name or ID
+    description: Image to be used for compute instance
+  vlb_flavor_name:
+    type: string
+    label: Flavor
+    description: Type of instance (flavor) to be used
+  public_net_id:
+    type: string
+    label: Public network name or ID
+    description: Public network that enables remote connection to VNF
+  vlb_private_net_id:
+    type: string
+    label: vLoadBalancer private network name or ID
+    description: Private network that connects vLoadBalancer with vDNSs
+  onap_private_net_id:
+    type: string
+    label: ONAP management network name or ID
+    description: Private network that connects ONAP component and the VNF
+  onap_private_subnet_id:
+    type: string
+    label: ONAP management sub-network name or ID
+    description: Private sub-network that connects ONAP component and the VNF
+  vlb_private_net_cidr:
+    type: string
+    label: vLoadBalancer private network CIDR
+    description: The CIDR of the vLoadBalancer private network
+  onap_private_net_cidr:
+    type: string
+    label: ONAP private network CIDR
+    description: The CIDR of the protected private network
+  vlb_private_ip_0:
+    type: string
+    label: vLoadBalancer private IP address towards the private network
+    description: Private IP address that is assigned to the vLoadBalancer to communicate with the vDNSs
+  vlb_private_ip_1:
+    type: string
+    label: vLoadBalancer private IP address towards the ONAP management network
+    description: Private IP address that is assigned to the vLoadBalancer to communicate with ONAP components
+  vdns_private_ip_0:
+    type: string
+    label: vDNS private IP address towards the private network
+    description: Private IP address that is assigned to the vDNS to communicate with the vLoadBalancer
+  vdns_private_ip_1:
+    type: string
+    label: vDNS private IP address towards the ONAP management network
+    description: Private IP address that is assigned to the vDNS to communicate with ONAP components
+  vdns_name_0:
+    type: string
+    label: vDNS name
+    description: Name of the vDNS
+  vnf_id:
+    type: string
+    label: VNF ID
+    description: The VNF ID is provided by ONAP
+  vf_module_id:
+    type: string
+    label: vFirewall module ID
+    description: The vLoadBalancer Module ID is provided by ONAP
+  key_name:
+    type: string
+    label: Key pair name
+    description: Public/Private key pair name
+  pub_key:
+    type: string
+    label: Public key
+    description: Public key to be installed on the compute instance
+  install_script_version:
+    type: string
+    label: Installation script version number
+    description: Version number of the scripts that install the vFW demo app
+  demo_artifacts_version:
+    type: string
+    label: Artifacts version used in demo vnfs
+    description: Artifacts (jar, tar.gz) version used in demo vnfs
+  nexus_artifact_repo:
+    type: string
+    description: Root URL for the Nexus repository for Maven artifacts.
+    default: "https://nexus.onap.org"
+  cloud_env:
+    type: string
+    label: Cloud environment
+    description: Cloud environment (e.g., openstack, rackspace)
+  sec_group:
+    type: string
+    description: ONAP Security Group
+
+
+#############
+#           #
+# RESOURCES #
+#           #
+#############
+
+resources:
+
+  random-str:
+    type: OS::Heat::RandomString
+    properties:
+      length: 4
+
+  my_keypair:
+    type: OS::Nova::KeyPair
+    properties:
+      name:
+        str_replace:
+          template: base_rand
+          params:
+            base: { get_param: key_name }
+            rand: { get_resource: random-str }
+      public_key: { get_param: pub_key }
+      save_private_key: false
+
+  vdns_2_private_0_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: vlb_private_net_id }
+      fixed_ips: [{"subnet": { get_param: vlb_private_net_id }, "ip_address": { get_param: vdns_private_ip_0 }}]
+      security_groups:
+       - { get_param: sec_group }
+
+  vdns_2_private_1_port:
+    type: OS::Neutron::Port
+    properties:
+      network: { get_param: onap_private_net_id }
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vdns_private_ip_1 }}]
+      security_groups:
+       - { get_param: sec_group }
+
+  vdns_2:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: vlb_image_name }
+      flavor: { get_param: vlb_flavor_name }
+      name: { get_param: vdns_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - network: { get_param: public_net_id }
+        - port: { get_resource: vdns_2_private_0_port }
+        - port: { get_resource: vdns_2_private_1_port }
+      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __lb_oam_int__: { get_param: vlb_private_ip_1 }
+            __lb_private_ipaddr__: { get_param: vlb_private_ip_0 }
+            __local_private_ipaddr__: { get_param: vdns_private_ip_0 }
+            __oam_private_ipaddr__: { get_param: vdns_private_ip_1 }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
+            __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
+            __cloud_env__: { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+          template: |
+            #!/bin/bash
+
+            # Create configuration files
+            mkdir /opt/config
+            echo "__lb_oam_int__" > /opt/config/lb_oam_int.txt
+            echo "__lb_private_ipaddr__" > /opt/config/lb_private_ipaddr.txt
+            echo "__local_private_ipaddr__" > /opt/config/local_private_ipaddr.txt
+            echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
+            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+
+            # Download and run install script
+            apt-get update
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vlb&a=vlb-scripts&e=zip&v=__install_script_version__" -o /opt/vlb-scripts-__install_script_version__.zip
+            unzip -j /opt/vlb-scripts-__install_script_version__.zip -d /opt v_dns_install.sh
+            cd /opt
+            chmod +x v_dns_install.sh
+            ./v_dns_install.sh
