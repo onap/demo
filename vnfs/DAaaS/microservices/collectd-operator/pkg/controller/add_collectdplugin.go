@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"demo/vnfs/DAaaS/collectd-operator/pkg/controller/collectdplugin"
+	"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/controller/collectdplugin"
 )
 
 func init() {

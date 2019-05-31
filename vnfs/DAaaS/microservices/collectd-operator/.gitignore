@@ -14,7 +14,6 @@ docs/build
 *.out
 
 # # Directories
-bin
 target
 vendor
 src/github.com

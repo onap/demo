@@ -1,4 +1,4 @@
-module demo/vnfs/DAaaS/collectd-operator
+module demo/vnfs/DAaaS/microservices/collectd-operator
 
 require (
 	contrib.go.opencensus.io/exporter/ocagent v0.4.9 // indirect
