@@ -1,0 +1,25 @@
+#Default values for Istio with SDS
+#This is a YAML-formatted file
+#Declare variables to be pssed into your Istio SDS template file.
+
+metadata:
+  name: "istio-sample"
+spec:
+  version: "1.2.2"
+  mtls: true
+  autoInjectionNamespaces: "default"
+  sds:
+    enabled: true
+    udsPath: "unix:/var/run/sds/uds_path"
+    useTrustworthyJwt: false
+    useNormalJwt: true
+  gateways:
+    enabled: true
+    ingress:
+      enabled: true
+      sds:
+        enabled: true
+        image: "docker.io/istio/node-agent-k8s:1.2.2"
+  nodeAgent:
+    enabled: true
+    image : "docker.io/istio/node-agent-k8s:1.2.2"

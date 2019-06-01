@@ -1,0 +1,32 @@
+apiVersion: istio.banzaicloud.io/v1beta1
+kind: Istio
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: {{ ( printf "\"%s\"" .Values.metadata.name ) }}
+spec:
+  version: {{ (printf "\"%s\"" .Values.spec.version ) }}
+  mtls: {{ .Values.spec.mtls }}
+  autoInjectionNamespaces: {{ ( printf "\"%s\"" .Values.spec.autoInjectionNamespaces) }}
+  sds:
+    enabled: {{ .Values.spec.sds.enabled }}
+    udsPath: {{ (printf "\"%s\"" .Values.spec.sds.udsPath ) }}
+    useTrustworthyJwt: {{ .Values.spec.sds.useTrustworthyJwt }}
+    useNormalJwt: {{ .Values.spec.sds.useNormalJwt }}
+  gateways:
+    enabled: {{ .Values.spec.gateways.enabled }}
+    ingress:
+      enabled: {{ .Values.spec.gateways.ingress.enabled }}
+      sds:
+        enabled: {{ .Values.spec.gateways.ingress.sds.enabled }}
+        image: {{ ( printf "\"%s\"" .Values.spec.gateways.ingress.sds.image) }}
+        resources: {}
+        #  requests:
+        #    cpu: 100m
+        #    memory: 128Mi
+        #  limits:
+        #    cpu: 2000m
+        #    memory: 1024Mi
+  nodeAgent:
+    enabled: {{ .Values.spec.nodeAgent.enabled }}
+    image: {{ ( printf "\"%s\"" .Values.spec.nodeAgent.image ) }}
