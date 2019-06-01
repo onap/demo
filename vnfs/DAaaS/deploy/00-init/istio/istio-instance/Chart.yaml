@@ -1,3 +1,4 @@
+
 #/*
 # * Copyright 2019 Intel Corporation, Inc
 # *
@@ -14,7 +15,8 @@
 # * limitations under the License.
 # */
 
-# Steps for Instaling Istio with Istio- Operator
-
-# Step 1 - Add the helm chart to install Istio in sds configuration
-helm install istio-instance --name istio --namespace istio-system
+apiVersion: v1
+appVersion: "1.0"
+description: A Helm chart for Istio
+name: istio-instance
+version: 0.1.0
