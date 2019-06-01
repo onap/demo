@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2019 Intel Corporation, Inc
  *
@@ -17,7 +16,9 @@
 
 # Instructions to Install Istio ServiceMesh
 
-# a. Install Istio Operator's helm chart
-# NOTE - Istio Operator is useful for maintainence and Upgrade to Istio versions
+# Step 1 - Install Istio Operator's helm chart
 
 helm install --name=istio-operator --namespace=istio-system istio-operator
+
+# Step 2 - Add the helm chart to install Istio in sds configuration
+helm install istio-instance --name istio --namespace istio-system
