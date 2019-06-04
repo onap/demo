@@ -1,0 +1,141 @@
+{
+     "input": {
+          "request-information": {
+               "notification-url": "openecomp.org",
+               "order-number": "1",
+               "order-version": "1",
+               "request-action": "PreloadVNFRequest",
+               "request-id": "robot12"
+          },
+          "sdnc-request-header": {
+               "svc-action": "reserve",
+               "svc-notification-url": "http:\/\/openecomp.org:8080\/adapters\/rest\/SDNCNotify",
+               "svc-request-id": "robot12"
+          },
+          "vnf-topology-information": {
+               "vnf-assignments": {
+                    "availability-zones": [],
+                    "vnf-networks": [],
+                    "vnf-vms": []
+               },
+               "vnf-parameters":
+               [{
+                         "vnf-parameter-name": "unprotected_private_net_id",
+                         "vnf-parameter-value": "unprotected_net_dt"
+                    }, {
+                         "vnf-parameter-name": "unprotected_private_subnet_id",
+                         "vnf-parameter-value": "unprotected_subnet_dt"
+                    }, {
+                         "vnf-parameter-name": "unprotected_private_net_cidr",
+                         "vnf-parameter-value": "192.168.10.0/24"
+                    }, {
+                         "vnf-parameter-name": "protected_private_net_id",
+                         "vnf-parameter-value": "protected_net_dt"
+                    }, {
+                         "vnf-parameter-name": "protected_private_net_cidr",
+                         "vnf-parameter-value": "192.168.20.0/24"
+                    }, {
+                         "vnf-parameter-name": "protected_private_subnet_id",
+                         "vnf-parameter-value": "protected_subnet_dt"
+                    }, {
+                         "vnf-parameter-name": "key_name",
+                         "vnf-parameter-value": "vfw_key"
+                    }, {
+                         "vnf-parameter-name": "cloud_env",
+                         "vnf-parameter-value": "openstack"
+                    }, {
+                         "vnf-parameter-name": "vsn_name_0",
+                         "vnf-parameter-value": "vfw-vsn-2-dt"
+                    }, {
+                         "vnf-parameter-name": "onap_private_net_id",
+                         "vnf-parameter-value": "oam_onap_y3id"
+                    }, {
+                         "vnf-parameter-name": "onap_private_subnet_id",
+                         "vnf-parameter-value": "oam_onap_y3id"
+                    }, {
+                         "vnf-parameter-name": "onap_private_net_cidr",
+                         "vnf-parameter-value": "10.0.0.0/16"
+                    }, {
+                         "vnf-parameter-name": "ext_private_net_id",
+                         "vnf-parameter-value": "onap_oam_ext"
+                    }, {
+                         "vnf-parameter-name": "ext_private_subnet_id",
+                         "vnf-parameter-value": "onap_oam_ext_sub"
+                    }, {
+                         "vnf-parameter-name": "ext_private_net_cidr",
+                         "vnf-parameter-value": "10.100.0.0/16"
+                    }, {
+                         "vnf-parameter-name": "nexus_artifact_repo",
+                         "vnf-parameter-value": "https://nexus.onap.org"
+                    }, {
+                         "vnf-parameter-name": "vfw_name_0",
+                         "vnf-parameter-value": "vfw-vfw-2-dt"
+                    }, {
+                         "vnf-parameter-name": "dcae_collector_port",
+                         "vnf-parameter-value": "8080"
+                    }, {
+                         "vnf-parameter-name": "public_net_id",
+                         "vnf-parameter-value": "external"
+                    }, {
+                         "vnf-parameter-name": "image_name",
+                         "vnf-parameter-value": "ubuntu-14-04-cloud-amd64"
+                    }, {
+                         "vnf-parameter-name": "flavor_name",
+                         "vnf-parameter-value": "m1.medium"
+                    }, {
+                         "vnf-parameter-name": "install_script_version",
+                         "vnf-parameter-value": "1.4.0"
+                    }, {
+                         "vnf-parameter-name": "vfw_private_ip_0",
+                         "vnf-parameter-value": "192.168.10.110"
+                    }, {
+                         "vnf-parameter-name": "vfw_private_ip_1",
+                         "vnf-parameter-value": "192.168.20.110"
+                    }, {
+                         "vnf-parameter-name": "vfw_private_ip_2",
+                         "vnf-parameter-value": "10.0.110.4"
+                    }, {
+                         "vnf-parameter-name": "vfw_private_ip_3",
+                         "vnf-parameter-value": "10.100.100.4"
+                    }, {
+                         "vnf-parameter-name": "vpg_private_ip_0",
+                         "vnf-parameter-value": "192.168.10.200"
+                    }, {
+                         "vnf-parameter-name": "vpg_private_ip_1",
+                         "vnf-parameter-value": "10.0.110.2"
+                    }, {
+                         "vnf-parameter-name": "vpg_private_ip_2",
+                         "vnf-parameter-value": "10.100.100.2"
+                    }, {
+                         "vnf-parameter-name": "vsn_private_ip_1",
+                         "vnf-parameter-value": "10.0.110.5"
+                    }, {
+                         "vnf-parameter-name": "vsn_private_ip_0",
+                         "vnf-parameter-value": "192.168.20.240"
+                    }, {
+                         "vnf-parameter-name": "vsn_private_ip_2",
+                         "vnf-parameter-value": "10.100.100.5"
+                    }, {
+                         "vnf-parameter-name": "demo_artifacts_version",
+                         "vnf-parameter-value": "1.4.0"
+                    }, {
+                         "vnf-parameter-name": "pub_key",
+                         "vnf-parameter-value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6KbTxfT368DNBzLyfTYJ0INI7mkRXc/xMpx349TXGBTQ06g2toN/p9OM188EGZd/qERRXcdnKY8lYULVIXZEoQbXTus2gTQWXy1zn5nhSkhste3L1uG+sjHySQHBj5NyOC32iNehRNu03bHi8XRBAOHZsXx6JpkltLXgWqQI91+h9i7I/4trpPyODtzz1DLIkbXv9woncwllKf4bmm+Bk6/OJKHuAlBdCLL5diZqODEZlKOyPPC9c07a835sskMgbscPrvBQigZFRNerjQlFXXCHjRwoBMvfS7kD7/R/K1fmSLtH0w4VEp5iwS9SIezgEeO2aDFPucmYG4MQDGzAz"
+                    }, {
+                         "vnf-parameter-name": "dcae_collector_ip",
+                         "vnf-parameter-value": "10.0.4.1"
+                    }, {
+                         "vnf-parameter-name": "sec_group",
+                         "vnf-parameter-value": "onap_sg_y3id"
+                    }
+               ],
+               "vnf-topology-identifier": {
+                    "service-type": "1c38ef10-0f14-4d78-876c-3cc10ff4e535",
+                    "vnf-type": "VfwsnkDistributetraffic..base_vfw..module-0",
+                    "generic-vnf-name": "vfw-vsnk-dt-2",
+                    "generic-vnf-type": "vFWSNK-DistributeTraffic 1",
+                    "vnf-name": "vfw-dt-module-2"
+               }
+          }
+     }
+}

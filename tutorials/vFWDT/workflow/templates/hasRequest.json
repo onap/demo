@@ -1,0 +1,93 @@
+{
+    "name": "de4f04e3-0a65-470b-9d07-8ea6c2fb3e10",
+    "template": {
+        "constraints": {
+            "affinity_vFW_TD": {
+                "demands": ["vFW-SINK", "vPGN"],
+                "properties": {
+                    "category": "region",
+                    "qualifier": "same"
+                },
+                "type": "zone"
+            }
+        },
+        "parameters": {
+            "service_name": "vFW_TD",
+            "chosen_region": "RegionOne",
+            "chosen_customer_id": "DemoCust_4fb7d3cf-5ddc-4d8c-8acf-70cc9174d18f",
+            "service_id": "2ad369d4-9056-4dc9-8e6d-df24f45e8729",
+            "customer_long": 2.2,
+            "REQUIRED_MEM": "",
+            "customer_lat": 1.1,
+            "REQUIRED_DISK": ""
+        },
+        "locations": {
+            "customer_loc": {
+                "longitude": {
+                    "get_param": "customer_long"
+                },
+                "latitude": {
+                    "get_param": "customer_lat"
+                }
+            }
+        },
+        "demands": {
+            "vFW-SINK": [{
+                "attributes": {
+                    "global-customer-id": {
+                        "get_param": "chosen_customer_id"
+                    },
+                    "cloud-region-id": {
+                        "get_param": "chosen_region"
+                    },
+                    "model-version-id": "202d2fd8-a045-4c9a-b767-2a1639c10291",
+                    "orchestration-status": ["active"],
+                    "model-invariant-id": "6f3fd439-fd5f-4a2d-95bc-b6bf8787001a",
+                    "service_instance_id": {
+                        "get_param": "service_id"
+                    },
+                    "prov-status": "ACTIVE"
+                },
+                "inventory_provider": "aai",
+                "service_resource_id": "vFW-SINK-XX",
+                "inventory_type": "vfmodule",
+                "service_type": "vFW-SINK-XX",
+                "excluded_candidates": [{
+                    "inventory_type": "vfmodule",
+                    "candidate_id": "e765d576-8755-4145-8536-0bb6d9b1dc9a"
+                }],
+                "required_candidates": [{
+                    "inventory_type": "vfmodule",
+                    "candidate_id": "e765d576-8755-4145-8536-0bb6d9b1dc9a"
+                }]
+            }],
+            "vPGN": [{
+                "attributes": {
+                    "global-customer-id": {
+                        "get_param": "chosen_customer_id"
+                    },
+                    "cloud-region-id": {
+                        "get_param": "chosen_region"
+                    },
+                    "model-version-id": "6bfe954e-bb00-4111-be3c-33eed9d20a8c",
+                    "orchestration-status": ["active"],
+                    "model-invariant-id": "3f356335-7b36-41ee-8f74-72d0a2ec3ebf",
+                    "service_instance_id": {
+                        "get_param": "service_id"
+                    },
+                    "prov-status": "ACTIVE"
+                },
+                "inventory_provider": "aai",
+                "service_resource_id": "vPGN-XX",
+                "unique": "false",
+                "inventory_type": "vfmodule",
+                "service_type": "vPGN-XX"
+            }]
+        },
+        "homing_template_version": "2017-10-10"
+    },
+    "limit": 100,
+    "num_solution": "100",
+    "files": {},
+    "timeout": 1200
+}
