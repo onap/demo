@@ -1,0 +1,65 @@
+{
+  "requestInfo": {
+    "transactionId": "e576c75e-7536-4145-a1c0-d60b65bb1bb8",
+    "requestId": "de4f04e3-0a65-470b-9d07-8ea6c2fb3e10",
+    "callbackUrl": "http://0.0.0.0:9000/osdfCallback/",
+    "sourceId": "SO",
+    "requestType": "create",
+    "numSolutions": 100,
+    "optimizers": [
+      "placement"
+    ],
+    "timeout": 1200
+  },
+  "placementInfo": {
+    "requestParameters": {
+      "chosenRegion": "RegionOne",
+      "chosenCustomerId": "DemoCust_8b908ab3-b9e6-41a9-a4e2-31cc9c5114a2"
+    },
+    "subscriberInfo": {
+      "globalSubscriberId": "dbc2c763-6383-42d6-880a-b7d5c5bc84d9",
+      "subscriberName": "oof-so-chm"
+    },
+    "placementDemands": [
+      {
+        "resourceModuleName": "vFW-SINK",
+        "serviceResourceId": "vFW-SINK-XX",
+        "resourceModelInfo": {
+          "modelInvariantId": "fda3c1e8-7653-4acd-80ef-f5755c1d3859",
+          "modelVersionId": "a6906768-1cae-4e78-acd1-d753ac61f3e8"
+        },
+        "excludedCandidates": [
+          {
+            "identifierType": "vfmodule",
+            "identifiers": [
+            ]
+          }
+        ],
+        "requiredCandidates": [
+          {
+            "identifierType": "vfmodule",
+            "identifiers": [
+            ]
+          }
+        ]
+      },
+      {
+        "resourceModuleName": "vPGN",
+        "serviceResourceId": "vPGN-XX",
+        "unique": "false",
+        "resourceModelInfo": {
+          "modelInvariantId": "f2f88e29-d571-49ef-aea3-b8d13900c16f",
+          "modelVersionId": "3ccebc76-66e1-47c8-aee9-98f30d08db97"
+        }
+      }
+    ]
+  },
+  "serviceInfo": {
+    "serviceInstanceId": "209fb01e-60ca-4325-b074-c5ad4e0499f8",
+    "serviceName": "TD",
+    "modelInfo": {
+      "modelInvariantId": "TD-invariantId",
+      "modelVersionId": "TD-versionId"
+    }
+  }
+}

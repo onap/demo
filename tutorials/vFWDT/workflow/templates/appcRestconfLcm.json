@@ -1,0 +1,21 @@
+{
+  "input": {
+    "action": "DistributeTraffic",
+    "payload": "{\"configuration-parameters\":{\"file_parameter_content\":\"{\\\"fwIp\\\":\\\"192.168.10.100\\\",\\\"sinkIp\\\":\\\"192.168.20.250\\\"}\",\"node_list\":\"[vpkg-1]\"}}",
+    "common-header": {
+      "api-ver": "2.00",
+      "timestamp": "2019-05-20T08:18:07.244Z",
+      "flags": {
+        "force": "TRUE",
+        "mode": "NORMAL",
+        "ttl": 36000
+      },
+      "request-id": "8ac122fd-6261-4e72-ba5c-5384fcd0ab2b",
+      "originator-id": "vfw-dt-demo",
+      "sub-request-id": "cefe9354-809d-4dd2-ab6d-e1f9d2fa9ea3"
+    },
+    "action-identifiers": {
+      "vnf-id": "2d125b4d-e120-4815-a0c7-4c4bec6c89f9"
+    }
+  }
+}
