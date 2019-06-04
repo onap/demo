@@ -1,0 +1,28 @@
+{
+    "body": {
+        "input": {
+            "action": "DistributeTraffic",
+            "payload": "{\"configuration-parameters\":{\"ConfigFileName\":\"/opt/onap/ccsdk/Playbooks/dt-vpkg-1-config.json\",\"playbook\":\"ansible_vfw_distributetraffic@0.00.yml\",\"node_list\":\"[vpkg-1]\"}}",
+            "common-header": {
+                "api-ver": "2.00",
+                "timestamp": "2018-10-22T11:11:25.244Z",
+                "flags": {
+                    "force": "TRUE",
+                    "mode": "NORMAL",
+                    "ttl": 36000
+                },
+                "request-id": 27081074,
+                "originator-id": "demo",
+                "sub-request-id": "1540197850899"
+            },
+            "action-identifiers": {
+                "vnf-id": "50ac9605-ce63-442d-a103-80e9cf4753ca"
+            }
+        }
+    },
+    "cambria.partition": "APPC",
+    "rpc-name": "distribute-traffic",
+    "correlation-id": "c09ac7d1-de62-0016-2000-e63701125557-201",
+    "version": "2.0",
+    "type": "request"
+}
