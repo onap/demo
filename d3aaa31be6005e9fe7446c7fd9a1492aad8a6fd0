@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a6d6854_c75259e2",
+        "filename": "vnfs/DAaaS/sample-apps/sample-minio-load-model/build/entrypoint.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 4960
+      },
+      "writtenOn": "2019-06-04T19:53:13Z",
+      "side": 1,
+      "message": "do we need this spark related thing here ?",
+      "revId": "d3aaa31be6005e9fe7446c7fd9a1492aad8a6fd0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
