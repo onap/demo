@@ -1,0 +1,217 @@
+---
+- hosts: vpgn
+  gather_facts: no
+  remote_user: ubuntu
+  tasks:
+    - include_vars: "{{ ConfigFileName }}"
+      register: json
+    - name: Install grepcidr library
+      shell: apt-get install grepcidr
+      become: true
+    - name: Read protected net CIDR
+      shell: cat /opt/config/protected_net_cidr.txt
+      register: protectedCidr
+      become: true
+    - name: Read unprotected net CIDR
+      shell: cat /opt/config/unprotected_private_net_cidr.txt
+      register: unprotectedCidr
+      become: true
+    - name: Read PKG IP
+      shell: cat /opt/config/vpg_private_ip_0.txt
+      register: pkgIp
+      become: true
+    - name: Read OLD FW IP
+      shell: cat /opt/config/fw_ipaddr.txt
+      register: oldFwIp
+      become: true
+    - name: Read OLD SINK IP
+      shell: cat /opt/config/sink_ipaddr.txt
+      register: oldSinkIp
+      become: true
+    - name: Get all Interfaces
+      set_fact:
+        interfaces: "{{destinations[0].vservers | map(attribute='l-interfaces') | list}}"
+    - name: print all Interfaces
+      debug: var=interfaces
+    - name: Interfaces vserver 1
+      set_fact:
+        vserver1_interfaces: "{{destinations[0].vservers[0]['l-interfaces'] | list}}"
+    - name: Interfaces vserver 2
+      set_fact:
+        vserver2_interfaces: "{{destinations[0].vservers[1]['l-interfaces'] | list}}"
+    - block:
+       - name: length interfaces vserver1
+         set_fact:
+           length1: "{{ vserver1_interfaces |length }}"
+       - name: length interfaces vserver2
+         set_fact:
+           length2: "{{ vserver2_interfaces |length }}"
+    - block:
+       - name: adress 1 vserver
+         set_fact:
+           sink_addresses:
+             - "{{destinations[0].vservers[0]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[0]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[0]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+       - name: adress 2 vserver
+         set_fact:
+           fw_addresses:
+             - "{{destinations[0].vservers[1]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[1]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[1]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[1]['l-interfaces'][3]['ipv4-addresses'][0]}}"
+      when:
+        - length1 == "3"
+        - length2 == "4"
+    - block:
+       - name: adress 1 vserver
+         set_fact:
+           fw_addresses:
+             - "{{destinations[0].vservers[0]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[0]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[0]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[0]['l-interfaces'][3]['ipv4-addresses'][0]}}"
+       - name: adress 2 vserver
+         set_fact:
+           sink_addresses:
+             - "{{destinations[0].vservers[1]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[1]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+             - "{{destinations[0].vservers[1]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+      when:
+        - length1 == "4"
+        - length2 == "3"
+    - block:
+        - name: Create file to store fw-addresses
+          shell: touch /home/fw.txt
+          become: true
+        - name: Create file to store sink-addresses
+          shell: touch /home/sink.txt
+          become: true
+        - name: Save sink-addresses to file
+          lineinfile:
+            path: /home/sink.txt
+            line: "{{item}}"
+          with_items:
+            - "{{sink_addresses[0]}}"
+            - "{{sink_addresses[1]}}"
+            - "{{sink_addresses[2]}}"
+          become: true
+        - name: Save fw-addresses to file
+          lineinfile:
+            path: /home/fw.txt
+            line: "{{item}}"
+          with_items:
+            - "{{fw_addresses[0]}}"
+            - "{{fw_addresses[1]}}"
+            - "{{fw_addresses[2]}}"
+            - "{{fw_addresses[3]}}"
+          become: true
+        - name: Filter  SINK IPs
+          shell: grepcidr {{protectedCidr.stdout}} /home/sink.txt
+          register: sinkIp
+          become: true
+        - debug: var=sinkIp.stdout
+        - name: Filter FW IPs
+          shell: grepcidr {{unprotectedCidr.stdout}} /home/fw.txt
+          register: fwIp
+          become: true
+        - debug: var=fwIp.stdout
+        - name: Delete created files
+          shell: rm -f /home/sink.txt /home/fw.txt
+          become: true
+    - debug: var=fwIp
+    - debug: var=sinkIp
+    - block:
+       - name: get new FW IP
+         set_fact:
+           fwIp: "{{fwIp.stdout}}"
+       - name: get new SINK IP
+         set_fact:
+           sinkIp: "{{sinkIp.stdout}}"
+    - debug: var=pkgIp.stdout
+    - debug: var=oldFwIp.stdout
+    - debug: var=oldSinkIp.stdout
+    - debug: var=protectedCidr.stdout
+    - debug: var=unprotectedCidr.stdout
+    - debug: var=sinkIp
+    - debug: var=fwIp
+    - debug:
+        msg: "FW IP has not been changed"
+      when: oldFwIp.stdout == fwIp
+    - block:
+        - name: Remove OLD FW IP route
+          shell: vppctl ip route del {{ protectedCidr.stdout }} via {{ oldFwIp.stdout }}
+        - name: Add NEW FW IP route
+          shell: vppctl ip route add {{ protectedCidr.stdout }} via {{ fwIp }}
+        - name: Save NEW FW IP address
+          shell: echo {{ fwIp }} > /opt/config/fw_ipaddr.txt
+        - debug:
+            msg: "FW IP has been changed"
+      become: true
+      when: oldFwIp.stdout != fwIp
+    - debug:
+        msg: "SINK IP has not been changed"
+      when: oldSinkIp.stdout == sinkIp
+    - block:
+        - block:
+          - name: Modify packet stream files
+            debug:
+              msg: "Modify packet stream files"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp1"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp2"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp3"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp4"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp5"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp6"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp7"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp8"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp9"
+          - shell: "sed -i -e '0,/UDP/ s/UDP:.*/UDP: {{ pkgIp.stdout }} -> {{ sinkIp }}/' /opt/pg_streams/stream_fw_udp10"
+        - block:
+          - name: Delete old streams
+            debug:
+              msg: "Delete old streams"
+          - shell: vppctl packet-generator delete fw_udp1
+          - shell: vppctl packet-generator delete fw_udp2
+          - shell: vppctl packet-generator delete fw_udp3
+          - shell: vppctl packet-generator delete fw_udp4
+          - shell: vppctl packet-generator delete fw_udp5
+          - shell: vppctl packet-generator delete fw_udp6
+          - shell: vppctl packet-generator delete fw_udp7
+          - shell: vppctl packet-generator delete fw_udp8
+          - shell: vppctl packet-generator delete fw_udp9
+          - shell: vppctl packet-generator delete fw_udp10
+        - block:
+          - name: Install new streams
+            debug:
+              msg: "Install new streams"
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp1
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp2
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp3
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp4
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp5
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp6
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp7
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp8
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp9
+          - shell: vppctl exec /opt/pg_streams/stream_fw_udp10
+        - block:
+          - name: Enable new streams
+            debug:
+              msg: "Enable new streams"
+          - shell: vppctl packet-generator enable fw_udp1
+          - shell: vppctl packet-generator enable fw_udp2
+          - shell: vppctl packet-generator enable fw_udp3
+          - shell: vppctl packet-generator enable fw_udp4
+          - shell: vppctl packet-generator enable fw_udp5
+          - shell: vppctl packet-generator enable fw_udp6
+          - shell: vppctl packet-generator enable fw_udp7
+          - shell: vppctl packet-generator enable fw_udp8
+          - shell: vppctl packet-generator enable fw_udp9
+          - shell: vppctl packet-generator enable fw_udp10
+        - name: Save NEW SINK IP address
+          shell: echo {{ sinkIp }} > /opt/config/sink_ipaddr.txt
+        - debug:
+            msg: "SINK IP has been changed"
+      become: true
+      when: oldSinkIp.stdout != sinkIp
