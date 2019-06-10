@@ -1,0 +1,14 @@
+apiVersion: onap.org/v1alpha1
+kind: CollectdPlugin
+metadata:
+  name: memory
+spec:
+  # Add fields here
+  pluginName: "memory"
+  pluginConf: |
+    <Plugin "memory">
+      Interval 30
+      ValuesAbsolute false
+      ValuesPercentage true
+    </Plugin>
+ 

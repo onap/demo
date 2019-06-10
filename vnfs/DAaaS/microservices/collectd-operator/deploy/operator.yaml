@@ -16,7 +16,7 @@ spec:
       containers:
         - name: collectd-operator
           # Replace this with the built image name
-          image: dcr.cluster.local:31976/collectd-operator:latest
+          image: dcr.cluster.local:32644/collectd-operator:latest
           command:
           - collectd-operator
           imagePullPolicy: Always

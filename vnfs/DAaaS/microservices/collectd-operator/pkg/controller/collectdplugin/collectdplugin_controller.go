@@ -136,14 +136,14 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 	if err := controllerutil.SetControllerReference(instance, cm, r.scheme); err != nil {
 		return reconcile.Result{}, err
 	}
-	// Set CollectdConf instance as the owner and controller
+	// Set CollectdPlugin instance as the owner and controller
 	if err := controllerutil.SetControllerReference(instance, ds, r.scheme); err != nil {
 		return reconcile.Result{}, err
 	}
 
 	// Update the ConfigMap with new Spec and reload DaemonSets
 	reqLogger.Info("Updating the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
-	log.Info("Map: ", cm.Data)
+	log.Info("ConfigMap Data", "Map: ", cm.Data)
 	err = r.client.Update(context.TODO(), cm)
 	if err != nil {
 		return reconcile.Result{}, err
@@ -180,14 +180,14 @@ func findResourceMapForCR(r *ReconcileCollectdPlugin, cr *onapv1alpha1.CollectdP
 	}
 
 	// Select DaemonSets with label app=collectd
-	dsList := &extensionsv1beta1.DaemonSet{}
+	dsList := &extensionsv1beta1.DaemonSetList{}
 	err = r.client.List(context.TODO(), opts, dsList)
 	if err != nil {
 		return rmap, err
 	}
 
 	rmap.configMap = &cmList.Items[0]
-	rmap.daemonSet = dsList
+	rmap.daemonSet = &dsList.Items[0]
 	return rmap, err
 }
 

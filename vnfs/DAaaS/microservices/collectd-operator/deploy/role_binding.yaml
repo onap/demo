@@ -5,6 +5,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: collectd-operator
+  namespace: cop
 roleRef:
   kind: ClusterRole
   name: collectd-operator

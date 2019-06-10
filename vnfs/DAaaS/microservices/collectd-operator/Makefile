@@ -13,16 +13,16 @@ BUILD := $(shell git rev-parse --short HEAD)
 PROJECTNAME := $(shell basename "$(PWD)")
 
 GOPATH := $(shell realpath "$(PWD)/../../../../../../")
-COP = ${PWD}/build/_output/bin/collectd-operator
-IMAGE_NAME = dcr.cluster.local/collectd-operator:latest
+COP := ${PWD}/build/_output/bin/collectd-operator
+IMAGE_NAME := collectd-operator:latest
 
 export GOPATH ...
 export GO111MODULE=on
 
 .PHONY: clean plugins
 
-## all: Generate the k8s and openapi artifacts using operator-sdk
-all: clean vendor
+## build: Generate the k8s and openapi artifacts using operator-sdk
+build: clean vendor
 	GOOS=linux GOARCH=amd64
 	operator-sdk generate k8s --verbose
 	operator-sdk generate openapi --verbose
@@ -33,8 +33,8 @@ all: clean vendor
 # no need to create a static binary with additional flags. However, for generating binary, additional build flags are necessary. This if used with
 # mock plugin errors out for unit tests. So the seperation avoids the error.
 
-## build: clean the
-build: clean test cover
+## all: Delete the image, binary, complete build, test and run coverage
+all: build test cover
 deploy: build publish
 vendor:
 	@go mod vendor
