@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Lukasz Rajewski <lukasz.rajewski@orange.com>
+Code-Review+2: Gary Wu <gary.wu@futurewei.com>
+Submitted-by: Gary Wu <gary.wu@futurewei.com>
+Submitted-at: Thu, 13 Jun 2019 14:25:02 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/demo/+/89810
+Project: demo
+Branch: refs/heads/dublin
