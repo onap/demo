@@ -1,0 +1,151 @@
+---
+- hosts: vpgn
+  gather_facts: no
+  remote_user: ubuntu
+  tasks:
+
+  - name: Install tcpdump, grepcidr
+    apt:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - tcpdump
+      - grepcidr
+    become: true
+
+
+  - include_vars: "{{ ConfigFileName }}"
+  - debug: var="trafficpresence"
+    failed_when: "'trafficpresence' is not defined"
+
+  - name: Get all Interfaces
+    set_fact:
+      interfaces: "{{destinations[0].vservers | map(attribute='l-interfaces') | list}}"
+  - name: Interfaces vserver 1
+    set_fact:
+      vserver1_interfaces: "{{destinations[0].vservers[0]['l-interfaces'] | list}}"
+  - name: Interfaces vserver 2
+    set_fact:
+      vserver2_interfaces: "{{destinations[0].vservers[1]['l-interfaces'] | list}}"
+  - block:
+     - name: length interfaces vserver1
+       set_fact:
+         length1: "{{ vserver1_interfaces |length }}"
+     - name: length interfaces vserver2
+       set_fact:
+         length2: "{{ vserver2_interfaces |length }}"
+  - block:
+     - name: adress 1 vserver
+       set_fact:
+         sink_addresses:
+           - "{{destinations[0].vservers[0]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[0]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[0]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+     - name: adress 2 vserver
+       set_fact:
+         fw_addresses:
+           - "{{destinations[0].vservers[1]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[1]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[1]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[1]['l-interfaces'][3]['ipv4-addresses'][0]}}"
+    when:
+      - length1 == "3"
+      - length2 == "4"
+  - block:
+     - name: adress 1 vserver
+       set_fact:
+         fw_addresses:
+           - "{{destinations[0].vservers[0]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[0]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[0]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[0]['l-interfaces'][3]['ipv4-addresses'][0]}}"
+     - name: adress 2 vserver
+       set_fact:
+         sink_addresses:
+           - "{{destinations[0].vservers[1]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[1]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+           - "{{destinations[0].vservers[1]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+    when:
+      - length1 == "4"
+      - length2 == "3"
+
+  - name: Concatenate sink_addresses
+    set_fact:
+      sink_addresses_conc: "{{ sink_addresses | join('\n') }}"
+
+  - name: Get sink IP fom json
+    shell: printf "{{ sink_addresses_conc }}" | grepcidr -f /opt/config/protected_net_cidr.txt
+    register: sink_ip
+
+  - debug: var=sink_ip.stdout
+
+  - name: Find interface name
+    shell:
+      cat /etc/network/interfaces | grep 255.255.255.0 -B2 | grep iface | awk '{print $2}'
+    register: interface_name
+
+  - name: Interface name
+    debug: msg='interface_name {{ interface_name.stdout }}'
+
+  - name: Traffic check if trafficpresence is TRUE
+    when:  trafficpresence == true
+    block:
+    - name: Traffic check if trafficpresence is TRUE
+      raw: |
+        #!/bin/bash
+        for i in {1..15}
+        do
+          sudo timeout 2 tcpdump -i {{ interface_name.stdout }} dst {{ sink_ip.stdout }} -c 10 > /dev/null 2>&1
+          timeout_result=$?
+            if [ $timeout_result == 0 ] ; then
+              echo 'traffic present'
+              break
+            fi
+        done
+        if [ $timeout_result == 124 ] ; then
+          echo 'traffic absent'
+        elif [ $timeout_result != 0 ] ; then
+          echo 'other error'
+        fi
+        exit $timeout_result
+      register: traffic_check
+      ignore_errors: yes
+    - debug:
+        msg: 'traffic absent {{ traffic_check.stdout_lines }} '
+      when: traffic_check.rc == 124
+      failed_when: traffic_check.rc == 124
+    - debug:
+        msg: 'traffic present {{ traffic_check.stdout_lines }} '
+      when: traffic_check.rc == 0
+
+  - name: Traffic check if trafficpresence is FALSE
+    when:  trafficpresence == false
+    block:
+    - name: Traffic check trafficpresence is FALSE
+      raw: |
+        #!/bin/bash
+        for i in {1..3}
+        do
+          sudo timeout 10  tcpdump -i {{ interface_name.stdout }} dst {{ sink_ip.stdout }} -c 1 > /dev/null 2>&1
+          timeout_result=$?
+            if [ $timeout_result == 124 ] ; then
+              echo 'traffic absent'
+              break
+            fi
+        done
+        if [ $timeout_result == 0 ] ; then
+          echo 'traffic present'
+         elif [ $timeout_result != 124 ] ; then
+          echo 'other error'
+        fi
+        exit $timeout_result
+      register: traffic_check
+      ignore_errors: yes
+    - debug:
+        msg: 'traffic absent {{ traffic_check.stdout_lines }} traffic_check.rc {{ traffic_check.rc }}'
+      when: traffic_check.rc == 124
+    - debug:
+        msg: 'traffic present {{ traffic_check.stdout_lines }} traffic_check.rc {{ traffic_check.rc }}'
+      when: traffic_check.rc == 0
+      failed_when: traffic_check.rc == 0
+

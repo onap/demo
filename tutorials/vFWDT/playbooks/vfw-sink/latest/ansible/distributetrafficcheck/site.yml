@@ -1,0 +1,95 @@
+---
+- hosts: vfw-sink
+  gather_facts: no
+  remote_user: ubuntu
+  vars:
+    time_measure: 30
+  tasks:
+
+  - name: Install grepcidr
+    apt:
+      name: grepcidr
+    become: yes
+
+  - include_vars: "{{ ConfigFileName }}"
+  - debug: var="trafficpresence"
+    failed_when: "'trafficpresence' is not defined"
+
+  - name: Get fw interface
+    shell: |
+      IP_PPNET=$(cat /etc/network/interfaces |grep address | awk '{print $2}' | grepcidr -f /opt/config/protected_private_net_cidr.txt)
+      cat /etc/network/interfaces | grep $IP_PPNET -B1 | grep iface | awk '{print $2}'
+    register: fw_ppnet_iface
+
+  - name: Traffic check if trafficpresence is TRUE
+    when:  trafficpresence == true
+    block:
+    - name: Traffic check if trafficpresence is TRUE
+      raw: |
+        #!/bin/bash
+        COL=$(netstat -i|grep lo |awk '{print NF}')
+        if [ $COL -eq 11 ] ; then NCOL=7
+          elif [  $COL -eq 12 ] ; then NCOL=8
+          else echo "bad NETSTAT version"
+        fi
+        TXOK_INITIAL=$(netstat -i | fgrep "{{ fw_ppnet_iface.stdout }}" | awk -v col=$NCOL '{print $col}')
+        sleep 0.1
+        for i in {1..{{ time_measure }}}
+        do
+          TXOK_CURRENT=$(netstat -i | fgrep "{{ fw_ppnet_iface.stdout }}" | awk -v col=$NCOL '{print $col}')
+          if [ $TXOK_CURRENT -gt $TXOK_INITIAL ] ; then
+            echo 'traffic present'
+            break
+          fi
+          sleep 1
+          echo $TXOK_CURRENT
+        done
+        if [ $TXOK_CURRENT -eq $TXOK_INITIAL ] ; then
+          echo 'traffic absent'
+          exit 1
+        fi
+      register: traffic_check
+      ignore_errors: yes
+    - debug:
+        msg: 'traffic absent {{ traffic_check.stdout_lines }} '
+      when: traffic_check.rc == 1
+      failed_when: traffic_check.rc == 1
+    - debug:
+        msg: 'traffic present {{ traffic_check.stdout_lines }} '
+      when: traffic_check.rc == 0
+
+  - name: Traffic check if trafficpresence is FALSE
+    when:  trafficpresence == false
+    block:
+    - name: Traffic check trafficpresence is FALSE
+      raw: |
+        #!/bin/bash
+        COL=$(netstat -i|grep lo |awk '{print NF}')
+        if [ $COL -eq 11 ] ; then NCOL=7
+        elif [  $COL -eq 12 ] ; then NCOL=8
+          else echo "bad NETSTAT version"
+        fi
+        for i in {1..{{ time_measure }}}
+        do
+          TXOK_INITIAL=$(netstat -i | fgrep "{{ fw_ppnet_iface.stdout }}" | awk -v col=$NCOL '{print $col}')
+          sleep 1
+          TXOK_CURRENT=$(netstat -i | fgrep "{{ fw_ppnet_iface.stdout }}" | awk -v col=$NCOL '{print $col}')
+          if [ $TXOK_CURRENT -eq $TXOK_INITIAL ] ; then
+            echo 'traffic absent'
+            break
+          fi
+        done
+        if [ $TXOK_CURRENT -gt $TXOK_INITIAL ] ; then
+          echo 'traffic present'
+          exit 1
+        fi
+      register: traffic_check
+      ignore_errors: yes
+    - debug:
+        msg: 'traffic absent {{ traffic_check.stdout_lines }} '
+      when: traffic_check.rc == 0
+    - debug:
+        msg: 'traffic present {{ traffic_check.stdout_lines }} '
+      when: traffic_check.rc == 1
+      failed_when: traffic_check.rc == 1
+
