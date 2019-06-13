@@ -5,6 +5,7 @@ metadata:
   name: cephclusters.ceph.rook.io
   annotations:
     "helm.sh/hook": crd-install
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   group: ceph.rook.io
   names:
@@ -88,6 +89,7 @@ metadata:
   name: cephfilesystems.ceph.rook.io
   annotations:
     "helm.sh/hook": crd-install
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   group: ceph.rook.io
   names:
@@ -112,6 +114,7 @@ metadata:
   name: cephobjectstores.ceph.rook.io
   annotations:
     "helm.sh/hook": crd-install
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   group: ceph.rook.io
   names:
@@ -128,6 +131,7 @@ metadata:
   name: cephobjectstoreusers.ceph.rook.io
   annotations:
     "helm.sh/hook": crd-install
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   group: ceph.rook.io
   names:
@@ -147,6 +151,7 @@ metadata:
   name: cephblockpools.ceph.rook.io
   annotations:
     "helm.sh/hook": crd-install
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   group: ceph.rook.io
   names:
@@ -163,6 +168,7 @@ metadata:
   name: volumes.rook.io
   annotations:
     "helm.sh/hook": crd-install
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   group: rook.io
   names:
