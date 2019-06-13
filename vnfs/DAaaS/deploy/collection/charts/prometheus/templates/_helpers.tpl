@@ -45,3 +45,13 @@ heritage: {{ .Release.Service | quote }}
 {{ toYaml .Values.commonLabels }}
 {{- end }}
 {{- end }}
+
+
+{{/* Create the name of prometheus service account to use */}}
+{{- define "prometheus.serviceAccountName" -}}
+{{- if .Values.prometheus.serviceAccount.create -}}
+    {{ default (include "prometheus.fullname" .) .Values.prometheus.serviceAccount.name }}
+{{- else -}}
+    {{ default "default" .Values.prometheus.serviceAccount.name }}
+{{- end -}}
+{{- end -}}

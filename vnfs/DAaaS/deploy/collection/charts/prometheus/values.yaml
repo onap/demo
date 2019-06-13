@@ -1,6 +1,9 @@
 ## Deploy a Prometheus instance
 ##
 prometheus:
+  serviceAccount:
+    create: true
+    name: ""
   additionalServiceMonitors:
     - name: service-monitor-collectd
       additionalLabels:
