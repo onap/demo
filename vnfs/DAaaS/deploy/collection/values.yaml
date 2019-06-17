@@ -26,3 +26,16 @@ global:
 #################################################################
 # Collection Package Day-0 configuration defaults.
 #################################################################
+
+#################################################################
+# Enable or disable components
+#################################################################
+
+cadvisor: 
+  enabled: true
+ 
+collectd:
+  enabled: true
+
+prometheus-node-exporter:
+  enabled: true

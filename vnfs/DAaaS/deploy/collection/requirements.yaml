@@ -1,0 +1,10 @@
+dependencies:
+
+  - name: cadvisor
+    condition: cadvisor.enabled
+
+  - name: collectd
+    condition: collectd.enabled
+
+  - name: prometheus-node-exporter
+    condition: prometheus-node-exporter.enabled
