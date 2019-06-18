@@ -1,0 +1,84 @@
+{{/*
+# Copyright 2019 Intel Corporation, Inc
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+*/}}
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ include "promql_query_app.fullname" . }}
+  labels:
+    app: {{ include "promql_query_app.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "promql_query_app.name" . }}
+      release: {{ .Release.Name }}
+      modelName: {{ .Values.modelName }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "promql_query_app.name" . }}
+        release: {{ .Release.Name }}
+        modelName: {{ .Values.modelName }}
+    spec:
+      serviceAccountName: {{ template "promql_query_app.serviceAccountName" . }}
+      containers:
+        - name: promql_query_app
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: DATA_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap_promql_app_env
+                  key: DATA_ENDPOINT
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.minio.existingSecret }}{{ .Values.minio.existingSecret }}{{ else }}{{ template "promql_query_app.fullname" . }}{{ end }}
+                  key: accesskey
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.minio.existingSecret }}{{ .Values.minio.existingSecret }}{{ else }}{{ template "promql_query_app.fullname" . }}{{ end }}
+                  key: secretkey
+            {{- range $key, $val := .Values.minio.environment }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end}}
+          resources:
+            {{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+            - mountPath: /models
+              name: models
+      volumes:
+        - name: models
+          emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
