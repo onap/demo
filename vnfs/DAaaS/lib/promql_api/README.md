@@ -22,7 +22,7 @@ The return is:
              'service': 'collectd'},
   'value': [1559177169.415, '119727200']}]
 ```
-i
+
 ## How to use this API ?
 
 ```
