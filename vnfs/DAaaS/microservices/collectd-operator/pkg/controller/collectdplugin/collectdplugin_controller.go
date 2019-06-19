@@ -3,17 +3,17 @@ package collectdplugin
 import (
 	"context"
 	"crypto/sha256"
+	"fmt"
+	"time"
 
 	onapv1alpha1 "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1"
 
 	corev1 "k8s.io/api/core/v1"
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
@@ -27,6 +27,7 @@ var log = logf.Log.WithName("controller_collectdplugin")
 type ResourceMap struct {
 	configMap *corev1.ConfigMap
 	daemonSet *extensionsv1beta1.DaemonSet
+	collectdPlugins *[]onapv1alpha1.CollectdPlugin
 }
 
 /**
@@ -57,25 +58,6 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Watch for changes to primary resource CollectdPlugin
 	log.V(1).Info("Add watcher for primary resource CollectdPlugin")
 	err = c.Watch(&source.Kind{Type: &onapv1alpha1.CollectdPlugin{}}, &handler.EnqueueRequestForObject{})
-	if err != nil {
-		return err
-	}
-
-	// TODO(user): Modify this to be the types you create that are owned by the primary resource
-	// Watch for changes to secondary resource Pods and requeue the owner CollectdPlugin
-	log.V(1).Info("Add watcher for secondary resource ConfigMap")
-	err = c.Watch(&source.Kind{Type: &corev1.ConfigMap{}}, &handler.EnqueueRequestForOwner{
-		IsController: true,
-		OwnerType:    &onapv1alpha1.CollectdPlugin{},
-	})
-	if err != nil {
-		return err
-	}
-
-	err = c.Watch(&source.Kind{Type: &extensionsv1beta1.DaemonSet{}}, &handler.EnqueueRequestForOwner{
-		IsController: true,
-		OwnerType:    &onapv1alpha1.CollectdPlugin{},
-	})
 	if err != nil {
 		return err
 	}
@@ -132,14 +114,18 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 	reqLogger.V(1).Info("Found ResourceMap")
 	reqLogger.V(1).Info("ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
 	reqLogger.V(1).Info("DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
-	// Set CollectdPlugin instance as the owner and controller
-	if err := controllerutil.SetControllerReference(instance, cm, r.scheme); err != nil {
-		return reconcile.Result{}, err
-	}
-	// Set CollectdPlugin instance as the owner and controller
-	if err := controllerutil.SetControllerReference(instance, ds, r.scheme); err != nil {
-		return reconcile.Result{}, err
-	}
+
+	//hasChanged, err := buildCollectdConf(r, instance)
+
+	//Restart Collectd Pods
+	ts := time.Now().Format(time.RFC850)
+	reqLogger.V(1).Info("Timestamp : ", ts)
+	ds.Spec.Template.SetAnnotations(map[string]string{
+		"daaas-random": ComputeSHA256([]byte(ts)),
+	})
+	cm.SetAnnotations(map[string]string{
+		"daaas-random": ComputeSHA256([]byte(ts)),
+	})
 
 	// Update the ConfigMap with new Spec and reload DaemonSets
 	reqLogger.Info("Updating the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
@@ -149,11 +135,11 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 		return reconcile.Result{}, err
 	}
 
-	//Restart Collectd Pods
+	err = r.client.Update(context.TODO(), ds)
+	if err != nil {
+		return reconcile.Result{}, err
+	}
 
-	ds.Spec.Template.SetLabels(map[string]string{
-		"daaas-random": ComputeSHA256([]byte("TEST")),
-	})
 	// Reconcile success
 	reqLogger.Info("Updated the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
 	return reconcile.Result{}, nil
@@ -162,7 +148,7 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 // ComputeSHA256  returns hash of data as string
 func ComputeSHA256(data []byte) string {
 	hash := sha256.Sum256(data)
-	return string(hash[:])
+	return fmt.Sprintf("%x", hash)
 }
 
 // findConfigMapForCR returns the configMap used by collectd Daemonset
@@ -179,6 +165,10 @@ func findResourceMapForCR(r *ReconcileCollectdPlugin, cr *onapv1alpha1.CollectdP
 		return rmap, err
 	}
 
+	if cmList.Items == nil || len(cmList.Items) == 0 {
+		return rmap, err
+	}
+
 	// Select DaemonSets with label app=collectd
 	dsList := &extensionsv1beta1.DaemonSetList{}
 	err = r.client.List(context.TODO(), opts, dsList)
@@ -186,30 +176,26 @@ func findResourceMapForCR(r *ReconcileCollectdPlugin, cr *onapv1alpha1.CollectdP
 		return rmap, err
 	}
 
+	if dsList.Items == nil || len(dsList.Items) == 0 {
+		return rmap, err
+	}
+
+	// Get all collectd plugins in the current namespace to rebuild conf.
+	collectdPlugins := &onapv1alpha1.CollectdPluginList{}
+	cpOpts := &client.ListOptions{}
+	cpOpts.InNamespace(cr.Namespace)
+	err = r.client.List(context.TODO(), cpOpts, collectdPlugins)
+	if err != nil {
+		return rmap, err
+	}
+
 	rmap.configMap = &cmList.Items[0]
 	rmap.daemonSet = &dsList.Items[0]
+	rmap.collectdPlugins = &collectdPlugins.Items //will be nil if no plugins exist
 	return rmap, err
 }
 
-// newPodForCR returns a busybox pod with the same name/namespace as the cr
-func newPodForCR(cr *onapv1alpha1.CollectdPlugin) *corev1.Pod {
-	labels := map[string]string{
-		"app": cr.Name,
-	}
-	return &corev1.Pod{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      cr.Name + "-pod",
-			Namespace: cr.Namespace,
-			Labels:    labels,
-		},
-		Spec: corev1.PodSpec{
-			Containers: []corev1.Container{
-				{
-					Name:    "busybox",
-					Image:   "busybox",
-					Command: []string{"sleep", "3600"},
-				},
-			},
-		},
-	}
+// Get all collectd plugins and reconstruct, compute Hash and check for changes
+func buildCollectdConf() {
+	
 }
