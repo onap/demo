@@ -14,7 +14,8 @@ PROJECTNAME := $(shell basename "$(PWD)")
 
 GOPATH := $(shell realpath "$(PWD)/../../../../../../")
 COP := ${PWD}/build/_output/bin/collectd-operator
-IMAGE_NAME := collectd-operator:latest
+COP_LOCAL := ${COP}-local
+IMAGE_NAME := dcr.cluster.local:32644/collectd-operator:latest
 
 export GOPATH ...
 export GO111MODULE=on
@@ -27,6 +28,7 @@ build: clean vendor
 	operator-sdk generate k8s --verbose
 	operator-sdk generate openapi --verbose
 	#@go build -o ${COP} -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor demo/vnfs/DAaaS/microservices/collectd-operator/cmd/manager
+	@go build -o ${COP_LOCAL} -mod=vendor demo/vnfs/DAaaS/microservices/collectd-operator/cmd/manager
 	@operator-sdk build ${IMAGE_NAME} --verbose
 
 # The following is done this way as each patch on CI runs build and each merge runs deploy. So for build we don't need to build binary and hence
