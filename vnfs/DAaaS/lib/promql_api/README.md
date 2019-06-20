@@ -1,29 +1,16 @@
 ## What does this API do ?
-This api as of now provides a function which takes in a list of 'QUERY_STRINGs' with respect to prometheus
-and returns the corresponding result_sets in a list.
 
-For eg:
-If the QUERY_STRING is
+This API has support for two PROMQL functions as of now :
 
-```
-QUERY_STRING = ['irate(collectd_cpufreq{exported_instance="otconap7",cpufreq="1"}[2m])']
-```
+1. 'query' 
+2. 'query_range'
 
-The return is:
-
-```
-[{'metric': {'cpufreq': '1',
-             'endpoint': 'collectd-prometheus',
-             'exported_instance': 'otconap7',
-             'instance': '172.25.103.1:9103',
-             'job': 'collectd',
-             'namespace': 'edge1',
-             'pod': 'plundering-liger-collectd-wz7xg',
-             'service': 'collectd'},
-  'value': [1559177169.415, '119727200']}]
-```
+You can directly call the above functions with required parameters, and API shall
+give out a result set.
 
 ## How to use this API ?
+
+### Using 'query'
 
 ```
 1. Copy the directory 'promql_api' to your working directory. 
@@ -42,6 +29,27 @@ QUERY_STRING = ['irate(collectd_cpufreq{exported_instance="otconap7",cpufreq="1"
 ```
 4. Store the result set in a list:
 list_of_result_sets = query(QUERY_STRING)
+```
+### Using 'query_range'
+
+```
+1. Copy the directory 'promql_api' to your working directory. 
+```
+
+```
+2. Import the API function: query_range
+from promql_api.prom_ql_api import query_range
+```
+
+```
+3. Its the calling application's responsibility to pass on the correct set of paramters. Form a map of required parameters:
+
+map_of_parameters = {'query': 'up', 'start': '2019-06-19T20:10:30.781Z', 'end': '2019-06-19T20:10:45.781Z', 'step': '15s'}
+```
+
+```
+4. Store the result set in a list:
+list_of_result_sets = query_range(map_of_parameters)
 ```
 
 ## Troubleshooting tips
