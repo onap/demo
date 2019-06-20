@@ -1,29 +1,16 @@
 ## What does this API do ?
-This api as of now provides a function which takes in a list of 'QUERY_STRINGs' with respect to prometheus
-and returns the corresponding result_sets in a list.
 
-For eg:
-If the QUERY_STRING is
+This API has support for two PROMQL functions as of now :
 
-```
-QUERY_STRING = ['irate(collectd_cpufreq{exported_instance="otconap7",cpufreq="1"}[2m])']
-```
+1. 'query' 
+2. 'query_range'
 
-The return is:
-
-```
-[{'metric': {'cpufreq': '1',
-             'endpoint': 'collectd-prometheus',
-             'exported_instance': 'otconap7',
-             'instance': '172.25.103.1:9103',
-             'job': 'collectd',
-             'namespace': 'edge1',
-             'pod': 'plundering-liger-collectd-wz7xg',
-             'service': 'collectd'},
-  'value': [1559177169.415, '119727200']}]
-```
+You can directly call the above functions with required parameters, and API shall
+give out a result set.
 
 ## How to use this API ?
+
+### Using 'query'
 
 ```
 1. Copy the directory 'promql_api' to your working directory. 
@@ -44,6 +31,78 @@ QUERY_STRING = ['irate(collectd_cpufreq{exported_instance="otconap7",cpufreq="1"
 list_of_result_sets = query(QUERY_STRING)
 ```
 
+```
+The return is :
+
+[{'metric': {'cpufreq': '1',
+             'endpoint': 'collectd-prometheus',
+             'exported_instance': 'otconap7',
+             'instance': 'ZZ.QQQ.XXX.YY:9103',
+             'job': 'collectd',
+             'namespace': 'edge1',
+             'pod': 'plundering-liger-collectd-wz7xg',
+             'service': 'collectd'},
+  'value': [1559177169.415, '119727200']}]
+```
+### Using 'query_range'
+
+```
+1. Copy the directory 'promql_api' to your working directory. 
+```
+
+```
+2. Import the API function: query_range
+from promql_api.prom_ql_api import query_range
+```
+
+```
+3. Its the calling application's responsibility to pass on the correct set of paramters. Form a map of required parameters:
+
+map_of_parameters = {'query': 'up', 'start': '2019-06-19T20:10:30.781Z', 'end': '2019-06-19T20:10:45.781Z', 'step': '15s'}
+```
+
+```
+4. Store the result set in a list:
+list_of_result_sets = query_range(map_of_parameters)
+```
+
+```
+The return is:
+
+[[{'metric': {'__name__': 'up',
+              'endpoint': 'cadvisor-prometheus',
+              'instance': 'ZZ.QQQ.XXX.YY:8080',
+              'job': 'cadvisor',
+              'namespace': 'default',
+              'pod': 'cp-cadvisor-69287',
+              'service': 'cadvisor'},
+   'values': [[1560975030.781, '1'], [1560975045.781, '1']]},
+  {'metric': {'__name__': 'up',
+              'endpoint': 'collectd-prometheus',
+              'instance': 'ZZ.QQQ.XXX.YY:9103',
+              'job': 'collectd',
+              'namespace': 'default',
+              'pod': 'vcmts-stats-daemonset-lsqjk',
+              'service': 'collectd'},
+   'values': [[1560975030.781, '1'], [1560975045.781, '1']]},
+  {'metric': {'__name__': 'up',
+              'endpoint': 'metrics',
+              'instance': 'ZZ.QQQ.XXX.YY:9100',
+              'job': 'cp-prometheus-node-exporter',
+              'namespace': 'default',
+              'pod': 'cp-prometheus-node-exporter-sbbb9',
+              'service': 'cp-prometheus-node-exporter'},
+   'values': [[1560975030.781, '1'], [1560975045.781, '1']]},
+  {'metric': {'__name__': 'up',
+              'endpoint': 'metrics',
+              'instance': 'ZZ.QQQ.XXX.YY:9100',
+              'job': 'cp-prometheus-node-exporter',
+              'namespace': 'default',
+              'pod': 'cp-prometheus-node-exporter-mcqtp',
+              'service': 'cp-prometheus-node-exporter'},
+   'values': [[1560975030.781, '1'], [1560975045.781, '1']]}]]
+```
+
 ## Troubleshooting tips
 
 * Check the sample file - sample_promql_query.py in the repo ( sample-apps/m3db_promql)
@@ -58,11 +117,11 @@ list_of_result_sets = query(QUERY_STRING)
  05-30-2019 08:47:53PM ::prom_ql_api.py :: load_and_validate_env_vars :: INFO :: Loading the env variables ...
  05-30-2019 08:47:53PM ::prom_ql_api.py :: load_and_validate_env_vars :: ERROR :: Env var: DATA_ENDPOINT not         found !
  05-30-2019 08:47:53PM ::prom_ql_api.py :: query :: INFO :: Forming the get request ...
- 05-30-2019 08:47:53PM ::prom_ql_api.py :: query :: INFO :: API request::: URL: http://172.25.103.1:30090/api/v1/    query
+ 05-30-2019 08:47:53PM ::prom_ql_api.py :: query :: INFO :: API request::: URL: http://ZZ.QQQ.XXX.YY:30090/api/v1/    query
  05-30-2019 08:47:53PM ::prom_ql_api.py :: query :: INFO :: API request::: params: {'query':                         'irate(collectd_cpufreq{exported_instance="otconap7",cpufreq="1"}[2m])'}
- 05-30-2019 08:47:53PM ::connectionpool.py :: _new_conn :: DEBUG :: Starting new HTTP connection (1): 172.25.103.1   05-30-2019 08:47:53PM ::connectionpool.py :: _make_request :: DEBUG :: http://172.25.103.1:30090 "GET /api/v1/      query?query=irate%28collectd_cpufreq%7Bexported_instance%3D%22otconap7%22%2Ccpufreq%3D%221%22%7D%5B2m%5D%29 HTTP/1. 1" 200 370
+ 05-30-2019 08:47:53PM ::connectionpool.py :: _new_conn :: DEBUG :: Starting new HTTP connection (1): ZZ.QQQ.XXX.YY   05-30-2019 08:47:53PM ::connectionpool.py :: _make_request :: DEBUG :: http://ZZ.QQQ.XXX.YY:30090 "GET /api/v1/      query?query=irate%28collectd_cpufreq%7Bexported_instance%3D%22otconap7%22%2Ccpufreq%3D%221%22%7D%5B2m%5D%29 HTTP/1. 1" 200 370
  05-30-2019 08:47:53PM ::prom_ql_api.py :: query :: INFO :: ::::::::::RESULTS:::::::::::::                           irate(collectd_cpufreq{exported_instance="otconap7",cpufreq="1"}[2m])
- 05-30-2019 08:47:53PM ::prom_ql_api.py :: query :: INFO :: {'metric': {'cpufreq': '1', 'endpoint': 'collectd-       prometheus', 'exported_instance': 'otconap7', 'instance': '172.25.103.1:9103', 'job': 'collectd', 'namespace':      'edge1', 'pod': 'plundering-liger-collectd-wz7xg', 'service': 'collectd'}, 'value': [1559249299.084, '236300']}
+ 05-30-2019 08:47:53PM ::prom_ql_api.py :: query :: INFO :: {'metric': {'cpufreq': '1', 'endpoint': 'collectd-       prometheus', 'exported_instance': 'otconap7', 'instance': 'ZZ.QQQ.XXX.YY:9103', 'job': 'collectd', 'namespace':      'edge1', 'pod': 'plundering-liger-collectd-wz7xg', 'service': 'collectd'}, 'value': [1559249299.084, '236300']}
  ```
 
  * Tested Error scenario: Configure QUERY_STRING as :
@@ -71,11 +130,11 @@ list_of_result_sets = query(QUERY_STRING)
  ```
  O/P :
  ```
- Check logs..HTTP error occurred: 400 Client Error: Bad Request for url: http://172.25.103.1:30090/api/v1/query?query=collectd_cpu_percent%7Bjob%3D%22collectd%22+exported_instance%3D%22an11-31%22%7D%5B1m%5D
+ Check logs..HTTP error occurred: 400 Client Error: Bad Request for url: http://ZZ.QQQ.XXX.YY:30090/api/v1/query?query=collectd_cpu_percent%7Bjob%3D%22collectd%22+exported_instance%3D%22an11-31%22%7D%5B1m%5D
 [{'metric': {'cpufreq': '1',
              'endpoint': 'collectd-prometheus',
              'exported_instance': 'otconap7',
-             'instance': '172.25.103.1:9103',
+             'instance': 'ZZ.QQQ.XXX.YY:9103',
              'job': 'collectd',
              'namespace': 'edge1',
              'pod': 'plundering-liger-collectd-wz7xg',
