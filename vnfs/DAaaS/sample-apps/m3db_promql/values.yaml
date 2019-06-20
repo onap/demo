@@ -15,6 +15,7 @@ fullnameOverride: ""
 
 prometheus:
   serverURL: http://172.25.103.1:30090
+  configMapName: ""
 
 ## Model repository information (Minio)
 ## Model repository information (Minio)

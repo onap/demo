@@ -46,8 +46,8 @@ spec:
             - name: DATA_ENDPOINT
               valueFrom:
                 configMapKeyRef:
-                  name: configmap_promql_app_env
-                  key: DATA_ENDPOINT
+                  name: {{ if .Values.prometheus.configMapName }}{{ .Values.prometheus.configMapName }}{{ else }}{{ template "promql_query_app.fullname" . }}{{ end }}
+                  key: prometheus_endpoint
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
