@@ -25,8 +25,8 @@ var log = logf.Log.WithName("controller_collectdplugin")
 
 // ResourceMap to hold objects to update/reload
 type ResourceMap struct {
-	configMap *corev1.ConfigMap
-	daemonSet *extensionsv1beta1.DaemonSet
+	configMap       *corev1.ConfigMap
+	daemonSet       *extensionsv1beta1.DaemonSet
 	collectdPlugins *[]onapv1alpha1.CollectdPlugin
 }
 
@@ -111,13 +111,15 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 
 	cm := rmap.configMap
 	ds := rmap.daemonSet
+	collectPlugins := rmap.collectdPlugins
 	reqLogger.V(1).Info("Found ResourceMap")
 	reqLogger.V(1).Info("ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
 	reqLogger.V(1).Info("DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
 
-	//hasChanged, err := buildCollectdConf(r, instance)
+	collectdConf, err := rebuildCollectdConf(collectPlugins)
 
 	//Restart Collectd Pods
+
 	ts := time.Now().Format(time.RFC850)
 	reqLogger.V(1).Info("Timestamp : ", ts)
 	ds.Spec.Template.SetAnnotations(map[string]string{
@@ -126,6 +128,8 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 	cm.SetAnnotations(map[string]string{
 		"daaas-random": ComputeSHA256([]byte(ts)),
 	})
+
+	cm.Data["node-collectd.conf"] = collectdConf
 
 	// Update the ConfigMap with new Spec and reload DaemonSets
 	reqLogger.Info("Updating the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
@@ -139,7 +143,6 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 	if err != nil {
 		return reconcile.Result{}, err
 	}
-
 	// Reconcile success
 	reqLogger.Info("Updated the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
 	return reconcile.Result{}, nil
@@ -196,6 +199,28 @@ func findResourceMapForCR(r *ReconcileCollectdPlugin, cr *onapv1alpha1.CollectdP
 }
 
 // Get all collectd plugins and reconstruct, compute Hash and check for changes
-func buildCollectdConf() {
-	
+func rebuildCollectdConf(cpList *[]onapv1alpha1.CollectdPlugin) (string, error) {
+	var collectdConf string
+	if *cpList == nil || len(*cpList) == 0 {
+		return "", errors.NewNotFound(corev1.Resource("collectdplugin"), "CollectdPlugin")
+	}
+	loadPlugin := make(map[string]string)
+	for _, cp := range *cpList {
+		if cp.Spec.PluginName == "global" {
+			collectdConf += cp.Spec.PluginConf + "\n"
+		} else {
+			loadPlugin[cp.Spec.PluginName] = cp.Spec.PluginConf
+		}
+	}
+
+	log.V(1).Info("::::::: Plugins Map ::::::: ", "PluginMap ", loadPlugin)
+
+	for cpName, cpConf := range loadPlugin {
+		collectdConf += "LoadPlugin" + " " + cpName + "\n"
+		collectdConf += cpConf + "\n"
+	}
+
+	collectdConf += "\n#Last line (collectd requires ‘\\n’ at the last line)"
+
+	return collectdConf, nil
 }
