@@ -1,0 +1,12 @@
+apiVersion: onap.org/v1alpha1
+kind: CollectdPlugin
+metadata:
+  name: prometheus
+spec:
+  # Add fields here
+  pluginName: "write_prometheus"
+  pluginConf: |
+    <Plugin "write_prometheus">
+      Port 9103
+    </Plugin>
+ 
