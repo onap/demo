@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b95d676c_93ea203d",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-06-21T23:05:05Z",
+      "side": 1,
+      "message": "make this a value?",
+      "range": {
+        "startLine": 11,
+        "startChar": 5,
+        "endLine": 11,
+        "endChar": 12
+      },
+      "revId": "90b5af158b25651f7ab0219a057ed3a1296f70ed",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b7b1c7d_d5281b10",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/values.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-06-21T23:05:05Z",
+      "side": 1,
+      "message": "nit: remove space",
+      "range": {
+        "startLine": 22,
+        "startChar": 50,
+        "endLine": 22,
+        "endChar": 53
+      },
+      "revId": "90b5af158b25651f7ab0219a057ed3a1296f70ed",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
