@@ -37,25 +37,39 @@ build: clean vendor
 
 ## all: Delete the image, binary, complete build, test and run coverage
 all: build test cover
+## debug: Build local binary for debugging
+debug:
+	@echo "Deleting ${COP_LOCAL} binary"
+	@rm -rf ${COP_LOCAL}
+	@echo "Building ${COP_LOCAL} binary"
+	@go build -o ${COP_LOCAL} -mod=vendor demo/vnfs/DAaaS/microservices/collectd-operator/cmd/manager
+
+## deploy: Build Dockerfile and publish to repository
 deploy: build publish
+## vendor: Build the vendor module
 vendor:
 	@go mod vendor
+## publish: Push docker image to repository
 publish:
 	@docker push ${IMAGE_NAME}
 .PHONY: test
+## test: run tests
 test: clean
 	@go test -v ./...
-
+## format: format source code
 format:
 	@go fmt ./...
 
+## clean: clean build artifacts, image, binary 
 clean:
 	@echo "Deleting the collectd-operator binary"
-	@rm -rf ${PWD}/build/_output/bin/collectd-operator
+	@rm -rf ${COP}
+	@rm -rf ${COP_LOCAL}
 	@echo "Deleting the collectd-operator docker image"
 	@docker rmi ${IMAGE_NAME}
 
 .PHONY: cover
+## cover: run tests and generate coverage report
 cover:
 	@go test ./... -coverprofile=coverage.out
 	@go tool cover -html=coverage.out -o coverage.html
@@ -64,7 +78,7 @@ cover:
 ## help: Print help message
 help: Makefile
 	@echo
-	@echo " Requires -\\t Operator SDK v0.8.0+, go1.12.5+"
+	@echo " Requires Operator SDK v0.8.0+, go1.12.5+"
 	@echo
 	@echo " Choose a command run in "$(PROJECTNAME)":"
 	@echo
