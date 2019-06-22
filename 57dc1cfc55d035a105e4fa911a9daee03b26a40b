@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "49cf8986_3c20cbda",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-06-22T05:41:08Z",
+      "side": 1,
+      "message": "Description is not correct.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 42
+      },
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35de93cd_60efa408",
         "filename": "vnfs/DAaaS/00-init/istio/istio-instance/Chart.yaml",
         "patchSetId": 5
