@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35de93cd_60efa408",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/Chart.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-06-22T05:39:46Z",
+      "side": 1,
+      "message": "Modify this to A Helm chart for Istio",
+      "range": {
+        "startLine": 3,
+        "startChar": 13,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ecd001eb_50f8fcf1",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/templates/_helpers.tpl",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-06-22T05:39:46Z",
+      "side": 1,
+      "message": "This file is not used? Can you remove the unused templates?",
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fd0ce05c_24ba6786",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/templates/_helpers.tpl",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-06-22T05:39:46Z",
+      "side": 1,
+      "message": "should be \"chart-name\".name\nSame for the ones below (if planning to use)",
+      "range": {
+        "startLine": 5,
+        "startChar": 12,
+        "endLine": 5,
+        "endChar": 23
+      },
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c14bc57_9c033e04",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-06-22T05:39:46Z",
+      "side": 1,
+      "message": "release name should be added as a label",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 9
+      },
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1788ca28_5d74f1c7",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-06-22T05:39:46Z",
+      "side": 1,
+      "message": "This should be a template",
+      "range": {
+        "startLine": 6,
+        "startChar": 8,
+        "endLine": 6,
+        "endChar": 20
+      },
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2c21a66d_5bea6da1",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/values.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-06-22T05:39:46Z",
+      "side": 1,
+      "message": "Since we are using gloo as ingress gateway, should this be disabled?",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 19
+      },
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
