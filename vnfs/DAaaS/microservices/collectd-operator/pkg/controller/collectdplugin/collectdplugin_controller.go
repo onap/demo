@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
-	"time"
+	"github.com/go-logr/logr"
 
 	onapv1alpha1 "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1"
 
@@ -76,6 +76,9 @@ type ReconcileCollectdPlugin struct {
 	scheme *runtime.Scheme
 }
 
+// Define the collectdPlugin finalizer for handling deletion
+const collectdPluginFinalizer = "finalizer.collectdplugin.onap.org"
+
 // Reconcile reads that state of the cluster for a CollectdPlugin object and makes changes based on the state read
 // and what is in the CollectdPlugin.Spec
 // TODO(user): Modify this Reconcile function to implement your Controller logic.  This example creates
@@ -103,49 +106,69 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 		return reconcile.Result{}, err
 	}
 
-	rmap, err := findResourceMapForCR(r, instance)
-	if err != nil {
-		reqLogger.Info("Skip reconcile: ConfigMap not found")
+	// Handle Delete CR for additional cleanup
+	isDelete, err := r.handleDelete(reqLogger, instance)
+	if isDelete {
 		return reconcile.Result{}, err
+	}
+
+	// Add finalizer for this CR
+	if !contains(instance.GetFinalizers(), collectdPluginFinalizer) {
+		if err := r.addFinalizer(reqLogger, instance); err != nil {
+			return reconcile.Result{}, err
+		}
+	}
+	err = r.handleCollectdPlugin(reqLogger, instance)
+	return reconcile.Result{}, err
+}
+
+// handleCollectdPlugin regenerates the collectd conf on CR Create, Update, Delete events
+func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin) error {
+
+	rmap, err := r.findResourceMapForCR(cr)
+	if err != nil {
+		reqLogger.Error(err, "Skip reconcile: Resources not found")
+		return err
 	}
 
 	cm := rmap.configMap
 	ds := rmap.daemonSet
 	collectPlugins := rmap.collectdPlugins
 	reqLogger.V(1).Info("Found ResourceMap")
-	reqLogger.V(1).Info("ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
-	reqLogger.V(1).Info("DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
+	reqLogger.V(1).Info(":::: ConfigMap Info ::::", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
+	reqLogger.V(1).Info(":::: DaemonSet Info ::::", "DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
 
 	collectdConf, err := rebuildCollectdConf(collectPlugins)
 
 	//Restart Collectd Pods
-
-	ts := time.Now().Format(time.RFC850)
-	reqLogger.V(1).Info("Timestamp : ", ts)
+	//Restart only if hash of configmap has changed.
 	ds.Spec.Template.SetAnnotations(map[string]string{
-		"daaas-random": ComputeSHA256([]byte(ts)),
+		"daaas-random": ComputeSHA256([]byte(collectdConf)),
 	})
 	cm.SetAnnotations(map[string]string{
-		"daaas-random": ComputeSHA256([]byte(ts)),
+		"daaas-random": ComputeSHA256([]byte(collectdConf)),
 	})
 
 	cm.Data["node-collectd.conf"] = collectdConf
 
 	// Update the ConfigMap with new Spec and reload DaemonSets
 	reqLogger.Info("Updating the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
-	log.Info("ConfigMap Data", "Map: ", cm.Data)
+	log.V(1).Info("ConfigMap Data", "Map: ", cm.Data)
 	err = r.client.Update(context.TODO(), cm)
 	if err != nil {
-		return reconcile.Result{}, err
+		reqLogger.Error(err, "Update the ConfigMap failed", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
+		return err
 	}
 
 	err = r.client.Update(context.TODO(), ds)
 	if err != nil {
-		return reconcile.Result{}, err
+		reqLogger.Error(err, "Update the DaemonSet failed", "DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
+		return err
 	}
+	r.updateStatus(cr)
 	// Reconcile success
-	reqLogger.Info("Updated the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
-	return reconcile.Result{}, nil
+	reqLogger.Info("Reconcile success!!")
+	return nil
 }
 
 // ComputeSHA256  returns hash of data as string
@@ -154,8 +177,8 @@ func ComputeSHA256(data []byte) string {
 	return fmt.Sprintf("%x", hash)
 }
 
-// findConfigMapForCR returns the configMap used by collectd Daemonset
-func findResourceMapForCR(r *ReconcileCollectdPlugin, cr *onapv1alpha1.CollectdPlugin) (ResourceMap, error) {
+// findResourceMapForCR returns the configMap, collectd Daemonset and list of Collectd Plugins
+func (r *ReconcileCollectdPlugin) findResourceMapForCR(cr *onapv1alpha1.CollectdPlugin) (ResourceMap, error) {
 	cmList := &corev1.ConfigMapList{}
 	opts := &client.ListOptions{}
 	rmap := ResourceMap{}
@@ -223,4 +246,94 @@ func rebuildCollectdConf(cpList *[]onapv1alpha1.CollectdPlugin) (string, error) 
 	collectdConf += "\n#Last line (collectd requires ‘\\n’ at the last line)"
 
 	return collectdConf, nil
+}
+
+// Handle Delete CR event for additional cleanup
+func (r *ReconcileCollectdPlugin) handleDelete(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin) (bool, error) {
+	// Check if the CollectdPlugin instance is marked to be deleted, which is
+	// indicated by the deletion timestamp being set.
+	isMarkedToBeDeleted := cr.GetDeletionTimestamp() != nil
+	if isMarkedToBeDeleted {
+		if contains(cr.GetFinalizers(), collectdPluginFinalizer) {
+			// Run finalization logic for collectdPluginFinalizer. If the
+			// finalization logic fails, don't remove the finalizer so
+			// that we can retry during the next reconciliation.
+			if err := r.finalizeCollectdPlugin(reqLogger, cr); err != nil {
+				return isMarkedToBeDeleted, err
+			}
+
+			// Remove collectdPluginFinalizer. Once all finalizers have been
+			// removed, the object will be deleted.
+			cr.SetFinalizers(remove(cr.GetFinalizers(), collectdPluginFinalizer))
+			err := r.client.Update(context.TODO(), cr)
+			if err != nil {
+				return isMarkedToBeDeleted, err
+			}
+		}
+	}
+	return isMarkedToBeDeleted, nil
+}
+
+func (r *ReconcileCollectdPlugin) updateStatus(cr *onapv1alpha1.CollectdPlugin) error {
+	podList := &corev1.PodList{}
+	opts := &client.ListOptions{}
+	opts.SetLabelSelector("app=collectd")
+	var pods []string
+	opts.InNamespace(cr.Namespace)
+	err := r.client.List(context.TODO(), opts, podList)
+	if err != nil {
+		return err
+	}
+
+	if podList.Items == nil || len(podList.Items) == 0 {
+		return err
+	}
+
+	for _, pod := range podList.Items {
+		pods = append(pods, pod.Name)
+	}
+	cr.Status.CollectdAgents = pods
+	err = r.client.Status().Update(context.TODO(), cr)
+	return err
+}
+
+func (r *ReconcileCollectdPlugin) finalizeCollectdPlugin(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin) error {
+	// Cleanup by regenerating new collectd conf and rolling update of DaemonSet
+	if err := r.handleCollectdPlugin(reqLogger, cr); err != nil {
+		reqLogger.Error(err, "Finalize CollectdPlugin failed!!")
+		return err
+	}
+	reqLogger.Info("Successfully finalized CollectdPlugin!!")
+	return nil
+}
+
+func (r *ReconcileCollectdPlugin) addFinalizer(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin) error {
+	reqLogger.Info("Adding Finalizer for the CollectdPlugin")
+	cr.SetFinalizers(append(cr.GetFinalizers(), collectdPluginFinalizer))
+
+	// Update CR
+	err := r.client.Update(context.TODO(), cr)
+	if err != nil {
+		reqLogger.Error(err, "Failed to update CollectdPlugin with finalizer")
+		return err
+	}
+	return nil
+}
+
+func contains(list []string, s string) bool {
+	for _, v := range list {
+		if v == s {
+			return true
+		}
+	}
+	return false
+}
+
+func remove(list []string, s string) []string {
+	for i, v := range list {
+		if v == s {
+			list = append(list[:i], list[i+1:]...)
+		}
+	}
+	return list
 }

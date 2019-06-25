@@ -93,7 +93,6 @@ func (in *CollectdPluginStatus) DeepCopyInto(out *CollectdPluginStatus) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	in.CollectdConf.DeepCopyInto(&out.CollectdConf)
 	return
 }
 

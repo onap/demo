@@ -109,16 +109,10 @@ func schema_pkg_apis_onap_v1alpha1_CollectdPluginStatus(ref common.ReferenceCall
 							},
 						},
 					},
-					"collectdConf": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.ConfigMap"),
-						},
-					},
 				},
-				Required: []string{"collectdAgents", "collectdConf"},
+				Required: []string{"collectdAgents"},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.ConfigMap"},
+		Dependencies: []string{},
 	}
 }

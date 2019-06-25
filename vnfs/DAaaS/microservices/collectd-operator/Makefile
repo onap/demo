@@ -41,6 +41,8 @@ all: build test cover
 debug:
 	@echo "Deleting ${COP_LOCAL} binary"
 	@rm -rf ${COP_LOCAL}
+	operator-sdk generate k8s --verbose
+	operator-sdk generate openapi --verbose
 	@echo "Building ${COP_LOCAL} binary"
 	@go build -o ${COP_LOCAL} -mod=vendor demo/vnfs/DAaaS/microservices/collectd-operator/cmd/manager
 

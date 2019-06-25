@@ -52,11 +52,8 @@ spec:
               items:
                 type: string
               type: array
-            collectdConf:
-              type: object
           required:
           - collectdAgents
-          - collectdConf
           type: object
   version: v1alpha1
   versions:
