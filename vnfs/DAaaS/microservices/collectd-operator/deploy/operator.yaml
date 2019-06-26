@@ -22,7 +22,9 @@ spec:
           imagePullPolicy: Always
           env:
             - name: WATCH_NAMESPACE
-              value: ""
+              value: "cop"
+            - name: WATCH_LABELS
+              value: "app=collectd"
             - name: POD_NAME
               valueFrom:
                 fieldRef:

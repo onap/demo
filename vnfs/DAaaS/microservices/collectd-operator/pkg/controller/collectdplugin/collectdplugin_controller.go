@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"github.com/go-logr/logr"
+	"os"
 
 	onapv1alpha1 "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1"
 
@@ -77,7 +78,15 @@ type ReconcileCollectdPlugin struct {
 }
 
 // Define the collectdPlugin finalizer for handling deletion
-const collectdPluginFinalizer = "finalizer.collectdplugin.onap.org"
+const (
+	defaultWatchLabel       = "app=collectd"
+	collectdPluginFinalizer = "finalizer.collectdplugin.onap.org"
+
+	// WatchLabelsEnvVar is the constant for env variable WATCH_LABELS
+	// which is the labels where the watch activity happens.
+	// this value is empty if the operator is running with clusterScope.
+	WatchLabelsEnvVar = "WATCH_LABELS"
+)
 
 // Reconcile reads that state of the cluster for a CollectdPlugin object and makes changes based on the state read
 // and what is in the CollectdPlugin.Spec
@@ -117,15 +126,16 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 		if err := r.addFinalizer(reqLogger, instance); err != nil {
 			return reconcile.Result{}, err
 		}
+		return reconcile.Result{}, nil
 	}
-	err = r.handleCollectdPlugin(reqLogger, instance)
+	err = r.handleCollectdPlugin(reqLogger, instance, false)
 	return reconcile.Result{}, err
 }
 
 // handleCollectdPlugin regenerates the collectd conf on CR Create, Update, Delete events
-func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin) error {
+func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin, isDelete bool) error {
 
-	rmap, err := r.findResourceMapForCR(cr)
+	rmap, err := r.findResourceMapForCR(reqLogger, cr)
 	if err != nil {
 		reqLogger.Error(err, "Skip reconcile: Resources not found")
 		return err
@@ -138,7 +148,7 @@ func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr
 	reqLogger.V(1).Info(":::: ConfigMap Info ::::", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
 	reqLogger.V(1).Info(":::: DaemonSet Info ::::", "DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
 
-	collectdConf, err := rebuildCollectdConf(collectPlugins)
+	collectdConf, err := rebuildCollectdConf(cr, collectPlugins, isDelete)
 
 	//Restart Collectd Pods
 	//Restart only if hash of configmap has changed.
@@ -160,6 +170,7 @@ func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr
 		return err
 	}
 
+	reqLogger.Info("Reloading the Daemonset", "DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
 	err = r.client.Update(context.TODO(), ds)
 	if err != nil {
 		reqLogger.Error(err, "Update the DaemonSet failed", "DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
@@ -178,24 +189,29 @@ func ComputeSHA256(data []byte) string {
 }
 
 // findResourceMapForCR returns the configMap, collectd Daemonset and list of Collectd Plugins
-func (r *ReconcileCollectdPlugin) findResourceMapForCR(cr *onapv1alpha1.CollectdPlugin) (ResourceMap, error) {
+func (r *ReconcileCollectdPlugin) findResourceMapForCR(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin) (ResourceMap, error) {
 	cmList := &corev1.ConfigMapList{}
 	opts := &client.ListOptions{}
 	rmap := ResourceMap{}
 
-	// Select ConfigMaps with label app=collectd
-	opts.SetLabelSelector("app=collectd")
+	// Select ConfigMaps with label
+	labelSelector, err := getWatchLabels()
+	if err != nil {
+		reqLogger.Error(err, "Failed to get watch labels, continuing with default label")
+	}
+	opts.SetLabelSelector(labelSelector)
 	opts.InNamespace(cr.Namespace)
-	err := r.client.List(context.TODO(), opts, cmList)
+
+	err = r.client.List(context.TODO(), opts, cmList)
 	if err != nil {
 		return rmap, err
 	}
 
 	if cmList.Items == nil || len(cmList.Items) == 0 {
-		return rmap, err
+		return rmap, errors.NewNotFound(corev1.Resource("configmap"), "ConfigMap")
 	}
 
-	// Select DaemonSets with label app=collectd
+	// Select DaemonSets with label
 	dsList := &extensionsv1beta1.DaemonSetList{}
 	err = r.client.List(context.TODO(), opts, dsList)
 	if err != nil {
@@ -203,7 +219,7 @@ func (r *ReconcileCollectdPlugin) findResourceMapForCR(cr *onapv1alpha1.Collectd
 	}
 
 	if dsList.Items == nil || len(dsList.Items) == 0 {
-		return rmap, err
+		return rmap, errors.NewNotFound(corev1.Resource("daemonset"), "DaemonSet")
 	}
 
 	// Get all collectd plugins in the current namespace to rebuild conf.
@@ -222,7 +238,7 @@ func (r *ReconcileCollectdPlugin) findResourceMapForCR(cr *onapv1alpha1.Collectd
 }
 
 // Get all collectd plugins and reconstruct, compute Hash and check for changes
-func rebuildCollectdConf(cpList *[]onapv1alpha1.CollectdPlugin) (string, error) {
+func rebuildCollectdConf(cr *onapv1alpha1.CollectdPlugin, cpList *[]onapv1alpha1.CollectdPlugin, isDelete bool) (string, error) {
 	var collectdConf string
 	if *cpList == nil || len(*cpList) == 0 {
 		return "", errors.NewNotFound(corev1.Resource("collectdplugin"), "CollectdPlugin")
@@ -236,6 +252,10 @@ func rebuildCollectdConf(cpList *[]onapv1alpha1.CollectdPlugin) (string, error) 
 		}
 	}
 
+	if isDelete {
+		delete(loadPlugin, cr.Spec.PluginName)
+	}
+
 	log.V(1).Info("::::::: Plugins Map ::::::: ", "PluginMap ", loadPlugin)
 
 	for cpName, cpConf := range loadPlugin {
@@ -243,7 +263,7 @@ func rebuildCollectdConf(cpList *[]onapv1alpha1.CollectdPlugin) (string, error) 
 		collectdConf += cpConf + "\n"
 	}
 
-	collectdConf += "\n#Last line (collectd requires ‘\\n’ at the last line)"
+	collectdConf += "#Last line (collectd requires ‘\\n’ at the last line)\n"
 
 	return collectdConf, nil
 }
@@ -277,7 +297,9 @@ func (r *ReconcileCollectdPlugin) handleDelete(reqLogger logr.Logger, cr *onapv1
 func (r *ReconcileCollectdPlugin) updateStatus(cr *onapv1alpha1.CollectdPlugin) error {
 	podList := &corev1.PodList{}
 	opts := &client.ListOptions{}
-	opts.SetLabelSelector("app=collectd")
+	// Select ConfigMaps with label
+	labelSelector, _ := getWatchLabels()
+	opts.SetLabelSelector(labelSelector)
 	var pods []string
 	opts.InNamespace(cr.Namespace)
 	err := r.client.List(context.TODO(), opts, podList)
@@ -299,7 +321,7 @@ func (r *ReconcileCollectdPlugin) updateStatus(cr *onapv1alpha1.CollectdPlugin) 
 
 func (r *ReconcileCollectdPlugin) finalizeCollectdPlugin(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin) error {
 	// Cleanup by regenerating new collectd conf and rolling update of DaemonSet
-	if err := r.handleCollectdPlugin(reqLogger, cr); err != nil {
+	if err := r.handleCollectdPlugin(reqLogger, cr, true); err != nil {
 		reqLogger.Error(err, "Finalize CollectdPlugin failed!!")
 		return err
 	}
@@ -336,4 +358,13 @@ func remove(list []string, s string) []string {
 		}
 	}
 	return list
+}
+
+// getWatchLabels returns the labels the operator should be watching for changes
+func getWatchLabels() (string, error) {
+	labelSelector, found := os.LookupEnv(WatchLabelsEnvVar)
+	if !found {
+		return defaultWatchLabel, fmt.Errorf("%s must be set", WatchLabelsEnvVar)
+	}
+	return labelSelector, nil
 }
