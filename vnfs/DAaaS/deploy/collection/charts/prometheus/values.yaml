@@ -38,6 +38,7 @@ prometheus:
           interval: 10s
           path: /metrics
  
+  resources: {}
   service:
     annotations: {}
     labels: {}
