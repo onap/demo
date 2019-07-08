@@ -192,7 +192,6 @@ chmod +x set_gre_tunnel.sh
 chmod +x run_health.sh
 
 # Download Bind config files
-cd /opt/config
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip db_dnsdemo_onap_org > /opt/db_dnsdemo_onap_org
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip named.conf.options > /opt/named.conf.options
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip named.conf.local > /opt/named.conf.local
@@ -209,7 +208,6 @@ mv named.conf.local /etc/bind/
 sleep 1
 
 # Run instantiation script
-cd /opt
 mv vdns.sh /etc/init.d
 update-rc.d vdns.sh defaults
 
