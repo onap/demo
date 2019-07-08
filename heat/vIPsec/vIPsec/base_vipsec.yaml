@@ -31,10 +31,10 @@ description: Heat template that deploys vIPsec demo app for ONAP
 ##############
 
 parameters:
-  vipsec_image_name:
+  basic_image_name:
     type: string
     label: Image name or ID
-    description: Image to be used for compute instance
+    description: Image to be used for IPsec compute instance
   ipsec_flavor_name:
     type: string
     label: IPsec Flavor
@@ -51,18 +51,26 @@ parameters:
     type: string
     label: Public network name or ID
     description: Public network that enables remote connection to VNF
-  external_net_id:
-    type: string
-    label: External network name or ID
-    description: External network that connects the two IPsec gateways
   protected_clientA_private_net_id:
     type: string
-    label: Unprotected private network name or ID
+    label: protected private network name or ID
     description: Private network that connects vPacketGenerator with vIPsec gateway A
   protected_clientB_private_net_id:
     type: string
     label: Protected private network name or ID
     description: Private network that connects vIPsec gateway B with vSink
+  protected_clientA_provider_net_id:
+    type: string
+    label: Provider network name or ID for client A
+    description: Private network that connects vPacketGenerator with vIPsec gateway A
+  protected_clientB_provider_net_id:
+    type: string
+    label: Provider network name or ID for client B
+    description: Private network that connects vIPsec gateway B with vSink
+  ipsec_provider_net_id:
+    type: string
+    label: Provider network name or ID between IPsec gateways
+    description: Private network that connects vIPsec gateway B with vIPsec gateway A
   onap_private_net_id:
     type: string
     label: ONAP management network name or ID
@@ -75,10 +83,6 @@ parameters:
     type: string
     label: IPsec private network name or ID
     description: Private network that connects the two IPsec VNFs
-  ipsec_private_subnet_id:
-    type: string
-    label: IPsec sub-network name or ID
-    description: Private sub-network that connects the two IPsec VNFs
   protected_clientA_private_net_cidr:
     type: string
     label: Unprotected private network CIDR
@@ -223,18 +227,6 @@ parameters:
     type: string
     label: Cloud environment
     description: Cloud environment (e.g., openstack, rackspace)
-  sec_group:
-    type: string
-    description: ONAP Security Group
-  sdnc_model_name:
-    type: string
-    description: SDNC Model Name metatada
-  sdnc_model_version:
-    type: string
-    description: SDNC Model Version metatada
-  sdnc_artifact_name:
-    type: string
-    description: SDNC Artifact Name metatada
   input_device_interface_A:
     type: string
     description: Device BDF name for the interface
@@ -296,15 +288,73 @@ resources:
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  protected_clientA_private_network:
+  security_group_ipsec:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: "ipsec_sg"
+      rules:
+      - {direction: ingress, remote_ip_prefix: 0.0.0.0/0, protocol: icmp }
+      - {direction: ingress, remote_ip_prefix: 0.0.0.0/0, protocol: tcp, port_range_min: 22, port_range_max: 22}
+
+  onap_private_net:
     type: OS::Neutron::Net
+    properties:
+      name: { get_param: onap_private_net_id }
+
+  onap_private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      name: { get_param: onap_private_subnet_id }
+      network_id: { get_resource: onap_private_net }
+      cidr: { get_param: onap_private_net_cidr }
+      dns_nameservers: [ "8.8.8.8" ]
+
+  router:
+    type: OS::Neutron::Router
+    properties:
+      name:
+        list_join: ['-', [{ get_param: 'OS::stack_name' }, 'router']]
+      external_gateway_info:
+        network: { get_param: public_net_id }
+
+  oam_router_interface:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: router }
+      subnet_id: { get_resource: onap_private_subnet }
+
+  ipsec_0_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: vipsec_A_private_1_port }
+
+  ipsec_1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: vipsec_B_private_1_port }
+
+  protected_clientA_private_network:
+    type: OS::Neutron::ProviderNet
     properties:
       name: { get_param: protected_clientA_private_net_id }
+      physical_network: { get_param: protected_clientA_provider_net_id }
+      network_type: vlan
 
   protected_clientB_private_network:
-    type: OS::Neutron::Net
+    type: OS::Neutron::ProviderNet
     properties:
       name: { get_param: protected_clientB_private_net_id }
+      physical_network: { get_param: protected_clientB_provider_net_id }
+      network_type: vlan
+
+  protected_ipsec_network:
+    type: OS::Neutron::ProviderNet
+    properties:
+      name: { get_param: ipsec_private_net_id }
+      physical_network: { get_param: ipsec_provider_net_id }
+      network_type: vlan
 
   protected_clientA_private_subnet:
     type: OS::Neutron::Subnet
@@ -318,75 +368,79 @@ resources:
       network_id: { get_resource: protected_clientB_private_network }
       cidr: { get_param: protected_clientB_private_net_cidr }
 
+  ipsec_private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: protected_ipsec_network }
+      cidr: { get_param: ipsec_private_net_cidr }
+
   # Virtual IPsec instantiation
   vipsec_A_private_0_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: protected_clientA_private_network }
       binding:vnic_type: { get_param: vipsec_A_private_0_port_vnic_type}
-      fixed_ips: [{"subnet": { get_resource: protected_clientA_private_subnet}, "ipaddress": { get_param: vipsec_A_private_ip_0 }}]
+      fixed_ips: [{"subnet": { get_resource: protected_clientA_private_subnet}, "ip_address": { get_param: vipsec_A_private_ip_0 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
   vipsec_A_private_1_port:
     type: OS::Neutron::Port
     properties:
-      #allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
-      network: { get_param: onap_private_net_id }
+      network: { get_resource: onap_private_net }
       binding:vnic_type: { get_param: vipsec_private_1_port_vnic_type}
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vipsec_A_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_resource: onap_private_subnet }, "ip_address": { get_param: vipsec_A_private_ip_1 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
   vipsec_A_private_2_port:
     type: OS::Neutron::Port
     properties:
-      #allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
-      network: { get_param: ipsec_private_net_id }
+      allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
+      network: { get_resource: protected_ipsec_network }
       binding:vnic_type: { get_param: vipsec_private_2_port_vnic_type}
-      fixed_ips: [{"subnet": { get_param: ipsec_private_subnet_id }, "ip_address": { get_param: vipsec_A_private_ip_2 }}]
+      fixed_ips: [{"subnet": { get_resource: ipsec_private_subnet }, "ip_address": { get_param: vipsec_A_private_ip_2 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
   vipsec_B_private_0_port:
     type: OS::Neutron::Port
     properties:
       network: { get_resource: protected_clientB_private_network }
       binding:vnic_type: { get_param: vipsec_B_private_0_port_vnic_type}
-      fixed_ips: [{"subnet": { get_resource: protected_clientB_private_subnet}, "ipaddress": { get_param: vipsec_B_private_ip_0 }}]
+      fixed_ips: [{"subnet": { get_resource: protected_clientB_private_subnet}, "ip_address": { get_param: vipsec_B_private_ip_0 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
   vipsec_B_private_1_port:
     type: OS::Neutron::Port
     properties:
-      #allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
-      network: { get_param: onap_private_net_id }
+      network: { get_resource: onap_private_net }
       binding:vnic_type: { get_param: vipsec_private_1_port_vnic_type}
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vipsec_B_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_resource: onap_private_subnet }, "ip_address": { get_param: vipsec_B_private_ip_1 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
   vipsec_B_private_2_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: ipsec_private_net_id }
+      network: { get_resource: protected_ipsec_network }
       binding:vnic_type: { get_param: vipsec_private_2_port_vnic_type}
-      fixed_ips: [{"subnet": { get_param: ipsec_private_subnet_id }, "ip_address": { get_param: vipsec_B_private_ip_2 }}]
+      fixed_ips: [{"subnet": { get_resource: ipsec_private_subnet }, "ip_address": { get_param: vipsec_B_private_ip_2 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
   vipsec_0:
     type: OS::Nova::Server
     properties:
-      image: { get_param: vipsec_image_name }
+      image: { get_param: basic_image_name }
       flavor: { get_param: ipsec_flavor_name }
       name: { get_param: vipsec_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
-        - network: { get_param: public_net_id }
         - port: { get_resource: vipsec_A_private_0_port }
         - port: { get_resource: vipsec_A_private_1_port }
+        - port: { get_resource: vipsec_A_private_2_port }
       metadata: { vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
@@ -434,10 +488,23 @@ resources:
 
             # Download and run install script
             apt-get update
-            cd /root/comms/dpdk/x86_64-native-linuxapp-gcc/kmod
-            modeprobe uio
-            insmod igb_uio.ko
+            wget https://packagecloud.io/install/repositories/fdio/release/script.deb.sh
+            bash ./script.deb.sh
+            apt install -y vpp
+            apt install -y vpp-plugin-dpdk
+            apt install -y make gcc libnuma-dev python
             cd /opt
+            git clone http://dpdk.org/git/dpdk
+            cd dpdk
+            export RTE_TARGET=x86_64-native-linuxapp-gcc/
+            export DESTDIR=/opt/dpdk
+            export RTE_SDK=/opt/dpdk
+            make install T=x86_64-native-linux-gcc
+            modprobe uio
+            insmod x86_64-native-linux-gcc/kmod/igb_uio.ko
+            python ./usertools/dpdk-devbind.py -b igb_uio 00:06.0
+            python ./usertools/dpdk-devbind.py -b igb_uio 00:05.0
+            cd /opt/config
             cat > __vpp_config__<< NEWFILE
 
             unix {
@@ -470,7 +537,6 @@ resources:
                     }
                     vdev crypto_aesni_gcm0
 
-                    num-mbufs 370000
                     no-multi-seg
                  }
 
@@ -509,14 +575,14 @@ resources:
   vipsec_1:
     type: OS::Nova::Server
     properties:
-      image: { get_param: vipsec_image_name }
+      image: { get_param: basic_image_name }
       flavor: { get_param: ipsec_flavor_name }
       name: { get_param: vipsec_name_1 }
       key_name: { get_resource: my_keypair }
       networks:
-        - network: { get_param: public_net_id }
         - port: { get_resource: vipsec_B_private_0_port }
         - port: { get_resource: vipsec_B_private_1_port }
+        - port: { get_resource: vipsec_B_private_2_port }
       metadata: { vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
@@ -564,10 +630,23 @@ resources:
 
             # Download and run install script
             apt-get update
-            cd /root/comms/dpdk/x86_64-native-linuxapp-gcc/kmod
-            modeprobe uio
-            insmod igb_uio.ko
+            wget https://packagecloud.io/install/repositories/fdio/release/script.deb.sh
+            bash ./script.deb.sh
+            apt install -y vpp
+            apt install -y vpp-plugin-dpdk
+            apt install -y make gcc libnuma-dev python
             cd /opt
+            git clone http://dpdk.org/git/dpdk
+            cd /opt/dpdk
+            export RTE_TARGET=x86_64-native-linuxapp-gcc/
+            export DESTDIR=/opt/dpdk
+            export RTE_SDK=/opt/dpdk
+            make install T=x86_64-native-linux-gcc
+            modprobe uio
+            insmod x86_64-native-linux-gcc/kmod/igb_uio.ko
+            python ./usertools/dpdk-devbind.py -b igb_uio 00:05.0
+            python ./usertools/dpdk-devbind.py -b igb_uio 00:06.0
+            cd /opt/config
             cat > __vpp_config__<< NEWFILE
 
             unix {
@@ -600,7 +679,6 @@ resources:
                     }
                     vdev crypto_aesni_gcm0
 
-                    num-mbufs 370000
                     no-multi-seg
                  }
 
@@ -645,70 +723,76 @@ resources:
       binding:vnic_type: { get_param: vpg_private_0_port_vnic_type}
       fixed_ips: [{"subnet": { get_resource: protected_clientA_private_subnet }, "ip_address": { get_param: vpg_private_ip_0 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
   vpg_private_1_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: onap_private_net_id }
+      network: { get_resource: onap_private_net }
       binding:vnic_type: { get_param: vpg_private_1_port_vnic_type}
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vpg_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_resource: onap_private_subnet }, "ip_address": { get_param: vpg_private_ip_1 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
-  vpg_0:
-    type: OS::Nova::Server
+
+  vpg_0_floating_ip:
+    type: OS::Neutron::FloatingIP
     properties:
-      image: { get_param: vipsec_image_name }
-      flavor: { get_param: packetgen_flavor_name }
-      name: { get_param: vpg_name_0 }
-      key_name: { get_resource: my_keypair }
-      networks:
-        - network: { get_param: public_net_id }
-        - port: { get_resource: vpg_private_0_port }
-        - port: { get_resource: vpg_private_1_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __ipsec_ipaddr__: { get_param: vipsec_A_private_ip_0 }
-            __protected_clientB_net_cidr__: { get_param: protected_clientB_private_net_cidr }
-            __sink_ipaddr__: { get_param: vsn_private_ip_0 }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __vpg_private_ip_0__ : { get_param: vpg_private_ip_0 }
-            __vpg_private_ip_1__ : { get_param: vpg_private_ip_1 }
-            __protected_clientA_net_cidr__ : { get_param: protected_clientA_private_net_cidr }
-            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
-            __cloud_env__ : { get_param: cloud_env }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-          template: |
-            #!/bin/bash
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: vpg_private_1_port }
 
-            # Create configuration files
-            mkdir /opt/config
-            echo "__ipsec_ipaddr__" > /opt/config/vipsec_ipaddr.txt
-            echo "__protected_clientB_net_cidr__" > /opt/config/protected_clientB_net_cidr.txt
-            echo "__sink_ipaddr__" > /opt/config/sink_ipaddr.txt
-            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
-            echo "__install_script_version__" > /opt/config/install_script_version.txt
-            echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
-            echo "__vpg_private_ip_1__" > /opt/config/vpg_private_ip_1.txt
-            echo "__protected_clientA__net_cidr__" > /opt/config/protected_clientA_net_cidr.txt
-            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+   vpg_0:
+     type: OS::Nova::Server
+     properties:
+       image: { get_param: basic_image_name }
+       flavor: { get_param: packetgen_flavor_name }
+       name: { get_param: vpg_name_0 }
+       key_name: { get_resource: my_keypair }
+       networks:
+         - port: { get_resource: vpg_private_0_port }
+         - port: { get_resource: vpg_private_1_port }
+       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+       user_data_format: RAW
+       user_data:
+         str_replace:
+           params:
+             __ipsec_ipaddr__: { get_param: vipsec_A_private_ip_0 }
+             __protected_clientB_net_cidr__: { get_param: protected_clientB_private_net_cidr }
+             __sink_ipaddr__: { get_param: vsn_private_ip_0 }
+             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
+             __install_script_version__ : { get_param: install_script_version }
+             __vpg_private_ip_0__ : { get_param: vpg_private_ip_0 }
+             __vpg_private_ip_1__ : { get_param: vpg_private_ip_1 }
+             __protected_clientA_net_cidr__ : { get_param: protected_clientA_private_net_cidr }
+             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
+             __cloud_env__ : { get_param: cloud_env }
+             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+           template: |
+             #!/bin/bash
 
-            # Download and run install script
-            apt-get update
-            apt-get -y install unzip
-            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
-            unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_packetgen_install.sh
-            cd /opt
-            chmod +x v_packetgen_install.sh
-            ./v_packetgen_install.sh
+             # Create configuration files
+             mkdir /opt/config
+             echo "__ipsec_ipaddr__" > /opt/config/vipsec_ipaddr.txt
+             echo "__protected_clientB_net_cidr__" > /opt/config/protected_clientB_net_cidr.txt
+             echo "__sink_ipaddr__" > /opt/config/sink_ipaddr.txt
+             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+             echo "__install_script_version__" > /opt/config/install_script_version.txt
+             echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
+             echo "__vpg_private_ip_1__" > /opt/config/vpg_private_ip_1.txt
+             echo "__protected_clientA__net_cidr__" > /opt/config/protected_clientA_net_cidr.txt
+             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+             echo "__cloud_env__" > /opt/config/cloud_env.txt
+             echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+
+             # Download and run install script
+             apt-get update
+             apt-get -y install unzip
+             if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
+             unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_packetgen_install.sh
+             cd /opt
+             chmod +x v_packetgen_install.sh
+             ./v_packetgen_install.sh
 
 
   # Virtual Sink instantiation
@@ -719,63 +803,68 @@ resources:
       binding:vnic_type: { get_param: vsn_private_0_port_vnic_type}
       fixed_ips: [{"subnet": { get_resource: protected_clientB_private_subnet }, "ip_address": { get_param: vsn_private_ip_0 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
   vsn_private_1_port:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: onap_private_net_id }
+      network: { get_resource: onap_private_net }
       binding:vnic_type: { get_param: vsn_private_1_port_vnic_type}
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vsn_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_resource: onap_private_subnet }, "ip_address": { get_param: vsn_private_ip_1 }}]
       security_groups:
-      - { get_param: sec_group }
+      - { get_resource: security_group_ipsec }
 
-  vsn_0:
-    type: OS::Nova::Server
+  vsn_floating_ip:
+    type: OS::Neutron::FloatingIP
     properties:
-      image: { get_param: vipsec_image_name }
-      flavor: { get_param: sink_flavor_name }
-      name: { get_param: vsn_name_0 }
-      key_name: { get_resource: my_keypair }
-      networks:
-        - network: { get_param: public_net_id }
-        - port: { get_resource: vsn_private_0_port }
-        - port: { get_resource: vsn_private_1_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
-      user_data_format: RAW
-      user_data:
-        str_replace:
-          params:
-            __protected_net_gw__: { get_param: vipsec_B_private_ip_0 }
-            __protected_net_A__: { get_param: protected_clientA_private_net_cidr }
-            __install_script_version__ : { get_param: install_script_version }
-            __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
-            __vsn_private_ip_1__ : { get_param: vsn_private_ip_1 }
-            __protected_clientB_private_net_cidr__ : { get_param: protected_clientB_private_net_cidr }
-            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
-            __cloud_env__ : { get_param: cloud_env }
-            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-          template: |
-            #!/bin/bash
+      floating_network_id: { get_param: public_net_id }
+      port_id: { get_resource: vsn_private_1_port }
 
-            # Create configuration files
-            mkdir /opt/config
-            echo "__protected_net_gw__" > /opt/config/protected_net_gw.txt
-            echo "__protected_net_A__" > /opt/config/protected_net_A.txt
-            echo "__install_script_version__" > /opt/config/install_script_version.txt
-            echo "__vsn_private_ip_0__" > /opt/config/vsn_private_ip_0.txt
-            echo "__vsn_private_ip_1__" > /opt/config/vsn_private_ip_1.txt
-            echo "__protected_clientB_private_net_cidr__" > /opt/config/protected_clientB_private_net_cidr.txt
-            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
-            echo "__cloud_env__" > /opt/config/cloud_env.txt
-            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+   vsn_0:
+     type: OS::Nova::Server
+     properties:
+       image: { get_param: basic_image_name }
+       flavor: { get_param: sink_flavor_name }
+       name: { get_param: vsn_name_0 }
+       key_name: { get_resource: my_keypair }
+       networks:
+         - port: { get_resource: vsn_private_0_port }
+         - port: { get_resource: vsn_private_1_port }
+       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+       user_data_format: RAW
+       user_data:
+         str_replace:
+           params:
+             __protected_net_gw__: { get_param: vipsec_B_private_ip_0 }
+             __protected_net_A__: { get_param: protected_clientA_private_net_cidr }
+             __install_script_version__ : { get_param: install_script_version }
+             __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
+             __vsn_private_ip_1__ : { get_param: vsn_private_ip_1 }
+             __protected_clientB_private_net_cidr__ : { get_param: protected_clientB_private_net_cidr }
+             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
+             __cloud_env__ : { get_param: cloud_env }
+             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+           template: |
+             #!/bin/bash
 
-            # Download and run install script
-            apt-get update
-            apt-get -y install unzip
-            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
-            unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_sink_install.sh
-            cd /opt
-            chmod +x v_sink_install.sh
-            ./v_sink_install.sh
+             # Create configuration files
+             mkdir /opt/config
+             echo "__protected_net_gw__" > /opt/config/protected_net_gw.txt
+             echo "__protected_net_A__" > /opt/config/protected_net_A.txt
+             echo "__install_script_version__" > /opt/config/install_script_version.txt
+             echo "__vsn_private_ip_0__" > /opt/config/vsn_private_ip_0.txt
+             echo "__vsn_private_ip_1__" > /opt/config/vsn_private_ip_1.txt
+             echo "__protected_clientB_private_net_cidr__" > /opt/config/protected_clientB_private_net_cidr.txt
+             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+             echo "__cloud_env__" > /opt/config/cloud_env.txt
+             echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+
+             # Download and run install script
+             apt-get update
+             apt-get -y install unzip
+             if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
+             unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_sink_install.sh
+             cd /opt
+             chmod +x v_sink_install.sh
+             ./v_sink_install.sh
