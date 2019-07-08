@@ -28,7 +28,7 @@
   <parent>
     <groupId>org.onap.demo.vnf</groupId>
     <artifactId>demo-aggregator</artifactId>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.2-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
