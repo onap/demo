@@ -1,0 +1,2 @@
+# 
+# defaults is the special folder for parameters that are available to any of the other folders. Careful about putting things there that you may want unfilled. Every other folder is the name of the service.

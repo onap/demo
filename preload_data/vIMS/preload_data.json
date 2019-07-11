@@ -1,0 +1,23 @@
+{
+	"vims_preload.template": {
+		"bono_image_name": "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+		"sprout_image_name": "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+		"homer_image_name": "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+		"homestead_image_name": "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+		"ralf_image_name": "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+		"ellis_image_name": "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+		"dns_image_name": "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+		"bono_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"sprout_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"homer_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"homestead_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"ralf_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"ellis_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"dns_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"repo_url": "http://repo.cw-ngv.com/stable",
+		"zone": "me.cw-ngv.com",
+		"dn_range_start": "2425550000",
+		"dn_range_length": "10000",
+		"dnssec_key": "9FPdYTWhk5+LbhrqtTPQKw=="
+	}
+}

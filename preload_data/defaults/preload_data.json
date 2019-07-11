@@ -1,0 +1,16 @@
+{
+	"key_name": "vfw_key${uuid}",
+	"pub_key": "${GLOBAL_INJECTED_PUBLIC_KEY}",
+	"repo_url_blob": "https://nexus.onap.org/content/repositories/raw",
+	"repo_url_artifacts": "${GLOBAL_INJECTED_ARTIFACTS_REPO_URL}",
+	"demo_artifacts_version": "${GLOBAL_INJECTED_ARTIFACTS_VERSION}",
+	"onap_private_net_id": "${GLOBAL_INJECTED_NETWORK}",
+	"onap_private_subnet_id": "${GLOBAL_INJECTED_OPENSTACK_PRIVATE_SUBNET_ID}",
+	"onap_private_net_cidr": "${GLOBAL_INJECTED_OPENSTACK_PRIVATE_NET_CIDR}",
+	"sec_group": "${GLOBAL_INJECTED_OPENSTACK_SECURITY_GROUP}",
+	"dcae_collector_ip": "${GLOBAL_INJECTED_DCAE_COLLECTOR_IP}",
+	"dcae_collector_port": "30235",
+	"public_net_id": "${GLOBAL_INJECTED_PUBLIC_NET_ID}",
+	"cloud_env": "${GLOBAL_INJECTED_CLOUD_ENV}",
+	"install_script_version": "${GLOBAL_INJECTED_SCRIPT_VERSION}"
+}

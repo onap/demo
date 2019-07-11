@@ -1,0 +1,42 @@
+{
+	"vlb_preload.template": {
+		"vlb_image_name": "${GLOBAL_INJECTED_UBUNTU_1604_IMAGE}",
+		"vlb_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"vdns_image_name": "${GLOBAL_INJECTED_UBUNTU_1604_IMAGE}",
+		"vdns_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"vpg_image_name": "${GLOBAL_INJECTED_UBUNTU_1604_IMAGE}",
+		"vpg_flavor_name": "${GLOBAL_INJECTED_VM_FLAVOR}",
+		"vlb_name_0": "vlblb${hostid}",
+		"vdns_name_0": "vlbdns${hostid}",
+		"vpg_name_0": "clvlbpgn${hostid}",
+		"vlb_private_net_id": "lb01_private${hostid}",
+		"vlb_private_net_cidr": "192.168.30.0/24",
+		"pktgen_private_net_id": "lb01_pktgen${hostid}",
+		"pktgen_private_net_cidr": "192.168.9.0/24",
+		"vlb_int_private_ip_0": "192.168.30.100",
+		"vlb_onap_private_ip_0": "${GLOBAL_INJECTED_OPENSTACK_OAM_NETWORK_CIDR_PREFIX}.${ecompnet}.24",
+		"vlb_int_pktgen_private_ip_0": "192.168.9.111",
+		"vdns_int_private_ip_0": "192.168.30.110",
+		"vdns_onap_private_ip_0": "${GLOBAL_INJECTED_OPENSTACK_OAM_NETWORK_CIDR_PREFIX}.${ecompnet}.25",
+		"vpg_int_pktgen_private_ip_0": "192.168.9.110",
+		"vpg_onap_private_ip_0": "${GLOBAL_INJECTED_OPENSTACK_OAM_NETWORK_CIDR_PREFIX}.${ecompnet}.27",
+		"sec_group": "${GLOBAL_INJECTED_OPENSTACK_SECURITY_GROUP}",
+		"pg_int": "192.168.9.109",
+		"vip": "192.168.9.112",
+		"gre_ipaddr": "192.168.30.112",
+		"vnf_id": "vLoadBalancer_${hostid}",
+		"vf_module_id": "vLoadBalancer"
+	},
+	"dnsscaling_preload.template": {
+		"int_private_net_id": "vLBMS_lb01_private${hostid}",
+		"int_private_subnet_id": "vLBMS_lb01_private${hostid}_subnet",
+		"vlb_int_private_ip_0": "192.168.30.100",
+		"vlb_onap_private_ip_0": "${GLOBAL_INJECTED_OPENSTACK_OAM_NETWORK_CIDR_PREFIX}.${ecompnet}.24",
+		"vlb_int_pktgen_private_ip_0": "192.168.9.111",
+		"vdns_int_private_ip_0": "192.168.30.222",
+		"vdns_onap_private_ip_0": "${GLOBAL_INJECTED_OPENSTACK_OAM_NETWORK_CIDR_PREFIX}.${ecompnet}.26",
+		"sec_group": "${GLOBAL_INJECTED_OPENSTACK_SECURITY_GROUP}",
+		"vdns_name_0": "vlbscaling${hostid}",
+		"vlb_private_net_cidr": "192.168.10.0/24"
+	}
+}
