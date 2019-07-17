@@ -1,0 +1,39 @@
+grafana:
+#  nodeSelector:
+#    vcmtspktgen: "true"
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://cp-prometheus-prometheus.edge1:9090
+        isDefault: true
+        access: proxy
+
+  adminPassword: admin
+
+  image:
+    tag: 5.1.4
+
+  service:
+    type: NodePort
+  #  nodePort: 17765
+
+  # Customer DashBoards configurations
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'dashboard1'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/dashboard1
+    
+  dashboardsConfigMaps:
+    dashboard1: "custom-dashboard1"
