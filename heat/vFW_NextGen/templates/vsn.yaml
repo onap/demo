@@ -33,11 +33,11 @@ description: Heat template that deploys vSink for ONAP
 ##############
 
 parameters:
-  image_name:
+  vsn_image_name:
     type: string
     label: Image name or ID
     description: Image to be used for compute instance
-  flavor_name:
+  vsn_flavor_name:
     type: string
     label: Flavor
     description: Type of instance (flavor) to be used
@@ -45,19 +45,19 @@ parameters:
     type: string
     label: Public network name or ID
     description: Public network that enables remote connection to VNF
-  unprotected_private_net_cidr:
+  int_private1_net_cidr:
     type: string
     label: Unprotected private network CIDR
     description: The CIDR of the unprotected private network
-  protected_private_net_id:
+  int_private2_net_id:
     type: string
     label: Protected private network name or ID
     description: Private network that connects vFirewall with vSink
-  protected_private_subnet_id:
+  int_private2_subnet_id:
     type: string
     label: Protected private subnetwork name or ID
     description: Private subnetwork of the unprotected network
-  protected_private_net_cidr:
+  int_private2_net_cidr:
     type: string
     label: Protected private network CIDR
     description: The CIDR of the protected private network
@@ -73,15 +73,15 @@ parameters:
     type: string
     label: ONAP private network CIDR
     description: The CIDR of the protected private network
-  vfw_private_ip_1:
+  vfw_int_private2_ip_0:
     type: string
     label: vFirewall private IP address towards the protected network
     description: Private IP address that is assigned to the vFirewall to communicate with the vSink
-  vsn_private_ip_0:
+  vsn_int_private2_ip_0:
     type: string
     label: vSink private IP address towards the protected network
     description: Private IP address that is assigned to the vSink to communicate with the vFirewall
-  vsn_private_ip_1:
+  vsn_onap_private_ip_0:
     type: string
     label: vSink private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vSink to communicate with ONAP components
@@ -93,6 +93,10 @@ parameters:
     type: string
     label: VNF ID
     description: The VNF ID is provided by ONAP
+  vnf_name:
+    type: string
+    label: VNF NAME
+    description: The VNF NAME is provided by ONAP
   vf_module_id:
     type: string
     label: VF Module ID
@@ -105,14 +109,14 @@ parameters:
     type: string
     label: Installation script version number
     description: Version number of the scripts that install the vFW demo app
-  demo_artifacts_version:
-    type: string
-    label: Artifacts version used in demo vnfs
-    description: Artifacts (jar, tar.gz) version used in demo vnfs
+  #demo_artifacts_version:
+  #  type: string
+  #  label: Artifacts version used in demo vnfs
+  #  description: Artifacts (jar, tar.gz) version used in demo vnfs
   nexus_artifact_repo:
     type: string
     description: Root URL for the Nexus repository for Maven artifacts.
-    default: "https://nexus.onap.org"
+  #  default: "https://nexus.onap.org"
   cloud_env:
     type: string
     label: Cloud environment
@@ -120,15 +124,6 @@ parameters:
   sec_group:
     type: string
     description: ONAP Security Group
-  sdnc_model_name:
-    type: string
-    description: SDNC Model Name metatada
-  sdnc_model_version:
-    type: string
-    description: SDNC Model Version metatada
-  sdnc_artifact_name:
-    type: string
-    description: SDNC Artifact Name metatada
 
 
 #############
@@ -140,44 +135,47 @@ parameters:
 resources:
 
   # Virtual Sink instantiation
-  vsn_private_0_port:
+  vsn_0_int_private2_port_0:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: protected_private_net_id }
-      fixed_ips: [{"subnet": { get_param: protected_private_subnet_id }, "ip_address": { get_param: vsn_private_ip_0 }}]
+      network: { get_param: int_private2_net_id }
+      fixed_ips: [{"subnet": { get_param: int_private2_subnet_id }, "ip_address": { get_param: vsn_int_private2_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vsn_private_1_port:
+  vsn_0_onap_private_port_0:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vsn_private_ip_1 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vsn_onap_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vsn_0:
+  vsn_server_0:
     type: OS::Nova::Server
     properties:
-      image: { get_param: image_name }
-      flavor: { get_param: flavor_name }
+      image: { get_param: vsn_image_name }
+      flavor: { get_param: vsn_flavor_name }
       name: { get_param: vsn_name_0 }
       key_name: { get_param: key_name }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vsn_private_0_port }
-        - port: { get_resource: vsn_private_1_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }, sdnc_model_name: { get_param: sdnc_model_name }, sdnc_model_version: { get_param: sdnc_model_version }, sdnc_artifact_name: { get_param: sdnc_artifact_name }}
+        - port: { get_resource: vsn_0_int_private2_port_0 }
+        - port: { get_resource: vsn_0_onap_private_port_0 }
+      metadata:
+        vnf_name: { get_param: vnf_name }
+        vnf_id: { get_param: vnf_id }
+        vf_module_id: { get_param: vf_module_id }
       user_data_format: RAW
       user_data:
         str_replace:
           params:
-            __protected_net_gw__: { get_param: vfw_private_ip_1 }
-            __unprotected_net__: { get_param: unprotected_private_net_cidr }
+            __protected_net_gw__: { get_param: vfw_int_private2_ip_0 }
+            __unprotected_net__: { get_param: int_private1_net_cidr }
             __install_script_version__ : { get_param: install_script_version }
-            __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
-            __vsn_private_ip_1__ : { get_param: vsn_private_ip_1 }
-            __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
+            __vsn_private_ip_0__ : { get_param: vsn_int_private2_ip_0 }
+            __vsn_private_ip_1__ : { get_param: vsn_onap_private_ip_0 }
+            __protected_private_net_cidr__ : { get_param: int_private2_net_cidr }
             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
             __cloud_env__ : { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
