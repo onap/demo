@@ -33,11 +33,11 @@ description: Heat template that deploys vFirewall for ONAP
 ##############
 
 parameters:
-  image_name:
+  vfw_image_name:
     type: string
     label: Image name or ID
     description: Image to be used for compute instance
-  flavor_name:
+  vfw_flavor_name:
     type: string
     label: Flavor
     description: Type of instance (flavor) to be used
@@ -45,27 +45,27 @@ parameters:
     type: string
     label: Public network name or ID
     description: Public network that enables remote connection to VNF
-  unprotected_private_net_id:
+  int_unprotected_private_net_id:
     type: string
     label: Unprotected private network name or ID
     description: Private network that connects vPacketGenerator with vFirewall
-  unprotected_private_subnet_id:
+  int_unprotected_private_subnet_id:
     type: string
     label: Unprotected private subnetwork name or ID
     description: Private subnetwork of the protected network
-  unprotected_private_net_cidr:
+  int_unprotected_private_net_cidr:
     type: string
     label: Unprotected private network CIDR
     description: The CIDR of the unprotected private network
-  protected_private_net_id:
+  int_protected_private_net_id:
     type: string
     label: Protected private network name or ID
     description: Private network that connects vFirewall with vSink
-  protected_private_subnet_id:
+  int_protected_private_subnet_id:
     type: string
     label: Protected private subnetwork name or ID
     description: Private subnetwork of the unprotected network
-  protected_private_net_cidr:
+  int_protected_private_net_cidr:
     type: string
     label: Protected private network CIDR
     description: The CIDR of the protected private network
@@ -81,19 +81,19 @@ parameters:
     type: string
     label: ONAP private network CIDR
     description: The CIDR of the protected private network
-  vfw_private_ip_0:
+  vfw_int_unprotected_private_ip_0:
     type: string
     label: vFirewall private IP address towards the unprotected network
     description: Private IP address that is assigned to the vFirewall to communicate with the vPacketGenerator
-  vfw_private_ip_1:
+  vfw_int_protected_private_ip_0:
     type: string
     label: vFirewall private IP address towards the protected network
     description: Private IP address that is assigned to the vFirewall to communicate with the vSink
-  vfw_private_ip_2:
+  vfw_onap_private_ip_0:
     type: string
     label: vFirewall private IP address towards the ONAP management network
     description: Private IP address that is assigned to the vFirewall to communicate with ONAP components
-  vpg_private_ip_0:
+  vfw_int_protected_private_floating_ip:
     type: string
     label: vPacketGenerator private IP address towards the unprotected network
     description: Private IP address that is assigned to the vPacketGenerator to communicate with the vFirewall
@@ -102,6 +102,10 @@ parameters:
     label: vFirewall name
     description: Name of the vFirewall
   vnf_id:
+    type: string
+    label: VNF ID
+    description: The VNF ID is provided by ONAP
+  vnf_name:
     type: string
     label: VNF ID
     description: The VNF ID is provided by ONAP
@@ -132,7 +136,7 @@ parameters:
   nexus_artifact_repo:
     type: string
     description: Root URL for the Nexus repository for Maven artifacts.
-    default: "https://nexus.onap.org"
+  #  default: "https://nexus.onap.org"
   cloud_env:
     type: string
     label: Cloud environment
@@ -140,15 +144,6 @@ parameters:
   sec_group:
     type: string
     description: ONAP Security Group
-  sdnc_model_name:
-    type: string
-    description: SDNC Model Name metatada
-  sdnc_model_version:
-    type: string
-    description: SDNC Model Version metatada
-  sdnc_artifact_name:
-    type: string
-    description: SDNC Artifact Name metatada
 
 
 #############
@@ -160,44 +155,48 @@ parameters:
 resources:
 
   # Virtual Firewall instantiation
-  vfw_private_0_port:
+  vfw_0_int_unprotected_private_port_0:
     type: OS::Neutron::Port
     properties:
-      network: { get_param: unprotected_private_net_id }
-      fixed_ips: [{"subnet": { get_param: unprotected_private_subnet_id }, "ip_address": { get_param: vfw_private_ip_0 }}]
+      network: { get_param: int_unprotected_private_net_id }
+      fixed_ips: [{"subnet": { get_param: int_unprotected_private_subnet_id }, "ip_address": { get_param: vfw_int_unprotected_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vfw_private_1_port:
+  vfw_0_int_protected_private_port_0:
     type: OS::Neutron::Port
     properties:
-      allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
-      network: { get_param: protected_private_net_id }
-      fixed_ips: [{"subnet": { get_param: protected_private_subnet_id }, "ip_address": { get_param: vfw_private_ip_1 }}]
+      ### NOTE: THIS USED TO BE allowed_address_pairs: [{ "ip_address": { get_param: vpg_private_ip_0 }}]
+      allowed_address_pairs: [{ "ip_address": { get_param: vfw_int_protected_private_floating_ip }}]
+      network: { get_param: int_protected_private_net_id }
+      fixed_ips: [{"subnet": { get_param: int_protected_private_subnet_id }, "ip_address": { get_param: vfw_int_protected_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vfw_private_2_port:
+  vfw_0_onap_private_port_0:
     type: OS::Neutron::Port
     properties:
       network: { get_param: onap_private_net_id }
-      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vfw_private_ip_2 }}]
+      fixed_ips: [{"subnet": { get_param: onap_private_subnet_id }, "ip_address": { get_param: vfw_onap_private_ip_0 }}]
       security_groups:
       - { get_param: sec_group }
 
-  vfw_0:
+  vfw_server_0:
     type: OS::Nova::Server
     properties:
-      image: { get_param: image_name }
-      flavor: { get_param: flavor_name }
+      image: { get_param: vfw_image_name }
+      flavor: { get_param: vfw_flavor_name }
       name: { get_param: vfw_name_0 }
       key_name: { get_param: key_name }
       networks:
         - network: { get_param: public_net_id }
-        - port: { get_resource: vfw_private_0_port }
-        - port: { get_resource: vfw_private_1_port }
-        - port: { get_resource: vfw_private_2_port }
-      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }, sdnc_model_name: { get_param: sdnc_model_name }, sdnc_model_version: { get_param: sdnc_model_version }, sdnc_artifact_name: { get_param: sdnc_artifact_name }}
+        - port: { get_resource: vfw_0_int_unprotected_private_port_0 }
+        - port: { get_resource: vfw_0_int_protected_private_port_0 }
+        - port: { get_resource: vfw_0_onap_private_port_0 }
+      metadata:
+        vnf_name: { get_param: vnf_name }
+        vnf_id: { get_param: vnf_id }
+        vf_module_id: { get_param: vf_module_id }
       user_data_format: RAW
       user_data:
         str_replace:
@@ -206,11 +205,11 @@ resources:
             __dcae_collector_port__ : { get_param: dcae_collector_port }
             __demo_artifacts_version__ : { get_param: demo_artifacts_version }
             __install_script_version__ : { get_param: install_script_version }
-            __vfw_private_ip_0__ : { get_param: vfw_private_ip_0 }
-            __vfw_private_ip_1__ : { get_param: vfw_private_ip_1 }
-            __vfw_private_ip_2__ : { get_param: vfw_private_ip_2 }
-            __unprotected_private_net_cidr__ : { get_param: unprotected_private_net_cidr }
-            __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
+            __vfw_private_ip_0__ : { get_param: vfw_int_unprotected_private_ip_0 }
+            __vfw_private_ip_1__ : { get_param: vfw_int_protected_private_ip_0 }
+            __vfw_private_ip_2__ : { get_param: vfw_onap_private_ip_0 }
+            __unprotected_private_net_cidr__ : { get_param: int_unprotected_private_net_cidr }
+            __protected_private_net_cidr__ : { get_param: int_protected_private_net_cidr }
             __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
             __cloud_env__ : { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
