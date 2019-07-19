@@ -44,6 +44,42 @@ rook-ceph-osd-prepare-vx2rz            0/2     Completed   0          60s
 rook-ceph-tools-5bd5cdb949-j68kk       1/1     Running     0          53s
 ```
 
+#### Troubleshooting Rook-Ceph installation
+
+In case your machine had rook previously installed successfully or unsuccessfully
+and you are attempting a fresh installation of rook operator, you may face some issues.
+Lets help you with that.
+
+* First check if there are some rook CRDs existing :
+```
+kubectl get crds | grep rook
+```
+If this return results like :
+```
+otc@otconap7 /var/lib/rook $  kc get crds | grep rook
+cephblockpools.ceph.rook.io         2019-07-19T18:19:05Z
+cephclusters.ceph.rook.io           2019-07-19T18:19:05Z
+cephfilesystems.ceph.rook.io        2019-07-19T18:19:05Z
+cephobjectstores.ceph.rook.io       2019-07-19T18:19:05Z
+cephobjectstoreusers.ceph.rook.io   2019-07-19T18:19:05Z
+volumes.rook.io                     2019-07-19T18:19:05Z
+```
+then you should delete these previously existing rook based CRDs by generating a delete 
+manifest file by these commands and then deleting those files:
+```
+helm template -n rook . -f values.yaml > ~/delete.yaml
+kc delete -f ~/delete.yaml
+```
+
+After this, delete the below directory in all the nodes.
+```
+sudo rm -rf /var/lib/rook/
+```
+Now, again attempt : 
+```
+helm install -n rook . -f values.yaml --namespace=rook-ceph-system
+```
+
 #### Install Operator package
 ```bash
 cd $DA_WORKING_DIR/operator
