@@ -1,0 +1,684 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae31bc19_3b876057",
+        "filename": "heat/vFW_NextGen/templates/base_template.env",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "093e4042_b8ec0952",
+        "filename": "heat/vFW_NextGen/templates/base_template.env",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62e98bc5_2c203f83",
+        "filename": "heat/vFW_NextGen/templates/base_template.env",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bc32742_f88849be",
+        "filename": "heat/vFW_NextGen/templates/base_template.env",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d8d2fa8_51b632c0",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "per instance name, should be removed",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32f89900_facb3073",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "per instance name, should be removed",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb3d03b9_23468c99",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "should be int_unprotected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1ed09c0_bd61eda9",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "per instance name, should be removed",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0ca0b11_fc60bae7",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "per instance name, should be removed",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc5a9f52_fbfd817b",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "should be protected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a33973c0_96f20523",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "per instance names, should be removed",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "525cbb78_06bf0d90",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "vnfname_key_pair",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f2013ad_b6ff40c0",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove line",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bee83ca_e9c7991a",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "vnf_name_int_unprotected_private_network",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e821b19_61bd3bec",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove line",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ec06801_cdcfc800",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "template: vnfname_int_unprotected_private_subnet",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1229fad5_e6226161",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove line",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7967c96_9f7a0386",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_unprotected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c4efa0a_6857c755",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "template: vnfname_int_protected_private_network",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "304c1f28_8c20e865",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove line",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e011a4f_4a493ef6",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "template: vnfname_int_protected_private_subnet",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb0f4b2d_e509a582",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove line",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee682236_43ea2917",
+        "filename": "heat/vFW_NextGen/templates/base_template.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_protected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25217614_d469fd33",
+        "filename": "heat/vFW_NextGen/templates/vfw.env",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove three sdnc lines",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6e969a7_e0c0f235",
+        "filename": "heat/vFW_NextGen/templates/vfw.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_unprotected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71816ef6_3d0a35fb",
+        "filename": "heat/vFW_NextGen/templates/vfw.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove 3 sdnc lines",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb82767b_40c546c8",
+        "filename": "heat/vFW_NextGen/templates/vfw.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove three lines - \"sdnc_*\"",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdf0d0bc_c1654d67",
+        "filename": "heat/vFW_NextGen/templates/vfw.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_unprotected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3acaac36_081ecf43",
+        "filename": "heat/vFW_NextGen/templates/vpg.env",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove sdnc lines",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c230bd22_b5bba1f7",
+        "filename": "heat/vFW_NextGen/templates/vpg.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_unprotected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "611a9752_f4fc7e5f",
+        "filename": "heat/vFW_NextGen/templates/vpg.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_protected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44201af0_4b94611f",
+        "filename": "heat/vFW_NextGen/templates/vpg.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove 3 sdnC lines",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cb14cb9_838779c4",
+        "filename": "heat/vFW_NextGen/templates/vpg.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove 3 sdnc lines",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60b21e49_479c0407",
+        "filename": "heat/vFW_NextGen/templates/vpg.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_unprotected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ee0edb6_27f4c30c",
+        "filename": "heat/vFW_NextGen/templates/vpg.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_onap_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa4a1009_e46d765f",
+        "filename": "heat/vFW_NextGen/templates/vsn.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_unprotected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ba05097_cba3d89d",
+        "filename": "heat/vFW_NextGen/templates/vsn.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "int_protected_private_net_cidr",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3981cfd_44ad4ff3",
+        "filename": "heat/vFW_NextGen/templates/vsn.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "remove sdnc lines",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96dfcbb1_c678af36",
+        "filename": "heat/vFW_NextGen/templates/vsn.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "needs int_",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8372e822_55fba7bb",
+        "filename": "heat/vFW_NextGen/templates/vsn.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 4055
+      },
+      "writtenOn": "2019-07-19T18:58:32Z",
+      "side": 1,
+      "message": "needs int_",
+      "revId": "65b425d20bad19703cb8b85b80e058e88b4bf41e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
