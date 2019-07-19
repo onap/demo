@@ -33,39 +33,21 @@ description: Heat template that deploys a private network for ONAP VNFs
 ##############
 
 parameters:
-  unprotected_private_net_id:
-    type: string
-    label: Unprotected private network name or ID
-    description: Private network that connects vPacketGenerator with vFirewall
-  unprotected_private_subnet_id:
-    type: string
-    label: Unprotected private subnetwork name or ID
-    description: Private subnetwork of the protected network
-  unprotected_private_net_cidr:
+  int_private1_net_cidr:
     type: string
     label: Unprotected private network CIDR
     description: The CIDR of the unprotected private network
-  protected_private_net_id:
-    type: string
-    label: Protected private network name or ID
-    description: Private network that connects vFirewall with vSink
-  protected_private_subnet_id:
-    type: string
-    label: Protected private subnetwork name or ID
-    description: Private subnetwork of the unprotected network
-  protected_private_net_cidr:
+  int_private2_net_cidr:
     type: string
     label: Protected private network CIDR
     description: The CIDR of the protected private network
-  key_name:
-    type: string
-    label: Key pair name
-    description: Public/Private key pair name
   pub_key:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-
+  vnf_name:
+    type: string
+    description: VNF_NAME
 
 #############
 #           #
@@ -77,30 +59,66 @@ resources:
   my_keypair:
     type: OS::Nova::KeyPair
     properties:
-      name: { get_param: key_name }
+      name:
+        str_replace:
+          template: vnfname_key_name
+          params:
+            vnfname: { get_param: vnf_name }
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  unprotected_private_network:
+  int_private1_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: unprotected_private_net_id }
+      name:
+        str_replace:
+          template: vnfname_int_private1_net
+          params:
+            vnfname: { get_param: vnf_name }
 
-  unprotected_private_subnet:
+  int_private1_subnet:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: unprotected_private_subnet_id }
-      network_id: { get_resource: unprotected_private_network }
-      cidr: { get_param: unprotected_private_net_cidr }
+      name:
+        str_replace:
+          template: vnfname_int_private1_subnet
+          params:
+            vnfname: { get_param: vnf_name }
+      network: { get_resource: int_private1_network }
+      cidr: { get_param: int_private1_net_cidr }
 
-  protected_private_network:
+  int_private2_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: protected_private_net_id }
+      name:
+        str_replace:
+          template: vnfname_int_private2_net
+          params:
+            vnfname: { get_param: vnf_name }
 
-  protected_private_subnet:
+  int_private2_subnet:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: protected_private_subnet_id }
-      network_id: { get_resource: protected_private_network }
-      cidr: { get_param: protected_private_net_cidr }
+      name:
+        str_replace:
+          template: vnfname_int_private2_subnet
+          params:
+            vnfname: { get_param: vnf_name }
+      network: { get_resource: int_private2_network }
+      cidr: { get_param: int_private2_net_cidr }
+
+outputs:
+  int_private1_net_id:
+    value: { get_resource: int_private1_network }
+  int_private1_subnet_id:
+    value: { get_resource: int_private1_subnet }
+  int_private2_net_id:
+    value: { get_resource: int_private2_network }
+  int_private2_subnet_id:
+    value: { get_resource: int_private2_subnet }
+  int_private2_net_cidr:
+    value: { get_param: int_private2_net_cidr }
+  int_private1_net_cidr:
+    value: { get_param: int_private1_net_cidr }
+  key_name:
+    value: { get_resource: my_keypair }
