@@ -33,11 +33,11 @@ description: Heat template that deploys a private network for ONAP VNFs
 ##############
 
 parameters:
-  unprotected_private_net_id:
+  int_unprotected_private_net_id:
     type: string
     label: Unprotected private network name or ID
     description: Private network that connects vPacketGenerator with vFirewall
-  unprotected_private_subnet_id:
+  int_unprotected_private_subnet_id:
     type: string
     label: Unprotected private subnetwork name or ID
     description: Private subnetwork of the protected network
@@ -45,11 +45,11 @@ parameters:
     type: string
     label: Unprotected private network CIDR
     description: The CIDR of the unprotected private network
-  protected_private_net_id:
+  int_protected_private_net_id:
     type: string
     label: Protected private network name or ID
     description: Private network that connects vFirewall with vSink
-  protected_private_subnet_id:
+  int_protected_private_subnet_id:
     type: string
     label: Protected private subnetwork name or ID
     description: Private subnetwork of the unprotected network
@@ -65,7 +65,9 @@ parameters:
     type: string
     label: Public key
     description: Public key to be installed on the compute instance
-
+  vnf_name:
+    type: string
+    description: VNF_NAME
 
 #############
 #           #
@@ -77,30 +79,68 @@ resources:
   my_keypair:
     type: OS::Nova::KeyPair
     properties:
-      name: { get_param: key_name }
+      name:
+        str_replace:
+          template: vnfname_keyname
+          params:
+            vnfname: { get_param: vnf_name }
+            keyname: { get_param: key_name }
       public_key: { get_param: pub_key }
       save_private_key: false
 
-  unprotected_private_network:
+  int_unprotected_private_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: unprotected_private_net_id }
+      name:
+        str_replace:
+          template: vnfname_unprotectednetname
+          params:
+            vnfname: { get_param: vnf_name }
+            unprotectednetname: { get_param: int_unprotected_private_net_id }
 
-  unprotected_private_subnet:
+  int_unprotected_private_subnet:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: unprotected_private_subnet_id }
-      network_id: { get_resource: unprotected_private_network }
+      name:
+        str_replace:
+          template: vnfname_unprotectedsubnetname
+          params:
+            vnfname: { get_param: vnf_name }
+            unprotectedsubnetname: { get_param: int_unprotected_private_subnet_id }
+      network: { get_resource: int_unprotected_private_network }
       cidr: { get_param: unprotected_private_net_cidr }
 
-  protected_private_network:
+  int_protected_private_network:
     type: OS::Neutron::Net
     properties:
-      name: { get_param: protected_private_net_id }
+      name:
+        str_replace:
+          template: vnfname_protectednetname
+          params:
+            vnfname: { get_param: vnf_name }
+            protectednetname: { get_param: int_protected_private_net_id }
 
-  protected_private_subnet:
+  int_protected_private_subnet:
     type: OS::Neutron::Subnet
     properties:
-      name: { get_param: protected_private_subnet_id }
-      network_id: { get_resource: protected_private_network }
+      name:
+        str_replace:
+          template: vnfname_protectedsubnetname
+          params:
+            vnfname: { get_param: vnf_name }
+            protectedsubnetname: { get_param: int_protected_private_subnet_id }
+      network: { get_resource: int_protected_private_network }
       cidr: { get_param: protected_private_net_cidr }
+
+outputs:
+  int_unprotected_private_net_id:
+    value: { get_resource: int_unprotected_private_network }
+  int_unprotected_private_subnet_id:
+    value: { get_resource: int_unprotected_private_subnet }
+  int_protected_private_net_id:
+    value: { get_resource: int_protected_private_network }
+  int_protected_private_subnet_id:
+    value: { get_resource: int_protected_private_subnet }
+  key_name:
+    value: { get_resource: my_keypair }
+
