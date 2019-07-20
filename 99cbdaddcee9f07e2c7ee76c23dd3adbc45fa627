@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "263e1fee_e86e0098",
+        "filename": "heat/vFW_NextGen/templates/vfw.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 55
+      },
+      "writtenOn": "2019-07-20T21:14:22Z",
+      "side": 1,
+      "message": "I\u0027m not sure floating is the right term here, unless the guidelines say so. It makes me think of a floating IP attached to a private port, while this is a private IP. Does it make sense to rename it?",
+      "revId": "99cbdaddcee9f07e2c7ee76c23dd3adbc45fa627",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
