@@ -44,16 +44,15 @@ spec:
         status:
           properties:
             collectdAgents:
-              description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
-                of cluster Important: Run "operator-sdk generate k8s" to regenerate
-                code after modifying this file Add custom validation using kubebuilder
-                tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
-                CollectdAgents are the collectd pods in the Daemonset'
+              description: CollectdAgents are the collectd pods in the Daemonset Status
+                can be one of "", Created, Deleting, Applied, Deprecated
               items:
                 type: string
               type: array
+            status:
+              type: string
           required:
-          - collectdAgents
+          - status
           type: object
   version: v1alpha1
   versions:
