@@ -4,15 +4,20 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
-	"github.com/go-logr/logr"
 	"os"
+	"reflect"
+	"strings"
+
+	"github.com/go-logr/logr"
 
 	onapv1alpha1 "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1"
 
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/util/retry"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -63,8 +68,40 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 		return err
 	}
 
+	log.V(1).Info("Add watcher for secondary resource Collectd Daemonset")
+	err = c.Watch(
+		&source.Kind{Type: &appsv1.DaemonSet{}},
+		&handler.EnqueueRequestsFromMapFunc{
+			ToRequests: handler.ToRequestsFunc(func (a handler.MapObject) []reconcile.Request {
+				labelSelector, err := getWatchLabels()
+				labels := strings.Split(labelSelector, "=")
+				if err != nil {
+					log.Error(err, "Failed to get watch labels, continuing with default label")
+				}
+				rcp := r.(*ReconcileCollectdPlugin)
+				// Select the Daemonset with labelSelector (Defautl  is app=collectd)
+				if a.Meta.GetLabels()[labels[0]] == labels[1]  {
+					var requests []reconcile.Request
+					cpList, err := rcp.getCollectdPluginList(a.Meta.GetNamespace())
+					if err != nil {
+						return nil
+					}
+					for _, cp := range cpList.Items {
+						requests = append(requests, reconcile.Request{
+							NamespacedName: client.ObjectKey{Namespace: cp.Namespace, Name: cp.Name}})
+					}
+					return requests
+				}
+				return nil
+			}),
+		})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
+
 
 // blank assignment to verify that ReconcileCollectdPlugin implements reconcile.Reconciler
 var _ reconcile.Reconciler = &ReconcileCollectdPlugin{}
@@ -128,6 +165,8 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 		}
 		return reconcile.Result{}, nil
 	}
+	// Handle the reconciliation for CollectdPlugin.
+	// At this stage the Status of the CollectdPlugin should NOT be ""
 	err = r.handleCollectdPlugin(reqLogger, instance, false)
 	return reconcile.Result{}, err
 }
@@ -142,19 +181,12 @@ func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr
 	}
 
 	cm := rmap.configMap
-	ds := rmap.daemonSet
 	collectPlugins := rmap.collectdPlugins
 	reqLogger.V(1).Info("Found ResourceMap")
 	reqLogger.V(1).Info(":::: ConfigMap Info ::::", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
-	reqLogger.V(1).Info(":::: DaemonSet Info ::::", "DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
 
 	collectdConf, err := rebuildCollectdConf(cr, collectPlugins, isDelete)
 
-	//Restart Collectd Pods
-	//Restart only if hash of configmap has changed.
-	ds.Spec.Template.SetAnnotations(map[string]string{
-		"daaas-random": ComputeSHA256([]byte(collectdConf)),
-	})
 	cm.SetAnnotations(map[string]string{
 		"daaas-random": ComputeSHA256([]byte(collectdConf)),
 	})
@@ -170,13 +202,45 @@ func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr
 		return err
 	}
 
-	reqLogger.Info("Reloading the Daemonset", "DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
-	err = r.client.Update(context.TODO(), ds)
+	retryErr := retry.RetryOnConflict(retry.DefaultRetry, func() error {
+		// Retrieve the latest version of Daemonset before attempting update
+		// RetryOnConflict uses exponential backoff to avoid exhausting the apiserver
+		// Select DaemonSets with label
+		dsList := &extensionsv1beta1.DaemonSetList{}
+		opts := &client.ListOptions{}
+		labelSelector, err := getWatchLabels()
+		if err != nil {
+			reqLogger.Error(err, "Failed to get watch labels, continuing with default label")
+		}
+		opts.SetLabelSelector(labelSelector)
+		opts.InNamespace(cr.Namespace)
+		err = r.client.List(context.TODO(), opts, dsList)
+		if err != nil {
+			panic(fmt.Errorf("Failed to get latest version of DaemonSet: %v", err))
+		}
+
+		if dsList.Items == nil || len(dsList.Items) == 0 {
+			return errors.NewNotFound(corev1.Resource("daemonset"), "DaemonSet")
+		}
+		ds := &dsList.Items[0]
+		//Restart Collectd Pods
+		reqLogger.Info("Reloading the Daemonset", "DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
+		//Restart only if hash of conf has changed.
+		ds.Spec.Template.SetAnnotations(map[string]string{
+			"daaas-random": ComputeSHA256([]byte(collectdConf)),
+		})
+		updateErr := r.client.Update(context.TODO(), ds)
+		return updateErr
+	})
+	if retryErr != nil {
+		panic(fmt.Errorf("Update failed: %v", retryErr))
+	}
+
+	err = r.updateStatus(cr)
 	if err != nil {
-		reqLogger.Error(err, "Update the DaemonSet failed", "DaemonSet.Namespace", ds.Namespace, "DaemonSet.Name", ds.Name)
+		reqLogger.Error(err, "Unable to update status")
 		return err
 	}
-	r.updateStatus(cr)
 	// Reconcile success
 	reqLogger.Info("Reconcile success!!")
 	return nil
@@ -223,17 +287,14 @@ func (r *ReconcileCollectdPlugin) findResourceMapForCR(reqLogger logr.Logger, cr
 	}
 
 	// Get all collectd plugins in the current namespace to rebuild conf.
-	collectdPlugins := &onapv1alpha1.CollectdPluginList{}
-	cpOpts := &client.ListOptions{}
-	cpOpts.InNamespace(cr.Namespace)
-	err = r.client.List(context.TODO(), cpOpts, collectdPlugins)
+	cpList, err := r.getCollectdPluginList(cr.Namespace)
 	if err != nil {
 		return rmap, err
 	}
 
 	rmap.configMap = &cmList.Items[0]
 	rmap.daemonSet = &dsList.Items[0]
-	rmap.collectdPlugins = &collectdPlugins.Items //will be nil if no plugins exist
+	rmap.collectdPlugins = &cpList.Items //will be nil if no plugins exist
 	return rmap, err
 }
 
@@ -274,6 +335,11 @@ func (r *ReconcileCollectdPlugin) handleDelete(reqLogger logr.Logger, cr *onapv1
 	// indicated by the deletion timestamp being set.
 	isMarkedToBeDeleted := cr.GetDeletionTimestamp() != nil
 	if isMarkedToBeDeleted {
+		// Update status to Deleting state
+		cr.Status.Status = onapv1alpha1.Deleting
+		cr.Status.CollectdAgents = nil
+		_ = r.client.Status().Update(context.TODO(), cr)
+
 		if contains(cr.GetFinalizers(), collectdPluginFinalizer) {
 			// Run finalization logic for collectdPluginFinalizer. If the
 			// finalization logic fails, don't remove the finalizer so
@@ -295,27 +361,22 @@ func (r *ReconcileCollectdPlugin) handleDelete(reqLogger logr.Logger, cr *onapv1
 }
 
 func (r *ReconcileCollectdPlugin) updateStatus(cr *onapv1alpha1.CollectdPlugin) error {
-	podList := &corev1.PodList{}
-	opts := &client.ListOptions{}
-	// Select ConfigMaps with label
-	labelSelector, _ := getWatchLabels()
-	opts.SetLabelSelector(labelSelector)
-	var pods []string
-	opts.InNamespace(cr.Namespace)
-	err := r.client.List(context.TODO(), opts, podList)
-	if err != nil {
-		return err
+	switch cr.Status.Status {
+	case onapv1alpha1.Initial:
+		cr.Status.Status = onapv1alpha1.Created
+	case onapv1alpha1.Created, onapv1alpha1.Enabled:
+		pods, err := r.getPodList(cr.Namespace)
+		if err != nil {
+			return err
+		}
+		if !reflect.DeepEqual(pods, cr.Status.CollectdAgents) {
+			cr.Status.CollectdAgents = pods
+			cr.Status.Status = onapv1alpha1.Enabled
+		}
+	case onapv1alpha1.Deleting, onapv1alpha1.Deprecated:
+		return nil
 	}
-
-	if podList.Items == nil || len(podList.Items) == 0 {
-		return err
-	}
-
-	for _, pod := range podList.Items {
-		pods = append(pods, pod.Name)
-	}
-	cr.Status.CollectdAgents = pods
-	err = r.client.Status().Update(context.TODO(), cr)
+	err := r.client.Status().Update(context.TODO(), cr)
 	return err
 }
 
@@ -332,7 +393,13 @@ func (r *ReconcileCollectdPlugin) finalizeCollectdPlugin(reqLogger logr.Logger, 
 func (r *ReconcileCollectdPlugin) addFinalizer(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin) error {
 	reqLogger.Info("Adding Finalizer for the CollectdPlugin")
 	cr.SetFinalizers(append(cr.GetFinalizers(), collectdPluginFinalizer))
-
+	// Update status from Initial to Created
+	// Since addFinalizer will be executed only once,
+	// the status will be changed from Initial state to Created
+	updateErr := r.updateStatus(cr)
+	if updateErr != nil {
+		reqLogger.Error(updateErr, "Failed to update status from Initial state")
+	}
 	// Update CR
 	err := r.client.Update(context.TODO(), cr)
 	if err != nil {
@@ -367,4 +434,39 @@ func getWatchLabels() (string, error) {
 		return defaultWatchLabel, fmt.Errorf("%s must be set", WatchLabelsEnvVar)
 	}
 	return labelSelector, nil
+}
+
+func (r *ReconcileCollectdPlugin) getPodList(ns string) ([]string, error) {
+	var pods []string
+	podList := &corev1.PodList{}
+	opts := &client.ListOptions{}
+	// Select ConfigMaps with label
+	labelSelector, _ := getWatchLabels()
+	opts.SetLabelSelector(labelSelector)
+	opts.InNamespace(ns)
+	err := r.client.List(context.TODO(), opts, podList)
+	if err != nil {
+		return nil, err
+	}
+
+	if podList.Items == nil || len(podList.Items) == 0 {
+		return nil, err
+	}
+
+	for _, pod := range podList.Items {
+		pods = append(pods, pod.Name)
+	}
+	return pods, nil
+}
+
+func (r *ReconcileCollectdPlugin) getCollectdPluginList(ns string) (*onapv1alpha1.CollectdPluginList, error) {
+	// Get all collectd plugins in the current namespace to rebuild conf.
+	collectdPlugins := &onapv1alpha1.CollectdPluginList{}
+	cpOpts := &client.ListOptions{}
+	cpOpts.InNamespace(ns)
+	err := r.client.List(context.TODO(), cpOpts, collectdPlugins)
+	if err != nil {
+		return nil, err
+	}
+	return collectdPlugins, nil
 }
