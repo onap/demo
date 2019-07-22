@@ -156,6 +156,64 @@ secretKey: "onapsecretdaas"
 helm install -n minio . -f values.yaml --namespace=edge1
 ```
 
+#### Onboard messaging platform
+
+We have currently support strimzi based kafka operator.
+Navigate to ```$DA_WORKING_DIR/deploy/messaging/charts/strimzi-kafka-operator``` directory.
+Use the below command :
+```
+helm install . -f values.yaml  --name sko --namespace=test
+```
+
+NOTE: Make changes in the values.yaml if required.
+
+Once the strimzi operator ready, you shall get a pod like :
+
+```
+strimzi-cluster-operator-5cf7648b8c-zgxv7       1/1     Running   0          53m
+```
+
+Once this done, install the kafka package like any other helm charts you have.
+Navigate to dir : ```$DA_WORKING_DIRdeploy/messaging``` and use command:
+```
+helm install --name kafka-cluster charts/kafka/
+```
+
+Once this done, you should have the following pods up and running.
+
+```
+kafka-cluster-entity-operator-b6557fc6c-hlnkm   3/3     Running   0          47m
+kafka-cluster-kafka-0                           2/2     Running   0          48m
+kafka-cluster-kafka-1                           2/2     Running   0          48m
+kafka-cluster-kafka-2                           2/2     Running   0          48m
+kafka-cluster-zookeeper-0                       2/2     Running   0          49m
+kafka-cluster-zookeeper-1                       2/2     Running   0          49m
+kafka-cluster-zookeeper-2                       2/2     Running   0          49m
+```
+
+You should have the following services when do a ```kubectl get svc```
+
+```
+kafka-cluster-kafka-bootstrap    ClusterIP   10.XX.YY.ZZ   <none>        9091/TCP,9092/TCP,9093/TCP   53m
+kafka-cluster-kafka-brokers      ClusterIP   None           <none>        9091/TCP,9092/TCP,9093/TCP   53m
+kafka-cluster-zookeeper-client   ClusterIP   10.XX.YY.ZZ   <none>        2181/TCP                     55m
+kafka-cluster-zookeeper-nodes    ClusterIP   None           <none>        2181/TCP,2888/TCP,3888/TCP   55m
+```
+#### Testing messaging 
+
+You can test your kafka brokers by creating a simple producer and consumer.
+
+Producer : 
+```
+kubectl run kafka-producer -ti --image=strimzi/kafka:0.12.2-kafka-2.2.1 --rm=true --restart=Never -- bin/kafka-console-producer.sh --broker-list kafka-cluster-kafka-bootstrap:9092 --topic my-topic
+ ```
+ Consumer :
+ ```
+
+kubectl run kafka-consumer -ti --image=strimzi/kafka:0.12.2-kafka-2.2.1 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server kafka-cluster-kafka-bootstrap:9092 --topic my-topic --from-beginning
+```
+
+
 #### Onboard an Inference Application
 ```
 TODO
