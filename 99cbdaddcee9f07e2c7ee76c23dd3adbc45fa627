@@ -16,6 +16,24 @@
       "revId": "99cbdaddcee9f07e2c7ee76c23dd3adbc45fa627",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "57c82f1b_bfc662d7",
+        "filename": "heat/vFW_NextGen/templates/vfw.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 3013
+      },
+      "writtenOn": "2019-07-22T13:55:30Z",
+      "side": 1,
+      "message": "Yeah it is the naming convention from the guidelines R-717227. \n\nWhen the VNF’s Heat Orchestration Template’s Resource OS::Neutron::Port is attaching to an internal network (per the ONAP definition, see Requirements R-52425 and R-46461), and an IPv4 Virtual IP (VIP) address is assigned using the property allowed_address_pairs map property ip_address, the parameter name MUST follow the naming convention\n\n{vm-type}_int_{network-role}_floating_ip",
+      "parentUuid": "263e1fee_e86e0098",
+      "revId": "99cbdaddcee9f07e2c7ee76c23dd3adbc45fa627",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
