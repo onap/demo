@@ -1,7 +1,8 @@
 #!/bin/bash
 
 NEXUS_ARTIFACT_REPO=$(cat /opt/config/nexus_artifact_repo.txt)
-NB_API_VERSION=$(cat /opt/config/nb_api_version.txt)
+DEMO_ARTIFACTS_VERSION=$(cat /opt/config/demo_artifacts_version.txt)
+if [[ "$DEMO_ARTIFACTS_VERSION" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
 INSTALL_SCRIPT_VERSION=$(cat /opt/config/install_script_version.txt)
 CLOUD_ENV=$(cat /opt/config/cloud_env.txt)
 
@@ -63,11 +64,11 @@ sed -i 's/vnfc=.*/vnfc=vDNS/g' /opt/config/properties.conf
 
 # Download Honeycomb artifacts
 wget -O vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf&a=vlb-vnf-onap-distribution&c=hc&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"
-tar -zmxvf sample-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
-mv sample-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
+tar -zmxvf vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz
+mv vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
 
-sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
-sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' honeycomb/vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
+sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/config/honeycomb.json
+sed -i 's/"netconf-tcp-binding-address": "127.0.0.1",/"netconf-tcp-binding-address": "0.0.0.0",/g' honeycomb/config/honeycomb.json
 
 rm *.tar.gz
 

@@ -76,9 +76,8 @@ vppctl set interface proxy-arp tap-0 enable
 vppctl set ip arp tap-0 $PKTGEN_IPADDR $PKTGEN_MAC
 
 # Start Honeycomb and initialize the vLB with information about vDNS
-VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 cd /opt
-./honeycomb/vlb-vnf-onap-distribution-$VERSION/honeycomb &>/var/log/honeycomb.log &disown
+./honeycomb/honeycomb &>/var/log/honeycomb.log &disown
 sleep 10
 
 OAM_VDNS_IP=$(cat /opt/config/oam_vdns_ip.txt)
