@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Modifications copyright © 2019 AT&T Intellectual Property
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <groupId>io.fd.honeycomb.common</groupId>
-    <artifactId>minimal-distribution-parent</artifactId>
-    <version>1.17.07</version>
+    <artifactId>hc-onap</artifactId>
+    <version>1.5.0-SNAPSHOT</version>
+    <groupId>org.onap.demo.vnf</groupId>
+    <relativePath>../../../honeycomb_plugin/parent-pom/pom.xml</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.onap.demo.vnf.vlb</groupId>
   <artifactId>vlb-vnf-onap-distribution</artifactId>
-  <version>1.2.0</version>
 
-  <properties>
+    <properties>
     <nexusproxy>http://nexus.fd.io/content</nexusproxy>
     <start.script.template>
 #!/bin/sh -
 %s
     </start.script.template>
 
-    <exec.parameters>-Xms128m -Xmx128m</exec.parameters>
+    <exec.parameters>-Xms256m -Xmx256m</exec.parameters>
+    <exec.parameters.minimal>
+      -client -Xms20m -Xmx32m -XX:MetaspaceSize=5m -XX:MaxMetaspaceSize=32m -XX:MaxMetaspaceExpansion=1m -Xss512k -XX:+UseSerialGC -Djava.compiler=NONE -Xverify:none -noverify
+    </exec.parameters.minimal>
+    <random.seed.file>/dev/./urandom</random.seed.file>
     <main.class>io.fd.honeycomb.infra.distro.Main</main.class>
     <interfaces.mapping.version>1.17.07</interfaces.mapping.version>
     <honeycomb.min.distro.version>1.17.07</honeycomb.min.distro.version>
@@ -37,153 +45,156 @@
     </distribution.modules>
   </properties>
 
-  <build>
+    <build>
+    <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${main.class}</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions>
+                            <classpathMavenRepositoryLayout>true</classpathMavenRepositoryLayout>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>config/ cert/ modules/ yang-mapping/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.10</version>
+                <executions>
+                    <!--  Dependencies are copied by parent project  -->
+                    <execution>
+                        <id>unpack-configuration</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includes>**/honeycomb-minimal-resources/</includes>
+                            <outputDirectory>${project.build.outputDirectory}/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--  Generate shell script  -->
+            <!--  Extract modules started by distribution  -->
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <executions>
+                    <!--execution>
+                        <id>start-scripts-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                              io.fd.honeycomb.common.scripts.StartupScriptGenerator.generate(project, properties, log)
+                            </source>
+                        </configuration>
+                    </execution-->
+                    <execution>
+                        <id>distribution-module-assembly</id>
+                        <!--phase changed from package to earlier phase to generate module descriptor before distribution jar is created,
+                             to include descriptor in the jar,to be accessible to children distributions-->
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                              io.fd.honeycomb.common.scripts.ModulesListGenerator.generate(project, properties, log)
+                            </source>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-module-to-yang-index</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                              io.fd.honeycomb.common.scripts.ModuleYangIndexGenerator.pairDistributionModulesWithYangModules(project, log)
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.fd.honeycomb.common</groupId>
+                        <artifactId>common-scripts</artifactId>
+                        <version>1.17.07</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!--  Build archives  -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.3</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.fd.honeycomb.common</groupId>
+                        <artifactId>minimal-assembly-descriptor</artifactId>
+                        <version>1.17.07</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>honeycomb-minimal</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--http://stackoverflow.com/questions/18107375/getting-skipping-jacoco-execution-due-to-missing-execution-data-file-upon-exec-->
+                    <argLine>
+                      ${argLine} -Djava.security.egd=file:${random.seed.file}
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
-        <configuration>
-          <!-- Use google's error-prone static analysis-->
-          <compilerId>javac-with-errorprone</compilerId>
-          <forceJavacCompilerUse>true</forceJavacCompilerUse>
-          <showWarnings>true</showWarnings>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-compiler-javac-errorprone</artifactId>
-            <version>2.5</version>
-          </dependency>
-          <!-- override plexus-compiler-javac-errorprone's dependency on
-               Error Prone with the latest version -->
-          <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_core</artifactId>
-            <version>2.0.9</version>
-          </dependency>
-        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.gmaven</groupId>
+        <artifactId>groovy-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>${main.class}</mainClass>
-              <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
-              <useUniqueVersions>false</useUniqueVersions>
-              <classpathMavenRepositoryLayout>true</classpathMavenRepositoryLayout>
-            </manifest>
-            <manifestEntries>
-              <Class-Path>config/ cert/ modules/ yang-mapping/</Class-Path>
-            </manifestEntries>
-          </archive>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
-              <useBaseVersion>true</useBaseVersion>
-              <useRepositoryLayout>true</useRepositoryLayout>
-              <excludeArtifactIds>yang-jmx-generator</excludeArtifactIds>
-            </configuration>
-           </execution>
-           <execution>
-             <id>unpack-configuration</id>
-             <phase>prepare-package</phase>
-             <goals>
-               <goal>unpack-dependencies</goal>
-             </goals>
-             <configuration>
-               <includes>**/honeycomb-minimal-resources/</includes>
-               <outputDirectory>${project.build.outputDirectory}/</outputDirectory>
-             </configuration>
-           </execution>
-         </executions>
-      </plugin>
-
-      <!-- Generate shell script -->
-      <plugin>
-        <groupId>org.codehaus.gmaven</groupId>
-        <artifactId>groovy-maven-plugin</artifactId>
-        <version>2.0</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>execute</goal>
-            </goals>
-            <configuration>
-              <source>
-                import java.nio.file.Paths
-
-                log.info "Generating shell exec script"
-                def scriptTemplate = properties.getOrDefault("start.script.template", "")
-                def args = properties.getOrDefault("exec.parameters", "")
-                log.debug "Additional shell exec script properties: ${args}"
-                def javaArgs = "${args} -jar \$(dirname \$0)/${project.artifactId}-${project.version}.jar"
-                def scriptParent = Paths.get(project.build.outputDirectory, "honeycomb-minimal-resources")
-                scriptParent.toFile().mkdirs()
-                def scriptContent = "java " + javaArgs
-                log.info "Generating shell exec script as ${scriptContent}"
-                def scriptPath = Paths.get(scriptParent.toString(), "honeycomb")
-                log.info "Writing shell exec script to ${scriptPath}"
-                scriptPath.toFile().text = String.format(scriptTemplate, scriptContent)
-                scriptPath.toFile().setExecutable(true)
-
-                scriptPath = Paths.get(scriptParent.toString(), "honeycomb-start")
-                log.info "Writing shell exec script to ${scriptPath}"
-                scriptPath.toFile().text = "\$(dirname \$0)/honeycomb &amp;"
-                scriptPath.toFile().setExecutable(true)
-
-                def debug_args = properties.getOrDefault("debug.parameters", "")
-                def debugScriptContent = "java" + " ${debug_args} " + javaArgs
-                log.info "Generating shell debug script as ${debugScriptContent}"
-                scriptPath = Paths.get(scriptParent.toString(), "honeycomb-debug")
-                log.info "Writing shell debug script to ${scriptPath}"
-                scriptPath.toFile().text = String.format(scriptTemplate, debugScriptContent)
-                scriptPath.toFile().setExecutable(true)
-              </source>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>io.fd.honeycomb.common</groupId>
-            <artifactId>minimal-assembly-descriptor</artifactId>
-            <version>1.17.07</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>create-archive</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <descriptorRefs>
-                <descriptorRef>honeycomb-minimal</descriptorRef>
-              </descriptorRefs>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -197,24 +208,6 @@
         <artifactId>maven-install-plugin</artifactId>
         <configuration>
           <skip>false</skip>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>none</phase>
-          </execution>
-        </executions>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
         </configuration>
       </plugin>
     </plugins>
@@ -232,11 +225,22 @@
       <artifactId>health-vnf-onap-plugin-impl</artifactId>
       <version>${interfaces.mapping.version}</version>
     </dependency>
+    <dependency>
+	  <groupId>com.google.guava</groupId>
+	  <artifactId>guava</artifactId>
+	  <version>18.0</version>
+    </dependency>
     <!-- Dependency on distribution base -->
     <dependency>
       <groupId>io.fd.honeycomb</groupId>
       <artifactId>minimal-distribution</artifactId>
       <version>${honeycomb.min.distro.version}</version>
+      <exclusions>
+        <exclusion>
+    	  <groupId>com.google.guava</groupId>
+    	  <artifactId>guava</artifactId>
+    	</exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 </project>

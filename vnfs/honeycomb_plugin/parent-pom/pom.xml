@@ -66,6 +66,11 @@ done
     <module>../stream-count/stream-count-api</module>
     <module>../stream-count/stream-count-impl</module>
     <module>../stream-count/stream-count-distribution</module>
+    <module>../../vLBMS/apis/vlb-business-vnf-onap-plugin/vlb-business-vnf-onap-plugin-api</module>
+    <module>../../vLBMS/apis/vlb-business-vnf-onap-plugin/vlb-business-vnf-onap-plugin-impl</module>
+    <module>../../vLBMS/apis/health-vnf-onap-plugin/health-vnf-onap-plugin-api</module>
+    <module>../../vLBMS/apis/health-vnf-onap-plugin/health-vnf-onap-plugin-impl</module>
+    <module>../../vLBMS/apis/vlb-vnf-onap-distribution</module>
   </modules>
 
     <build>
