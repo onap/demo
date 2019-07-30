@@ -36,48 +36,49 @@ spec:
         release: {{ .Release.Name }}
     spec:
       hostNetwork: true
+      {{- if .Values.serviceAccountName }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
+      {{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | trim | indent 8 }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | trim | indent 8 }}
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
+            allowPrivilegeEscalation: true
             privileged: true
+{{- if .Values.env }}
+          env:
+{{ toYaml .Values.env | trim | indent 10 }}
+{{- end  }}
+{{- if .Values.command }}
+          command:
+{{ toYaml .Values.command | trim | indent 10 }}
+{{- end  }}
+{{- if .Values.args }}
+          args:
+{{ toYaml .Values.args | trim | indent 10 }}
+{{- end  }}
           volumeMounts:
           - name: {{ template "fullname" . }}-config
-            mountPath: /opt/collectd/etc
-          - name: proc
-            mountPath: /mnt/proc
-            readOnly: true
-          - name: root
-            mountPath: /hostfs
-            readOnly: true
-          - name: etc
-            mountPath: /mnt/etc
-            readOnly: true
-          - name: run
-            mountPath: /var/run/docker.sock
+            mountPath: {{ .Values.configMountPath }}
+{{- if .Values.volumeMounts }}
+{{ toYaml .Values.volumeMounts | trim | indent 10 }}
+{{- end }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- if .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
-    {{- end }}
+{{- toYaml .Values.resources | trim | indent 12}}
       volumes:
       - name: {{ template "fullname" . }}-config
         configMap:
           name: {{ template "fullname" . }}-config
-          items:
-          - key: node-collectd.conf
-            path: collectd.conf
-      - name: proc
-        hostPath:
-          path: /proc
-      - name: root
-        hostPath:
-          path: /
-      - name: etc
-        hostPath:
-          path: /etc
-      - name: run
-        hostPath:
-          path: /var/run/docker.sock
+          defaultMode: 0744
+{{- if .Values.volumeMounts }}
+{{ toYaml .Values.volumes | indent 6 }}
+{{- end }}

@@ -23,5 +23,4 @@ metadata:
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
 data:
-  node-collectd.conf: |-
-  {{ tpl (.Files.Glob "resources/config/*").AsConfig . | indent 2 }}
+  {{- tpl (.Files.Glob "resources/*").AsConfig . | nindent 2 }}
