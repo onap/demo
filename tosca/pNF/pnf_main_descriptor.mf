@@ -1,0 +1,27 @@
+metadata:
+    pnfd_name: myPnf
+    pnfd_provider: Acme
+    pnfd_archive_version: 1.0
+    pnfd_release_date_time: 2019-03-11T11:25:00+00:00
+
+Source: pnf_main_descriptor.mf
+Source: Definitions/pnf_main_descriptor.yaml
+Source: Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml
+Source: Definitions/etsi_nfv_sol001_vnfd_2_5_1_types.yaml
+Source: Files/ChangeLog.txt
+Source: Files/Events/MyPnf_Pnf_v1.yaml
+Source: Files/Guides/user_guide.txt
+Source: Files/Measurements/PM_Dictionary.yaml
+Source: Files/Scripts/my_script.sh
+Source: Files/Yang_module/mynetconf.yang
+Source: TOSCA-Metadata/TOSCA.meta
+
+non_mano_artifact_sets:
+    onap_ves_events:
+        Source: Files/Events/MyPnf_Pnf_v1.yaml
+    onap_pm_dictionary:
+        Source: Files/Measurements/PM_Dictionary.yaml
+    onap_yang_modules:
+        Source: Files/Yang_module/mynetconf.yang
+    onap_others:
+        Source: Files/Guides/user_guide.txt
