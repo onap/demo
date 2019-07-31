@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "3b89924d_790d2e18",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/Chart.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-07-31T23:15:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35de93cd_60efa408",
+      "range": {
+        "startLine": 3,
+        "startChar": 13,
+        "endLine": 3,
+        "endChar": 40
+      },
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ecd001eb_50f8fcf1",
         "filename": "vnfs/DAaaS/00-init/istio/istio-instance/templates/_helpers.tpl",
         "patchSetId": 5
@@ -65,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "cfc4232b_ac44261a",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/templates/_helpers.tpl",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-07-31T23:15:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecd001eb_50f8fcf1",
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fd0ce05c_24ba6786",
         "filename": "vnfs/DAaaS/00-init/istio/istio-instance/templates/_helpers.tpl",
         "patchSetId": 5
@@ -76,6 +118,30 @@
       "writtenOn": "2019-06-22T05:39:46Z",
       "side": 1,
       "message": "should be \"chart-name\".name\nSame for the ones below (if planning to use)",
+      "range": {
+        "startLine": 5,
+        "startChar": 12,
+        "endLine": 5,
+        "endChar": 23
+      },
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "019efc66_70a1afa7",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/templates/_helpers.tpl",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-07-31T23:15:37Z",
+      "side": 1,
+      "message": "Done. Let me know if this looks good~",
+      "parentUuid": "fd0ce05c_24ba6786",
       "range": {
         "startLine": 5,
         "startChar": 12,
@@ -145,6 +211,30 @@
       "writtenOn": "2019-06-22T05:39:46Z",
       "side": 1,
       "message": "Since we are using gloo as ingress gateway, should this be disabled?",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 19
+      },
+      "revId": "57dc1cfc55d035a105e4fa911a9daee03b26a40b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d59f2a44_1db47d17",
+        "filename": "vnfs/DAaaS/00-init/istio/istio-instance/values.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-07-31T23:15:37Z",
+      "side": 1,
+      "message": "As far as the gloo and istio integration documents are concerned, this is not disabled.",
+      "parentUuid": "2c21a66d_5bea6da1",
       "range": {
         "startLine": 17,
         "startChar": 0,
