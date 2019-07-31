@@ -1,0 +1,35 @@
+{    
+	"vfwsnk_preload.template": {
+            "int_unprotected_private_net_id" : "vofwlsnk_unprotected${hostid}",
+            "int_unprotected_private_subnet_id" : "vofwlsnk_unprotected_sub${hostid}",
+            "unprotected_private_net_cidr" : "192.168.10.0/24",
+            "int_protected_private_net_id" : "vofwlsnk_protected${hostid}",
+            "int_protected_private_subnet_id" : "vofwlsnk_protected_sub${hostid}",
+            "protected_private_net_cidr" : "192.168.20.0/24",
+            "vfw_int_unprotected_private_ip_0" : "192.168.10.100",
+            "vfw_int_protected_private_floating_ip" : "192.168.10.200",
+            "vfw_int_protected_private_ip_0" : "192.168.20.100",
+            "vfw_onap_private_ip_0" : "${GLOBAL_INJECTED_OPENSTACK_OAM_NETWORK_CIDR_PREFIX}.${ecompnet}.101",
+            "vsn_int_protected_private_ip_0" : "192.168.20.250",
+            "vsn_onap_private_ip_0" : "${GLOBAL_INJECTED_OPENSTACK_OAM_NETWORK_CIDR_PREFIX}.${ecompnet}.102",
+            "vfw_name_0": "vofwl01fwl${hostid}",
+            "vsn_name_0": "vofwl01snk${hostid}",
+            "vfw_image_name" : "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+            "vfw_flavor_name" : "${GLOBAL_INJECTED_VM_FLAVOR}",
+            "vsn_image_name" : "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+            "vsn_flavor_name" : "${GLOBAL_INJECTED_VM_FLAVOR}"
+	},
+    "vpkg_preload.template": {
+            "unprotected_private_net_id" : "vFWSNK_vofwlsnk_unprotected${hostid}",
+            "unprotected_private_subnet_id" : "vFWSNK_vofwlsnk_unprotected_sub${hostid}",
+            "unprotected_private_net_cidr" : "192.168.10.0/24",
+            "protected_private_net_cidr" : "192.168.20.0/24",
+            "vfw_private_ip_0" : "192.168.10.100",
+            "vpg_unprotected_private_ip_0" : "192.168.10.200",
+            "vpg_onap_private_ip_0" : "${GLOBAL_INJECTED_OPENSTACK_OAM_NETWORK_CIDR_PREFIX}.${ecompnet}.103",
+            "vsn_private_ip_0" : "192.168.20.250",
+            "vpg_name_0" : "vofwl01pgn${hostid}",
+            "vpg_image_name" : "${GLOBAL_INJECTED_UBUNTU_1404_IMAGE}",
+            "vpg_flavor_name" : "${GLOBAL_INJECTED_VM_FLAVOR}"
+	}
+}
