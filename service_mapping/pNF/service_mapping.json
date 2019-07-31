@@ -1,0 +1,17 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+	                        "pNF" : ["pNF"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+	    "pNF"  : ["pNF"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "pNF" :[]
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "pNF" :[]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "pNF"  : []
+   } 
+}

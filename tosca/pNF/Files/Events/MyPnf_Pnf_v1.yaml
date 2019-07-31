@@ -1,0 +1,213 @@
+---
+event:
+    presence: required
+    structure: 
+        commonEventHeader:
+            presence: required
+            structure: 
+                domain: {presence: required, value: notification}
+                eventName: {presence: required, value: Noti_MyPnf-Acme_FileReady}
+                priority: {presence: required, value: Normal}
+                eventId: {presence: required}
+                reportingEntityId: {presence: required}
+                reportingEntityName: {presence: required}
+                sequence: {presence: required, value: 0}
+                sourceId: {presence: required}
+                sourceName: {presence: required}
+                version: {presence: required, value: 4.0.1}
+                vesEventListenerVersion: {presence: required, value: 7.0.1}
+                startEpochMicrosec: {presence: required}
+                lastEpochMicrosec: {presence: required}
+        notificationFields:
+            presence: required
+            structure:  
+                changeIdentifier: {presence: required, value: PM_MEAS_FILES}
+                changeType: {presence: required, value: fileReady}
+                notificationFieldsVersion: {presence: required, value: 2.0}
+                arrayOfNamedHashMap:
+                    presence: required
+                    array:
+                        - name: {presence: required} 
+                          hashMap: {presence: required, structure: {
+                              keyValuePair: {presence: required, structure: {key: {presence: required, value: location}, value: {presence: required}}},
+                              keyValuePair: {presence: required, structure: {key: {presence: required, value: compression}, value: {presence: required, value: gzip}}},
+                              keyValuePair: {presence: required, structure: {key: {presence: required, value: fileFormatType}, value: {presence: required, value: org.3GPP.32.435}}},
+                              keyValuePair: {presence: required, structure: {key: {presence: required, value: fileFormatVersion}, value: {presence: required, value: V10}}}}
+                          }
+...
+---
+event:
+    presence: required
+    structure:
+        commonEventHeader:
+            presence: required
+            structure:
+                domain: {presence: required, value: pnfRegistration}
+                eventId: {presence: required}
+                eventName: {presence: required, value: PnfReg_MyPnf-Acme_pnfRegistration}
+                lastEpochMicrosec: {presence: required}
+                priority: {presence: required, value: Normal}
+                reportingEntityName: {presence: required}
+                sequence: {presence: required, value: 0}
+                sourceName: {presence: required}
+                startEpochMicrosec: {presence: required}
+                timeZoneOffset: {presence: required}
+                version: {presence: required, value: 4.0.1}
+                vesEventListenerVersion: {presence: required, value: 7.0.1}
+        pnfRegistrationFields:
+            presence: required
+            structure:
+                modelNumber: {presence: required}
+                oamV4IpAddress: {presence: optional}
+                oamV6IpAddress: {presence: optional}
+                pnfRegistrationFieldsVersion: {presence: required, value: 2.0}
+                serialNumber: {presence: required}
+                softwareVersion: {presence: required}
+                unitFamily: {presence: required, value: BBU}
+                unitType: {presence: required}
+                vendorName: {presence: required, value: Acme}
+...
+---
+event:
+    presence: required
+    action: [ any, any, null, null, null ]
+    comment: " 
+        ALARM NAME: CertMAutomaticEnrollmentFailed,
+        ALARM DESCRIPTION: ‘See alarm OPI x/1111-ABC 123 4567/1 Uen’,
+        ALARM EFFECT: 'See alarm OPI x/2222-ABC 123 4567/1 Uen',
+        MANAGED OBJECT CLASSES: NodeCredential,
+        EVENT TYPE: 'PROCESSINGERRORALARM',
+        PROBABLE CAUSE: 'ConfigurationOrCustomizationError',
+        PROPOSED REPAIR ACTIONS: 'See alarm OPI x/3333-ABC 123 4567/1 Uen',
+        CLEARING TYPE: Automatic
+    "
+    structure:
+        commonEventHeader:
+            presence: required
+            structure:
+                version: {presence: required, value: 4.0.1}
+                vesEventListenerVersion: {presence: required, value: 7.0.1}
+                domain: {presence: required, value: fault}
+                eventName: {presence: required, value: Fault_MyPnf-Acme_CertMAutomaticEnrollmentFailed}
+                eventId: {presence: required}
+                sequence: {presence: required}
+                priority: {presence: required, value: Normal}
+                reportingEntityName: {presence: required}
+                sourceName: {presence: required}
+                nfVendorName: {presence: required, value: Acme}
+                startEpochMicrosec: {presence: required}
+                lastEpochMicrosec: {presence: required}
+                timeZoneOffset: {presence: required}
+        faultFields:
+            presence: required
+            structure:
+                faultFieldsVersion: {presence: required, value: 4.0}
+                alarmCondition: {presence: required, value: 'CertMAutomaticEnrollmentFailed'}
+                eventCategory: {presence: required, value: 'PROCESSINGERRORALARM'}
+                eventSourceType: {presence: required}
+                specificProblem: {presence: required, value: 'Certificate Management Automatic Enrollment Failed'}
+                eventSeverity: {presence: required}
+                vfStatus: {presence: required, value: Active}
+                alarmAdditionalInformation: {presence: required, structure: {
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: source}, value: {presence: required}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: probableCause}, value: {presence: required, value: 'ConfigurationOrCustomizationError'}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalText}, value: {presence: optional}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalInfo}, value: {presence: optional}}}}
+                }
+...
+---
+event:
+    presence: required
+    action: [ any, any, null, null, null ]
+    comment: "
+        ALARM NAME: PowerLoss,
+        ALARM DESCRIPTION: 'PNF is losing power',
+        ALARM EFFECT: 'PNF will shutdown if battery is drained',
+        MANAGED OBJECT CLASSES: 'BatteryBackup;BatteryUnit',
+        EVENT TYPE: 'EQUIPMENTALARM',
+        PROBABLE CAUSE: 'Power Supply Failure',
+        PROPOSED REPAIR ACTIONS: 'Repair Power Supply',
+        CLEARING TYPE: Automatic
+    "
+    structure:
+        commonEventHeader:
+            presence: required
+            structure:
+                version: {presence: required, value: 4.0.1}
+                vesEventListenerVersion: {presence: required, value: 7.0.1}
+                domain: {presence: required, value: fault}
+                eventName: {presence: required, value: Fault_MyPnf-Acme_PowerLoss}
+                eventId: {presence: required}
+                sequence: {presence: required}
+                priority: {presence: required, value: Normal}
+                reportingEntityName: {presence: required}
+                sourceName: {presence: required}
+                nfVendorName: {presence: required, value: Acme}
+                startEpochMicrosec: {presence: required}
+                lastEpochMicrosec: {presence: required}
+                timeZoneOffset: {presence: required}
+        faultFields:
+            presence: required
+            structure:
+                faultFieldsVersion: {presence: required, value: 4.0}
+                alarmCondition: {presence: required, value: 'PowerLoss'}
+                eventCategory: {presence: required, value: 'EQUIPMENTALARM'}
+                eventSourceType: {presence: required}
+                specificProblem: {presence: required, value: 'Power Supply Failure'}
+                eventSeverity: {presence: required}
+                vfStatus: {presence: required, value: Active}
+                alarmAdditionalInformation: {presence: required, structure: {
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: source}, value: {presence: required}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: probableCause}, value: {presence: required, value: 'Power Supply Failure'}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalText}, value: {presence: optional}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalInfo}, value: {presence: optional}}}}
+                }
+...
+---
+event:
+    presence: required
+    action: [ any, any, null, null, null ]
+    comment: "
+        ALARM NAME: LogHasReachedFullCapacity,
+        ALARM DESCRIPTION: 'Log Has Reached Full Capacity',
+        ALARM EFFECT: 'See alarm OPI x/2223-ABC 123 4567/1 Uen',
+        MANAGED OBJECT CLASSES: Log,
+        EVENT TYPE: 'PROCESSINGERRORALARM',
+        PROBABLE CAUSE: 'FileError',
+        PROPOSED REPAIR ACTIONS: 'See alarm OPI x/3334-ABC 123 4567/1 Uen',
+        CLEARING TYPE: Automatic
+    "
+    structure:
+        commonEventHeader:
+            presence: required
+            structure:
+                version: {presence: required, value: 4.0.1}
+                vesEventListenerVersion: {presence: required, value: 7.0.1}
+                domain: {presence: required, value: fault}
+                eventName: {presence: required, value: Fault_MyPnf-Acme_LogHasReachedFullCapacity}
+                eventId: {presence: required}
+                sequence: {presence: required}
+                priority: {presence: required, value: Normal}
+                reportingEntityName: {presence: required}
+                sourceName: {presence: required}
+                nfVendorName: {presence: required, value: Acme}
+                startEpochMicrosec: {presence: required}
+                lastEpochMicrosec: {presence: required}
+                timeZoneOffset: {presence: required}
+        faultFields:
+            presence: required
+            structure:
+                faultFieldsVersion: {presence: required, value: 4.0}
+                alarmCondition: {presence: required, value: 'LogHasReachedFullCapacity'}
+                eventCategory: {presence: required, value: 'PROCESSINGERRORALARM'}
+                eventSourceType: {presence: required}
+                specificProblem: {presence: required, value: 'Log Has Reached Full Capacity'}
+                eventSeverity: {presence: required}
+                vfStatus: {presence: required, value: Active}
+                alarmAdditionalInformation: {presence: required, structure: {
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: source},value: {presence: required}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: probableCause},value: {presence: required, value: 'FileError'}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalText},value: {presence: optional}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalInfo},value: {presence: optional}}}}
+                }
+...
