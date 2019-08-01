@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3104ee8c_fc43c665",
+        "filename": "vnfs/DAaaS/deploy/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-08-01T06:16:13Z",
+      "side": 1,
+      "message": "copyright header",
+      "revId": "7f497bc6b8b51401a130a36d1bb825a1bc5340e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d19de5c1_d6c71862",
+        "filename": "vnfs/DAaaS/deploy/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-08-01T06:16:13Z",
+      "side": 1,
+      "message": "is there difference between printf and directly using .Values.metadata.name ?",
+      "range": {
+        "startLine": 6,
+        "startChar": 8,
+        "endLine": 6,
+        "endChar": 53
+      },
+      "revId": "7f497bc6b8b51401a130a36d1bb825a1bc5340e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "15ac96a3_82997bad",
+        "filename": "vnfs/DAaaS/deploy/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-08-01T06:16:13Z",
+      "side": 1,
+      "message": "same as above",
+      "range": {
+        "startLine": 8,
+        "startChar": 10,
+        "endLine": 8,
+        "endChar": 55
+      },
+      "revId": "7f497bc6b8b51401a130a36d1bb825a1bc5340e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3990536_2d6d9e22",
+        "filename": "vnfs/DAaaS/deploy/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-08-01T06:16:13Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 22,
+        "startChar": 15,
+        "endLine": 22,
+        "endChar": 79
+      },
+      "revId": "7f497bc6b8b51401a130a36d1bb825a1bc5340e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4167ad3b_dc74a71e",
+        "filename": "vnfs/DAaaS/deploy/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-08-01T06:16:13Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 32,
+        "startChar": 11,
+        "endLine": 32,
+        "endChar": 65
+      },
+      "revId": "7f497bc6b8b51401a130a36d1bb825a1bc5340e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12d5ef96_903ea25a",
+        "filename": "vnfs/DAaaS/deploy/00-init/istio/istio-instance/values.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-08-01T06:16:13Z",
+      "side": 1,
+      "message": "Is istio ingress gateway enabled by default?",
+      "range": {
+        "startLine": 17,
+        "startChar": 13,
+        "endLine": 17,
+        "endChar": 17
+      },
+      "revId": "7f497bc6b8b51401a130a36d1bb825a1bc5340e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a486066b_44736627",
+        "filename": "vnfs/DAaaS/deploy/00-init/istio/istio-sds.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-08-01T06:16:13Z",
+      "side": 1,
+      "message": "Is this redundant file? there is a istio-sds.yaml in the templates folder as well..",
+      "revId": "7f497bc6b8b51401a130a36d1bb825a1bc5340e2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
