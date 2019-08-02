@@ -1,0 +1,22 @@
+{
+   "GLOBAL_SERVICE_FOLDER_MAPPING": { 
+                                "vLB_CDS" : ["vLB_CDS"]
+   },
+   "GLOBAL_SERVICE_VNF_MAPPING": { 
+            "vLB_CDS"  : ["vLB_CDS"]
+   },
+   "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vLB_CDS" :[]
+   },
+   "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+    "vLB_CDS" :["k8s-tca-clamp-policy-05082019.yaml"]
+   },
+   "GLOBAL_SERVICE_TEMPLATE_MAPPING":  {
+    "vLB_CDS"  : [{"isBase" : "true",   "template" : "vlb_preload.template", "vnf_index": "0", "name_pattern": "base_vlb"},
+              {"isBase" : "false",  "template" : "dnsscaling_preload.template", "vnf_index": "1", "name_pattern": "dnsscaling", "prefix" : "vDNS_"}]
+   },
+   "GLOBAL_VALIDATE_NAME_MAPPING": {
+                                 "vLB_CDS" : "vlb_name_0",
+                                 "vDNS_CDS" : "vdns_name_0"
+   } 
+}
