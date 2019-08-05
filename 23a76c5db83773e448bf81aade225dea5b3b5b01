@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4421f34d_4ae2dcc8",
+        "filename": "vnfs/DAaaS/deploy/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-08-05T22:57:25Z",
+      "side": 1,
+      "message": "Can you add the apiversion as well so that it is clear which CRD is being used here.",
+      "revId": "23a76c5db83773e448bf81aade225dea5b3b5b01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
