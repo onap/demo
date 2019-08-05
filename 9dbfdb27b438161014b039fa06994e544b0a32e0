@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "338faf06_f554b9d0",
+        "filename": "vnfs/DAaaS/microservices/visualization-operator/deploy/operator.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-08-05T23:09:02Z",
+      "side": 1,
+      "message": "Is this a place holder or is the operator supposed to be installed in each namespace that it works on?",
+      "range": {
+        "startLine": 24,
+        "startChar": 20,
+        "endLine": 24,
+        "endChar": 35
+      },
+      "revId": "9dbfdb27b438161014b039fa06994e544b0a32e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
