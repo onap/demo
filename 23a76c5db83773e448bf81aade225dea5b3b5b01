@@ -16,6 +16,24 @@
       "revId": "23a76c5db83773e448bf81aade225dea5b3b5b01",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36a2aad6_d6d14426",
+        "filename": "vnfs/DAaaS/deploy/00-init/istio/istio-instance/templates/istio-sds.yaml",
+        "patchSetId": 9
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-08-05T23:11:23Z",
+      "side": 1,
+      "message": "Hi Kiran, \nThe API is set in the Istio-operator.\n\nhttps://gerrit.onap.org/r/#/c/demo/+/92409/3/vnfs/DAaaS/deploy/00-init/istio/istio-operator/templates/operator-istio-1.2-crd.yaml\n\nSteps in deployment\n1. The operator pods come up\n2. Depending on the configuration as per this patch, the operator deploys specific istio pods. The API s are defined in the operator.\n\nIs that what you were looking for?",
+      "parentUuid": "4421f34d_4ae2dcc8",
+      "revId": "23a76c5db83773e448bf81aade225dea5b3b5b01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
