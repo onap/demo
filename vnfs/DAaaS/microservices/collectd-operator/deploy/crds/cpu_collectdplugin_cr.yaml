@@ -4,7 +4,7 @@ metadata:
   name: cpu
 spec:
   # Add fields here
-  pluginName: "cpu"
+  pluginName: cpu
   pluginConf: |
     <Plugin "cpu">
       Interval 5

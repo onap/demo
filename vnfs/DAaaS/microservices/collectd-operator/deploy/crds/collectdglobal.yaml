@@ -1,0 +1,15 @@
+apiVersion: onap.org/v1alpha1
+kind: CollectdGlobal
+metadata:
+  name: example-collectdglobal
+spec:
+  # Add fields here
+  globalOptions: |
+    BaseDir     "/opt/collectd/var/lib/collectd"
+    PIDFile     "/opt/collectd/var/run/collectd.pid"
+    PluginDir   "/opt/collectd/lib/collectd"
+    TypesDB     "/opt/collectd/share/collectd/types.db"
+    TypesDB     "/opt/collectd/share/collectd/vcmts.types.db"
+    #Hostname "localhost"
+    Interval 1
+  configMap:  typesdb-configmap
