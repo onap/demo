@@ -44,5 +44,6 @@ rules:
   - onap.org
   resources:
   - '*'
+  - collectdglobals
   verbs:
   - '*'
