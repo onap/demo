@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5202e842_b8395785",
+        "filename": "vnfs/DAaaS/microservices/collectd-operator/pkg/controller/collectdplugin/collectdplugin_controller.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-08-08T19:59:49Z",
+      "side": 1,
+      "message": "Is this a built in predicate? Sounds like a nice one to have. I am assuming that it will drop all changes which does not cause a change in generationversion of the resource. If so, this will drop all status changes. Is that okay?",
+      "range": {
+        "startLine": 55,
+        "startChar": 113,
+        "endLine": 55,
+        "endChar": 139
+      },
+      "revId": "ccee01c333b297950bf839d8d04f151fab520f5c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce9e1560_f85baaf9",
+        "filename": "vnfs/DAaaS/microservices/collectd-operator/pkg/controller/collectdplugin/collectdplugin_controller.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-08-08T19:59:49Z",
+      "side": 1,
+      "message": "Indentation. gofmt should fix it.",
+      "range": {
+        "startLine": 55,
+        "startChar": 100,
+        "endLine": 55,
+        "endChar": 142
+      },
+      "revId": "ccee01c333b297950bf839d8d04f151fab520f5c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
