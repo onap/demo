@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f9bdd04_1d1b459e",
+        "filename": "vnfs/DAaaS/microservices/collectd-operator/pkg/controller/collectdglobal/collectdglobal_controller.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-08-08T19:57:30Z",
+      "side": 1,
+      "message": "Maybe move this into a function and refer to it here.\nWill make maintenance and testing it easier in the future.Utils is a good place for it.\nI see that similar code is being called in the plugin as well... Not sure if there is room to merge the two.",
+      "range": {
+        "startLine": 64,
+        "startChar": 22,
+        "endLine": 83,
+        "endChar": 14
+      },
+      "revId": "21c3a10e6a2359a8aacf4426a955f96a580d34a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
