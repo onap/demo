@@ -9,8 +9,8 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/operator-framework/operator-sdk/pkg/predicate"
 
-	onapv1alpha1 "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1"
-	collectdutils "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/controller/utils"
+	onapv1alpha1 "collectd-operator/pkg/apis/onap/v1alpha1"
+	collectdutils "collectd-operator/pkg/controller/utils"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"

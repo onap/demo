@@ -12,23 +12,22 @@ VERSION := $(shell git describe --tags)
 BUILD := $(shell git rev-parse --short HEAD)
 PROJECTNAME := $(shell basename "$(PWD)")
 
-GOPATH := $(shell realpath "$(PWD)/../../../../../../")
+ROOTPATH := $(shell realpath "$(PWD)/../")
 COP := ${PWD}/build/_output/bin/collectd-operator
 COP_LOCAL := ${COP}-local
 IMAGE_NAME := dcr.cluster.local:32644/collectd-operator:latest
 
-export GOPATH ...
 export GO111MODULE=on
 
 .PHONY: clean plugins
 
 ## build: Generate the k8s and openapi artifacts using operator-sdk
-build: clean vendor
+build: clean
 	GOOS=linux GOARCH=amd64
 	operator-sdk generate k8s --verbose
 	operator-sdk generate openapi --verbose
-	#@go build -o ${COP} -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor demo/vnfs/DAaaS/microservices/collectd-operator/cmd/manager
-	@go build -o ${COP_LOCAL} -mod=vendor demo/vnfs/DAaaS/microservices/collectd-operator/cmd/manager
+	#@go build -o ${COP} -gcflags all=-trimpath=${ROOTPATH} -asmflags all=-trimpath=${ROOTPATH} collectd-operator/cmd/manager
+	@go build -o ${COP_LOCAL} collectd-operator/cmd/manager
 	@operator-sdk build ${IMAGE_NAME} --verbose
 
 # The following is done this way as each patch on CI runs build and each merge runs deploy. So for build we don't need to build binary and hence
@@ -44,13 +43,11 @@ debug:
 	operator-sdk generate k8s --verbose
 	operator-sdk generate openapi --verbose
 	@echo "Building ${COP_LOCAL} binary"
-	@go build -o ${COP_LOCAL} -mod=vendor demo/vnfs/DAaaS/microservices/collectd-operator/cmd/manager
+	@go build -o ${COP_LOCAL} collectd-operator/cmd/manager
 
 ## deploy: Build Dockerfile and publish to repository
 deploy: build publish
-## vendor: Build the vendor module
-vendor:
-	@go mod vendor
+
 ## publish: Push docker image to repository
 publish:
 	@docker push ${IMAGE_NAME}
