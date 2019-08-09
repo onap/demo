@@ -24,7 +24,7 @@
 
 heat_template_version: 2013-05-23
 
-description: Heat template to deploy vCPE Infrastructue emlements (vAAA, vDHCP, vDNS_DHCP, webServer)
+description: Heat template to deploy vCPE Infrastructure emlements (vAAA, vDHCP, vDNS_DHCP, webServer)
 
 ##############
 #            #

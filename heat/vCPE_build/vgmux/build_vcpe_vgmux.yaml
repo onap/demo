@@ -24,7 +24,7 @@
 
 heat_template_version: 2013-05-23
 
-description: Heat template to build vCPE Infrastructue Metro vGMUX
+description: Heat template to build vCPE Infrastructure Metro vGMUX
 
 ##############
 #            #
