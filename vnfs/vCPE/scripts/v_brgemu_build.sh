@@ -35,7 +35,7 @@ cdr2mask () {
     yes y | make install-dep
 
 # Check vpp build status
-    if [[$? -ne 0]]
+    if [[ $? -ne 0 ]]
     then
         echo $ERROR_MESSAGE 'Reason: VPP build failed' > /opt/script_status.txt
         exit
@@ -46,7 +46,7 @@ cdr2mask () {
     make V=0 PLATFORM=vpp TAG=vpp install-deb
 
 # Check vpp/build-root build status
-    if [[$? -ne 0]]
+    if [[ $? -ne 0 ]]
     then
         echo $ERROR_MESSAGE 'Reason: vpp/build-root build failed' > /opt/script_status.txt
         exit
@@ -56,7 +56,7 @@ cdr2mask () {
     dpkg -i *.deb
 
 # Check vpp package installation status
-    if [[$? -ne 0]]
+    if [[ $? -ne 0 ]]
     then
         echo $ERROR_MESSAGE 'Reason: VPP package installation failed' > /opt/script_status.txt
         exit
@@ -183,7 +183,7 @@ EOF
     mvn clean install
 
 # Check hc2vpp build status
-    if [[$? -ne 0]]
+    if [[ $? -ne 0 ]]
     then
         echo $ERROR_MESSAGE 'Reason: hc2vpp build failed' > /opt/script_status.txt
         exit
