@@ -11,8 +11,8 @@ import (
 
 	onapv1alpha1 "collectd-operator/pkg/apis/onap/v1alpha1"
 
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -33,7 +33,7 @@ var lock sync.Mutex
 // ResourceMap to hold objects to update/reload
 type ResourceMap struct {
 	ConfigMap       *corev1.ConfigMap
-	DaemonSet       *extensionsv1beta1.DaemonSet
+	DaemonSet       *appsv1.DaemonSet
 	CollectdPlugins *[]onapv1alpha1.CollectdPlugin
 }
 
@@ -98,7 +98,7 @@ func FindResourceMapForCR(rc client.Client, reqLogger logr.Logger, ns string) (*
 	}
 
 	// Select DaemonSets with label
-	dsList := &extensionsv1beta1.DaemonSetList{}
+	dsList := &appsv1.DaemonSetList{}
 	err = rc.List(context.TODO(), opts, dsList)
 	if err != nil {
 		return rmap, err

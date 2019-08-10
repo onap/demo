@@ -7,8 +7,8 @@ import (
 
 	onapv1alpha1 "collectd-operator/pkg/apis/onap/v1alpha1"
 
+	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
@@ -24,7 +24,7 @@ const (
 )
 
 // RemoveTypesDB - removes TypesDB volumes and volume mounts from collectd pods.
-func RemoveTypesDB(ds *extensionsv1beta1.DaemonSet) {
+func RemoveTypesDB(ds *appsv1.DaemonSet) {
 	vols := &ds.Spec.Template.Spec.Volumes
 	for i:=0; i < len(*vols); i++ {
 		if (*vols)[i].Name == typesDB {
@@ -48,7 +48,7 @@ func RemoveTypesDB(ds *extensionsv1beta1.DaemonSet) {
 }
 
 // UpsertTypesDB - Insert/Update TypesDB volumes and volume mounts to collectd pods.
-func UpsertTypesDB(ds *extensionsv1beta1.DaemonSet, cm *corev1.ConfigMap, cr *onapv1alpha1.CollectdGlobal) {
+func UpsertTypesDB(ds *appsv1.DaemonSet, cm *corev1.ConfigMap, cr *onapv1alpha1.CollectdGlobal) {
 	typesVM := findMountInfo(cr)
 	if *typesVM == nil || len(*typesVM) == 0 {
 		return

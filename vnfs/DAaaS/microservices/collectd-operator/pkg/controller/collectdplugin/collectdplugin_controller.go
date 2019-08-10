@@ -14,7 +14,6 @@ import (
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	extensionsv1beta1 "k8s.io/api/extensions/v1beta1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/util/retry"
@@ -185,7 +184,7 @@ func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr
 		// Retrieve the latest version of Daemonset before attempting update
 		// RetryOnConflict uses exponential backoff to avoid exhausting the apiserver
 		// Select DaemonSets with label
-		dsList := &extensionsv1beta1.DaemonSetList{}
+		dsList := &appsv1.DaemonSetList{}
 		opts := &client.ListOptions{}
 		labelSelector, err := collectdutils.GetWatchLabels()
 		if err != nil {
