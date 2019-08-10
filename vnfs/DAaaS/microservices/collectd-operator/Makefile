@@ -26,7 +26,6 @@ build: clean
 	GOOS=linux GOARCH=amd64
 	operator-sdk generate k8s --verbose
 	operator-sdk generate openapi --verbose
-	#@go build -o ${COP} -gcflags all=-trimpath=${ROOTPATH} -asmflags all=-trimpath=${ROOTPATH} collectd-operator/cmd/manager
 	@go build -o ${COP_LOCAL} collectd-operator/cmd/manager
 	@operator-sdk build ${IMAGE_NAME} --verbose
 
