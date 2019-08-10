@@ -12,6 +12,7 @@ import (
 
 	onapv1alpha1 "collectd-operator/pkg/apis/onap/v1alpha1"
 	collectdutils "collectd-operator/pkg/controller/utils"
+	dsutils "collectd-operator/pkg/controller/utils"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -213,7 +214,7 @@ func (r *ReconcileCollectdGlobal) handleCollectdGlobal(reqLogger logr.Logger, cr
 		ds.Spec.Template.SetAnnotations(map[string]string{
 			"daaas-random": collectdutils.ComputeSHA256([]byte(collectdConf)),
 		})
-		r.handleAdditonalConfigMap(reqLogger, cr, ds)
+		r.handleTypesDB(reqLogger, cr, ds, isDelete)
 		updateErr := r.client.Update(context.TODO(), ds)
 		return updateErr
 	})
@@ -311,7 +312,12 @@ func (r *ReconcileCollectdGlobal) addFinalizer(reqLogger logr.Logger, cr *onapv1
 	return nil
 }
 
-func (r *ReconcileCollectdGlobal) handleAdditonalConfigMap(reqLogger logr.Logger, cr *onapv1alpha1.CollectdGlobal, ds *extensionsv1beta1.DaemonSet) error {
+func (r *ReconcileCollectdGlobal) handleTypesDB(reqLogger logr.Logger, cr *onapv1alpha1.CollectdGlobal, ds *extensionsv1beta1.DaemonSet, isDelete bool) error {
+	if isDelete || cr.Spec.ConfigMap == "" {
+		dsutils.RemoveTypesDB(ds)
+		return nil
+	}
+
 	cm := &corev1.ConfigMap{}
 	key := types.NamespacedName{Namespace: cr.Namespace, Name: cr.Spec.ConfigMap}
 	err := r.client.Get(context.TODO(), key, cm)
@@ -319,6 +325,6 @@ func (r *ReconcileCollectdGlobal) handleAdditonalConfigMap(reqLogger logr.Logger
 		reqLogger.Info("Error getting TypesDB")
 		return nil
 	}
-	// TODO: Implement Types.DB mounting
+	dsutils.UpsertTypesDB(ds, cm, cr)
 	return nil
 }

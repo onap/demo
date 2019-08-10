@@ -29,7 +29,6 @@ import (
 
 var log = logf.Log.WithName("controller_collectdplugin")
 
-
 // Add creates a new CollectdPlugin Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
@@ -61,7 +60,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	err = c.Watch(
 		&source.Kind{Type: &appsv1.DaemonSet{}},
 		&handler.EnqueueRequestsFromMapFunc{
-			ToRequests: handler.ToRequestsFunc(func (a handler.MapObject) []reconcile.Request {
+			ToRequests: handler.ToRequestsFunc(func(a handler.MapObject) []reconcile.Request {
 				labelSelector, err := collectdutils.GetWatchLabels()
 				labels := strings.Split(labelSelector, "=")
 				if err != nil {
@@ -69,7 +68,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 				}
 				rcp := r.(*ReconcileCollectdPlugin)
 				// Select the Daemonset with labelSelector (Defautl  is app=collectd)
-				if a.Meta.GetLabels()[labels[0]] == labels[1]  {
+				if a.Meta.GetLabels()[labels[0]] == labels[1] {
 					var requests []reconcile.Request
 					cpList, err := collectdutils.GetCollectdPluginList(rcp.client, a.Meta.GetNamespace())
 					if err != nil {
@@ -91,7 +90,6 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	return nil
 }
 
-
 // blank assignment to verify that ReconcileCollectdPlugin implements reconcile.Reconciler
 var _ reconcile.Reconciler = &ReconcileCollectdPlugin{}
 
@@ -102,7 +100,6 @@ type ReconcileCollectdPlugin struct {
 	client client.Client
 	scheme *runtime.Scheme
 }
-
 
 // Reconcile reads that state of the cluster for a CollectdPlugin object and makes changes based on the state read
 // and what is in the CollectdPlugin.Spec

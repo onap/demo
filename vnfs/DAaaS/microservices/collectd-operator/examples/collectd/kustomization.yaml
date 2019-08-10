@@ -1,0 +1,5 @@
+configMapGenerator:
+- name: typesdb-configmap
+  files:
+  - resources/types.db
+  - resources/vbng.types.db

@@ -4,18 +4,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-
 const (
 	//Initial indicates the initial status of CollectdPlugin
-	Initial  	= ""
+	Initial = ""
 	//Created indicates the status of CollectdPlugin after first reconcile
-	Created     = "Created"
+	Created = "Created"
 	//Enabled indicates the status of CollectdPlugin after all the pods are reloaded
-	Enabled     = "Enabled"
+	Enabled = "Enabled"
 	//Deleting state
-	Deleting	= "Deleting"
+	Deleting = "Deleting"
 	//Deprecated state when a plugin with same name is created. Old plugin gets deprecated and deleted eventually.
-	Deprecated 	= "Deprecated"
+	Deprecated = "Deprecated"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
