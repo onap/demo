@@ -19,7 +19,7 @@ import (
 
 // Define the collectdPlugin finalizer for handling deletion
 const (
-	defaultWatchLabel       = "app=collectd"
+	defaultWatchLabel = "app=collectd"
 	CollectdFinalizer = "finalizer.collectd.onap.org"
 
 	// WatchLabelsEnvVar is the constant for env variable WATCH_LABELS
@@ -200,7 +200,7 @@ func RebuildCollectdConf(rc client.Client, ns string, isDelete bool, delPlugin s
 			}
 		}
 	}
-	
+
 	if isDelete {
 		delete(loadPlugin, delPlugin)
 	} else {
