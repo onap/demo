@@ -1,0 +1,41 @@
+{{- if .Values.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collectd-operator
+  labels:
+    app: {{ template "collectd-operator.name" . }}
+    chart: {{ template "collectd-operator.chart" . }}
+    component: deployment
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: collectd-operator
+  template:
+    metadata:
+      labels:
+        name: collectd-operator
+    spec:
+      serviceAccountName: collectd-operator
+      containers:
+        - name: collectd-operator
+          # Replace this with the built image name
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+          - collectd-operator
+          env:
+            - name: WATCH_NAMESPACE
+              value: {{ default "" .Values.watch.namespace | quote }}
+            - name: WATCH_LABELS
+              value: {{ default "app=collectd" .Values.watch.labels | quote }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "collectd-operator"
+{{- end }}
