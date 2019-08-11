@@ -45,6 +45,30 @@
       "revId": "ccee01c333b297950bf839d8d04f151fab520f5c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f37dcd9_4719d701",
+        "filename": "vnfs/DAaaS/microservices/collectd-operator/pkg/controller/collectdplugin/collectdplugin_controller.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-08-11T00:37:37Z",
+      "side": 1,
+      "message": "Yes this from the operator sdk. github.com/operator-framework/operator-sdk/pkg/predicate",
+      "parentUuid": "5202e842_b8395785",
+      "range": {
+        "startLine": 55,
+        "startChar": 113,
+        "endLine": 55,
+        "endChar": 139
+      },
+      "revId": "ccee01c333b297950bf839d8d04f151fab520f5c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
