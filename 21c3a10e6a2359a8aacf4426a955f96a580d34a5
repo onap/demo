@@ -22,6 +22,30 @@
       "revId": "21c3a10e6a2359a8aacf4426a955f96a580d34a5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf8d9f8a_4afd1144",
+        "filename": "vnfs/DAaaS/microservices/collectd-operator/pkg/controller/collectdglobal/collectdglobal_controller.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-08-12T17:58:51Z",
+      "side": 1,
+      "message": "Planning to move this as a separate function or predicate. Which can be reused by both Controllers. Will handle it as part of another patch.",
+      "parentUuid": "0f9bdd04_1d1b459e",
+      "range": {
+        "startLine": 64,
+        "startChar": 22,
+        "endLine": 83,
+        "endChar": 14
+      },
+      "revId": "21c3a10e6a2359a8aacf4426a955f96a580d34a5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
