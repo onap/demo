@@ -1,19 +1,19 @@
 # Distributed Analytics Framework
-## Install
 
-#### Pre-requisites
+
+## Pre-requisites
 | Required   | Version |
 |------------|---------|
 | Kubernetes | 1.12.3+ |
 | Docker CE  | 18.09+  |
-| Helm       | 2.12.1+ |
-#### Download Framework
+| Helm       | >=2.12.1 and <=2.13.1 |
+## Download Framework
 ```bash
 git clone https://github.com/onap/demo.git
 DA_WORKING_DIR=$PWD/demo/vnfs/DAaaS/deploy
 ```
 
-#### Install Rook-Ceph for Persistent Storage
+## Install Rook-Ceph for Persistent Storage
 Note: This is unusual but Flex volume path can be different than the default value. values.yaml has the most common flexvolume path configured. In case of errors related to flexvolume please refer to the https://rook.io/docs/rook/v0.9/flexvolume.html#configuring-the-flexvolume-path to find the appropriate flexvolume-path and set it in values.yaml
 ```bash
 cd $DA_WORKING_DIR/00-init/rook-ceph
@@ -80,7 +80,7 @@ Now, again attempt :
 helm install -n rook . -f values.yaml --namespace=rook-ceph-system
 ```
 
-#### Install Operator package
+## Install Operator package
 ```bash
 cd $DA_WORKING_DIR/operator
 helm install -n operator . -f values.yaml --namespace=operator
@@ -89,15 +89,28 @@ Check for the status of the pods in operator namespace. Check if Prometheus oper
 ```bash
 kubectl get pods -n operator
 NAME                                                      READY   STATUS    RESTARTS
-m3db-operator-0                                           1/1     Running   0       -etcd-operator-etcd-backup-operator-6cdc577f7d-ltgsr      1/1     Running   0
+m3db-operator-0                                           1/1     Running   0
+op-etcd-operator-etcd-backup-operator-6cdc577f7d-ltgsr    1/1     Running   0
 op-etcd-operator-etcd-operator-79fd99f8b7-fdc7p           1/1     Running   0
 op-etcd-operator-etcd-restore-operator-855f7478bf-r7qxp   1/1     Running   0
 op-prometheus-operator-operator-5c9b87965b-wjtw5          1/1     Running   1
 op-sparkoperator-6cb4db884c-75rcd                         1/1     Running   0
 strimzi-cluster-operator-5bffdd7b85-rlrvj                 1/1     Running   0
 ```
+#### Troubleshooting Operator installation
+Sometimes deleting the previously installed Operator package will fail to remove all operator pods. To troubleshoot this ensure these following steps.
 
-#### Install Collection package
+1. Make sure that all the other deployments or helm release is deleted (purged). Operator package is a baseline package for the applications, so if the applications are still running while trying to delete the operator package might result in unwarrented state. 
+
+2. Delete all the resources and CRDs associated with operator package.
+```bash
+#NOTE: Use the same release name and namespace as in installation of operator package in the previous section
+cd $DA_WORKING_DIR/operator
+helm template -n operator . -f values.yaml --namespace=operator > ../delete_operator.yaml
+cd ../
+kubectl delete -f delete_operator.yaml
+```
+## Install Collection package
 Note: Collectd.conf is avaliable in $DA_WORKING_DIR/collection/charts/collectd/resources/config directory. Any valid collectd.conf can be placed here.
 ```bash
 Default (For custom collectd skip this section)
@@ -143,7 +156,7 @@ cp13-prometheus-prometheus      NodePort    10.43.26.155   <none>        9090:30
 prometheus-operated             ClusterIP   None           <none>        9090/TCP
 ```
 
-#### Install Minio Model repository
+## Install Minio Model repository
 * Prerequisite: Dynamic storage provisioner needs to be enabled. Either rook-ceph ($DA_WORKING_DIR/00-init) or another alternate provisioner needs to be enabled.
 ```bash
 cd $DA_WORKING_DIR/minio
@@ -156,7 +169,7 @@ secretKey: "onapsecretdaas"
 helm install -n minio . -f values.yaml --namespace=edge1
 ```
 
-#### Onboard messaging platform
+## Install Messaging platform
 
 We have currently support strimzi based kafka operator.
 Navigate to ```$DA_WORKING_DIR/deploy/messaging/charts/strimzi-kafka-operator``` directory.
@@ -213,8 +226,57 @@ kubectl run kafka-producer -ti --image=strimzi/kafka:0.12.2-kafka-2.2.1 --rm=tru
 kubectl run kafka-consumer -ti --image=strimzi/kafka:0.12.2-kafka-2.2.1 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server kafka-cluster-kafka-bootstrap:9092 --topic my-topic --from-beginning
 ```
 
+## Install Training Package
 
-#### Onboard an Inference Application
+#### Install M3DB (Time series Data lake)
+##### Pre-requisites
+1.  kubernetes cluster with atleast 3 nodes
+2.  Etcd operator, M3DB operator
+3.  Node labelled with zone and region.
+
+```bash
+## Defult region is us-west1, Default labels are us-west1-a, us-west1-b, us-west1-c
+## If this is changed then isolationGroups in training-core/charts/m3db/values.yaml needs to be updated.
+NODES=($(kubectl get nodes --output=jsonpath={.items..metadata.name}))
+
+kubectl label node/${NODES[0]} failure-domain.beta.kubernetes.io/region=us-west1
+kubectl label node/${NODES[1]} failure-domain.beta.kubernetes.io/region=us-west1
+kubectl label node/${NODES[2]} failure-domain.beta.kubernetes.io/region=us-west1
+
+kubectl label node/${NODES[0]} failure-domain.beta.kubernetes.io/zone=us-west1-a --overwrite=true
+kubectl label node/${NODES[1]} failure-domain.beta.kubernetes.io/zone=us-west1-b --overwrite=true
+kubectl label node/${NODES[2]} failure-domain.beta.kubernetes.io/zone=us-west1-c --overwrite=true
 ```
-TODO
+```bash
+cd $DA_WORKING_DIR/training-core/charts/m3db
+helm install -n m3db . -f values.yaml --namespace training
 ```
+```
+$ kubectl get pods -n training
+NAME                   READY   STATUS    RESTARTS   AGE
+m3db-cluster-rep0-0    1/1     Running   0          103s
+m3db-cluster-rep1-0    1/1     Running   0          83s
+m3db-cluster-rep1-0    1/1     Running   0          62s
+m3db-etcd-sjhgl4xfgc   1/1     Running   0          83s
+m3db-etcd-lfs96hngz6   1/1     Running   0          67s
+m3db-etcd-rmgdkkx4bq   1/1     Running   0          51s
+```
+
+##### Configure remote write from Prometheus to M3DB
+```bash
+cd $DA_WORKING_DIR/day2_configs/prometheus/
+```
+```yaml
+cat << EOF > add_m3db_remote.yaml
+spec:
+  remoteWrite:
+  - url: "http://m3coordinator-m3db.training.svc.cluster.local:7201/api/v1/prom/remote/write"
+    writeRelabelConfigs:
+      - targetLabel: metrics_storage
+        replacement: m3db_remote
+EOF
+```
+```bash
+kubectl patch --namespace=edge1 prometheus cp-prometheus-prometheus -p "$(cat add_m3db_remote.yaml)" --type=merge
+```
+Verify the prometheus GUI to see if the m3db remote write is enabled.
