@@ -16,6 +16,7 @@ m3dbCluster:
     - name: collectd
       preset: 10s:2d
   configMapName: m3-configuration
+  tolerations: {}
 
 etcdCluster:
   name: etcd
