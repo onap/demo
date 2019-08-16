@@ -8,6 +8,8 @@ spec:
   numberOfShards: {{ .Values.m3dbCluster.numberOfShards }}
   isolationGroups:
 {{ toYaml .Values.m3dbCluster.isolationGroups | indent 4 }}
+  tolerations:
+{{ toYaml .Values.m3dbCluster.tolerations | indent 4 }}
   namespaces:
 {{ toYaml .Values.m3dbCluster.namespaces | indent 4 }}
   configMapName: {{ .Values.m3dbCluster.configMapName }}
