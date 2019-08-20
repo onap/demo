@@ -1,0 +1,55 @@
+# Default values for model-saver.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: dcr.cluster.local:32644/sample-minio-save
+  tag: v3
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+## Model repository information (Minio)
+## Model repository information (Minio)
+minio:
+  existingSecret: ""
+  accessKey: "onapdaas"
+  secretKey: "onapsecretdaas"
+  environment:
+    AWS_REGION: "us-west-1"
+    S3_REGION: "us-west-1"
+    S3_ENDPOINT: "minio.edge1.svc.cluster.local:9000"
+    AWS_ENDPOINT_URL: "http://minio.edge1.svc.cluster.local:9000"
+    S3_USE_HTTPS: 0
+    S3_VERIFY_SSL: 0
+    AWS_LOG_LEVEL: 3
+    TF_CPP_MIN_LOG_LEVEL: 3
+    MODEL_BUCKET: "numpy"
+    # List of object files to be loaded given in a , separated list format
+    MODEL_FILE: 'sample-model.pkl'
+
+## Service account for model-saver to use.
+serviceAccount:
+  create: true
+  name: ""
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
