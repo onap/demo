@@ -4,6 +4,12 @@ require (
 	github.com/NYTimes/gziphandler v1.0.1 // indirect
 	github.com/operator-framework/operator-sdk v0.9.1-0.20190805223000-66e78cc576ef
 	github.com/spf13/pflag v1.0.3
+	golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4 // indirect
+	golang.org/x/lint v0.0.0-20190409202823-959b441ac422 // indirect
+	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
+	golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa // indirect
+	golang.org/x/text v0.3.2 // indirect
+	golang.org/x/tools v0.0.0-20190807223507-b346f7fd45de // indirect
 	k8s.io/api v0.0.0-20190612125737-db0771252981
 	k8s.io/apimachinery v0.0.0-20190612125636-6a5db36e93ad
 	k8s.io/client-go v11.0.0+incompatible

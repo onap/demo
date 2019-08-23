@@ -1,0 +1,15 @@
+apiVersion: onap.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  name: prometheus-grafanadatasource
+spec:
+  datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://10.54.77.172:30090
+      isDefault: true
+      access: proxy
+  grafana:
+    url:  http://vis-grafana.default.svc.cluster.local
+    username: admin
+    password: admin
