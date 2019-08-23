@@ -90,6 +90,15 @@ cd $DA_WORKING_DIR/../microservices/collectd-operator
 IMAGE_NAME=dcr.cluster.local:32644/collectd-operator:latest
 ./build/build_image.sh $IMAGE_NAME
 ```
+#### visualization-operator
+```bash
+cd $DA_WORKING_DIR/../microservices/visualization-operator
+
+## Note: The image tag and respository in the Visualization-operator helm charts needs to match the IMAGE_NAME
+IMAGE_NAME=dcr.cluster.local:32644/visualization-operator:latest
+./build/build_image.sh $IMAGE_NAME
+```
+
 ### Install the Operator Package
 ```bash
 cd $DA_WORKING_DIR/operator
@@ -181,6 +190,12 @@ kubectl create -f edge1 collectdglobal.yaml
 kubectl create -f edge1 [PLUGIN_NAME1]_collectdplugin_cr.yaml
 kubectl create -f edge1 [PLUGIN_NAME2]_collectdplugin_cr.yaml
 kubectl create -f edge1 [PLUGIN_NAME3]_collectdplugin_cr.yaml
+...
+```
+#### Configure Grafana Datasources
+Using the sample [prometheus_grafanadatasource_cr.yaml](microservices/visualization-operator/examples/grafana/prometheus_grafanadatasource_cr.yaml), Configure the GrafanaDataSource CR by running the command below
+```yaml
+kubectl create -f [DATASOURCE_NAME]_grafanadatasource_cr.yaml
 ...
 ```
 

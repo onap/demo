@@ -1,0 +1,24 @@
+apiVersion: onap.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  name: influxdb
+spec:
+  datasources:
+    - name: InfluxDB
+      type: influxdb
+      url: http://localhost:8086 
+      isDefault: false
+      access: proxy
+      withCredentials: true
+      basicAuth: true
+      basicAuthUser: user
+      basicAuthPassword: password
+      database: collectd
+      user: user
+      password: password
+      jsonData:
+        timeInterval: 15s
+  grafana:
+    url:  http://vis-grafana.default.svc.cluster.local
+    username: admin
+    password: admin
