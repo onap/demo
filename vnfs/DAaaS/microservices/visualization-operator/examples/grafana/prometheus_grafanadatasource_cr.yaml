@@ -1,0 +1,23 @@
+apiVersion: onap.org/v1alpha1
+kind: GrafanaDataSource
+metadata:
+  name: prometheus
+spec:
+  datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://cp-prometheus-prometheus:9090
+      isDefault: true
+      access: proxy
+      withCredentials: true
+      basicAuth: true
+      basicAuthUser: user
+      basicAuthPassword: password
+      jsonData:
+        timeInterval: 10s
+        queryTimeout: 50s
+      readOnly: false
+  grafana:
+    url:  http://vis-grafana.default.svc.cluster.local
+    username: admin
+    password: admin
