@@ -15,7 +15,9 @@ PROJECTNAME := $(shell basename "$(PWD)")
 ROOTPATH := $(shell realpath "$(PWD)/../")
 COP := ${PWD}/build/_output/bin/collectd-operator
 COP_LOCAL := ${COP}-local
-IMAGE_NAME := dcr.cluster.local:32644/collectd-operator:latest
+ifndef IMAGE_NAME
+override IMAGE_NAME := dcr.cluster.local:32644/collectd-operator:latest
+endif
 
 export GO111MODULE=on
 
@@ -64,7 +66,7 @@ clean:
 	@rm -rf ${COP}
 	@rm -rf ${COP_LOCAL}
 	@echo "Deleting the collectd-operator docker image"
-	@docker rmi ${IMAGE_NAME}
+	@docker 2>/dev/null rmi ${IMAGE_NAME} | true
 
 .PHONY: cover
 ## cover: run tests and generate coverage report
