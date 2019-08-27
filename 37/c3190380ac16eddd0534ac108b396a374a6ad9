@@ -1,0 +1,9 @@
+Code-Review+1: Kiran Kamineni <kiran.k.kamineni@intel.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Marco Platania <platania@research.att.com>
+Verified+1: Marco Platania <platania@research.att.com>
+Submitted-by: Marco Platania <platania@research.att.com>
+Submitted-at: Tue, 27 Aug 2019 12:37:35 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/demo/+/89090
+Project: demo
+Branch: refs/heads/master
