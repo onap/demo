@@ -137,7 +137,7 @@ Custom Collectd
 5. Edit the values.yaml and change the image repository and tag using 
    COLLECTD_IMAGE_NAME appropriately.
 6. Place the collectd.conf in 
-   $DA_WORKING_DIR/collection/charts/collectd/resources/config 
+   $DA_WORKING_DIR/collection/charts/collectd/resources
 
 7. cd $DA_WORKING_DIR/collection
 8. helm install -n cp . -f values.yaml --namespace=edge1
@@ -164,6 +164,24 @@ collectd                        ClusterIP   10.43.222.34   <none>        9103/TC
 cp13-prometheus-node-exporter   ClusterIP   10.43.17.242   <none>        9100/TCP
 cp13-prometheus-prometheus      NodePort    10.43.26.155   <none>        9090:30090/TCP
 prometheus-operated             ClusterIP   None           <none>        9090/TCP
+```
+#### Configure Collectd Plugins
+1. Using the sample [collectdglobal.yaml](microservices/collectd-operator/examples/collectd/collectdglobal.yaml), Configure the CollectdGlobal CR
+2. If there are additional Types.db files to update, Copy the additional types.db files to resources folder. 
+3. Create a ConfigMap to load the types.db and update the configMap with name of the ConfigMap created.
+4. Create and configure the required CollectdPlugin CRs. Use these samples as a reference [cpu_collectdplugin_cr.yaml](microservices/collectd-operator/examples/collectd/cpu_collectdplugin_cr.yaml), [prometheus_collectdplugin_cr.yaml](microservices/collectd-operator/examples/collectd/prometheus_collectdplugin_cr.yaml).
+4. Use the same namespace where the collection package was installed.
+5. Assuming it is edge1, create the config resources that are applicable. Apply the following commands in the same order.
+```yaml
+# Note: 
+## 1. Create Configmap is optional and required only if additional types.db file needs to be mounted.
+## 2. Add/Remove --from-file accordingly. Use the correct file name based on the context.
+kubectl create configmap typesdb-configmap --from-file ./resource/[FILE_NAME1] --from-file ./resource/[FILE_NAME2]
+kubectl create -f edge1 collectdglobal.yaml
+kubectl create -f edge1 [PLUGIN_NAME1]_collectdplugin_cr.yaml
+kubectl create -f edge1 [PLUGIN_NAME2]_collectdplugin_cr.yaml
+kubectl create -f edge1 [PLUGIN_NAME3]_collectdplugin_cr.yaml
+...
 ```
 
 ## Install Minio Model repository
