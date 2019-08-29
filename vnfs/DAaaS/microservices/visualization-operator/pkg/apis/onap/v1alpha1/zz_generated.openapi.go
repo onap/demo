@@ -55,7 +55,7 @@ func schema_pkg_apis_onap_v1alpha1_Datasource(ref common.ReferenceCallback) comm
 						},
 					},
 				},
-				Required: []string{"name", "type", "url"},
+				Required: []string{"name", "type"},
 			},
 		},
 		Dependencies: []string{},
@@ -113,8 +113,7 @@ func schema_pkg_apis_onap_v1alpha1_GrafanaDataSourceSpec(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"datasources": {
 						SchemaProps: spec.SchemaProps{
-							Description: "INSERT ADDITIONAL SPEC FIELDS - desired state of cluster Important: Run \"operator-sdk generate k8s\" to regenerate code after modifying this file Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html",
-							Type:        []string{"array"},
+							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -151,29 +150,7 @@ func schema_pkg_apis_onap_v1alpha1_GrafanaDataSourceStatus(ref common.ReferenceC
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "GrafanaDataSourceStatus defines the observed state of GrafanaDataSource",
-				Properties: map[string]spec.Schema{
-					"grafanaPod": {
-						SchemaProps: spec.SchemaProps{
-							Description: "GrafanaPod is the grafana pod Status can be one of \"\", Created, Enabled, Deleting, Deprecated",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
-									},
-								},
-							},
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-				Required: []string{"status"},
+				Properties:  map[string]spec.Schema{},
 			},
 		},
 		Dependencies: []string{},

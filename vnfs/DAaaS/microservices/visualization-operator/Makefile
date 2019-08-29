@@ -12,12 +12,11 @@ VERSION := $(shell git describe --tags)
 BUILD := $(shell git rev-parse --short HEAD)
 PROJECTNAME := $(shell basename "$(pwd)")
 
-GOPATH := $(shell realpath "$(PWD)/../../../../../../")
+ROOTPATH := $(shell realpath "$(PWD)/../../../../../../")
 VOP := ${PWD}/build/_output/bin/visualization-operator
 VOP_LOCAL := ${VOP}-local
 IMAGE_NAME := dcr.cluster.local:32644/visualization-operator:latest
 
-export GOPATH ...
 export GO111MODULE=on
 
 .PHONY: clean publish
@@ -40,6 +39,10 @@ clean:
 ## publish: Push docker image to registry
 publish:
 	@docker push ${IMAGE_NAME}
+
+## format: format source code
+format:
+	@go fmt ./...
 
 .PHONY: help
 ## help: Print help message
