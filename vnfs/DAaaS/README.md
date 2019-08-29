@@ -195,7 +195,8 @@ kubectl create -f edge1 [PLUGIN_NAME3]_collectdplugin_cr.yaml
 #### Configure Grafana Datasources
 Using the sample [prometheus_grafanadatasource_cr.yaml](microservices/visualization-operator/examples/grafana/prometheus_grafanadatasource_cr.yaml), Configure the GrafanaDataSource CR by running the command below
 ```yaml
-kubectl create -f [DATASOURCE_NAME]_grafanadatasource_cr.yaml
+kubectl create -f [DATASOURCE_NAME1]_grafanadatasource_cr.yaml
+kubectl create -f [DATASOURCE_NAME2]_grafanadatasource_cr.yaml
 ...
 ```
 
