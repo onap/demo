@@ -30,10 +30,6 @@ spec:
         spec:
           properties:
             datasources:
-              description: 'INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-                Important: Run "operator-sdk generate k8s" to regenerate code after
-                modifying this file Add custom validation using kubebuilder tags:
-                https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html'
               items:
                 properties:
                   access:
@@ -49,7 +45,6 @@ spec:
                 required:
                 - name
                 - type
-                - url
                 type: object
               type: array
             grafana:
@@ -63,8 +58,7 @@ spec:
         status:
           properties:
             grafanaPod:
-              description: GrafanaPod is the grafana pod Status can be one of "",
-                Created, Enabled, Deleting, Deprecated
+              description: GrafanaPod is the grafana pod
               items:
                 type: string
               type: array

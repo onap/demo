@@ -8,7 +8,7 @@ spec:
       type: prometheus
       url: http://10.54.77.172:30090
       isDefault: true
-      access: proxy
+      access: direct 
   grafana:
     url:  http://vis-grafana.default.svc.cluster.local
     username: admin
