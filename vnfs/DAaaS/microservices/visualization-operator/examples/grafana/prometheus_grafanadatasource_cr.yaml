@@ -8,7 +8,7 @@ spec:
       type: prometheus
       url: http://cp-prometheus-prometheus:9090
       isDefault: true
-      access: proxy
+      access: direct 
       withCredentials: true
       basicAuth: true
       basicAuthUser: user
