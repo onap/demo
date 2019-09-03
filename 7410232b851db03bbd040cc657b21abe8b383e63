@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "308e376e_3571e43a",
+        "filename": "vnfs/DAaaS/microservices/visualization-operator/pkg/controller/grafanadatasource/grafanadatasource_controller.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-09-03T23:00:07Z",
+      "side": 1,
+      "message": "comment about status check from 94237 applies here as well.",
+      "range": {
+        "startLine": 229,
+        "startChar": 1,
+        "endLine": 231,
+        "endChar": 2
+      },
+      "revId": "7410232b851db03bbd040cc657b21abe8b383e63",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
