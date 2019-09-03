@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb23f7b0_4d571159",
+        "filename": "vnfs/DAaaS/microservices/visualization-operator/pkg/controller/grafanadatasource/grafanadatasource_controller.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-09-03T17:48:17Z",
+      "side": 1,
+      "message": "My comments from previous patch apply here as well.. Whenever we have an error, we should just return from the function with an error if needed. Proceeding to the next statement is guaranteed to crash your operator pod.",
+      "range": {
+        "startLine": 232,
+        "startChar": 2,
+        "endLine": 232,
+        "endChar": 48
+      },
+      "revId": "a0c4dc93d903e53217037e47822ac13eb14919f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34ce7da7_c5a90877",
+        "filename": "vnfs/DAaaS/microservices/visualization-operator/pkg/controller/utils/visualizationutils.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-09-03T17:48:17Z",
+      "side": 1,
+      "message": "Should this be utils?",
+      "range": {
+        "startLine": 1,
+        "startChar": 8,
+        "endLine": 1,
+        "endChar": 26
+      },
+      "revId": "a0c4dc93d903e53217037e47822ac13eb14919f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
