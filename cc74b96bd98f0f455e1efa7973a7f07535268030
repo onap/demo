@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b665f21_48657f48",
+        "filename": "vnfs/DAaaS/microservices/visualization-operator/deploy/crds/onap_v1alpha1_grafanadatasource_cr.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-09-03T23:59:25Z",
+      "side": 1,
+      "message": "Add the CR instances to examples folder. And also add README on how to use this if required.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 19
+      },
+      "revId": "cc74b96bd98f0f455e1efa7973a7f07535268030",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "36ef05e2_643e1e9f",
+        "filename": "vnfs/DAaaS/microservices/visualization-operator/pkg/apis/onap/v1alpha1/grafanadatasource_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-09-03T23:59:25Z",
+      "side": 1,
+      "message": "BasicAuth, User, Password and other options needs to be supported.",
+      "range": {
+        "startLine": 44,
+        "startChar": 5,
+        "endLine": 44,
+        "endChar": 15
+      },
+      "revId": "cc74b96bd98f0f455e1efa7973a7f07535268030",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e2976a6_a1625540",
+        "filename": "vnfs/DAaaS/microservices/visualization-operator/pkg/controller/grafanadatasource/grafanadatasource_controller.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-09-03T23:59:25Z",
+      "side": 1,
+      "message": "nit - remove this",
+      "range": {
+        "startLine": 66,
+        "startChar": 3,
+        "endLine": 67,
+        "endChar": 22
+      },
+      "revId": "cc74b96bd98f0f455e1efa7973a7f07535268030",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
