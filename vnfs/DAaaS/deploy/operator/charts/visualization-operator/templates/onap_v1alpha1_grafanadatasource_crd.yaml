@@ -1,0 +1,72 @@
+{{- if .Values.enabled }}
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: grafanadatasources.onap.org
+  labels:
+    app: {{ template "visualization-operator.name" . }}
+    chart: {{ template "visualization-operator.chart" . }}
+    component: grafanadatasources.onap.org-crd
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  group: onap.org
+  names:
+    kind: GrafanaDataSource
+    listKind: GrafanaDataSourceList
+    plural: grafanadatasources
+    singular: grafanadatasource
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          properties:
+            datasources:
+              items:
+                properties:
+                  access:
+                    type: string
+                  isDefault:
+                    type: boolean
+                  name:
+                    type: string
+                  type:
+                    type: string
+                  url:
+                    type: string
+                required:
+                - name
+                - type
+                type: object
+              type: array
+            grafana:
+              additionalProperties:
+                type: string
+              type: object
+          required:
+          - datasources
+          - grafana
+          type: object
+        status:
+          type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+{{- end }}
