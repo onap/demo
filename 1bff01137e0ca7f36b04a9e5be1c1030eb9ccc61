@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "06917dd9_d9a16fa9",
+        "filename": "vnfs/DAaaS/microservices/visualization-operator/pkg/controller/grafanadatasource/grafanadatasource_controller.go",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-09-03T22:54:55Z",
+      "side": 1,
+      "message": "Return nil only when StatusCode \u003d\u003d StatusOK. Other cases should return error.",
+      "range": {
+        "startLine": 164,
+        "startChar": 1,
+        "endLine": 167,
+        "endChar": 11
+      },
+      "revId": "1bff01137e0ca7f36b04a9e5be1c1030eb9ccc61",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
