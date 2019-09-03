@@ -1,0 +1,20 @@
+{{- if .Values.enabled }}
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: visualization-operator
+  labels:
+    app: {{ template "visualization-operator.name" . }}
+    chart: {{ template "visualization-operator.chart" . }}
+    component: rolebinding
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+subjects:
+- kind: ServiceAccount
+  name: visualization-operator
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: visualization-operator
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

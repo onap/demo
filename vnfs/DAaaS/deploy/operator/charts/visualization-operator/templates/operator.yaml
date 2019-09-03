@@ -1,0 +1,39 @@
+{{- if .Values.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visualization-operator
+  labels:
+    app: {{ template "visualization-operator.name" . }}
+    chart: {{ template "visualization-operator.chart" . }}
+    component: deployment
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: visualization-operator
+  template:
+    metadata:
+      labels:
+        name: visualization-operator
+    spec:
+      serviceAccountName: visualization-operator
+      containers:
+        - name: visualization-operator
+          # Replace this with the built image name
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command:
+          - visualization-operator
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: WATCH_NAMESPACE
+              value: {{ default "" .Values.watch.namespace | quote }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "visualization-operator"
+{{- end }}
