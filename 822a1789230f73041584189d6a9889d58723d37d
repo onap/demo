@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "62dfddfc_93f519d6",
+        "filename": "vnfs/DAaaS/deploy/operator/charts/visualization-operator/templates/operator.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-09-03T22:59:07Z",
+      "side": 1,
+      "message": "Is this used in the operator?",
+      "range": {
+        "startLine": 33,
+        "startChar": 11,
+        "endLine": 34,
+        "endChar": 77
+      },
+      "revId": "822a1789230f73041584189d6a9889d58723d37d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0afae4c1_7a466e54",
+        "filename": "vnfs/DAaaS/deploy/operator/charts/visualization-operator/values.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-09-03T22:59:07Z",
+      "side": 1,
+      "message": "Change this to IfNotPresent",
+      "range": {
+        "startLine": 10,
+        "startChar": 14,
+        "endLine": 10,
+        "endChar": 20
+      },
+      "revId": "822a1789230f73041584189d6a9889d58723d37d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
