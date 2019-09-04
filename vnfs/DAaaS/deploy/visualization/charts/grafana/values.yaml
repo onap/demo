@@ -208,7 +208,18 @@ plugins: []
 ## Configure grafana datasources
 ## ref: http://docs.grafana.org/administration/provisioning/#datasources
 ##
-#datasources:
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://localhost:9090
+      isDefault: true
+    - name: M3DB
+      type: prometheus
+      url: http://m3coordinator-m3db-cluster.edge1.svc.cluster.local:7201
+      access: proxy
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels
