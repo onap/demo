@@ -10,5 +10,5 @@ configmap found at ./charts/grafana/templates/configmap-add-dashboard.yaml
 
 #Install visualization helm package
 
-helm install -n graf-prometheus . -f ./charts/grafana/values.yaml -f ./charts/grafana/grafana-values.yaml
+helm install -n graf-prometheus . -f ./grafana-values.yaml
 
