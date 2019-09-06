@@ -2,8 +2,8 @@ package utils
 
 import (
 	"path/filepath"
-	"strings"
 	"strconv"
+	"strings"
 
 	onapv1alpha1 "collectd-operator/pkg/apis/onap/v1alpha1"
 
@@ -26,7 +26,7 @@ const (
 // RemoveTypesDB - removes TypesDB volumes and volume mounts from collectd pods.
 func RemoveTypesDB(ds *appsv1.DaemonSet) {
 	vols := &ds.Spec.Template.Spec.Volumes
-	for i:=0; i < len(*vols); i++ {
+	for i := 0; i < len(*vols); i++ {
 		if (*vols)[i].Name == typesDB {
 			*vols = append((*vols)[:i], (*vols)[i+1:]...)
 			i--
@@ -37,7 +37,7 @@ func RemoveTypesDB(ds *appsv1.DaemonSet) {
 	for j, container := range *containers {
 		if container.Name == collectdContainerName {
 			vms := &(*containers)[j].VolumeMounts
-			for i:=0; i < len(*vms); i++ {
+			for i := 0; i < len(*vms); i++ {
 				if (*vms)[i].Name == typesDB {
 					*vms = append((*vms)[:i], (*vms)[i+1:]...)
 					i--
@@ -81,7 +81,7 @@ func UpsertTypesDB(ds *appsv1.DaemonSet, cm *corev1.ConfigMap, cr *onapv1alpha1.
 	for j, container := range *containers {
 		if container.Name == collectdContainerName {
 			vms := &(*containers)[j].VolumeMounts
-			for i:=0; i < len(*vms); i++ {
+			for i := 0; i < len(*vms); i++ {
 				// Update case (Equivalent to remove and add)
 				if (*vms)[i].Name == typesDB {
 					*vms = append((*vms)[:i], (*vms)[i+1:]...)
@@ -104,7 +104,7 @@ func findMountInfo(cr *onapv1alpha1.CollectdGlobal) *[]corev1.VolumeMount {
 		s := strings.Fields(globalOpt)
 		log.V(1).Info(":::::s:::::", "s:", s)
 		if s != nil && len(s) != 0 && s[0] == "TypesDB" {
-			path,_ := strconv.Unquote(s[1])
+			path, _ := strconv.Unquote(s[1])
 			_, file := filepath.Split(path)
 			log.V(1).Info(":::::file:::::", "s[1]:", path, "file:", file)
 			vm := corev1.VolumeMount{Name: typesDB, MountPath: path, SubPath: file}
