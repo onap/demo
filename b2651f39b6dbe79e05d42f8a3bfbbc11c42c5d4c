@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b5bf4df_2903eea8",
+        "filename": "vnfs/DAaaS/microservices/collectd-operator/pkg/controller/collectdplugin/collectdplugin_controller.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-09-06T21:39:15Z",
+      "side": 1,
+      "message": "You should use always use defer to unlock or your lock becomes permanently locked if handleCollectdPlugin panic\u0027d for some reason.",
+      "range": {
+        "startLine": 150,
+        "startChar": 1,
+        "endLine": 150,
+        "endChar": 23
+      },
+      "revId": "b2651f39b6dbe79e05d42f8a3bfbbc11c42c5d4c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
