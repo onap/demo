@@ -72,48 +72,6 @@ func GetWatchLabels() (string, error) {
 	return labelSelector, nil
 }
 
-// FindResourceMapForCR returns the configMap, collectd Daemonset and list of Collectd Plugins
-func FindResourceMapForCR(rc client.Client, reqLogger logr.Logger, ns string) (*ResourceMap, error) {
-	lock.Lock()
-	defer lock.Unlock()
-	cmList := &corev1.ConfigMapList{}
-	opts := &client.ListOptions{}
-	rmap := &ResourceMap{}
-
-	// Select ConfigMaps with label
-	labelSelector, err := GetWatchLabels()
-	if err != nil {
-		reqLogger.Error(err, "Failed to get watch labels, continuing with default label")
-	}
-	opts.SetLabelSelector(labelSelector)
-	opts.InNamespace(ns)
-
-	err = rc.List(context.TODO(), opts, cmList)
-	if err != nil {
-		return rmap, err
-	}
-
-	if cmList.Items == nil || len(cmList.Items) == 0 {
-		return rmap, errors.NewNotFound(corev1.Resource("configmap"), "ConfigMap")
-	}
-
-	// Select DaemonSets with label
-	dsList := &appsv1.DaemonSetList{}
-	err = rc.List(context.TODO(), opts, dsList)
-	if err != nil {
-		return rmap, err
-	}
-
-	if dsList.Items == nil || len(dsList.Items) == 0 {
-		return rmap, errors.NewNotFound(corev1.Resource("daemonset"), "DaemonSet")
-	}
-
-	rmap.ConfigMap = &cmList.Items[0]
-	rmap.DaemonSet = &dsList.Items[0]
-
-	return rmap, err
-}
-
 // GetCollectdPluginList returns the list of CollectdPlugin instances in the namespace ns
 func GetCollectdPluginList(rc client.Client, ns string) (*onapv1alpha1.CollectdPluginList, error) {
 	// Get all collectd plugins in the current namespace to rebuild conf.
@@ -125,6 +83,36 @@ func GetCollectdPluginList(rc client.Client, ns string) (*onapv1alpha1.CollectdP
 		return nil, err
 	}
 	return collectdPlugins, nil
+}
+
+// GetConfigMap returns the GetConfigMap in the namespace ns
+func GetConfigMap(rc client.Client, reqLogger logr.Logger, ns string) (*corev1.ConfigMap, error) {
+	lock.Lock()
+	defer lock.Unlock()
+
+	reqLogger.Info("Get ConfigMap for collectd.conf")
+	// Get all collectd plugins in the current namespace to rebuild conf.
+	cmList := &corev1.ConfigMapList{}
+	opts := &client.ListOptions{}
+	// Select ConfigMaps with label
+	labelSelector, err := GetWatchLabels()
+	if err != nil {
+		reqLogger.Error(err, "Failed to get watch labels, continuing with default label")
+	}
+	opts.SetLabelSelector(labelSelector)
+	opts.InNamespace(ns)
+
+	err = rc.List(context.TODO(), opts, cmList)
+	if err != nil {
+		return nil, err
+	}
+
+	if cmList.Items == nil || len(cmList.Items) == 0 {
+		return nil, errors.NewNotFound(corev1.Resource("configmap"), "ConfigMap")
+	}
+
+	cm := &cmList.Items[0]
+	return cm, nil
 }
 
 // GetCollectdGlobal returns the CollectdGlobal instance in the namespace ns

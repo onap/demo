@@ -149,38 +149,32 @@ func (r *ReconcileCollectdGlobal) Reconcile(request reconcile.Request) (reconcil
 
 // handleCollectdGlobal regenerates the collectd conf on CR Create, Update, Delete events
 func (r *ReconcileCollectdGlobal) handleCollectdGlobal(reqLogger logr.Logger, cr *onapv1alpha1.CollectdGlobal, isDelete bool) error {
+	var collectdConf string
 
-	rmap, err := collectdutils.FindResourceMapForCR(r.client, reqLogger, cr.Namespace)
-	if err != nil {
-		reqLogger.Info(":::: Skip current reconcile:::: Resources not found. Cache might be stale. Requeue")
-		return err
-	}
-
-	cm := rmap.ConfigMap
-	reqLogger.V(1).Info("Found ResourceMap")
-	reqLogger.V(1).Info(":::: ConfigMap Info ::::", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
-
-	collectdConf, err := collectdutils.RebuildCollectdConf(r.client, cr.Namespace, isDelete, "")
-	if err != nil {
-		reqLogger.Error(err, "Skip reconcile: Rebuild conf failed")
-		return err
-	}
-
-	cm.SetAnnotations(map[string]string{
-		"daaas-random": collectdutils.ComputeSHA256([]byte(collectdConf)),
-	})
-
-	cm.Data["collectd.conf"] = collectdConf
 	retryErr := retry.RetryOnConflict(retry.DefaultRetry, func() error {
-		// Update the ConfigMap with new Spec and reload DaemonSets
-		reqLogger.Info("Updating the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
-		log.V(1).Info("ConfigMap Data", "Map: ", cm.Data)
-		err = r.client.Update(context.TODO(), cm)
+		cm, err := collectdutils.GetConfigMap(r.client, reqLogger, cr.Namespace)
 		if err != nil {
-			reqLogger.Error(err, "Update the ConfigMap failed", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
+			reqLogger.Info(":::: Skip current reconcile:::: ConfigMap not found. Cache might be stale. Requeue")
 			return err
 		}
-		return nil
+
+		reqLogger.V(1).Info(":::: ConfigMap Info ::::", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
+
+		collectdConf, err := collectdutils.RebuildCollectdConf(r.client, cr.Namespace, isDelete, "")
+		if err != nil {
+			reqLogger.Error(err, "Skip reconcile: Rebuild conf failed")
+			return err
+		}
+
+		cm.SetAnnotations(map[string]string{
+			"daaas-random": collectdutils.ComputeSHA256([]byte(collectdConf)),
+		})
+
+		cm.Data["collectd.conf"] = collectdConf
+		// Update the ConfigMap with new Spec and reload DaemonSets
+		reqLogger.Info("Updating the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
+		updateErr := r.client.Update(context.TODO(), cm)
+		return updateErr
 	})
 	if retryErr != nil {
 		panic(fmt.Errorf("Update failed: %v", retryErr))
@@ -221,7 +215,7 @@ func (r *ReconcileCollectdGlobal) handleCollectdGlobal(reqLogger logr.Logger, cr
 		panic(fmt.Errorf("Update failed: %v", retryErr))
 	}
 
-	err = r.updateStatus(cr)
+	err := r.updateStatus(cr)
 	if err != nil {
 		reqLogger.Error(err, "Unable to update status")
 		return err

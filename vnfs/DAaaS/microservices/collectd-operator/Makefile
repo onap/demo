@@ -24,7 +24,7 @@ export GO111MODULE=on
 .PHONY: clean plugins
 
 ## build: Generate the k8s and openapi artifacts using operator-sdk
-build: clean
+build: clean format
 	GOOS=linux GOARCH=amd64
 	operator-sdk generate k8s --verbose
 	operator-sdk generate openapi --verbose
