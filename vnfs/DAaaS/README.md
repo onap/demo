@@ -84,11 +84,11 @@ helm install -n rook . -f values.yaml --namespace=rook-ceph-system
 ### Build docker images
 #### collectd-operator
 ```bash
-cd $DA_WORKING_DIR/../microservices/collectd-operator
+cd $DA_WORKING_DIR/../microservices
 
 ## Note: The image tag and respository in the Collectd-operator helm charts needs to match the IMAGE_NAME
 IMAGE_NAME=dcr.cluster.local:32644/collectd-operator:latest
-./build/build_image.sh $IMAGE_NAME
+./build_image.sh collectd-operator $IMAGE_NAME
 ```
 ### Install the Operator Package
 ```bash
