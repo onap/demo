@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	"strings"
-	"sync"
 
 	"github.com/go-logr/logr"
 	"github.com/operator-framework/operator-sdk/pkg/predicate"
@@ -28,8 +26,6 @@ import (
 )
 
 var log = logf.Log.WithName("controller_collectdplugin")
-
-var reconcileLock sync.Mutex
 
 // Add creates a new CollectdPlugin Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
@@ -54,37 +50,6 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	// Watch for changes to primary resource CollectdPlugin
 	log.V(1).Info("Add watcher for primary resource CollectdPlugin")
 	err = c.Watch(&source.Kind{Type: &onapv1alpha1.CollectdPlugin{}}, &handler.EnqueueRequestForObject{}, predicate.GenerationChangedPredicate{})
-	if err != nil {
-		return err
-	}
-
-	log.V(1).Info("Add watcher for secondary resource Collectd Daemonset")
-	err = c.Watch(
-		&source.Kind{Type: &appsv1.DaemonSet{}},
-		&handler.EnqueueRequestsFromMapFunc{
-			ToRequests: handler.ToRequestsFunc(func(a handler.MapObject) []reconcile.Request {
-				labelSelector, err := collectdutils.GetWatchLabels()
-				labels := strings.Split(labelSelector, "=")
-				if err != nil {
-					log.Error(err, "Failed to get watch labels, continuing with default label")
-				}
-				rcp := r.(*ReconcileCollectdPlugin)
-				// Select the Daemonset with labelSelector (Defautl  is app=collectd)
-				if a.Meta.GetLabels()[labels[0]] == labels[1] {
-					var requests []reconcile.Request
-					cpList, err := collectdutils.GetCollectdPluginList(rcp.client, a.Meta.GetNamespace())
-					if err != nil {
-						return nil
-					}
-					for _, cp := range cpList.Items {
-						requests = append(requests, reconcile.Request{
-							NamespacedName: client.ObjectKey{Namespace: cp.Namespace, Name: cp.Name}})
-					}
-					return requests
-				}
-				return nil
-			}),
-		})
 	if err != nil {
 		return err
 	}
@@ -141,19 +106,18 @@ func (r *ReconcileCollectdPlugin) Reconcile(request reconcile.Request) (reconcil
 		if err := r.addFinalizer(reqLogger, instance); err != nil {
 			return reconcile.Result{}, err
 		}
-		return reconcile.Result{}, nil
+		//return reconcile.Result{}, nil
 	}
 	// Handle the reconciliation for CollectdPlugin.
 	// At this stage the Status of the CollectdPlugin should NOT be ""
-	reconcileLock.Lock()
 	err = r.handleCollectdPlugin(reqLogger, instance, false)
-	reconcileLock.Unlock()
 	return reconcile.Result{}, err
 }
 
 // handleCollectdPlugin regenerates the collectd conf on CR Create, Update, Delete events
 func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr *onapv1alpha1.CollectdPlugin, isDelete bool) error {
-	var collectdConf string
+	collectdutils.ReconcileLock.Lock()
+	defer collectdutils.ReconcileLock.Unlock()
 	retryErr := retry.RetryOnConflict(retry.DefaultRetry, func() error {
 		cm, err := collectdutils.GetConfigMap(r.client, reqLogger, cr.Namespace)
 		if err != nil {
@@ -176,12 +140,11 @@ func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr
 		// Update the ConfigMap with new Spec and reload DaemonSets
 		reqLogger.Info("Updating the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
 		updateErr := r.client.Update(context.TODO(), cm)
-		return updateErr
-	})
-	if retryErr != nil {
-		panic(fmt.Errorf("Update failed: %v", retryErr))
-	}
-	retryErr = retry.RetryOnConflict(retry.DefaultRetry, func() error {
+		if updateErr != nil {
+			reqLogger.Error(updateErr, "Update ConfigMap failed")
+			return updateErr
+		}
+
 		// Retrieve the latest version of Daemonset before attempting update
 		// RetryOnConflict uses exponential backoff to avoid exhausting the apiserver
 		// Select DaemonSets with label
@@ -208,7 +171,7 @@ func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr
 		ds.Spec.Template.SetAnnotations(map[string]string{
 			"daaas-random": collectdutils.ComputeSHA256([]byte(collectdConf)),
 		})
-		updateErr := r.client.Update(context.TODO(), ds)
+		updateErr = r.client.Update(context.TODO(), ds)
 		return updateErr
 	})
 	if retryErr != nil {

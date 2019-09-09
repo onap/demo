@@ -74,7 +74,17 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 					var requests []reconcile.Request
 					cg, err := collectdutils.GetCollectdGlobal(rcp.client, a.Meta.GetNamespace())
 					if err != nil || cg == nil {
-						return nil
+						log.V(1).Info("No CollectdGlobal CR instance Exist")
+						cpList, err := collectdutils.GetCollectdPluginList(rcp.client, a.Meta.GetNamespace())
+						if err != nil || cpList == nil || cpList.Items == nil || len(cpList.Items) == 0 {
+							log.V(1).Info("No CollectdPlugin CR instance Exist")
+							return nil
+						}
+						for _, cp := range cpList.Items {
+							requests = append(requests, reconcile.Request{
+								NamespacedName: client.ObjectKey{Namespace: cp.Namespace, Name: cp.Name}})
+						}
+						return requests
 					}
 					requests = append(requests, reconcile.Request{
 						NamespacedName: client.ObjectKey{Namespace: cg.Namespace, Name: cg.Name}})
@@ -82,7 +92,7 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 				}
 				return nil
 			}),
-		})
+		}, predicate.GenerationChangedPredicate{})
 	if err != nil {
 		return err
 	}
@@ -139,7 +149,7 @@ func (r *ReconcileCollectdGlobal) Reconcile(request reconcile.Request) (reconcil
 		if err := r.addFinalizer(reqLogger, instance); err != nil {
 			return reconcile.Result{}, err
 		}
-		return reconcile.Result{}, nil
+		//return reconcile.Result{}, nil
 	}
 	// Handle the reconciliation for CollectdGlobal.
 	// At this stage the Status of the CollectdGlobal should NOT be ""
@@ -149,7 +159,8 @@ func (r *ReconcileCollectdGlobal) Reconcile(request reconcile.Request) (reconcil
 
 // handleCollectdGlobal regenerates the collectd conf on CR Create, Update, Delete events
 func (r *ReconcileCollectdGlobal) handleCollectdGlobal(reqLogger logr.Logger, cr *onapv1alpha1.CollectdGlobal, isDelete bool) error {
-	var collectdConf string
+	collectdutils.ReconcileLock.Lock()
+	defer collectdutils.ReconcileLock.Unlock()
 
 	retryErr := retry.RetryOnConflict(retry.DefaultRetry, func() error {
 		cm, err := collectdutils.GetConfigMap(r.client, reqLogger, cr.Namespace)
@@ -174,13 +185,11 @@ func (r *ReconcileCollectdGlobal) handleCollectdGlobal(reqLogger logr.Logger, cr
 		// Update the ConfigMap with new Spec and reload DaemonSets
 		reqLogger.Info("Updating the ConfigMap", "ConfigMap.Namespace", cm.Namespace, "ConfigMap.Name", cm.Name)
 		updateErr := r.client.Update(context.TODO(), cm)
-		return updateErr
-	})
-	if retryErr != nil {
-		panic(fmt.Errorf("Update failed: %v", retryErr))
-	}
+		if updateErr != nil {
+			reqLogger.Error(updateErr, "Update ConfigMap failed")
+			return updateErr
+		}
 
-	retryErr = retry.RetryOnConflict(retry.DefaultRetry, func() error {
 		// Retrieve the latest version of Daemonset before attempting update
 		// RetryOnConflict uses exponential backoff to avoid exhausting the apiserver
 		// Select DaemonSets with label
@@ -208,7 +217,7 @@ func (r *ReconcileCollectdGlobal) handleCollectdGlobal(reqLogger logr.Logger, cr
 			"daaas-random": collectdutils.ComputeSHA256([]byte(collectdConf)),
 		})
 		r.handleTypesDB(reqLogger, cr, ds, isDelete)
-		updateErr := r.client.Update(context.TODO(), ds)
+		updateErr = r.client.Update(context.TODO(), ds)
 		return updateErr
 	})
 	if retryErr != nil {

@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"os"
+	"sort"
 	"sync"
 
 	"github.com/go-logr/logr"
@@ -29,6 +30,9 @@ const (
 )
 
 var lock sync.Mutex
+
+// ReconcileLock - Used to sync between global and plugin controller
+var ReconcileLock sync.Mutex
 
 // ResourceMap to hold objects to update/reload
 type ResourceMap struct {
@@ -195,7 +199,14 @@ func RebuildCollectdConf(rc client.Client, ns string, isDelete bool, delPlugin s
 		collectdConf += collectdGlobalConf
 	}
 
-	for cpName, cpConf := range loadPlugin {
+	pluginKeys := make([]string, 0, len(loadPlugin))
+	for k := range loadPlugin {
+		pluginKeys = append(pluginKeys, k)
+	}
+	sort.Strings(pluginKeys)
+
+	for _, cpName := range pluginKeys {
+		cpConf := loadPlugin[cpName]
 		collectdConf += "LoadPlugin" + " " + cpName + "\n"
 		collectdConf += cpConf + "\n"
 	}
