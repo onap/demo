@@ -92,11 +92,11 @@ IMAGE_NAME=dcr.cluster.local:32644/collectd-operator:latest
 ```
 #### visualization-operator
 ```bash
-cd $DA_WORKING_DIR/../microservices/visualization-operator
+cd $DA_WORKING_DIR/../microservices
 
 ## Note: The image tag and respository in the Visualization-operator helm charts needs to match the IMAGE_NAME
 IMAGE_NAME=dcr.cluster.local:32644/visualization-operator:latest
-./build/build_image.sh $IMAGE_NAME
+./build_image.sh visualization-operator $IMAGE_NAME
 ```
 
 ### Install the Operator Package
