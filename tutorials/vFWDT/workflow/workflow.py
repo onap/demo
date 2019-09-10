@@ -29,6 +29,9 @@ import netifaces as ni
 import warnings
 import contextlib
 import requests
+import simplejson
+import http.server
+import threading
 from datetime import datetime
 from datetime import timedelta
 from simple_rest_client.api import API
@@ -43,7 +46,44 @@ old_merge_environment_settings = requests.Session.merge_environment_settings
 
 hostname_cache = []
 ansible_inventory = {}
+osdf_response = {"last": { "id": "id", "data": None}}
 
+
+class BaseServer(http.server.BaseHTTPRequestHandler):
+
+    def __init__(self, one, two, three):
+        self.osdf_resp = osdf_response
+        super().__init__(one, two, three)
+
+    def _set_headers(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+
+    def do_GET(self):
+        self._set_headers()
+
+    def do_HEAD(self):
+        self._set_headers()
+
+    def do_POST(self):
+        self._set_headers()
+        self.data_string = self.rfile.read(int(self.headers['Content-Length']))
+        self.send_response(200)
+        self.end_headers()
+
+        data = simplejson.loads(self.data_string)
+        self.osdf_resp["last"]["data"] = data
+        self.osdf_resp["last"]["id"] = data["requestId"]
+        with open("response.json", "w") as outfile:
+            simplejson.dump(data, outfile)
+
+
+def _run_osdf_resp_server():
+    server_address = ('', 9000)
+    httpd = http.server.HTTPServer(server_address, BaseServer)
+    print('Starting OSDF Response Server...')
+    httpd.serve_forever()
 
 @contextlib.contextmanager
 def _no_ssl_verification():
@@ -143,6 +183,12 @@ class HASApiResource(Resource):
     }
 
 
+class OSDFApiResource(Resource):
+    actions = {
+        'placement': {'method': 'POST', 'url': 'placement'}
+    }
+
+
 class APPCLcmApiResource(Resource):
     actions = {
         'distribute_traffic': {'method': 'POST', 'url': 'appc-provider-lcm:distribute-traffic/'},
@@ -186,6 +232,25 @@ def _init_python_has_api(onap_ip):
         json_encode_body=True # encode body as json
     )
     api.add_resource(resource_name='has', resource_class=HASApiResource)
+    return api
+
+
+def _init_python_osdf_api(onap_ip):
+    api = API(
+        api_root_url="https://{}:30248/api/oof/v1/".format(onap_ip),
+        params={},
+        headers={
+            'Authorization': encode("test", "testpwd"),
+            'X-FromAppId': 'SCRIPT',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-TransactionId': str(uuid.uuid4()),
+        },
+        timeout=30,
+        append_slash=False,
+        json_encode_body=True # encode body as json
+    )
+    api.add_resource(resource_name='osdf', resource_class=OSDFApiResource)
     return api
 
 
@@ -255,6 +320,75 @@ def load_aai_data(vfw_vnf_id, onap_ip):
     return aai_data
 
 
+def _osdf_request(rancher_ip, onap_ip, aai_data, exclude, use_oof_cache):
+    dirname = os.path.join('templates/oof-cache/', aai_data['vf-module-id'])
+    if exclude:
+        file = os.path.join(dirname, 'sample-osdf-excluded.json')
+    else:
+        file = os.path.join(dirname, 'sample-osdf-required.json')
+    if use_oof_cache and os.path.exists(file):
+        migrate_from = json.loads(open(file).read())
+        return migrate_from
+
+    print('Making OSDF request for excluded {}'.format(str(exclude)))
+    api = _init_python_osdf_api(onap_ip)
+    request_id = str(uuid.uuid4())
+    transaction_id = str(uuid.uuid4())
+    callback_url = "http://{}:9000/osdfCallback/".format(str(rancher_ip))
+    template = json.loads(open('templates/osdfRequest.json').read())
+    template["requestInfo"]["transactionId"] = transaction_id
+    template["requestInfo"]["requestId"] = request_id
+    template["requestInfo"]["callbackUrl"] = callback_url
+    template["serviceInfo"]["serviceInstanceId"] = aai_data['service-info']['service-instance-id']
+    template["placementInfo"]["requestParameters"]["chosenCustomerId"] = aai_data['service-info']['global-customer-id']
+    template["placementInfo"]["placementDemands"][0]["resourceModelInfo"]["modelInvariantId"] =\
+        aai_data['vfw-model-info']['model-invariant-id']
+    template["placementInfo"]["placementDemands"][0]["resourceModelInfo"]["modelVersionId"] =\
+        aai_data['vfw-model-info']['model-version-id']
+    template["placementInfo"]["placementDemands"][1]["resourceModelInfo"]["modelInvariantId"] =\
+        aai_data['vpgn-model-info']['model-invariant-id']
+    template["placementInfo"]["placementDemands"][1]["resourceModelInfo"]["modelVersionId"] =\
+        aai_data['vpgn-model-info']['model-version-id']
+    if exclude:
+        template["placementInfo"]["placementDemands"][0]["excludedCandidates"][0]["identifiers"].\
+            append(aai_data['vf-module-id'])
+    else:
+        template["placementInfo"]["placementDemands"][0]["requiredCandidates"][0]["identifiers"].\
+            append(aai_data['vf-module-id'])
+
+    #print(json.dumps(template, indent=4))
+
+    with _no_ssl_verification():
+        response = api.osdf.placement(body=template, params={}, headers={})
+        #if response.body.get('error_message') is not None:
+        #    raise Exception(response.body['error_message']['explanation'])
+
+    counter = 0
+    while counter < 600 and osdf_response["last"]["id"] != request_id:
+        time.sleep(1)
+        if counter % 20 == 0:
+            print("solving")
+        counter += 1
+
+    if osdf_response["last"]["id"] == request_id:
+        status = osdf_response["last"]["data"]["requestStatus"]
+        if status == "completed":
+            result = {
+                "solution": osdf_response["last"]["data"]["solutions"]["placementSolutions"]
+            }
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+            f = open(file, 'w+')
+            f.write(json.dumps(result, indent=4))
+            f.close()
+            return result
+        else:
+            message = osdf_response["last"]["data"]["statusMessage"]
+            raise Exception("OOF request {}: {}".format(status, message))
+    else:
+        raise Exception("No response for OOF request")
+
+
 def _has_request(onap_ip, aai_data, exclude, use_oof_cache):
     dirname = os.path.join('templates/oof-cache/', aai_data['vf-module-id'])
     if exclude:
@@ -278,14 +412,16 @@ def _has_request(onap_ip, aai_data, exclude, use_oof_cache):
     node['attributes']['model-invariant-id'] = aai_data['vfw-model-info']['model-invariant-id']
     node['attributes']['model-version-id'] = aai_data['vfw-model-info']['model-version-id']
     if exclude:
-        node['excluded_candidates'][0]['candidate_id'] = aai_data['vf-module-id']
+        node['excluded_candidates'][0]['candidate_id'][0] = aai_data['vf-module-id']
         del node['required_candidates']
     else:
-        node['required_candidates'][0]['candidate_id'] = aai_data['vf-module-id']
+        node['required_candidates'][0]['candidate_id'][0] = aai_data['vf-module-id']
         del node['excluded_candidates']
     node = template['template']['demands']['vPGN'][0]
     node['attributes']['model-invariant-id'] = aai_data['vpgn-model-info']['model-invariant-id']
     node['attributes']['model-version-id'] = aai_data['vpgn-model-info']['model-version-id']
+
+    #print(json.dumps(template, indent=4))
 
     with _no_ssl_verification():
         response = api.has.plans(body=template, params={}, headers={})
@@ -345,6 +481,39 @@ def _extract_has_appc_identifiers(has_result, demand):
     return config
 
 
+def _extract_osdf_appc_identifiers(has_result, demand):
+    if demand == 'vPGN':
+        v_server = has_result[demand]['vservers'][0]
+    else:
+        if len(has_result[demand]['vservers'][0]['l-interfaces']) == 4:
+            v_server = has_result[demand]['vservers'][0]
+        else:
+            v_server = has_result[demand]['vservers'][1]
+    for itf in v_server['l-interfaces']:
+        if itf['ipv4-addresses'][0].startswith("10.0."):
+            ip = itf['ipv4-addresses'][0]
+            break
+
+    if v_server['vserver-name'] in hostname_cache and demand != 'vPGN':
+        v_server['vserver-name'] = v_server['vserver-name'].replace("01", "02")
+    hostname_cache.append(v_server['vserver-name'])
+
+    config = {
+        'vnf-id': has_result[demand]['nf-id'],
+        'vf-module-id': has_result[demand]['vf-module-id'],
+        'ip': ip,
+        'vserver-id': v_server['vserver-id'],
+        'vserver-name': v_server['vserver-name'],
+        'vnfc-type': demand.lower(),
+        'physical-location-id': has_result[demand]['locationId']
+    }
+    ansible_inventory_entry = "{} ansible_ssh_host={} ansible_ssh_user=ubuntu".format(config['vserver-name'], config['ip'])
+    if demand.lower() not in ansible_inventory:
+        ansible_inventory[demand.lower()] = {}
+    ansible_inventory[demand.lower()][config['vserver-name']] = ansible_inventory_entry
+    return config
+
+
 def _extract_has_appc_dt_config(has_result, demand):
     if demand == 'vPGN':
         return {}
@@ -371,10 +540,53 @@ def _extract_has_appc_dt_config(has_result, demand):
         return config
 
 
+def _extract_osdf_appc_dt_config(osdf_result, demand):
+    if demand == 'vPGN':
+        return {}
+    else:
+        return osdf_result[demand]
+
+
 def _build_config_from_has(has_result):
     v_pgn_result = _extract_has_appc_identifiers(has_result, 'vPGN')
     v_fw_result = _extract_has_appc_identifiers(has_result, 'vFW-SINK')
     dt_config = _extract_has_appc_dt_config(has_result, 'vFW-SINK')
+
+    config = {
+        'vPGN': v_pgn_result,
+        'vFW-SINK': v_fw_result
+    }
+    #print(json.dumps(config, indent=4))
+    config['dt-config'] = {
+        'destinations': [dt_config]
+    }
+    return config
+
+
+def _adapt_osdf_result(osdf_result):
+    result = {}
+    demand = _build_osdf_result_demand(osdf_result["solution"][0][0])
+    result[demand["name"]] = demand["value"]
+    demand = _build_osdf_result_demand(osdf_result["solution"][0][1])
+    result[demand["name"]] = demand["value"]
+    return result
+
+
+def _build_osdf_result_demand(solution):
+    result = {}
+    result["name"] = solution["resourceModuleName"]
+    value = {"candidateId": solution["solution"]["identifiers"][0]}
+    for info in solution["assignmentInfo"]:
+        value[info["key"]] = info["value"]
+    result["value"] = value
+    return result
+
+
+def _build_config_from_osdf(osdf_result):
+    osdf_result = _adapt_osdf_result(osdf_result)
+    v_pgn_result = _extract_osdf_appc_identifiers(osdf_result, 'vPGN')
+    v_fw_result = _extract_osdf_appc_identifiers(osdf_result, 'vFW-SINK')
+    dt_config = _extract_osdf_appc_dt_config(osdf_result, 'vFW-SINK')
 
     config = {
         'vPGN': v_pgn_result,
@@ -469,16 +681,32 @@ def _set_appc_lcm_timestamp(body, timestamp=None):
     body['input']['common-header']['timestamp'] = timestamp
 
 
-def build_appc_lcms_requests_body(onap_ip, aai_data, use_oof_cache, if_close_loop_vfw):
-    migrate_from = _has_request(onap_ip, aai_data, False, use_oof_cache)
+def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, if_close_loop_vfw):
+    if_has = False
 
-    if if_close_loop_vfw:
-        migrate_to = migrate_from
+    if if_has:
+        migrate_from = _has_request(onap_ip, aai_data, False, use_oof_cache)
+
+        if if_close_loop_vfw:
+            migrate_to = migrate_from
+        else:
+            migrate_to = _has_request(onap_ip, aai_data, True, use_oof_cache)
+
+        migrate_from = _build_config_from_has(migrate_from)
+        migrate_to = _build_config_from_has(migrate_to)
     else:
-        migrate_to = _has_request(onap_ip, aai_data, True, use_oof_cache)
+        migrate_from = _osdf_request(rancher_ip, onap_ip, aai_data, False, use_oof_cache)
 
-    migrate_from = _build_config_from_has(migrate_from)
-    migrate_to = _build_config_from_has(migrate_to)
+        if if_close_loop_vfw:
+            migrate_to = migrate_from
+        else:
+            migrate_to = _osdf_request(rancher_ip, onap_ip, aai_data, True, use_oof_cache)
+
+        migrate_from = _build_config_from_osdf(migrate_from)
+        migrate_to = _build_config_from_osdf(migrate_to)
+
+    #print(json.dumps(migrate_from, indent=4))
+    #print(json.dumps(migrate_to, indent=4))
     req_id = str(uuid.uuid4())
     payload_dt_check_vpkg = _build_appc_lcm_request_body(True, migrate_from, req_id, 'DistributeTrafficCheck', True)
     payload_dt_vpkg_to = _build_appc_lcm_request_body(True, migrate_to, req_id, 'DistributeTraffic')
@@ -552,14 +780,17 @@ def confirm_appc_lcm_action(onap_ip, req, check_appc_result):
             return
 
 
-def execute_workflow(vfw_vnf_id, onap_ip, use_oof_cache, if_close_loop_vfw, info_only, check_result):
-    print("\nExecuting workflow for VNF ID '{}' on ONAP with IP {}".format(vfw_vnf_id, onap_ip))
+def execute_workflow(vfw_vnf_id, rancher_ip, onap_ip, use_oof_cache, if_close_loop_vfw, info_only, check_result):
+    print("\nExecuting workflow for VNF ID '{}' on Rancher with IP {} and ONAP with IP {}".format(
+        vfw_vnf_id, rancher_ip, onap_ip))
     print("\nOOF Cache {}, is CL vFW {}, only info {}, check LCM result {}".format(use_oof_cache, if_close_loop_vfw,
                                                                                    info_only, check_result))
+    x = threading.Thread(target=_run_osdf_resp_server, daemon=True)
+    x.start()
     aai_data = load_aai_data(vfw_vnf_id, onap_ip)
     print("\nvFWDT Service Information:")
     print(json.dumps(aai_data, indent=4))
-    lcm_requests = build_appc_lcms_requests_body(onap_ip, aai_data, use_oof_cache, if_close_loop_vfw)
+    lcm_requests = build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, if_close_loop_vfw)
     print("\nAnsible Inventory:")
     for key in ansible_inventory:
         print("[{}]".format(key))
@@ -579,6 +810,6 @@ def execute_workflow(vfw_vnf_id, onap_ip, use_oof_cache, if_close_loop_vfw, info
             #time.sleep(30)
 
 
-#vnf_id, K8s node IP, use OOF cache, if close loop vfw, if info_only, if check APPC result
-execute_workflow(sys.argv[1], sys.argv[2], sys.argv[3].lower() == 'true', sys.argv[4].lower() == 'true',
-                 sys.argv[5].lower() == 'true', sys.argv[6].lower() == 'true')
+#vnf_id, Rancher node IP, K8s node IP, use OOF cache, if close loop vfw, if info_only, if check APPC result
+execute_workflow(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4].lower() == 'true', sys.argv[5].lower() == 'true',
+                 sys.argv[6].lower() == 'true', sys.argv[7].lower() == 'true')

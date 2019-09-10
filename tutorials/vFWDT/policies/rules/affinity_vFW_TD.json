@@ -1,0 +1,29 @@
+{
+    "service": "affinityPolicy",
+    "policyName": "OSDF_DUBLIN.Affinity_vFW_TD",
+    "description": "Affinity policy for vPGN Anchor and vFW destination point",
+    "templateVersion": "OpenSource.version.1",
+    "version": "OpenSource.version.1",
+    "priority": "3",
+    "riskType": "test",
+    "riskLevel": "2",
+    "guard": "False",
+    "content": {
+        "identity": "affinity_vFW_TD",
+        "policyScope": [
+            "td",
+            "us",
+            "vFW-SINK",
+            "vPGN"
+        ],
+        "affinityProperty": {
+            "qualifier": "same",
+            "category": "region"
+        },
+        "policyType": "zone",
+        "resources": [
+            "vFW-SINK",
+            "vPGN"
+        ]
+    }
+}

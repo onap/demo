@@ -1,0 +1,41 @@
+{
+    "service": "vnfPolicy",
+    "policyName": "OSDF_DUBLIN.vnfPolicy_vFW_TD",
+    "description": "vnfPolicy",
+    "templateVersion": "OpenSource.version.1",
+    "version": "OpenSource.version.1",
+    "priority": "6",
+    "riskType": "test",
+    "riskLevel": "3",
+    "guard": "False",
+    "content": {
+        "identity": "vnf_vFW_TD",
+        "policyScope": [
+            "td",
+            "us",
+            "vFW-SINK"
+        ],
+        "policyType": "vnfPolicy",
+        "resources": ["vFW-SINK"],
+        "applicableResources": "any",
+        "vnfProperties": [{
+            "inventoryProvider": "aai",
+            "serviceType": "",
+            "inventoryType": "vfmodule",
+            "customerId": {
+                "get_param": "chosen_customer_id"
+            },
+            "equipmentRole": "",
+            "attributes": {
+                "orchestrationStatus": ["active"],
+                "provStatus": "ACTIVE",
+                "cloudRegionId": {
+                    "get_param": "chosen_region"
+                },
+                "service_instance_id": {
+                    "get_param": "service_id"
+                }
+            }
+        }]
+    }
+}
