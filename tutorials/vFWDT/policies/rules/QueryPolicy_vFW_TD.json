@@ -1,0 +1,32 @@
+{
+  "service": "queryPolicy",
+  "policyName": "OSDF_DUBLIN.QueryPolicy_vFW_TD",
+  "description": "Query policy for vFW TD",
+  "templateVersion": "OpenSource.version.1",
+  "version": "OpenSource.version.1",
+  "priority": "3",
+  "riskType": "test",
+  "riskLevel": "2",
+  "guard": "False",
+  "content": {
+    "queryProperties": [
+      {"attribute":"customerLatitude", "attribute_location": "customerLatitude", "value": 1.1},
+      {"attribute":"customerLongitude", "attribute_location": "customerLongitude", "value": 2.2},
+      {"attribute":"chosen_region", "attribute_location": "chosenRegion"},
+      {"attribute":"chosen_customer_id", "attribute_location": "chosenCustomerId"}
+    ],
+    "policyScope": [
+      "td",
+      "us",
+      "vFW-SINK",
+      "vPGN"
+    ],
+    "policyType": "request_param_query",
+    "serviceName": "vFW_TD",
+    "identity": "vFW_TD_Query_Policy",
+    "resources": [
+            "vFW-SINK",
+            "vPGN"
+    ]
+  }
+}
