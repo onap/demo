@@ -63,11 +63,11 @@ parameters:
     description: Private network that connects vLoadBalancer with vPacketGen
   onap_private_net_id:
     type: string
-    label: ECOMP management network name or ID
+    label: ONAP management network name or ID
     description: Private network that connects ONAP component and the VNF
   onap_private_subnet_id:
     type: string
-    label: ECOMP management sub-network name or ID
+    label: ONAP management sub-network name or ID
     description: Private sub-network that connects ONAP component and the VNF
   vlb_private_net_cidr:
     type: string

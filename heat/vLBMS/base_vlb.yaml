@@ -71,11 +71,11 @@ parameters:
     description: Private network that connects vLoadBalancer with vPacketGen
   onap_private_net_id:
     type: string
-    label: ECOMP management network name or ID
+    label: ONAP management network name or ID
     description: Private network that connects ONAP component and the VNF
   onap_private_subnet_id:
     type: string
-    label: ECOMP management sub-network name or ID
+    label: ONAP management sub-network name or ID
     description: Private sub-network that connects ONAP component and the VNF
   vlb_private_net_cidr:
     type: string
@@ -421,6 +421,7 @@ resources:
             __oam_private_ipaddr__: { get_param: vdns_onap_private_ip_0 }
             __nb_api_version__: { get_param: nb_api_version }
             __install_script_version__: { get_param: install_script_version }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
             __vlb_private_net_cidr__: { get_param: vlb_private_net_cidr }
             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
             __cloud_env__: { get_param: cloud_env }
@@ -437,6 +438,7 @@ resources:
             echo "__oam_private_ipaddr__" > /opt/config/oam_private_ipaddr.txt
             echo "__nb_api_version__" > /opt/config/nb_api_version.txt
             echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
             echo "__vlb_private_net_cidr__" > /opt/config/vlb_private_net_cidr.txt
             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
             echo "__cloud_env__" > /opt/config/cloud_env.txt
