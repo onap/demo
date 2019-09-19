@@ -73,6 +73,7 @@ class BaseServer(http.server.BaseHTTPRequestHandler):
         self.end_headers()
 
         data = simplejson.loads(self.data_string)
+        #print(json.dumps(data, indent=4))
         self.osdf_resp["last"]["data"] = data
         self.osdf_resp["last"]["id"] = data["requestId"]
         with open("response.json", "w") as outfile:
@@ -352,9 +353,11 @@ def _osdf_request(rancher_ip, onap_ip, aai_data, exclude, use_oof_cache):
     if exclude:
         template["placementInfo"]["placementDemands"][0]["excludedCandidates"][0]["identifiers"].\
             append(aai_data['vf-module-id'])
+        del template["placementInfo"]["placementDemands"][0]["requiredCandidates"]
     else:
         template["placementInfo"]["placementDemands"][0]["requiredCandidates"][0]["identifiers"].\
             append(aai_data['vf-module-id'])
+        del template["placementInfo"]["placementDemands"][0]["excludedCandidates"]
 
     #print(json.dumps(template, indent=4))
 
@@ -792,10 +795,16 @@ def execute_workflow(vfw_vnf_id, rancher_ip, onap_ip, use_oof_cache, if_close_lo
     print(json.dumps(aai_data, indent=4))
     lcm_requests = build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, if_close_loop_vfw)
     print("\nAnsible Inventory:")
+    inventory = "[host]\nlocalhost   ansible_connection=local\n"
     for key in ansible_inventory:
-        print("[{}]".format(key))
+        inventory += str("[{}]\n").format(key)
         for host in ansible_inventory[key]:
-            print(ansible_inventory[key][host])
+            inventory += str("{}\n").format(ansible_inventory[key][host])
+
+    print(inventory)
+    f = open("Ansible_inventory", 'w+')
+    f.write(inventory)
+    f.close()
 
     if info_only:
         return
