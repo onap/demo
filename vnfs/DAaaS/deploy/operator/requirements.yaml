@@ -1,0 +1,4 @@
+dependencies:
+
+  - name: visualization-operator
+    condition: visualization-operator.enabled
