@@ -52,3 +52,10 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+#################################################################
+# Enable or disable components
+#################################################################
+
+grafana:
+  enabled: true 
