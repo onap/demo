@@ -192,6 +192,50 @@ kubectl create -f edge1 [PLUGIN_NAME2]_collectdplugin_cr.yaml
 kubectl create -f edge1 [PLUGIN_NAME3]_collectdplugin_cr.yaml
 ...
 ```
+
+#Install visualization package
+```bash
+Default (For custom Grafana dashboards skip this section)
+=======
+cd $DA_WORKING_DIR/visualization
+helm install -n viz . -f values.yaml -f grafana-values.yaml
+
+Custom Grafana dashboards
+=========================
+1. Place the custom dashboard definition into the folder $DA_WORKING_DIR/visualization/charts/grafana/dashboards
+    Example dashboard definition can be found at $DA_WORKING_DIR/visualization/charts/grafana/dashboards/dashboard1.json
+2. Create a configmap.yaml that imports above created dashboard.json file as config and copy that configmap.yaml to $DA_WORKING_DIR/visualization/charts/grafana/templates/
+    Example configmap can be found at $DA_WORKING_DIR/visualization/charts/grafana/templates/configmap-add-dashboard.yaml
+3. Add custom dashboard configuration to values.yaml or an overriding values.yaml. 
+    Example configuration can be found in the "dashboardProviders" section of grafana-values.yaml
+
+4. cd $DA_WORKING_DIR/visualization
+5. For a fresh install of visualization package, do "helm install"
+    e.g., helm install -n viz . -f values.yaml -f grafana-values.yaml
+   If the custom dashboard is being added to an already running Grafana, do "helm upgrade"
+    e.g., helm upgrade -n viz . -f values.yaml -f grafana-values.yaml -f ......
+```
+
+#### Verify Visualization package
+Check if the visualization pod is up
+```
+$ kubectl get pods
+    NAME                          READY   STATUS    RESTARTS   AGE
+    viz-grafana-78dcffd75-sxnjv   1/1     Running   0          52m
+```
+
+### Login to Grafana
+```
+1. Get your 'admin' user password by running:
+    kubectl get secret --namespace default viz-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+
+2. Get the Grafana URL to visit by running these commands in the same shell:
+    export POD_NAME=$(kubectl get pods --namespace default -l "app=grafana,release=viz" -o jsonpath="{.items[0].metadata.name}")
+    kubectl --namespace default port-forward $POD_NAME 3000
+
+3. Visit the URL : http://localhost:3000 and login with the password from step 1 and the username: admin
+```
+
 #### Configure Grafana Datasources
 Using the sample [prometheus_grafanadatasource_cr.yaml](microservices/visualization-operator/examples/grafana/prometheus_grafanadatasource_cr.yaml), Configure the GrafanaDataSource CR by running the command below
 ```yaml
