@@ -11,12 +11,12 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdGlobal":       schema_pkg_apis_onap_v1alpha1_CollectdGlobal(ref),
-		"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdGlobalSpec":   schema_pkg_apis_onap_v1alpha1_CollectdGlobalSpec(ref),
-		"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdGlobalStatus": schema_pkg_apis_onap_v1alpha1_CollectdGlobalStatus(ref),
-		"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPlugin":       schema_pkg_apis_onap_v1alpha1_CollectdPlugin(ref),
-		"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginSpec":   schema_pkg_apis_onap_v1alpha1_CollectdPluginSpec(ref),
-		"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginStatus": schema_pkg_apis_onap_v1alpha1_CollectdPluginStatus(ref),
+		"./pkg/apis/onap/v1alpha1.CollectdGlobal":       schema_pkg_apis_onap_v1alpha1_CollectdGlobal(ref),
+		"./pkg/apis/onap/v1alpha1.CollectdGlobalSpec":   schema_pkg_apis_onap_v1alpha1_CollectdGlobalSpec(ref),
+		"./pkg/apis/onap/v1alpha1.CollectdGlobalStatus": schema_pkg_apis_onap_v1alpha1_CollectdGlobalStatus(ref),
+		"./pkg/apis/onap/v1alpha1.CollectdPlugin":       schema_pkg_apis_onap_v1alpha1_CollectdPlugin(ref),
+		"./pkg/apis/onap/v1alpha1.CollectdPluginSpec":   schema_pkg_apis_onap_v1alpha1_CollectdPluginSpec(ref),
+		"./pkg/apis/onap/v1alpha1.CollectdPluginStatus": schema_pkg_apis_onap_v1alpha1_CollectdPluginStatus(ref),
 	}
 }
 
@@ -47,19 +47,19 @@ func schema_pkg_apis_onap_v1alpha1_CollectdGlobal(ref common.ReferenceCallback) 
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdGlobalSpec"),
+							Ref: ref("./pkg/apis/onap/v1alpha1.CollectdGlobalSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdGlobalStatus"),
+							Ref: ref("./pkg/apis/onap/v1alpha1.CollectdGlobalStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdGlobalSpec", "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdGlobalStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"./pkg/apis/onap/v1alpha1.CollectdGlobalSpec", "./pkg/apis/onap/v1alpha1.CollectdGlobalStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 
@@ -151,19 +151,19 @@ func schema_pkg_apis_onap_v1alpha1_CollectdPlugin(ref common.ReferenceCallback) 
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginSpec"),
+							Ref: ref("./pkg/apis/onap/v1alpha1.CollectdPluginSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginStatus"),
+							Ref: ref("./pkg/apis/onap/v1alpha1.CollectdPluginStatus"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginSpec", "demo/vnfs/DAaaS/microservices/collectd-operator/pkg/apis/onap/v1alpha1.CollectdPluginStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+			"./pkg/apis/onap/v1alpha1.CollectdPluginSpec", "./pkg/apis/onap/v1alpha1.CollectdPluginStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
 	}
 }
 

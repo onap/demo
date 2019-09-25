@@ -4,17 +4,20 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"strings"
 
 	"github.com/go-logr/logr"
 	"github.com/operator-framework/operator-sdk/pkg/predicate"
 
 	onapv1alpha1 "collectd-operator/pkg/apis/onap/v1alpha1"
 	collectdutils "collectd-operator/pkg/controller/utils"
+	dspredicate "collectd-operator/pkg/controller/utils"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/util/retry"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
@@ -53,6 +56,35 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 	if err != nil {
 		return err
 	}
+
+	log.V(1).Info("Add watcher for secondary resource Collectd Daemonset")
+	err = c.Watch(
+		&source.Kind{Type: &appsv1.DaemonSet{}},
+		&handler.EnqueueRequestsFromMapFunc{
+			ToRequests: handler.ToRequestsFunc(func(a handler.MapObject) []reconcile.Request {
+				labelSelector, err := collectdutils.GetWatchLabels()
+				labels := strings.Split(labelSelector, "=")
+				if err != nil {
+					log.Error(err, "Failed to get watch labels, continuing with default label")
+				}
+				rcp := r.(*ReconcileCollectdPlugin)
+				// Select the Daemonset with labelSelector (Default  is app=collectd)
+				if a.Meta.GetLabels()[labels[0]] == labels[1] {
+					var requests []reconcile.Request
+					cpList, err := collectdutils.GetCollectdPluginList(rcp.client, a.Meta.GetNamespace())
+					if err != nil || cpList == nil || cpList.Items == nil || len(cpList.Items) == 0 {
+						log.V(1).Info("No CollectdPlugin CR instance Exist")
+						return nil
+					}
+					for _, cp := range cpList.Items {
+						requests = append(requests, reconcile.Request{
+							NamespacedName: client.ObjectKey{Namespace: cp.Namespace, Name: cp.Name}})
+					}
+					return requests
+				}
+				return nil
+			}),
+		}, dspredicate.DaemonSetStatusChangedPredicate{})
 
 	return nil
 }
@@ -178,10 +210,13 @@ func (r *ReconcileCollectdPlugin) handleCollectdPlugin(reqLogger logr.Logger, cr
 		panic(fmt.Errorf("Update failed: %v", retryErr))
 	}
 
-	err := r.updateStatus(cr)
-	if err != nil {
-		reqLogger.Error(err, "Unable to update status")
+	retryErr = retry.RetryOnConflict(retry.DefaultRetry, func() error {
+		err := r.updateStatus(cr)
 		return err
+	})
+
+	if retryErr != nil {
+		panic(fmt.Errorf("Update failed: %v", retryErr))
 	}
 	// Reconcile success
 	reqLogger.Info("Reconcile success!!")
@@ -220,22 +255,29 @@ func (r *ReconcileCollectdPlugin) handleDelete(reqLogger logr.Logger, cr *onapv1
 }
 
 func (r *ReconcileCollectdPlugin) updateStatus(cr *onapv1alpha1.CollectdPlugin) error {
-	switch cr.Status.Status {
+	// Fetch the CollectdGlobal instance
+	instance := &onapv1alpha1.CollectdPlugin{}
+	key := types.NamespacedName{Namespace: cr.Namespace, Name: cr.Name}
+	err := r.client.Get(context.TODO(), key, instance)
+	if err != nil {
+		return err
+	}
+	switch instance.Status.Status {
 	case onapv1alpha1.Initial:
-		cr.Status.Status = onapv1alpha1.Created
+		instance.Status.Status = onapv1alpha1.Created
 	case onapv1alpha1.Created, onapv1alpha1.Enabled:
-		pods, err := collectdutils.GetPodList(r.client, cr.Namespace)
+		pods, err := collectdutils.GetPodList(r.client, instance.Namespace)
 		if err != nil {
 			return err
 		}
-		if !reflect.DeepEqual(pods, cr.Status.CollectdAgents) {
-			cr.Status.CollectdAgents = pods
-			cr.Status.Status = onapv1alpha1.Enabled
+		if !reflect.DeepEqual(pods, instance.Status.CollectdAgents) {
+			instance.Status.CollectdAgents = pods
+			instance.Status.Status = onapv1alpha1.Enabled
 		}
 	case onapv1alpha1.Deleting, onapv1alpha1.Deprecated:
 		return nil
 	}
-	err := r.client.Status().Update(context.TODO(), cr)
+	err = r.client.Status().Update(context.TODO(), instance)
 	return err
 }
 
@@ -255,11 +297,12 @@ func (r *ReconcileCollectdPlugin) addFinalizer(reqLogger logr.Logger, cr *onapv1
 	// Update status from Initial to Created
 	// Since addFinalizer will be executed only once,
 	// the status will be changed from Initial state to Created
-	updateErr := r.updateStatus(cr)
-	if updateErr != nil {
-		reqLogger.Error(updateErr, "Failed to update status from Initial state")
-	}
+	// updateErr := r.updateStatus(cr)
+	// if updateErr != nil {
+	// 	reqLogger.Error(updateErr, "Failed to update status from Initial state")
+	// }
 	// Update CR
+	cr.Status.Status = onapv1alpha1.Created
 	err := r.client.Update(context.TODO(), cr)
 	if err != nil {
 		reqLogger.Error(err, "Failed to update CollectdPlugin with finalizer")

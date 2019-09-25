@@ -211,7 +211,7 @@ func RebuildCollectdConf(rc client.Client, ns string, isDelete bool, delPlugin s
 		collectdConf += cpConf + "\n"
 	}
 
-	collectdConf += "#Last line (collectd requires ‘\\n’ at the last line)\n"
+	collectdConf += "#Last line (collectd requires '\\n' at the last line)\n"
 
 	return collectdConf, nil
 }
