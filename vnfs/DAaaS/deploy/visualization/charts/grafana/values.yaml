@@ -7,6 +7,20 @@ serviceAccount:
   create: true
   name:
 
+# Enable Virtual if using Under Istio servicemesh
+
+virtualservice:
+  enabled: false
+  allowedhosts:
+  - "*"
+# Input the name of the gateway - TO BE FILLED IN BY USER/ADMIN
+  gateways:
+  - <Name of the gateway to be used>
+  httprules:
+    enabled: true
+  prefixmatchURI: /grafana123
+  destinationhost: graf-prometheus-grafana
+
 replicas: 1
 
 deploymentStrategy: RollingUpdate
@@ -307,6 +321,9 @@ grafana.ini:
     mode: console
   grafana_net:
     url: https://grafana.net
+  server:
+    root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana123/"
+    serve_from_sub_path : true
 ## LDAP Authentication can be enabled with the following values on grafana.ini
 ## NOTE: Grafana will fail to start if the value for ldap.toml is invalid
   # auth.ldap:
