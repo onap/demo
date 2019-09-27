@@ -200,6 +200,22 @@ ossgateway:
   replicas: 4
   endpointURL: ""
 
+# Enable Virtual if using Under Istio servicemesh
+
+virtualservice:
+  enabled: false
+  allowedhosts:
+  - "*"
+# Input the name of the gateway - TO BE FILLED IN BY USER/ADMIN
+  gateways:
+  - minio
+  httprules:
+    enabled: true
+  prefixmatchURI: /minio/
+  # The template to input destinationhost is - <Pod name><Service name><namespace>.svc.cluster.local
+  destinationhost: minio-0.minio-svc.svc.cluster.local
+  destinationhostPort: 9000
+
 ## Use minio on NAS backend
 ## https://docs.minio.io/docs/minio-gateway-for-nas
 
