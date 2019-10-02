@@ -194,6 +194,9 @@ class APPCLcmApiResource(Resource):
     actions = {
         'distribute_traffic': {'method': 'POST', 'url': 'appc-provider-lcm:distribute-traffic/'},
         'distribute_traffic_check': {'method': 'POST', 'url': 'appc-provider-lcm:distribute-traffic-check/'},
+        'upgrade_software': {'method': 'POST', 'url': 'appc-provider-lcm:upgrade-software/'},
+        'upgrade_pre_check': {'method': 'POST', 'url': 'appc-provider-lcm:upgrade-pre-check/'},
+        'upgrade_post_check': {'method': 'POST', 'url': 'appc-provider-lcm:upgrade-post-check/'},
         'action_status': {'method': 'POST', 'url': 'appc-provider-lcm:action-status/'},
     }
 
@@ -257,7 +260,7 @@ def _init_python_osdf_api(onap_ip):
 
 def _init_python_appc_lcm_api(onap_ip):
     api = API(
-        api_root_url="http://{}:30230/restconf/operations/".format(onap_ip),
+        api_root_url="https://{}:30230/restconf/operations/".format(onap_ip),
         params={},
         headers={
             'Authorization': encode("admin", "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U"),
@@ -602,18 +605,15 @@ def _build_config_from_osdf(osdf_result):
     return config
 
 
-def _build_appc_lcm_dt_payload(is_vpkg, oof_config, book_name, traffic_presence):
+def _build_appc_lcm_dt_payload(demand, oof_config, action, traffic_presence):
     is_check = traffic_presence is not None
     oof_config = copy.deepcopy(oof_config)
     #if is_vpkg:
     #    node_list = "[ {} ]".format(oof_config['vPGN']['vserver-id'])
     #else:
     #    node_list = "[ {} ]".format(oof_config['vFW-SINK']['vserver-id'])
-
-    if is_vpkg:
-        config = oof_config['vPGN']
-    else:
-        config = oof_config['vFW-SINK']
+    book_name = "{}/latest/ansible/{}/site.yml".format(demand.lower(), action.lower())
+    config = oof_config[demand]
     #node = {
     #    'site': config['physical-location-id'],
     #    'vnfc_type': config['vnfc-type'],
@@ -644,6 +644,29 @@ def _build_appc_lcm_dt_payload(is_vpkg, oof_config, book_name, traffic_presence)
     return payload
 
 
+def _build_appc_lcm_upgrade_payload(demand, oof_config, action, old_version, new_version):
+    oof_config = copy.deepcopy(oof_config)
+    book_name = "{}/latest/ansible/{}/site.yml".format(demand.lower(), action.lower())
+    config = oof_config[demand]
+
+    file_content = {}  #oof_config['dt-config']
+
+    config = {
+        "configuration-parameters": {
+            #"node_list": node_list,
+            "ne_id": config['vserver-name'],
+            "fixed_ip_address": config['ip'],
+            "file_parameter_content":  json.dumps(file_content),
+            "existing-software-version": old_version,
+            "new-software-version": new_version
+        }
+    }
+    if book_name != '':
+        config["configuration-parameters"]["book_name"] = book_name
+    payload = json.dumps(config)
+    return payload
+
+
 def _build_appc_lcm_status_body(req):
     payload = {
         'request-id': req['input']['common-header']['request-id'],
@@ -660,14 +683,22 @@ def _build_appc_lcm_status_body(req):
     return template
 
 
-def _build_appc_lcm_request_body(is_vpkg, config, req_id, action, traffic_presence=None):
+def _build_appc_lcm_dt_request_body(is_vpkg, config, req_id, action, traffic_presence=None):
     if is_vpkg:
         demand = 'vPGN'
     else:
         demand = 'vFW-SINK'
+    payload = _build_appc_lcm_dt_payload(demand, config, action, traffic_presence)
+    return _build_appc_lcm_request_body(payload, demand, config, req_id, action)
 
-    book_name = "{}/latest/ansible/{}/site.yml".format(demand.lower(), action.lower())
-    payload = _build_appc_lcm_dt_payload(is_vpkg, config, book_name, traffic_presence)
+
+def _build_appc_lcm_upgrade_request_body(config, req_id, action, old_version, new_version):
+    demand = 'vFW-SINK'
+    payload = _build_appc_lcm_upgrade_payload(demand, config, action, old_version, new_version)
+    return _build_appc_lcm_request_body(payload, demand, config, req_id, action)
+
+
+def _build_appc_lcm_request_body(payload, demand, config, req_id, action):
     template = json.loads(open('templates/appcRestconfLcm.json').read())
     template['input']['action'] = action
     template['input']['payload'] = payload
@@ -684,8 +715,8 @@ def _set_appc_lcm_timestamp(body, timestamp=None):
     body['input']['common-header']['timestamp'] = timestamp
 
 
-def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, if_close_loop_vfw):
-    if_has = False
+def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, if_close_loop_vfw, new_version=None):
+    if_has = True
 
     if if_has:
         migrate_from = _has_request(onap_ip, aai_data, False, use_oof_cache)
@@ -711,34 +742,82 @@ def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, 
     #print(json.dumps(migrate_from, indent=4))
     #print(json.dumps(migrate_to, indent=4))
     req_id = str(uuid.uuid4())
-    payload_dt_check_vpkg = _build_appc_lcm_request_body(True, migrate_from, req_id, 'DistributeTrafficCheck', True)
-    payload_dt_vpkg_to = _build_appc_lcm_request_body(True, migrate_to, req_id, 'DistributeTraffic')
-    payload_dt_check_vfw_from = _build_appc_lcm_request_body(False, migrate_from, req_id, 'DistributeTrafficCheck',
-                                                             False)
-    payload_dt_check_vfw_to = _build_appc_lcm_request_body(False, migrate_to, req_id, 'DistributeTrafficCheck', True)
-
     result = list()
-    result.append(payload_dt_check_vpkg)
-    result.append(payload_dt_vpkg_to)
-    result.append(payload_dt_check_vfw_from)
-    result.append(payload_dt_check_vfw_to)
+    old_version = 2.0
+    if_dt_only = new_version is None
+    if new_version is not None and new_version != "1.0":
+        old_version = 1.0
+
+    if if_dt_only:
+        #_build_appc_lcm_dt_request_body(is_vpkg, config, req_id, action, traffic_presence=None):
+        payload_dt_check_vpkg = _build_appc_lcm_dt_request_body(True, migrate_from, req_id, 'DistributeTrafficCheck', True)
+        payload_dt_vpkg_to = _build_appc_lcm_dt_request_body(True, migrate_to, req_id, 'DistributeTraffic')
+        payload_dt_check_vfw_from = _build_appc_lcm_dt_request_body(False, migrate_from, req_id, 'DistributeTrafficCheck',
+                                                                 False)
+        payload_dt_check_vfw_to = _build_appc_lcm_dt_request_body(False, migrate_to, req_id, 'DistributeTrafficCheck', True)
+
+        requests = list()
+        requests.append({"payload": payload_dt_vpkg_to, "breakOnFailure": True, "description": "Migrating source vFW traffic to destination vFW"})
+        requests.append({"payload": payload_dt_check_vfw_from, "breakOnFailure": True, "description": "Checking traffic has been stopped on the source vFW"})
+        requests.append({"payload": payload_dt_check_vfw_to, "breakOnFailure": True, "description": "Checking traffic has appeared on the destination vFW"})
+        result.append({"payload": payload_dt_check_vpkg, "breakOnFailure": False, "description": "Check current traffic destination on vPGN",
+                      "workflow": {"requests": requests, "description": "Migrate Traffic and Verify"}})
+    else:
+        #_build_appc_lcm_dt_request_body(is_vpkg, config, req_id, action, traffic_presence=None):
+        payload_dt_check_vpkg = _build_appc_lcm_dt_request_body(True, migrate_from, req_id, 'DistributeTrafficCheck', True)
+        payload_dt_vpkg_to = _build_appc_lcm_dt_request_body(True, migrate_to, req_id, 'DistributeTraffic')
+        payload_dt_vpkg_from = _build_appc_lcm_dt_request_body(True, migrate_from, req_id, 'DistributeTraffic')
+
+        payload_dt_check_vfw_from_absent = _build_appc_lcm_dt_request_body(False, migrate_from, req_id, 'DistributeTrafficCheck', False)
+        payload_dt_check_vfw_to_present = _build_appc_lcm_dt_request_body(False, migrate_to, req_id, 'DistributeTrafficCheck', True)
+        payload_dt_check_vfw_to_absent = _build_appc_lcm_dt_request_body(False, migrate_to, req_id, 'DistributeTrafficCheck', False)
+        payload_dt_check_vfw_from_present = _build_appc_lcm_dt_request_body(False, migrate_from, req_id, 'DistributeTrafficCheck', True)
+
+        payload_old_version_check_vfw_from =  _build_appc_lcm_upgrade_request_body(migrate_from, req_id, 'UpgradePreCheck', old_version, new_version)
+        payload_new_version_check_vfw_from =  _build_appc_lcm_upgrade_request_body(migrate_from, req_id, 'UpgradePostCheck', old_version, new_version)
+        payload_upgrade_vfw_from =  _build_appc_lcm_upgrade_request_body(migrate_from, req_id, 'UpgradeSoftware', old_version, new_version)
+
+        requests = list()
+        migrate_requests = list()
+        migrate_requests.append({"payload": payload_dt_vpkg_to, "breakOnFailure": True, "description": "Migrating source vFW traffic to destination vFW"})
+        migrate_requests.append({"payload": payload_dt_check_vfw_from_absent, "breakOnFailure": True, "description": "Checking traffic has been stopped on the source vFW"})
+        migrate_requests.append({"payload": payload_dt_check_vfw_to_present, "breakOnFailure": True, "description": "Checking traffic has appeared on the destination vFW"})
+
+        requests.append({"payload": payload_dt_check_vpkg, "breakOnFailure": False, "description": "Check current traffic destination on vPGN",
+                        "workflow": {"requests": migrate_requests, "description": "Migrate Traffic and Verify"}})
+        requests.append({"payload": payload_upgrade_vfw_from, "breakOnFailure": True, "description": "Upgrading Software on source vFW"})
+        requests.append({"payload": payload_new_version_check_vfw_from, "breakOnFailure": True, "description": "Check current software version on source vFW"})
+        requests.append({"payload": payload_dt_vpkg_from, "breakOnFailure": True, "description": "Migrating destination vFW traffic to source vFW"})
+        requests.append({"payload": payload_dt_check_vfw_to_absent, "breakOnFailure": True, "description": "Checking traffic has been stopped on the destination vFW"})
+        requests.append({"payload": payload_dt_check_vfw_from_present, "breakOnFailure": True, "description": "Checking traffic has appeared on the source vFW"})
+
+        result.append({"payload": payload_old_version_check_vfw_from, "breakOnFailure": False, "description": "Check current software version on source vFW",
+                      "workflow": {"requests": requests, "description": "Migrate Traffic and Upgrade Software"}})
+
     return result
 
 
 def appc_lcm_request(onap_ip, req):
     api = _init_python_appc_lcm_api(onap_ip)
+    with _no_ssl_verification():
     #print(json.dumps(req, indent=4))
-    if req['input']['action'] == "DistributeTraffic":
-        result = api.lcm.distribute_traffic(body=req, params={}, headers={})
-    elif req['input']['action'] == "DistributeTrafficCheck":
-        result = api.lcm.distribute_traffic_check(body=req, params={}, headers={})
-    else:
-        raise Exception("{} action not supported".format(req['input']['action']))
+        if req['input']['action'] == "DistributeTraffic":
+            result = api.lcm.distribute_traffic(body=req, params={}, headers={})
+        elif req['input']['action'] == "DistributeTrafficCheck":
+            result = api.lcm.distribute_traffic_check(body=req, params={}, headers={})
+        elif req['input']['action'] == "UpgradeSoftware":
+            result = api.lcm.upgrade_software(body=req, params={}, headers={})
+        elif req['input']['action'] == "UpgradePreCheck":
+            result = api.lcm.upgrade_pre_check(body=req, params={}, headers={})
+        elif req['input']['action'] == "UpgradePostCheck":
+            result = api.lcm.upgrade_post_check(body=req, params={}, headers={})
+        else:
+            raise Exception("{} action not supported".format(req['input']['action']))
 
     if result.body['output']['status']['code'] == 400:
-        print("Request Completed")
+        print("SUCCESSFUL")
     elif result.body['output']['status']['code'] == 100:
-        print("Request Accepted. Receiving result status...")
+        print("ACCEPTED")
 #    elif result.body['output']['status']['code'] == 311:
 #        timestamp = result.body['output']['common-header']['timestamp']
 #        _set_appc_lcm_timestamp(req, timestamp)
@@ -756,7 +835,8 @@ def appc_lcm_status_request(onap_ip, req):
     status_body = _build_appc_lcm_status_body(req)
     _set_appc_lcm_timestamp(status_body)
 
-    result = api.lcm.action_status(body=status_body, params={}, headers={})
+    with _no_ssl_verification():
+        result = api.lcm.action_status(body=status_body, params={}, headers={})
 
     if result.body['output']['status']['code'] == 400:
         status = json.loads(result.body['output']['payload'])
@@ -767,33 +847,60 @@ def appc_lcm_status_request(onap_ip, req):
 
 
 def confirm_appc_lcm_action(onap_ip, req, check_appc_result):
-    print("Checking LCM {} Status".format(req['input']['action']))
+    print("APPC LCM << {} >> [Status]".format(req['input']['action']))
 
     while True:
         time.sleep(2)
         status = appc_lcm_status_request(onap_ip, req)
         print(status['status'])
         if status['status'] == 'SUCCESSFUL':
-            return
+            return True
         elif status['status'] == 'IN_PROGRESS':
             continue
         elif check_appc_result:
-            raise Exception("LCM {} {} - {}".format(req['input']['action'], status['status'], status['status-reason']))
+            print("APPC LCM <<{}>> [{} - {}]".format(req['input']['action'], status['status'], status['status-reason']))
+            return False
         else:
-            return
+            return True
 
 
-def execute_workflow(vfw_vnf_id, rancher_ip, onap_ip, use_oof_cache, if_close_loop_vfw, info_only, check_result):
+def _execute_lcm_requests(workflow, onap_ip, check_result):
+    lcm_requests = workflow["requests"]
+    print("WORKFLOW << {} >>".format(workflow["description"]))
+    for i in range(len(lcm_requests)):
+       req = lcm_requests[i]["payload"]
+       #print(json.dumps(req, indent=4))
+       print("APPC LCM << {} >> [{}]".format(req['input']['action'], lcm_requests[i]["description"]))
+       _set_appc_lcm_timestamp(req)
+       result = appc_lcm_request(onap_ip, req)
+       if result == 100:
+           conf_result = confirm_appc_lcm_action(onap_ip, req, check_result)
+           if not conf_result:
+               if lcm_requests[i]["breakOnFailure"]:
+                   raise Exception("APPC LCM << {} >> FAILED".format(req['input']['action']))
+               elif "workflow" in lcm_requests[i]:
+                   print("WORKFLOW << {} >> SKIP".format(lcm_requests[i]["workflow"]["description"]))
+           elif "workflow" in lcm_requests[i]:
+               _execute_lcm_requests(lcm_requests[i]["workflow"], onap_ip, check_result)
+            
+           #time.sleep(30)
+
+
+
+def execute_workflow(vfw_vnf_id, rancher_ip, onap_ip, use_oof_cache, if_close_loop_vfw, info_only, check_result, new_version=None):
     print("\nExecuting workflow for VNF ID '{}' on Rancher with IP {} and ONAP with IP {}".format(
         vfw_vnf_id, rancher_ip, onap_ip))
     print("\nOOF Cache {}, is CL vFW {}, only info {}, check LCM result {}".format(use_oof_cache, if_close_loop_vfw,
                                                                                    info_only, check_result))
+    if new_version is not None:
+        print("\nNew vFW software version {}\n".format(new_version))
+
     x = threading.Thread(target=_run_osdf_resp_server, daemon=True)
     x.start()
     aai_data = load_aai_data(vfw_vnf_id, onap_ip)
     print("\nvFWDT Service Information:")
     print(json.dumps(aai_data, indent=4))
-    lcm_requests = build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, if_close_loop_vfw)
+    lcm_requests = build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, if_close_loop_vfw, new_version)
     print("\nAnsible Inventory:")
     inventory = "[host]\nlocalhost   ansible_connection=local\n"
     for key in ansible_inventory:
@@ -809,16 +916,29 @@ def execute_workflow(vfw_vnf_id, rancher_ip, onap_ip, use_oof_cache, if_close_lo
     if info_only:
         return
     print("\nDistribute Traffic Workflow Execution:")
-    for i in range(len(lcm_requests)):
-        req = lcm_requests[i]
-        print("APPC REQ {} - {}".format(i, req['input']['action']))
-        _set_appc_lcm_timestamp(req)
-        result = appc_lcm_request(onap_ip, req)
-        if result == 100:
-            confirm_appc_lcm_action(onap_ip, req, check_result)
-            #time.sleep(30)
 
+    _execute_lcm_requests({"requests": lcm_requests, "description": "Migrate vFW Traffic Conditionally"}, onap_ip, check_result)
+
+
+help = """\npython3 workflow.py <VNF-ID> <RANCHER-NODE-IP> <K8S-NODE-IP> <IF-CACHE> <IF-VFWCL> <INITIAL-ONLY> <CHECK-STATUS> <VERSION>
+\n<VNF-ID> - vnf-id of vFW VNF instance that traffic should be migrated out from
+<RANCHER-NODE-IP> - External IP of ONAP Rancher Node i.e. 10.12.5.160 (If Rancher Node is missing this is NFS node)
+<K8S-NODE-IP> - External IP of ONAP K8s Worker Node i.e. 10.12.5.212
+<IF-CACHE> - If script should use and build OOF response cache (cache it speed-ups further executions of script)
+<IF-VFWCL> - If instead of vFWDT service instance vFW or vFWCL one is used (should be False always)
+<INITIAL-ONLY> - If only configuration information will be collected (True for initial phase and False for full execution of workflow)
+<CHECK-STATUS> - If APPC LCM action status should be verified and FAILURE should stop workflow (when False FAILED status of LCM action does not stop execution of further LCM actions)
+<VERSION> - New version of vFW - for tests '1.0' or '2.0'. Ommit when traffic distribution only\n"""
+
+for key in sys.argv:
+    if key == "-h" or key == "--help":
+        print(help)
+        sys.exit()
+
+new_version = None
+if len(sys.argv) > 8:
+    new_version = sys.argv[8]
 
 #vnf_id, Rancher node IP, K8s node IP, use OOF cache, if close loop vfw, if info_only, if check APPC result
 execute_workflow(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4].lower() == 'true', sys.argv[5].lower() == 'true',
-                 sys.argv[6].lower() == 'true', sys.argv[7].lower() == 'true')
+                 sys.argv[6].lower() == 'true', sys.argv[7].lower() == 'true', new_version)
