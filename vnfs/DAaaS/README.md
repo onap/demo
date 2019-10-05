@@ -13,6 +13,29 @@ git clone https://github.com/onap/demo.git
 DA_WORKING_DIR=$PWD/demo/vnfs/DAaaS/deploy
 ```
 
+## Install Istio Service Mesh
+
+## Istio is installed in two Steps
+```bash
+1. Istio-Operator
+2. Istio-config
+```
+
+## Download the Istio Installation repo
+
+```bash
+git clone https://github.com/onap/multicloud-k8s.git
+cd ~/k8s/deployments/helm/servicemesh
+helm install --name=istio-operator --namespace=istio-system istio-operator
+helm install istio-instance --name istio --namespace istio-system
+```
+
+## Install Metallb to act as a Loadbalancer
+```bash
+NOTE: Update the IP Address Ranges before you Install Metallb
+helm install --name metallb -f values.yaml metallb
+```
+
 ## Install Rook-Ceph for Persistent Storage
 Note: This is unusual but Flex volume path can be different than the default value. values.yaml has the most common flexvolume path configured. In case of errors related to flexvolume please refer to the https://rook.io/docs/rook/v0.9/flexvolume.html#configuring-the-flexvolume-path to find the appropriate flexvolume-path and set it in values.yaml
 ```bash
