@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9a47f0ce_0556026f",
+        "filename": "vnfs/DAaaS/deploy/istio-config/grafana-config/grafana-istio-virtualservice/Chart.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-10-08T21:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "047b32d3_710e492c",
+      "range": {
+        "startLine": 16,
+        "startChar": 13,
+        "endLine": 16,
+        "endChar": 50
+      },
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45c33c1d_23e74eb6",
         "filename": "vnfs/DAaaS/deploy/istio-config/grafana-config/grafana-istio-virtualservice/Chart.yaml",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2019-10-08T01:08:59Z",
       "side": 1,
       "message": "Change this to grafana-istio",
+      "range": {
+        "startLine": 17,
+        "startChar": 6,
+        "endLine": 17,
+        "endChar": 20
+      },
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3e85012c_5fbb1d04",
+        "filename": "vnfs/DAaaS/deploy/istio-config/grafana-config/grafana-istio-virtualservice/Chart.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-10-08T21:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45c33c1d_23e74eb6",
       "range": {
         "startLine": 17,
         "startChar": 6,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "20fb18bf_bc08ef0e",
+        "filename": "vnfs/DAaaS/deploy/istio-config/minio-config/minio-istio-serviceentry/templates/serviceentry.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-10-08T21:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7060893b_45b772eb",
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "076fb055_7d3efcc2",
         "filename": "vnfs/DAaaS/deploy/istio-config/minio-config/minio-istio-serviceentry/values.yaml",
         "patchSetId": 2
@@ -82,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "3540c549_8c338c8c",
+        "filename": "vnfs/DAaaS/deploy/istio-config/minio-config/minio-istio-serviceentry/values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-10-08T21:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "076fb055_7d3efcc2",
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cb733d5a_378abfde",
         "filename": "vnfs/DAaaS/deploy/istio-config/minio-config/minio-istio-virtualservice/templates/virtualservice.yaml",
         "patchSetId": 2
@@ -93,6 +177,24 @@
       "writtenOn": "2019-10-08T01:08:59Z",
       "side": 1,
       "message": "Create virtual services for all the replicas.",
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32dfb4f3_0813ce2b",
+        "filename": "vnfs/DAaaS/deploy/istio-config/minio-config/minio-istio-virtualservice/templates/virtualservice.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3261
+      },
+      "writtenOn": "2019-10-08T21:05:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb733d5a_378abfde",
       "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
