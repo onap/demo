@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "047b32d3_710e492c",
+        "filename": "vnfs/DAaaS/deploy/istio-config/grafana-config/grafana-istio-virtualservice/Chart.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-08T01:08:59Z",
+      "side": 1,
+      "message": "Grafana Istio configs",
+      "range": {
+        "startLine": 16,
+        "startChar": 13,
+        "endLine": 16,
+        "endChar": 50
+      },
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45c33c1d_23e74eb6",
+        "filename": "vnfs/DAaaS/deploy/istio-config/grafana-config/grafana-istio-virtualservice/Chart.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-08T01:08:59Z",
+      "side": 1,
+      "message": "Change this to grafana-istio",
+      "range": {
+        "startLine": 17,
+        "startChar": 6,
+        "endLine": 17,
+        "endChar": 20
+      },
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7060893b_45b772eb",
+        "filename": "vnfs/DAaaS/deploy/istio-config/minio-config/minio-istio-serviceentry/templates/serviceentry.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-08T01:08:59Z",
+      "side": 1,
+      "message": "Combine this and virtualservice in one helm chart and rename the chart to minio-istio",
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "076fb055_7d3efcc2",
+        "filename": "vnfs/DAaaS/deploy/istio-config/minio-config/minio-istio-serviceentry/values.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-08T01:08:59Z",
+      "side": 1,
+      "message": "Combine this file into one values.yaml",
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb733d5a_378abfde",
+        "filename": "vnfs/DAaaS/deploy/istio-config/minio-config/minio-istio-virtualservice/templates/virtualservice.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-08T01:08:59Z",
+      "side": 1,
+      "message": "Create virtual services for all the replicas.",
+      "revId": "19ccb217f0276b56e4e1af12cbb72577614a0fa3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
