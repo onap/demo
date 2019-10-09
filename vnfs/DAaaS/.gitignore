@@ -1,5 +1,6 @@
 *.iml
 .idea
+.vscode
 target/
 dependency-reduced-pom.xml
 File2hdfsApp.java

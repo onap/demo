@@ -47,7 +47,7 @@ debug:
 	@go build -o ${COP_LOCAL} collectd-operator/cmd/manager
 
 ## deploy: Build Dockerfile and publish to repository
-deploy: build publish
+deploy: build test publish
 
 ## publish: Push docker image to repository
 publish:
