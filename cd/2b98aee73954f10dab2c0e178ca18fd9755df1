@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Jessica Wagantall <jwagantall@linuxfoundation.org>
+Code-Review+2: Daniel Rose <dr695h@att.com>
+Submitted-by: Daniel Rose <dr695h@att.com>
+Submitted-at: Fri, 11 Oct 2019 22:10:46 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/demo/+/96982
+Project: demo
+Branch: refs/heads/elalto
