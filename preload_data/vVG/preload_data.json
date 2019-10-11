@@ -1,4 +1,5 @@
 {
 	"vvg_preload.template": {
+		"nova_instance": "${server_id}"
 	}
 }
