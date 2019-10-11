@@ -1,0 +1,4 @@
+distribution_type: 'maven'
+version: '1.5.0'
+project: 'demo'
+log_dir: 'demo-maven-stage-master/151/'
