@@ -22,8 +22,8 @@ metadata:
     app: cadvisor
     release: {{ .Release.Name }}
 spec:
-  type: NodePort
-  externalTrafficPolicy: Local
+  type: ClusterIP
+  #externalTrafficPolicy: Local
   selector:
 {{ include "rangeskipempty" .Values.cadvisor_prometheus.service.selector | indent 4 }}
   ports:
@@ -33,5 +33,5 @@ spec:
     {{- end }}
     protocol: TCP
     port: {{ .Values.cadvisor_prometheus.service.port }}
-    nodePort: {{ .Values.global.nodePortPrefix }}{{ .Values.cadvisor_prometheus.service.nodePort }}
+    #nodePort: {{ .Values.global.nodePortPrefix }}{{ .Values.cadvisor_prometheus.service.nodePort }}
     targetPort: {{ .Values.cadvisor_prometheus.service.targetPort }}

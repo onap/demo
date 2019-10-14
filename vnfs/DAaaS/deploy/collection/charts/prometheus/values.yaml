@@ -40,6 +40,7 @@ prometheus:
  
   resources: {}
   service:
+    type: ClusterIP
     annotations: {}
     labels: {}
     clusterIP: ""
@@ -55,7 +56,7 @@ prometheus:
     ## Port to expose on each node
     ## Only used if service.type is 'NodePort'
     ##
-    nodePort: 90
+    # nodePort: 90
 
     ## Loadbalancer IP
     ## Only use if service.type is "loadbalancer"
@@ -63,7 +64,7 @@ prometheus:
     loadBalancerSourceRanges: []
     ## Service type
     ##
-    type: NodePort
+    #type: NodePort
 
     sessionAffinity: ""
 m3db:

@@ -14,9 +14,9 @@ resources: {}
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
 cadvisor_prometheus:
   service:
-    type: NodePort
+    type: ClusterIP
     port: 80
-    nodePort: 91
+    #nodePort: 91
     targetPort: 8080
     selector:
       app: cadvisor

@@ -162,7 +162,7 @@ alertmanager:
   ## Port to expose on each node
   ## Only used if service.type is 'NodePort'
   ##
-    nodePort: 30903
+    #nodePort: 30903
   ## List of IP addresses at which the Prometheus server service is available
   ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
   ##
@@ -567,7 +567,7 @@ prometheusOperator:
   ## Port to expose on each node
   ## Only used if service.type is 'NodePort'
   ##
-    nodePort: 30080
+    #nodePort: 30080
 
 
   ## Loadbalancer IP
@@ -579,7 +579,7 @@ prometheusOperator:
   ## Service type
   ## NodepPort, ClusterIP, loadbalancer
   ##
-    type: NodePort
+    type: ClusterIP
 
     ## List of IP addresses at which the Prometheus server service is available
     ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
@@ -734,7 +734,7 @@ prometheus:
     loadBalancerSourceRanges: []
     ## Service type
     ##
-    type: NodePort
+    type: ClusterIP
 
     sessionAffinity: ""
 
