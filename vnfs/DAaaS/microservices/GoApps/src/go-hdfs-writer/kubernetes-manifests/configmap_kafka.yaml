@@ -1,0 +1,11 @@
+# Preserving a sample config of kafka broker
+#NOTE : The kafka config shall come through the REST request as part of writer config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-kafka
+data:
+  #broker: kafka-cluster-kafka-1.kafka-cluster-kafka-brokers.hdfs1.svc.cluster.local:9092
+  broker: kafka-cluster-kafka-bootstrap:9092
+  group: grp1i
+  topic: newTopc9

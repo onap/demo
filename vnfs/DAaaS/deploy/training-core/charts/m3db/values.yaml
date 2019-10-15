@@ -2,7 +2,7 @@ m3dbCluster:
   name: m3db-cluster
   image:
     repository: quay.io/m3db/m3dbnode
-    tag: latest
+    tag: v0.10.2
   replicationFactor: 3
   numberOfShards: 256
   isolationGroups:
