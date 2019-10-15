@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3addc973_33180992",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/handler/handler.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-10-15T17:01:40Z",
+      "side": 1,
+      "message": "This is not RESTFul design.\nAPIs usually don\u0027t have verbs in the URL.\nPOST is the VERB to create and DELETE is the verb to delete. They should just hit the same endpoint.\n/v1/writer should be the endpoint with POST to create and DELETE on /v1/writer/{writer-name} to delete.\n\nAlso, URLs should be lower case. Camel case is not recommended here.",
+      "range": {
+        "startLine": 34,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 80
+      },
+      "revId": "99f7370360201104ddfc99b5e766b4e32e8524cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
