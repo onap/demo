@@ -1,0 +1,22 @@
+#Preserving a sample config of writer. 
+#NOTE : The writer config shall come through the REST request
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-json
+data:
+  config.json: |-
+    [
+    {"writer": {
+            "kafkaConfig": {
+                "broker": "kafka-cluster-kafka-bootstrap:9092",
+                "group": "grp1",
+                "topic": "newTopic9"
+            },
+            "hdfsConfig": {
+                "hdfs_url": "hdfs1-namenode:8020"
+            }
+        }
+    }
+    ]
+ 

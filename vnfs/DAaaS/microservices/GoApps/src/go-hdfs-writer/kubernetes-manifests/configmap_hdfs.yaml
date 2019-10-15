@@ -1,0 +1,10 @@
+# Preserving a sample config of hdfs
+#NOTE : The kafka config shall come through the REST request as part of writer config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-hdfs
+data:
+  #hdfs_url: hdfs1-namenode-1.hdfs1-namenode.hdfs1:8020
+  hdfs_url: hdfs1-namenode:8020
+  

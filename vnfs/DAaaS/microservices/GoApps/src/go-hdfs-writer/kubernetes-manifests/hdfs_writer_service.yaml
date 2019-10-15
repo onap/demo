@@ -1,0 +1,14 @@
+# This is required for testing using the POSTMAN
+kind: Service
+apiVersion: v1
+metadata:
+  name: hdfs-writer-svc
+spec:
+  type: NodePort
+  selector:
+    app: hdfs-writer
+  ports:
+    - nodePort: 30303
+      port: 9393
+      targetPort: 9393
+      

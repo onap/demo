@@ -1,0 +1,11 @@
+{"writer": {
+    "kafkaConfig": {
+        "broker": "kafka-cluster-kafka-bootstrap:9092",
+        "group": "grp1",
+        "topic": "newTopic9"
+    },
+    "hdfsConfig": {
+        "hdfs_url": "hdfs1-namenode:8020"
+    }
+}
+}

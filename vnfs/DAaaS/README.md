@@ -79,7 +79,7 @@ kubectl get crds | grep rook
 ```
 If this return results like :
 ```
-otc@otconap7 /var/lib/rook $  kc get crds | grep rook
+otc@otconap7 /var/lib/rook $  kubectl get crds | grep rook
 cephblockpools.ceph.rook.io         2019-07-19T18:19:05Z
 cephclusters.ceph.rook.io           2019-07-19T18:19:05Z
 cephfilesystems.ceph.rook.io        2019-07-19T18:19:05Z
@@ -91,7 +91,7 @@ then you should delete these previously existing rook based CRDs by generating a
 manifest file by these commands and then deleting those files:
 ```
 helm template -n rook . -f values.yaml > ~/delete.yaml
-kc delete -f ~/delete.yaml
+kubectl delete -f ~/delete.yaml
 ```
 
 After this, delete the below directory in all the nodes.
@@ -124,7 +124,7 @@ IMAGE_NAME=dcr.cluster.local:32644/visualization-operator:latest
 
 ### Install the Operator Package
 ```bash
-cd $DA_WORKING_DIR/operator
+cd $DA_WORKING_DIR/deploy/operator
 helm install -n operator . -f values.yaml --namespace=operator
 ```
 Check for the status of the pods in operator namespace. Check if Prometheus operator pods are in Ready state.
@@ -157,7 +157,7 @@ Note: Collectd.conf is avaliable in $DA_WORKING_DIR/collection/charts/collectd/r
 ```bash
 Default (For custom collectd skip this section)
 =======
-cd $DA_WORKING_DIR/collection
+cd $DA_WORKING_DIR/deploy/collection
 helm install -n cp . -f values.yaml --namespace=edge1
 
 Custom Collectd
