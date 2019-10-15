@@ -15,8 +15,9 @@
  */
 
 
-NOTE - A configMap of available IPs is to applied in order for services to 
-get external IP address assigned.Please Update values.yaml before deploying
+NOTE - A configMap of available IPs is to be applied in order for services
+to get external IP address assigned. Please Update values.yaml with
+IP addresses before deploying
 
 Prerequisites
 -------------

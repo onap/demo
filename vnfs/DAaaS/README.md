@@ -24,16 +24,18 @@ DA_WORKING_DIR=$PWD/demo/vnfs/DAaaS/deploy
 ## Download the Istio Installation repo
 
 ```bash
-cd DA_WORKING_DIR/00-init
-helm install --name=istio-operator --namespace=istio-system istio-operator
-helm install istio-instance --name istio --namespace istio-system
+cd $DA_WORKING_DIR/00-init
+helm install --name=istio-operator istio-operator --namespace=istio-system
+cd $DA_WORKING_DIR/00-init/istio
+helm install --name istio istio-instance --namespace istio-system
 ```
 
 ## Install Metallb to act as a Loadbalancer
 ```bash
-cd  DA_WORKING_DIR/00-init
+cd  $DA_WORKING_DIR/00-init
 NOTE: Update the IP Address Ranges before you Install Metallb
-helm install --name metallb -f values.yaml metallb
+NOTE: If you are using a single IP, use <IP>/32 format
+helm install --name metallb metallb --namespace metallb-system
 ```
 
 ## Install Rook-Ceph for Persistent Storage
