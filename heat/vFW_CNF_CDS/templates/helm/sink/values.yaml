@@ -1,0 +1,36 @@
+# Default values for sink.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  sinkrepo: rtsood/onap-vfw-demo-sink
+  sinktag: 0.2.0
+  pullPolicy: IfNotPresent
+  darkstatrepo: electrocucaracha/darkstat
+  darkstattag: latest
+
+service:
+#serivce port value for sink service
+  type: NodePort
+  ports:
+    port: 667
+    nodePort: 30667
+
+
+# Static Defaults
+#
+# OPENSTACK PARAMETERS
+# Names
+vnf_name: test-vnf
+vsn_name_0: test-vnf-vsn
+int_private2_net_id: protected-net
+onap_private_net_id: onap-private-net
+
+# OWN Addresses
+vsn_int_private2_ip_0: 192.168.20.3
+vsn_onap_private_ip_0: 10.10.100.4
+# Env Variables
+int_private2_gw_ip: 192.168.20.1/24
+int_private1_net_cidr: 192.168.10.0/24

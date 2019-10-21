@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.vfw_name_0 }}
+  labels:
+    release: {{ .Release.Name }}
+    app: {{ .Values.vnf_name }}
+    chart: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.vnf_name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.vnf_name }}
+        release: {{ .Release.Name }}
+      annotations:
+        VirtletLibvirtCPUSetting: |
+          mode: host-model
+        VirtletSSHKeySource: "secret/{{ .Values.key_name }}"
+        VirtletCloudInitUserData: |
+          ssh_pwauth: True #FIXME Remove after troubleshooting
+          users:
+          - name: admin
+            gecos: User
+            primary-group: admin
+            groups: users
+            sudo: ALL=(ALL) NOPASSWD:ALL
+            # Password is "testuser"
+            passwd: "$6$rounds=4096$wPs4Hz4tfs$a8ssMnlvH.3GX88yxXKF2cKMlVULsnydoOKgkuStTErTq2dzKZiIx9R/pPWWh5JLxzoZEx7lsSX5T2jW5WISi1"
+          runcmd:
+            - env #Tests #FIXME
+            - cat /etc/cloud/environment #Tests #FIXME
+            - wget -O - https://git.onap.org/multicloud/k8s/plain/kud/tests/vFW/firewall | sudo -E bash
+        VirtletRootVolumeSize: 5Gi
+        k8s.v1.cni.cncf.io/networks: "{{ .Values.vnf_name }}-ovn-attachment"
+        k8s.plugin.opnfv.org/nfn-network: | 
+            { "type": "ovn4nfv",
+              "interface": [
+                { "name": {{ .Values.int_private1_net_id | quote }},
+                  "ipAddress": {{ .Values.vfw_int_private1_ip_0 | quote }},
+                  "interface": "eth1",
+                  "defaultGateway": "false" },
+                { "name": {{ .Values.int_private2_net_id | quote }},
+                  "ipAddress": {{ .Values.vfw_int_private2_ip_0 | quote }},
+                  "interface": "eth2",
+                  "defaultGateway": "false" },
+                { "name": {{ .Values.onap_private_net_id | quote }},
+                  "ipAddress": {{ .Values.vfw_onap_private_ip_0 | quote }},
+                  "interface": "eth3",
+                  "defaultGateway": "false" }
+              ]
+            }
+        kubernetes.io/target-runtime: virtlet.cloud
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: extraRuntime
+                operator: In
+                values:
+                - virtlet
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        tty: true
+        stdin: true
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.vfw_name_0 }}-configmap
+        resources:
+          limits:
+            memory: {{ .Values.resources.limits.memory }}

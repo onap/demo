@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.vsn_name_0 }}-configmap
+  labels:
+    release: {{ .Release.Name }}
+    app: {{ .Values.vnf_name }}
+    chart: {{ .Chart.Name }}
+data:
+  protected_net_gw: {{ (splitn "/" 2 .Values.int_private2_gw_ip)._0 | quote }} #FIXME maybe?
+  protected_private_net_cidr: {{ .Values.int_private1_net_cidr | quote }}
