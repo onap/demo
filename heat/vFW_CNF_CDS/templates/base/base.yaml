@@ -1,0 +1,69 @@
+##########################################################################
+#
+#==================LICENSE_START==========================================
+#
+#
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#==================LICENSE_END============================================
+#
+# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+#
+##########################################################################
+
+heat_template_version: 2013-05-23
+
+description: Dummy base heat template for vFW usecase
+
+##############
+#            #
+# PARAMETERS #
+#            #
+##############
+
+parameters:
+  int_private1_net_cidr:
+    type: string
+    label: Unprotected private network CIDR
+    description: The CIDR of the unprotected private network
+  int_private2_net_cidr:
+    type: string
+    label: Protected private network CIDR
+    description: The CIDR of the protected private network
+  pub_key:
+    type: string
+    label: Public key
+    description: Public key to be installed on the compute instance
+  vnf_name:
+    type: string
+    description: VNF_NAME
+
+#############
+#           #
+# RESOURCES #
+#           #
+#############
+
+resources:
+  dummy:
+    type: OS::Heat::None
+    properties:
+      int_private1_net_cidr:
+        get_param: int_private1_net_cidr
+      int_private2_net_cidr:
+        get_param: int_private2_net_cidr
+      pub_key:
+        get_param: pub_key
+      vnf_name:
+        get_param: vnf_name

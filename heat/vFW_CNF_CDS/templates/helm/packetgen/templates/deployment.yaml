@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.vpg_name_0 }}
+  labels:
+    release: {{ .Release.Name }}
+    app: {{ .Values.vnf_name }}
+    chart: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.vnf_name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.vnf_name }}
+        release: {{ .Release.Name }}
+      annotations:
+        VirtletLibvirtCPUSetting: |
+          mode: host-model
+        VirtletSSHKeySource: "secret/{{ .Values.key_name }}"
+        VirtletCloudInitUserData: |
+          ssh_pwauth: True #FIXME Remove after troubleshooting
+          users:
+          #- default #FIXME Check working key auth or remove
+          - name: admin
+            gecos: User
+            primary-group: admin
+            groups: users
+            sudo: ALL=(ALL) NOPASSWD:ALL
+            # FIXME Remove after troubleshooting
+            # Password is "testuser"
+            passwd: "$6$rounds=4096$D6cf92nq$cgBveQHTP7IK3CIYTNkVJyzd0Vze6l1QlV9sWSXiTma2hOCTl7bFSh4nvK5qPMvNlnDtlIm03arG5Uh866E9w."
+            lock_passwd: False
+          runcmd:
+            - wget -O packetgen.sh https://git.onap.org/multicloud/k8s/plain/kud/tests/vFW/packetgen
+            - bash -c 'set -a; . /etc/cloud/environment; bash packetgen.sh'
+        VirtletRootVolumeSize: 5Gi
+        k8s.v1.cni.cncf.io/networks: "{{ .Values.vnf_name }}-ovn-attachment"
+        k8s.plugin.opnfv.org/nfn-network: |
+            { "type": "ovn4nfv",
+              "interface": [
+                { "name": {{ .Values.int_private1_net_id | quote }},
+                  "ipAddress": {{ .Values.vpg_int_private1_ip_0 | quote  }},
+                  "interface": "eth1" ,
+                  "defaultGateway": "false"},
+                { "name": {{ .Values.onap_private_net_id | quote }},
+                  "ipAddress": {{ .Values.vpg_onap_private_ip_0 | quote }},
+                  "interface": "eth2",
+                  "defaultGateway": "false" }
+              ]
+            }
+        kubernetes.io/target-runtime: virtlet.cloud
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: extraRuntime
+                operator: In
+                values:
+                - virtlet
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        tty: true
+        stdin: true
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.vpg_name_0 }}-configmap
+        resources:
+          limits:
+            memory: {{ .Values.resources.limits.memory }}
