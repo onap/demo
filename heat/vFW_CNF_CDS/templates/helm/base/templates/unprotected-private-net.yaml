@@ -1,0 +1,10 @@
+apiVersion: k8s.plugin.opnfv.org/v1alpha1
+kind: Network
+metadata:
+  name: {{ .Values.unprotectedNetworkName }}
+spec:
+  cniType : ovn4nfv
+  ipv4Subnets:
+  - name: subnet1
+    subnet: {{ .Values.unprotectedNetCidr }}
+    gateway: {{ .Values.unprotectedNetGw }}

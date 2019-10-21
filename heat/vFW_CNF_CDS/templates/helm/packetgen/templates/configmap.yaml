@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "packetgen.name" .}}-configmap
+data:
+  vfw_private_ip_0: {{ .Values.vfwPrivateIp0 }}
+  vsn_private_ip_0: {{ .Values.vsnPrivateIp0 }}
+  protected_net_cidr: {{ .Values.protectedNetCidr }}
+  protected_net_gw: {{ .Values.protectedNetGw }} #FIXME This or *NetGwIp ?
+  protected_private_net_cidr: {{ .Values.protectedPrivateNetCidr }}
+  demo_artifacts_version: {{ .Values.demoArtifactsVersion }}
+  dcae_collector_ip: {{ .Values.dcaeCollectorIp }}
+  dcae_collector_port: {{ .Values.dcaeCollectorPort }}

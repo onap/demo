@@ -1,0 +1,39 @@
+#Networks
+unprotectedNetworkName: unprotected-private-net
+unprotectedNetCidr: 192.168.10.0/24
+unprotectedNetGw: 192.168.10.1/24
+
+onapPrivateNetworkName: onap-private-net
+onapPrivateNetCidr: 10.10.0.0/16
+onapPrivateNetGw: 10.10.0.1/16
+
+protectedNetworkName: protected-private-net
+protectedNetCidr: 192.168.20.0/24
+protectedNetGwIp: 192.168.20.100 #Not used by Network templates
+protectedNetGw: 192.168.20.100/24
+
+#vFirewall container
+vfwPrivateIp0: 192.168.10.3
+vfwPrivateIp1: 192.168.20.2
+vfwPrivateIp2: 10.10.100.3
+#Packetgen container
+vpgPrivateIp0: 192.168.10.2
+vpgPrivateIp1: 10.0.100.2
+#Sink container
+vsnPrivateIp0: 192.168.20.3
+vsnPrivateIp1: 10.10.100.4
+
+#########
+ovnMultusNetworkName: ovn-networkobj
+demoArtifactsVersion: 1.5.0
+dcaeCollectorIp: 10.0.4.1
+dcaeCollectorPort: 8081
+
+
+
+# OPENSTACK PARAMETERS
+int_private1_net_cidr: 192.168.10.0/24 #unprotected
+int_private2_net_cidr: 192.168.20.0/24 #protected
+pub_key: #Not needed
+vnf_name: #Needed?
+
