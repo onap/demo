@@ -1,0 +1,66 @@
+{
+    "name": "virtualFirewall",
+    "description": "",
+    "data": [
+        {
+            "file": "base.yaml",
+            "type": "HEAT",
+            "isBase": "true",
+            "data": [
+                {
+                    "file": "base.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "base_cloudtech_k8s_charts.tgz",
+            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
+        },
+        {
+            "file": "firewall.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "firewall.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "firewall_cloudtech_k8s_charts.tgz",
+            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
+        },
+        {
+            "file": "packetgen.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "packetgen.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "packetgen_cloudtech_k8s_charts.tgz",
+            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
+        },
+        {
+            "file": "sink.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "sink.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "sink_cloudtech_k8s_charts.tgz",
+            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
+        }
+    ]
+}

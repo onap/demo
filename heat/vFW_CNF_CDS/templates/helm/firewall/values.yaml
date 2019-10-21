@@ -1,0 +1,55 @@
+# global:
+# 
+#   #Networks
+#   unprotectedNetworkName: unprotected-private-net
+#   protectedPrivateNetCidr: 192.168.10.0/24
+#   protectedPrivateNetGw: 192.168.10.1/24
+# 
+#   onapPrivateNetworkName: onap-private-net
+#   onapPrivateNetCidr: 10.10.0.0/16
+#   onapPrivateNetGw: 10.10.0.1/16
+# 
+#   protectedNetworkName: protected-private-net
+#   protectedNetCidr: 192.168.20.0/24
+#   protectedNetGwIp: 192.168.20.100
+#   protectedNetGw: 192.168.20.100/24
+# 
+#   #vFirewall container
+#   vfwPrivateIp0: 192.168.10.3
+#   vfwPrivateIp1: 192.168.20.2
+#   vfwPrivateIp2: 10.10.100.3
+#   #Packetgen container
+#   vpgPrivateIp0: 192.168.10.2
+#   vpgPrivateIp1: 10.0.100.2
+#   #Sink container
+#   vsnPrivateIp0: 192.168.20.3
+#   vsnPrivateIp1: 10.10.100.4
+
+# Static Defaults
+replicaCount: 1
+image:
+  repository: virtlet.cloud/ubuntu/16.04
+  tag: latest
+  pullPolicy: IfNotPresent
+resources:
+  limits:
+    memory: 4Gi
+
+# OPENSTACK PARAMETERS
+# Names
+vnf_name: test-vnf
+vfw_name_0: test-vnf-vfw
+key_name: ssh-pub-key
+int_private1_net_id: unprotected-net
+int_private2_net_id: protected-net
+onap_private_net_id: onap-private-net
+# OWN Addresses
+vfw_int_private1_ip_0: 192.168.10.3
+vfw_int_private2_ip_0: 192.168.20.2
+vfw_onap_private_ip_0: 10.10.100.3
+# Env variables
+dcae_collector_port: 8081 #FIXME set to 30235?
+dcae_collector_ip: 10.0.4.1 #Placeholder
+demo_artifacts_version: 1.5.0
+int_private2_net_cidr: 192.168.20.0/24
+vsn_int_private2_ip_0: 192.168.20.3

@@ -1,0 +1,33 @@
+# Static Defaults
+replicaCount: 1
+image:
+  repository: virtlet.cloud/ubuntu/16.04
+  tag: latest
+  pullPolicy: IfNotPresent
+resources:
+  limits:
+    memory: 4Gi
+service:
+#service port value for packetgen service
+  type: NodePort
+  ports:
+    port: 2831
+    nodePort: 30831
+
+# OPENSTACK PARAMETERS
+# Names
+vpg_name_0: test-vnf-vpg
+vnf_name: test-vnf 
+key_name: ssh-pub-key
+int_private1_net_id: unprotected-net
+onap_private_net_id: onap-private-net
+# Own Addresses
+vpg_int_private1_ip_0: 192.168.10.2
+vpg_onap_private_ip_0: 10.10.100.2
+# Env variables
+dcae_collector_ip: 10.0.4.1 #Placeholder
+dcae_collector_port: 8081 #FIXME set to 30235?
+demo_artifacts_version: 1.5.0
+vfw_int_private1_ip_0: 192.168.10.3
+vsn_int_private2_ip_0: 192.168.20.3
+int_private2_net_cidr: 192.168.20.0/24
