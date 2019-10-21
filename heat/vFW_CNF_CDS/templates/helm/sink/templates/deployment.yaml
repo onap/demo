@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.vsn_name_0 }}
+  labels:
+    release: {{ .Release.Name }}
+    app: {{ .Values.vnf_name }} #FIXME Should vnf_name be replaced with v*_name_0 for labels?
+    chart: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.vnf_name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.vnf_name }}
+        release: {{ .Release.Name }}
+      annotations:
+        k8s.v1.cni.cncf.io/networks: "{{ .Values.vnf_name }}-ovn-attachment"
+        k8s.plugin.opnfv.org/nfn-network: |
+            { "type": "ovn4nfv",
+              "interface": [
+                { "name": {{ .Values.int_private2_net_id | quote }},
+                  "ipAddress": {{ .Values.vsn_int_private2_ip_0 | quote }},
+                  "interface": "eth1",
+                  "defaultGateway": "false" },
+                { "name": {{ .Values.onap_private_net_id | quote }},
+                  "ipAddress": {{ .Values.vsn_onap_private_ip_0 | quote }},
+                  "interface": "eth2" ,
+                  "defaultGateway": "false" }
+              ]
+            }
+    spec:
+      #FIXME DEBUG START
+      initContainers:
+      - name: init_test
+        image: busybox
+        command:
+            - env
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.vsn_name_0 }}-configmap
+      #FIXME DEBUG END
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.sinkrepo }}:{{ .Values.image.sinktag }}"
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.vsn_name_0 }}-configmap
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        tty: true
+        stdin: true
+        securityContext:
+          privileged: true
+      - name: darkstat
+        image:  "{{ .Values.image.darkstatrepo }}:{{ .Values.image.darkstattag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        tty: true
+        stdin: true
+        ports:
+          - containerPort: {{ .Values.service.ports.port }}

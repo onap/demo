@@ -1,0 +1,50 @@
+{
+    "name": "virtualFirewall",
+    "description": "",
+    "data": [
+        {
+            "file": "base.yaml",
+            "type": "HEAT",
+            "isBase": "true",
+            "data": [
+                {
+                    "file": "base.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "firewall.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "firewall.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "packetgen.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "packetgen.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        },
+        {
+            "file": "sink.yaml",
+            "type": "HEAT",
+            "isBase": "false",
+            "data": [
+                {
+                    "file": "sink.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        }
+    ]
+}

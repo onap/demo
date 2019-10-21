@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: {{ .Values.key_name }}
+type: Opaque
+stringData:
+    authorized_keys: {{ .Values.pub_key }}

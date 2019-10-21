@@ -1,0 +1,22 @@
+# OPENSTACK PARAMETERS
+#unprotected
+int_private1_net_cidr: 192.168.10.0/24
+int_private1_gw_ip: 192.168.10.1/24 #No typo here
+int_private1_net_id: unprotected-net
+int_private1_subnet_id: unprotected-subnet-1
+#protected
+int_private2_net_cidr: 192.168.20.0/24
+int_private2_gw_ip: 192.168.20.1/24 #No typo here
+int_private2_net_id: protected-net
+int_private2_subnet_id: protected-subnet-1
+#onap mgmt net
+onap_private_net_cidr: 10.10.0.0/16
+onap_private_gw_ip: 10.10.0.1/16 #No typo here
+onap_private_net_id: onap-private-net
+onap_private_subnet_id: onap-subnet-1
+#public key
+key_name: ssh-pub-key
+pub_key: |
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDWjN5xhfgdoS7SIa4YdyyJJVl7QSe7AZgg7EgrsYqxq4wCVeFmwBp2eTOx/dBgSZJxUlzqB0GDZ7J69Llnnn/y1ZCanbWXK9kgmLqf4kO415r88ubjWwa1/D+Fn82icQRIFvmS/UDSKyonJ9k2tDrD0cXUL1r4l88LEPvArX09unubeAuqxqCgx7CdjtxOmINvA06ACaXoRz65gtWeZxbZ2yeoGtNhfC/nzmgr5/UCODlSAi1Ik2Fw8dn18NuzyYMxXka1kjOq4n9BgmDSOgZ3w2qKRPQ6Ggh1Sitv4iWYfr/dP+1ynFzvVX4Obzx5UJ5vgNS6Sm+GFrYq+bACfL95 k.banka@localhost
+#vnf name
+vnf_name: test-vnf
