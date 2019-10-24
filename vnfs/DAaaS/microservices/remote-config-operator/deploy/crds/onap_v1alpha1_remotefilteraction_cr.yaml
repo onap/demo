@@ -1,0 +1,11 @@
+apiVersion: onap.org/v1alpha1
+kind: RemoteFilterAction
+metadata:
+  name: relabelconfig002
+  labels:
+    remote: m3db1
+spec:
+  action: drop
+  regex: (.*)
+  sourceLabels:
+  - __name__

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: remote-config-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: remote-config-operator
+  template:
+    metadata:
+      labels:
+        name: remote-config-operator
+    spec:
+      serviceAccountName: remote-config-operator
+      containers:
+        - name: remote-config-operator
+          # Replace this with the built image name
+          image: REPLACEdcr.cluster.local:32644/remote-config-operator:latest
+          command:
+          - remote-config-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              value: ""
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "remote-config-operator"
