@@ -1,0 +1,7 @@
+apiVersion: onap.org/v1alpha1
+kind: PrometheusRemoteEndpoint
+metadata:
+  name: example-prometheusremoteendpoint
+spec:
+  # Add fields here
+  size: 3
