@@ -1,0 +1,30 @@
+apiVersion: onap.org/v1alpha1
+kind: PrometheusRemoteEndpoint
+metadata:
+  name: remoteendpoint-kafka1
+  labels:
+    app: cp-prometheus-1​
+spec:
+  adapterUrl: "{{ .Values.kafkaAdapter.url }}"
+  filterSelector:
+    remote: kafka1​
+  type: "kafka"
+  kafkaConfig:
+    brokerUrl: "{{ .Values.kafka.brokerUrl }}"
+    group: "{{ .Values.kafka.group }}"
+    topic: "{{ .Values.kafka.topic }}"
+
+---
+
+apiVersion: onap.org/v1alpha1​
+kind:  PrometheusRemoteEndpoint​
+Metadata:
+  name: relabelconfig-m3db1​
+  labels:
+    app: cp-prometheus-1​
+
+spec:
+  adapterUrl: "{{ .Values.m3db.url }}"
+  type: "m3db"
+  filterSelector:
+    remote: m3db1​
