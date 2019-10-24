@@ -1,0 +1,12 @@
+apiVersion: onap.org/v1alpha1
+kind:  PrometheusRemoteEndpoint
+metadata:
+  name: relabelconfig-m3db1
+  labels:
+    app: cp-prometheus-prometheus
+spec:
+  adapterUrl: "http://m3coordinator-m3db-cluster.edge1.svc.cluster.local:7201"
+  remoteTimeout: "35s"
+  type: "m3db"
+  filterSelector:
+    remote: m3db1
