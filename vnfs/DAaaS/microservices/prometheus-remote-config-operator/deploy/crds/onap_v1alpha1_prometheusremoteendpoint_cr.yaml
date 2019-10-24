@@ -1,0 +1,25 @@
+apiVersion: onap.org/v1alpha1
+kind: PrometheusRemoteEndpoint
+metadata:
+  name: example-prometheusremoteendpoint
+spec:
+  remoteWrite:
+  - url: "http://m3coordinator-m3db-cluster.edge1.svc.cluster.local:7201/api/v1/prom/remote/write"
+    type: m3db
+    writeRelabelConfigs:
+    - action: drop
+      regex: (.*)
+      sourceLabels:
+      - __name__
+    - targetLabel: metrics_storage
+      replacement: m3db_remote
+  
+  - url: "http://localhost:8080/api/v1/prom/remote/write"
+    type: kafka
+    writeRelabelConfigs:
+    - action: drop
+      regex: (.*)
+      sourceLabels:
+      - __name__
+    - targetLabel: metrics_storage
+      replacement: kafka_remote
