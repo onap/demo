@@ -1,0 +1,274 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "428ee441_b5f5bd6b",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/deploy/crds/onap_v1alpha1_prometheusremoteendpoint_cr.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "Spec is not aligned with the initial design.\nPrometheusRemoteEndpoint contains only one endpoint; it is not an array of endpoints.",
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2cccd855_4a3d1230",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/deploy/crds/onap_v1alpha1_prometheusremoteendpoint_cr.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "As per the design, the relabel config should not be part of the PrometheusRemoteEndpoint.\n\nversion: onap.org/v1alpha1​\nkind:  RemoteStorageConfig​\nspec:​\n  adapterUrl: \"{{ .Values.m3db.url }}\"​\n  type: \"m3db“​\n  filterSelector:​\n     remote: m3db1",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 2
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9abbeda4_334366fb",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "Since it is not an array, the attributes AdapterUrl, Type, KafkaConfig, FilterSelector can be added here directly and avoid another nested key remoteWrite.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 1
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4de7dedc_28856d27",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "Need to define the status.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 1
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41bf501e_f1b63ab8",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "Use AdapterUrl",
+      "range": {
+        "startLine": 21,
+        "startChar": 1,
+        "endLine": 21,
+        "endChar": 4
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "61dbf746_978263bb",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 21,
+        "startChar": 49,
+        "endLine": 21,
+        "endChar": 52
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "de26f3aa_984980e5",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "This should be discovered using FilterSelector not added from the Spec. Not needed here.",
+      "range": {
+        "startLine": 23,
+        "startChar": 1,
+        "endLine": 23,
+        "endChar": 20
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "152e6748_4063bb87",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "Please refer to any additional parameters in the prometheus relabelling spec.",
+      "range": {
+        "startLine": 30,
+        "startChar": 5,
+        "endLine": 30,
+        "endChar": 23
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3be82c28_2e7d3b5c",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "I think we need to think of a simple strategy to make it more intuitive. Regex validation and all will be more complex.\n\nFor eg: we can create a few sample cookie-cutter configs that is simple to use. Regex and other attributes can still be used if advanced usage is required, but that will not  be default.",
+      "range": {
+        "startLine": 31,
+        "startChar": 1,
+        "endLine": 35,
+        "endChar": 52
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12b2a622_8bebb941",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "Refer to label selectors from Kubernetes or ServiceMonitor selector implementation. \n *metav1.LabelSelector",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 1
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1fc0b6af_81580145",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "KafkaConfig needs a few other parameters. It is optional for this patch.",
+      "range": {
+        "startLine": 46,
+        "startChar": 5,
+        "endLine": 46,
+        "endChar": 16
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a34ac3c_ea523285",
+        "filename": "vnfs/DAaaS/microservices/prometheus-remote-config-operator/pkg/apis/onap/v1alpha1/prometheusremoteendpoint_types.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-10-25T06:53:43Z",
+      "side": 1,
+      "message": "needs omitempty",
+      "range": {
+        "startLine": 48,
+        "startChar": 25,
+        "endLine": 48,
+        "endChar": 30
+      },
+      "revId": "6a54fce48002aa3b225ad64897c1b2bef5218ccc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
