@@ -1,0 +1,10 @@
+spec:
+  remoteWrite:
+  - url: "http://prom-kafka-writer.edge1.svc.cluster.local:8686/pkw/pkw0/receive"
+    writeRelabelConfigs:
+      - targetLabel: metrics_storage
+        replacement: kafka_remote
+      - action: keep
+        regex: go_gc_duration_seconds_count
+        sourceLabels:
+        - __name__
