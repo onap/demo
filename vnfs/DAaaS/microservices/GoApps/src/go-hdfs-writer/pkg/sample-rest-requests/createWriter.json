@@ -1,4 +1,4 @@
-{"writer": {
+{
     "kafkaConfig": {
         "broker": "kafka-cluster-kafka-bootstrap:9092",
         "group": "grp1",
@@ -7,5 +7,4 @@
     "hdfsConfig": {
         "hdfs_url": "hdfs1-namenode:8020"
     }
-}
 }

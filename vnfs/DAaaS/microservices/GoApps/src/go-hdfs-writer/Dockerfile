@@ -7,7 +7,7 @@ RUN go get -u github.com/go-delve/delve/cmd/dlv
 WORKDIR /src/hdfs-writer
 
 RUN mkdir /librdkafka-dir && cd /librdkafka-dir
-RUN git clone https://github.com/edenhill/librdkafka.git && \ 
+RUN git clone https://github.com/edenhill/librdkafka.git && \
 cd librdkafka && \
 ./configure --prefix /usr && \
 make && \
