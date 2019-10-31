@@ -1,0 +1,27 @@
+# This Deployment manifest defines:
+# - single-replica deployment of the container image, with label "app: go-prom-kafka-adapter"
+# - Pod exposes port 8686
+# - specify PORT environment variable to the container process
+# Syntax reference https://kubernetes.io/docs/concepts/configuration/overview/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prom-kafka-adapter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prom-kafka-adapter
+  template:
+    metadata:
+      labels:
+        app: prom-kafka-adapter
+    spec:
+      containers:
+      - name: server
+        image: dcr.cluster.local:32644/prom-kafka-adapter
+        ports:
+        - containerPort: 8686
+        env:
+        - name: PORT
+          value: "8686"
