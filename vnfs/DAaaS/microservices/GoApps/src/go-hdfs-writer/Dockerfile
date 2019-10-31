@@ -7,7 +7,7 @@ RUN go get -u github.com/go-delve/delve/cmd/dlv
 WORKDIR /src/hdfs-writer
 
 RUN mkdir /librdkafka-dir && cd /librdkafka-dir
-RUN git clone https://github.com/edenhill/librdkafka.git && \ 
+RUN git clone https://github.com/edenhill/librdkafka.git && \
 cd librdkafka && \
 ./configure --prefix /usr && \
 make && \
@@ -34,5 +34,5 @@ RUN go build -o /hdfs-writer -v ./cmd/hdfs-writer
 # If you want to run WITHOUT the debugging server:
 #   * COMMENT OUT the previous ENTRYPOINT statements,
 #   * UNCOMMENT the following ENTRYPOINT statement.
-#ENTRYPOINT ["/bin/sleep", "3600"]
-ENTRYPOINT ["/hdfs-writer"]
+ENTRYPOINT ["/bin/sleep", "3600"]
+#ENTRYPOINT ["/hdfs-writer"]
