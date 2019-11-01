@@ -1,0 +1,244 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "40aeb3cd_4a2dca85",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/cmd/hdfs-writer/main.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "remove this",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 32
+      },
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce3f3f18_bf353943",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/handler/handler.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "Is this route used anywhere. If not, you can remove it.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 52
+      },
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8921905_3388a0a9",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/handler/handler.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "Check for err here.",
+      "range": {
+        "startLine": 56,
+        "startChar": 1,
+        "endLine": 56,
+        "endChar": 34
+      },
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d9afee2_fe8d3b1c",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/handler/handler.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "remove this",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 5
+      },
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3820c48_d09169f9",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/pipeline/pipeline.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "On failure, you will need to remove the channel specific to this go routine from the global channelmap.",
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a9bf0687_97b43d6c",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/pipeline/pipeline.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "Also make sure you call wg.Done() before returning here.",
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5167aaa8_71aa0f6a",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/pipeline/pipeline.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "No need to use os.exit to return from a go routine. Just use return.",
+      "range": {
+        "startLine": 56,
+        "startChar": 2,
+        "endLine": 56,
+        "endChar": 12
+      },
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eaa57253_d0aea533",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/pipeline/pipeline.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "Once the channel is close, do we also need to remove it from the global map? Is that taken care of elsewhere?",
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9bde3fb4_2b8cbc74",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/pipeline/pipeline.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "We need to make sure we call all the necessary channel deletion and wg.Done() calls before we return here.",
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51e9831e_92bf80a5",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/pipeline/pipeline.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "fix indentation\nrecommend using vscode with gofmt on save.",
+      "range": {
+        "startLine": 167,
+        "startChar": 1,
+        "endLine": 171,
+        "endChar": 32
+      },
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a715c91_b6b5884c",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/utils/hdfs-config.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "remove the file if it is all commented. \nyou can always retrieve it from the git history if needed.",
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db6d2a95_8a6d6dde",
+        "filename": "vnfs/DAaaS/microservices/GoApps/src/go-hdfs-writer/pkg/utils/kafka-config.go",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 301
+      },
+      "writtenOn": "2019-11-01T20:38:56Z",
+      "side": 1,
+      "message": "Same as previous comment",
+      "revId": "e9e174bf4786a8aacfa8a42119ec961dcde4867d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
