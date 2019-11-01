@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: python-kafkaconsumer-inference-app
+  labels:
+    app: python-kafkaconsumer-inference-app
+    tier: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-kafkaconsumer-inference-app
+      tier: app
+  template:
+    metadata:
+      labels:
+        app: python-kafkaconsumer-inference-app
+        tier: app
+    spec:
+      containers:
+      - name: python-kafkaconsumer-inference-app
+        image: python-kafkaconsumer-inference-app
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            memory: "640Mi"
+            cpu: "2500m"
+          limits:
+            memory: "1280Mi"
+            cpu: "5000m"
