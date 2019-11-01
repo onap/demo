@@ -67,18 +67,3 @@ prometheus:
     #type: NodePort
 
     sessionAffinity: ""
-m3db:
-  url: http://m3coordinator-m3db.m3db-operator.svc.cluster.local:7201
-
-kafkaAdapter:
-  image: 
-    repository: telefonica/prometheus-kafka-adapter
-    tag: 1.2.0 
-    pullPolicy: IfNotPresent
-  url: http://localhost:8080
-  port: 8080
-  broker: my-cluster-kafka-bootstrap.msg.svc.cluster.local:9092
-  topic: orders
-  serializationFormat: json
-  logLevel: debug
-  resources: {}
