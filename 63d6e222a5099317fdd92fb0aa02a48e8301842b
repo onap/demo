@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fd1407b_ddf5bb35",
+        "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-11-04T23:37:18Z",
+      "side": 1,
+      "message": "Need to add proper README",
+      "revId": "63d6e222a5099317fdd92fb0aa02a48e8301842b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
