@@ -4,8 +4,9 @@ metadata:
   name: {{ .Values.vpg_name_0 }}-configmap
   labels:
     release: {{ .Release.Name }}
-    app: {{ .Values.vnf_name }}
+    app: {{ .Values.vpg_name_0 }}
     chart: {{ .Chart.Name }}
+    vnf-name: {{ .Values.vnf_name }}
 data:
   vfw_private_ip_0: {{ .Values.vfw_int_private1_ip_0 | quote }}
   vsn_private_ip_0: {{ .Values.vsn_int_private2_ip_0 | quote }}

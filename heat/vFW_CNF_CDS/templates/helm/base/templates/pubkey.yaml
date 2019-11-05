@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Secret
 metadata:
     name: {{ .Values.key_name }}
+    labels:
+        vnf-name: {{ .Values.vnf_name }}
 type: Opaque
 stringData:
     authorized_keys: {{ .Values.pub_key }}
