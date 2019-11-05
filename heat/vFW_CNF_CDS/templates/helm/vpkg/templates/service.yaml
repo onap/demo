@@ -1,16 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "{{ .Values.vsn_name_0 }}-service"
+  name: "{{ .Values.vpg_name_0 }}-management-api"
   labels:
-    app: {{ .Values.vnf_name }}
+    app: {{ .Values.vpg_name_0 }}
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
+    vnf-name: {{ .Values.vnf_name }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.ports.port  }}
-      nodePort: {{ .Values.service.ports.nodePort }} 
+      nodePort: {{ .Values.service.ports.nodePort }}
   selector:
-    app: {{ .Values.vnf_name }}
+    app: {{ .Values.vpg_name_0 }}
     release: {{ .Release.Name }}
