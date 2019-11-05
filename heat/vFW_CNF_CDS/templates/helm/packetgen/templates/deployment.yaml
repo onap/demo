@@ -4,18 +4,18 @@ metadata:
   name: {{ .Values.vpg_name_0 }}
   labels:
     release: {{ .Release.Name }}
-    app: {{ .Values.vnf_name }}
+    app: {{ .Values.vpg_name_0 }}
     chart: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.vnf_name }}
+      app: {{ .Values.vpg_name_0 }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.vnf_name }}
+        app: {{ .Values.vpg_name_0 }}
         release: {{ .Release.Name }}
       annotations:
         VirtletLibvirtCPUSetting: |

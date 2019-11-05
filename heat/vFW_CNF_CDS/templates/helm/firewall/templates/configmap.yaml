@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.vfw_name_0 }}-configmap
   labels:
     release: {{ .Release.Name }}
-    app: {{ .Values.vnf_name }}
+    app: {{ .Values.vfw_name_0 }}
     chart: {{ .Chart.Name }}
 data:
   demo_artifacts_version: {{ .Values.demo_artifacts_version | quote }}

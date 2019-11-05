@@ -4,18 +4,18 @@ metadata:
   name: {{ .Values.vsn_name_0 }}
   labels:
     release: {{ .Release.Name }}
-    app: {{ .Values.vnf_name }} #FIXME Should vnf_name be replaced with v*_name_0 for labels?
+    app: {{ .Values.vsn_name_0 }}
     chart: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.vnf_name }}
+      app: {{ .Values.vsn_name_0 }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.vnf_name }}
+        app: {{ .Values.vsn_name_0 }}
         release: {{ .Release.Name }}
       annotations:
         k8s.v1.cni.cncf.io/networks: "{{ .Values.vnf_name }}-ovn-attachment"
@@ -33,16 +33,6 @@ spec:
               ]
             }
     spec:
-      #FIXME DEBUG START
-      initContainers:
-      - name: init-test
-        image: busybox
-        command:
-            - env
-        envFrom:
-        - configMapRef:
-            name: {{ .Values.vsn_name_0 }}-configmap
-      #FIXME DEBUG END
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.sinkrepo }}:{{ .Values.image.sinktag }}"

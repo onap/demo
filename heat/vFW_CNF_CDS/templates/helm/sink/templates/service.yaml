@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: "{{ .Values.vsn_name_0 }}-service"
   labels:
-    app: {{ .Values.vnf_name }}
+    app: {{ .Values.vsn_name_0 }}
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
 spec:
@@ -12,5 +12,5 @@ spec:
     - port: {{ .Values.service.ports.port  }}
       nodePort: {{ .Values.service.ports.nodePort }} 
   selector:
-    app: {{ .Values.vnf_name }}
+    app: {{ .Values.vsn_name_0 }}
     release: {{ .Release.Name }}

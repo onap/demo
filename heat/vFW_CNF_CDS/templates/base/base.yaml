@@ -67,3 +67,11 @@ resources:
         get_param: pub_key
       vnf_name:
         get_param: vnf_name
+
+  #SDC won't allow too dummy resource as it has to find `topology_template` TOSCA equivalent in heat templates
+  dummy_base:
+      type: OS::Nova::Server
+      properties:
+          name: test
+          image: test
+          flavor: test

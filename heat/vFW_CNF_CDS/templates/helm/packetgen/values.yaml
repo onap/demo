@@ -26,7 +26,7 @@ vpg_int_private1_ip_0: 192.168.10.2
 vpg_onap_private_ip_0: 10.10.100.2
 # Env variables
 dcae_collector_ip: 10.0.4.1 #Placeholder
-dcae_collector_port: 8081 #FIXME set to 30235?
+dcae_collector_port: 8080
 demo_artifacts_version: 1.5.0
 vfw_int_private1_ip_0: 192.168.10.3
 vsn_int_private2_ip_0: 192.168.20.3

@@ -4,18 +4,18 @@ metadata:
   name: {{ .Values.vfw_name_0 }}
   labels:
     release: {{ .Release.Name }}
-    app: {{ .Values.vnf_name }}
+    app: {{ .Values.vfw_name_0 }}
     chart: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.vnf_name }}
+      app: {{ .Values.vfw_name_0 }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.vnf_name }}
+        app: {{ .Values.vfw_name_0 }}
         release: {{ .Release.Name }}
       annotations:
         VirtletLibvirtCPUSetting: |
@@ -34,12 +34,6 @@ spec:
             passwd: "$6$rounds=4096$D6cf92nq$cgBveQHTP7IK3CIYTNkVJyzd0Vze6l1QlV9sWSXiTma2hOCTl7bFSh4nvK5qPMvNlnDtlIm03arG5Uh866E9w."
             lock_passwd: False
           runcmd:
-            #FIXME DEBUG START
-            - echo "ENV:"
-            - env
-            - echo "/etc/cloud/environment:"
-            - cat /etc/cloud/environment
-            #FIXME DEBUG END
             - wget -O firewall.sh https://git.onap.org/multicloud/k8s/plain/kud/tests/vFW/firewall
             - bash -c 'set -a; . /etc/cloud/environment; bash firewall.sh'
         VirtletRootVolumeSize: 5Gi
