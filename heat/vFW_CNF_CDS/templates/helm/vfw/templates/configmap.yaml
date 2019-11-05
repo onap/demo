@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.vfw_name_0 }}-configmap
+  labels:
+    release: {{ .Release.Name }}
+    app: {{ .Values.vfw_name_0 }}
+    chart: {{ .Chart.Name }}
+    vnf-name: {{ .Values.vnf_name }}
+data:
+  demo_artifacts_version: {{ .Values.demo_artifacts_version | quote }}
+  dcae_collector_ip: {{ .Values.dcae_collector_ip | quote }}
+  dcae_collector_port: {{ .Values.dcae_collector_port | quote }}
+  vfw_private_ip_0: {{ .Values.vfw_int_private1_ip_0 | quote }}
+  vsn_private_ip_0: {{ .Values.vsn_int_private2_ip_0 | quote }}
+  protected_net_cidr: {{ .Values.int_private2_net_cidr | quote }}
+

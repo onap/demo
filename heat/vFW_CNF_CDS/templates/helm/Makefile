@@ -1,10 +1,9 @@
-vf-modules = base firewall packetgen sink
+vf-modules = base_template vpkg vfw vsn
 .PHONY: build clean $(vf-modules:=-build) $(vf-modules:-clean) $(vf-modules:=-package)
 
 package: $(vf-modules:=-package)
 build: $(vf-modules:=-build)
 clean: $(vf-modules:=-clean)
-	rm -f *_cloudtech_k8s_charts.tgz
 
 $(vf-modules:=-package): %-package: %-build
 	mv $(@:package=)*.tgz $(@:-package=)_cloudtech_k8s_charts.tgz
@@ -14,3 +13,4 @@ $(vf-modules:=-build): %-build: %-clean
 
 $(vf-modules:=-clean):
 	rm -f $(@:-clean=)-*.tgz
+	rm -f $(@:-clean=)_cloudtech_k8s_charts.tgz
