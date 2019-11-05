@@ -3,63 +3,63 @@
     "description": "",
     "data": [
         {
-            "file": "base.yaml",
+            "file": "base_template.yaml",
             "type": "HEAT",
             "isBase": "true",
             "data": [
                 {
-                    "file": "base.env",
+                    "file": "base_template.env",
                     "type": "HEAT_ENV"
                 }
             ]
         },
         {
-            "file": "base_cloudtech_k8s_charts.tgz",
+            "file": "base_template_cloudtech_k8s_charts.tgz",
             "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
         },
         {
-            "file": "firewall.yaml",
+            "file": "vfw.yaml",
             "type": "HEAT",
             "isBase": "false",
             "data": [
                 {
-                    "file": "firewall.env",
+                    "file": "vfw.env",
                     "type": "HEAT_ENV"
                 }
             ]
         },
         {
-            "file": "firewall_cloudtech_k8s_charts.tgz",
+            "file": "vfw_cloudtech_k8s_charts.tgz",
             "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
         },
         {
-            "file": "packetgen.yaml",
+            "file": "vpkg.yaml",
             "type": "HEAT",
             "isBase": "false",
             "data": [
                 {
-                    "file": "packetgen.env",
+                    "file": "vpkg.env",
                     "type": "HEAT_ENV"
                 }
             ]
         },
         {
-            "file": "packetgen_cloudtech_k8s_charts.tgz",
+            "file": "vpkg_cloudtech_k8s_charts.tgz",
             "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
         },
         {
-            "file": "sink.yaml",
+            "file": "vsn.yaml",
             "type": "HEAT",
             "isBase": "false",
             "data": [
                 {
-                    "file": "sink.env",
+                    "file": "vsn.env",
                     "type": "HEAT_ENV"
                 }
             ]
         },
         {
-            "file": "sink_cloudtech_k8s_charts.tgz",
+            "file": "vsn_cloudtech_k8s_charts.tgz",
             "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
         }
     ]
