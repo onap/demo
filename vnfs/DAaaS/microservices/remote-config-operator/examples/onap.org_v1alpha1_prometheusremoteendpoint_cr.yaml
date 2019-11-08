@@ -5,7 +5,7 @@ metadata:
   labels:
     app: cp-prometheus-prometheus
 spec:
-  adapterUrl: "http://m3coordinator-m3db-cluster.edge1.svc.cluster.local:7201/api/v1/prom/remote/write"
+  adapterURL: "http://m3coordinator-m3db-cluster.edge1.svc.cluster.local:7201"
   remoteTimeout: "45s"
   type: "m3db"
   filterSelector:

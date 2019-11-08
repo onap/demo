@@ -38,6 +38,7 @@ spec:
             replacement:
               type: string
             sourceLabels:
+              description: SourceLabels are the labels of the each metric
               items:
                 type: string
               type: array
