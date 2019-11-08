@@ -71,7 +71,7 @@ func schema_pkg_apis_onap_v1alpha1_PrometheusRemoteEndpointSpec(ref common.Refer
 				Description: "PrometheusRemoteEndpointSpec defines the desired state of PrometheusRemoteEndpoint",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"adapterUrl": {
+					"adapterURL": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",
@@ -106,7 +106,7 @@ func schema_pkg_apis_onap_v1alpha1_PrometheusRemoteEndpointSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"adapterUrl", "type"},
+				Required: []string{"adapterURL", "type"},
 			},
 		},
 		Dependencies: []string{
@@ -120,6 +120,34 @@ func schema_pkg_apis_onap_v1alpha1_PrometheusRemoteEndpointStatus(ref common.Ref
 			SchemaProps: spec.SchemaProps{
 				Description: "PrometheusRemoteEndpointStatus defines the observed state of PrometheusRemoteEndpoint",
 				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"prometheusInstance": {
+						SchemaProps: spec.SchemaProps{
+							Description: "INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run \"operator-sdk generate k8s\" to regenerate code after modifying this file Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html Status can be Error, Enabled",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"kafkaWriterID": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"remoteURL": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"status"},
 			},
 		},
 	}
@@ -189,8 +217,14 @@ func schema_pkg_apis_onap_v1alpha1_RemoteFilterActionSpec(ref common.ReferenceCa
 						},
 					},
 					"sourceLabels": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "SourceLabels are the labels of the each metric",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{

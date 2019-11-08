@@ -1,3 +1,24 @@
+# Common
+.DS_Store
+.vscode
+*-workspace
+.tox/
+.*.swp
+*.log
+coverage.html
+docs/build
+*.so
+
+# Tests
+*.test
+*.out
+
+# # Directories
+target
+vendor
+src/github.com
+src/golang.org
+
 # Temporary Build Files
 build/_output
 build/_test
