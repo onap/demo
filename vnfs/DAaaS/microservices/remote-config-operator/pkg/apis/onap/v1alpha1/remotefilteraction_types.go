@@ -7,8 +7,10 @@ import (
 // RemoteFilterActionSpec defines the desired state of RemoteFilterAction
 // +k8s:openapi-gen=true
 type RemoteFilterActionSpec struct {
-	Action       string   `json:"action,omitempty"`
-	Regex        string   `json:"regex,omitempty"`
+	Action string `json:"action,omitempty"`
+	Regex  string `json:"regex,omitempty"`
+	// SourceLabels are the labels of the each metric
+	// +listType=set
 	SourceLabels []string `json:"sourceLabels,omitempty"`
 	TargetLabel  string   `json:"targetLabel,omitempty"`
 	Replacement  string   `json:"replacement,omitempty"`

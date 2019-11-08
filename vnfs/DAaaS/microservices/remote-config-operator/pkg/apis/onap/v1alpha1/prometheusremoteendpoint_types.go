@@ -4,15 +4,10 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-type Metadata struct {
-	Name   string   `json:"Name"`
-	Labels []string `json:"Labels"`
-}
-
 // PrometheusRemoteEndpointSpec defines the desired state of PrometheusRemoteEndpoint
 // +k8s:openapi-gen=true
 type PrometheusRemoteEndpointSpec struct {
-	AdapterUrl     string                `json:"adapterUrl"`
+	AdapterURL     string                `json:"adapterURL"`
 	FilterSelector *metav1.LabelSelector `json:"filterSelector,omitempty"`
 	Type           string                `json:"type"`
 	KafkaConfig    string                `json:"kafkaConfig,omitempty"`
@@ -20,12 +15,16 @@ type PrometheusRemoteEndpointSpec struct {
 	RemoteTimeout  string                `json:"remoteTimeout,omitempty"`
 }
 
+// KafkaConfig - defines the desired remote kafka writer configurations
 type KafkaConfig struct {
-	BrokerUrl string `json:"brokerUrl"`
-	Group     string `json:"group,omitempty"`
-	Topic     string `json:"topic"`
+	BrokerURL    string `json:"bootstrap.servers"`
+	Topic        string `json:"topic"`
+	UsePartition bool   `json:"usePartition"`
+	BatchMsgNum  int    `json:"batch.num.messages,omitempty`
+	Compression  string `json:"compression.codec,omitempty`
 }
 
+// QueueConfig - defines the prometheus remote write queue configurations
 type QueueConfig struct {
 	BatchSendDeadline string `json:"batchSendDeadline,omitempty"`
 	Capacity          string `json:"capacity,omitempty"`
@@ -39,10 +38,16 @@ type QueueConfig struct {
 
 // PrometheusRemoteEndpointStatus defines the observed state of PrometheusRemoteEndpoint
 // +k8s:openapi-gen=true
+// +kubebuilder:subresource:status
 type PrometheusRemoteEndpointStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
+	// Status can be Error, Enabled
+	PrometheusInstance string `json:"prometheusInstance,omitempty"`
+	Status             string `json:"status"`
+	KafkaWriterID      string `json:"kafkaWriterID,omitempty"`
+	RemoteURL          string `json:"remoteURL,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -24,7 +24,7 @@ spec:
             - name: WATCH_NAMESPACE
               value: ""
             - name: WATCH_LABELS
-              value: "app=cp-prometheus-prometheus"
+              value: "remote=m3db1"
             - name: POD_NAME
               valueFrom:
                 fieldRef:

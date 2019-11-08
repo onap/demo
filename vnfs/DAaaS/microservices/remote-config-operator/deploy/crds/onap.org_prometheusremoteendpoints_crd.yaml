@@ -32,7 +32,7 @@ spec:
         spec:
           description: PrometheusRemoteEndpointSpec defines the desired state of PrometheusRemoteEndpoint
           properties:
-            adapterUrl:
+            adapterURL:
               type: string
             filterSelector:
               description: A label selector is a label query over a set of resources.
@@ -83,6 +83,8 @@ spec:
             kafkaConfig:
               type: string
             queueConfig:
+              description: QueueConfig - defines the prometheus remote write queue
+                configurations
               properties:
                 batchSendDeadline:
                   type: string
@@ -106,12 +108,28 @@ spec:
             type:
               type: string
           required:
-          - adapterUrl
+          - adapterURL
           - type
           type: object
         status:
           description: PrometheusRemoteEndpointStatus defines the observed state of
             PrometheusRemoteEndpoint
+          properties:
+            kafkaWriterID:
+              type: string
+            prometheusInstance:
+              description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                of cluster Important: Run "operator-sdk generate k8s" to regenerate
+                code after modifying this file Add custom validation using kubebuilder
+                tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
+                Status can be Error, Enabled'
+              type: string
+            remoteURL:
+              type: string
+            status:
+              type: string
+          required:
+          - status
           type: object
       type: object
   version: v1alpha1
