@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "548bdd56_7f9968ae",
+        "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/pkg/api/handler.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-11-11T22:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b78073d5_00a4d508",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 48
+      },
+      "revId": "63d6e222a5099317fdd92fb0aa02a48e8301842b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ca060d63_01aaa9e7",
         "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/pkg/api/handler.go",
         "patchSetId": 3
@@ -53,6 +77,30 @@
       "writtenOn": "2019-11-06T19:38:13Z",
       "side": 1,
       "message": "not needed as status is available from call.",
+      "range": {
+        "startLine": 81,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 45
+      },
+      "revId": "63d6e222a5099317fdd92fb0aa02a48e8301842b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8509de4d_e5bf015f",
+        "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/pkg/api/handler.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-11-11T22:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca060d63_01aaa9e7",
       "range": {
         "startLine": 81,
         "startChar": 0,
@@ -111,6 +159,30 @@
     },
     {
       "key": {
+        "uuid": "a89fe566_568f08d3",
+        "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/pkg/api/handler.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-11-11T22:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f068e1f_c7258821",
+      "range": {
+        "startLine": 100,
+        "startChar": 1,
+        "endLine": 107,
+        "endChar": 2
+      },
+      "revId": "63d6e222a5099317fdd92fb0aa02a48e8301842b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "38eb9bb4_e2cdede9",
         "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/pkg/kafkawriter/kafkawriter.go",
         "patchSetId": 3
@@ -134,6 +206,30 @@
     },
     {
       "key": {
+        "uuid": "ceccbdde_df29840c",
+        "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/pkg/kafkawriter/kafkawriter.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-11-11T22:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38eb9bb4_e2cdede9",
+      "range": {
+        "startLine": 63,
+        "startChar": 1,
+        "endLine": 65,
+        "endChar": 2
+      },
+      "revId": "63d6e222a5099317fdd92fb0aa02a48e8301842b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bbfa469c_d331e5bb",
         "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/pkg/kafkawriter/kafkawriter.go",
         "patchSetId": 3
@@ -145,6 +241,30 @@
       "writtenOn": "2019-11-06T19:38:13Z",
       "side": 1,
       "message": "Catch the error here for this.",
+      "range": {
+        "startLine": 94,
+        "startChar": 12,
+        "endLine": 94,
+        "endChar": 26
+      },
+      "revId": "63d6e222a5099317fdd92fb0aa02a48e8301842b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b813a6f1_78d1a780",
+        "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/pkg/kafkawriter/kafkawriter.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-11-11T22:39:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bbfa469c_d331e5bb",
       "range": {
         "startLine": 94,
         "startChar": 12,
@@ -208,6 +328,24 @@
       "writtenOn": "2019-11-06T19:38:13Z",
       "side": 1,
       "message": "Continue on error to next sample",
+      "revId": "63d6e222a5099317fdd92fb0aa02a48e8301842b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "efd7150a_dc14d669",
+        "filename": "vnfs/DAaaS/microservices/prom-kafka-writer/pkg/kafkawriter/producer.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2019-11-11T22:39:51Z",
+      "side": 1,
+      "message": "We return an internal server error as it cannot publish to the producer. This cannot occur on a normal operation. So returning with a status internal server error to prometheus.",
+      "parentUuid": "9737d815_e2fa1c12",
       "revId": "63d6e222a5099317fdd92fb0aa02a48e8301842b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
