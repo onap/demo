@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b68711e_8d0254e9",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/deployment.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-11-19T10:39:40Z",
+      "side": 0,
+      "message": "why we don\u0027t use vnf_name? CDS generates names for generic-vnf and vf-module. will this name be a name of vf-module? imho all the resources created in helm package should be prefixed with vf-module name - in order to allow creation of mul;tiple instances",
+      "range": {
+        "startLine": 13,
+        "startChar": 22,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "68d118176bb53c36b31a7060cfa16ad5acac1765",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

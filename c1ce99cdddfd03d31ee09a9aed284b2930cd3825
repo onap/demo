@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "992d0af5_dbf81277",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/packetgen/templates/service.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-11-19T10:39:40Z",
+      "side": 1,
+      "message": "what king of service this is?",
+      "range": {
+        "startLine": 4,
+        "startChar": 34,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "c1ce99cdddfd03d31ee09a9aed284b2930cd3825",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57e2bb1f_bb15f897",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/deployment.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-11-19T10:39:40Z",
+      "side": 1,
+      "message": "it would be nice to group all resources under the same label like vfw-k8s - so perhaps new label is needed. Maybe this label should be a vnf_name which was removed?",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 33
+      },
+      "revId": "c1ce99cdddfd03d31ee09a9aed284b2930cd3825",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa53e489_cb974fc8",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/service.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-11-19T10:39:40Z",
+      "side": 1,
+      "message": "what kind of service this is?",
+      "range": {
+        "startLine": 4,
+        "startChar": 34,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "c1ce99cdddfd03d31ee09a9aed284b2930cd3825",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
