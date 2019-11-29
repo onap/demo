@@ -46,6 +46,30 @@
       "revId": "68d118176bb53c36b31a7060cfa16ad5acac1765",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "738f6131_79007aa2",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/deployment.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-11-29T10:15:27Z",
+      "side": 0,
+      "message": "Apps should have name that is related with vf-module name but vnf_name allows to group all resources (from all vf-modules) created for some vnf. That\u0027s why perhaps we should use it in the label",
+      "parentUuid": "3b8cd3be_a7f84d86",
+      "range": {
+        "startLine": 13,
+        "startChar": 22,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "68d118176bb53c36b31a7060cfa16ad5acac1765",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }

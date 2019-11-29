@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e36d4edf_04423122",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/packetgen/templates/service.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-11-29T10:15:27Z",
+      "side": 1,
+      "message": "The comment was about naming convention. This service is for some purpose. SSH?",
+      "parentUuid": "e0f0d641_d7c8ed1c",
+      "range": {
+        "startLine": 4,
+        "startChar": 34,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "c1ce99cdddfd03d31ee09a9aed284b2930cd3825",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "57e2bb1f_bb15f897",
         "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/deployment.yaml",
         "patchSetId": 1
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "It\u0027s the service that allows users to watch darkstat UI",
       "parentUuid": "aa53e489_cb974fc8",
+      "range": {
+        "startLine": 4,
+        "startChar": 34,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "c1ce99cdddfd03d31ee09a9aed284b2930cd3825",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d533460b_b34a0704",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/service.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-11-29T10:15:27Z",
+      "side": 1,
+      "message": "It is about naming convention. Service name should reflect purpose",
+      "parentUuid": "be973f8e_8489bd98",
       "range": {
         "startLine": 4,
         "startChar": 34,
