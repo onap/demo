@@ -22,6 +22,30 @@
       "revId": "68d118176bb53c36b31a7060cfa16ad5acac1765",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b8cd3be_a7f84d86",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/deployment.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2019-11-29T08:15:30Z",
+      "side": 0,
+      "message": "Basicaly, all resources created by helm package will have vf-module name injected in label automatically by k8splugin. Do we want to also embed it second time?\nOr do you mean that app names (line 4) should be changed from v*_name_0 to vf-module name?",
+      "parentUuid": "4b68711e_8d0254e9",
+      "range": {
+        "startLine": 13,
+        "startChar": 22,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "68d118176bb53c36b31a7060cfa16ad5acac1765",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }

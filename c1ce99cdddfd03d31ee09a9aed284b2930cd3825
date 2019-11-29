@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e0f0d641_d7c8ed1c",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/packetgen/templates/service.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2019-11-29T08:15:30Z",
+      "side": 1,
+      "message": "I\u0027ve created this service for future reference when used with DCAE/Application Closed Loops to expose port for external configuration. This service was not part of so-far used CNF-vFW so I\u0027m welcome for suggestions to modify it.\nSo far I also cannot really test it, as we\u0027re not working with Closed Loops",
+      "parentUuid": "992d0af5_dbf81277",
+      "range": {
+        "startLine": 4,
+        "startChar": 34,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "c1ce99cdddfd03d31ee09a9aed284b2930cd3825",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "57e2bb1f_bb15f897",
         "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/deployment.yaml",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "e057c40d_81cd2480",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/deployment.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2019-11-29T08:15:30Z",
+      "side": 1,
+      "message": "Yes, you\u0027re right. Corrected this in latest patch",
+      "parentUuid": "57e2bb1f_bb15f897",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 33
+      },
+      "revId": "c1ce99cdddfd03d31ee09a9aed284b2930cd3825",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "aa53e489_cb974fc8",
         "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/service.yaml",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2019-11-19T10:39:40Z",
       "side": 1,
       "message": "what kind of service this is?",
+      "range": {
+        "startLine": 4,
+        "startChar": 34,
+        "endLine": 4,
+        "endChar": 41
+      },
+      "revId": "c1ce99cdddfd03d31ee09a9aed284b2930cd3825",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be973f8e_8489bd98",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/sink/templates/service.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2019-11-29T08:15:30Z",
+      "side": 1,
+      "message": "It\u0027s the service that allows users to watch darkstat UI",
+      "parentUuid": "aa53e489_cb974fc8",
       "range": {
         "startLine": 4,
         "startChar": 34,
