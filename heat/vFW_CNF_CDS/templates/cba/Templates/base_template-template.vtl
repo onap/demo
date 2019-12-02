@@ -1,0 +1,112 @@
+{
+  "resource-accumulator-resolved-data": [
+    {
+      "param-name": "service-instance-id",
+      "param-value": "${service-instance-id}"
+    },
+    {
+      "param-name": "vnf_id",
+      "param-value": "${vnf-id}"
+    },
+    {
+      "param-name": "vnf_name",
+      "param-value": "${vnf_name}"
+    },
+    {
+      "param-name": "vnf_model_customization_uuid",
+      "param-value": "${vnf-model-customization-uuid}"
+    },
+    {
+      "param-name": "vf_module_id",
+      "param-value": "${vf-module-id}"
+    },
+    {
+      "param-name": "vf_module_type",
+      "param-value": "${vf-module-type}"
+    },
+ 
+    {
+      "param-name": "int_private1_net_cidr",
+      "param-value": "${int_private1_net_cidr}"
+    },
+ 
+    {
+      "param-name": "int_private2_net_cidr",
+      "param-value": "${int_private2_net_cidr}"
+    },
+
+    {		
+      "param-name": "pub_key",		
+      "param-value": "${pub_key}"		
+    }
+ 
+  ],
+  "capability-data": [
+    {
+      "capability-name": "generate-name",
+      "key-mapping": [
+        {
+          "payload": [
+            {
+              "param-name": "resource-name",
+              "param-value": "vf-module-name"
+            },
+            {
+              "param-name": "resource-value",
+              "param-value": "${vf-module-name}"
+            },
+            {
+              "param-name": "external-key",
+              "param-value": "${vf-module-id}_vf-module-name"
+            },
+            {
+              "param-name": "policy-instance-name",
+              "param-value": "${vf-naming-policy}"
+            },
+            {
+              "param-name": "naming-type",
+              "param-value": "VF-MODULE"
+            },
+            {
+              "param-name": "VNF_NAME",
+              "param-value": "${vnf_name}"
+            },
+            {
+              "param-name": "VF_MODULE_LABEL",
+              "param-value": "${vf-module-label}"
+            },
+            {
+              "param-name": "VF_MODULE_TYPE",
+              "param-value": "${vf-module-type}"
+            }
+          ],
+          "output-key-mapping": [
+            {
+              "resource-name": "vf-module-name",
+              "resource-value": "${vf-module-name}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "capability-name": "aai-vf-module-put",
+      "key-mapping": [
+        {
+          "payload": [
+            {
+              "param-name": "vf-module",
+              "param-value": "vf-module"
+            }
+          ],
+          "output-key-mapping": [
+            {
+              "resource-name": "aai-vf-module-put",
+              "resource-value": "${status}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

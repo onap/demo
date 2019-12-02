@@ -1,0 +1,181 @@
+{
+  "tosca_definitions_version" : "controller_blueprint_1_0_0",
+  "metadata" : {
+    "template_author" : "Abdelmuhaimen Seaudi",
+    "author-email" : "abdelmuhaimen.seaudi@orange.com",
+    "user-groups" : "ADMIN, OPERATION",
+    "template_name" : "vFW_CDS",
+    "template_version" : "1.0.0",
+    "template_tags" : "vFW-CDS, vfw-CDS, SCALE-OUT"
+  },
+  "imports" : [ {
+    "file" : "Definitions/data_types.json"
+  }, {
+    "file" : "Definitions/relationship_types.json"
+  }, {
+    "file" : "Definitions/artifact_types.json"
+  }, {
+    "file" : "Definitions/node_types.json"
+  }, {
+    "file" : "Definitions/policy_types.json"
+  } ],
+  "dsl_definitions" : {
+    "ipam-1" : {
+      "type" : "token-auth",
+      "url" : "http://netbox-nginx:8080",
+      "token" : "Token 0123456789abcdef0123456789abcdef01234567"
+    },
+    "config-deploy-properties" : {
+      "resolution-key" : {
+        "get_input" : "resolution-key"
+      }
+    },
+    "dynamic-db-source" : {
+      "type" : "maria-db",
+      "url" : "jdbc:mysql://mariadb-galera:3306/sdnctl",
+      "username" : "root",
+      "password" : "secretpassword"
+    }
+  },
+  "topology_template" : {
+    "workflows" : {
+      "resource-assignment" : {
+        "steps" : {
+          "resource-assignment" : {
+            "description" : "Resource Assign Workflow",
+            "target" : "resource-assignment"
+          }
+        },
+        "inputs" : {
+          "template-prefix" : {
+            "required" : true,
+            "type" : "list",
+            "entry_schema" : {
+              "type" : "string"
+            }
+          },
+          "resource-assignment-properties" : {
+            "description" : "Dynamic PropertyDefinition for workflow(resource-assignment).",
+            "required" : true,
+            "type" : "dt-resource-assignment-properties"
+          }
+        },
+        "outputs" : {
+          "meshed-template" : {
+            "type" : "json",
+            "value" : {
+              "get_attribute" : [ "resource-assignment", "assignment-params" ]
+            }
+          }
+        }
+      },
+      "config-deploy" : {
+        "steps" : {
+          "config-deploy" : {
+            "description" : "Config Deploy Workflow",
+            "target" : "config-deploy-process"
+          }
+        },
+        "inputs" : {
+          "config-deploy-properties" : {
+            "description" : "Dynamic PropertyDefinition for workflow(config-deploy).",
+            "required" : true,
+            "type" : "dt-config-deploy-properties"
+          }
+        },
+        "outputs" : {
+          "dry-run" : {
+            "type" : "json",
+            "value" : {
+              "get_attribute" : [ "config-deploy-process", "assignment-params" ]
+            }
+          }
+        }
+      }
+    },
+    "node_templates" : {
+      "resource-assignment" : {
+        "type" : "component-resource-resolution",
+        "interfaces" : {
+          "ResourceResolutionComponent" : {
+            "operations" : {
+              "process" : {
+                "inputs" : {
+                  "artifact-prefix-names" : {
+                    "get_input" : "template-prefix"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "artifacts" : {
+          "base_template-template" : {
+            "type" : "artifact-template-velocity",
+            "file" : "Templates/base_template-template.vtl"
+          },
+          "base_template-mapping" : {
+            "type" : "artifact-mapping-resource",
+            "file" : "Templates/base_template-mapping.json"
+          },
+          "vpkg-template" : {
+            "type" : "artifact-template-velocity",
+            "file" : "Templates/vpkg-template.vtl"
+          },
+          "vpkg-mapping" : {
+            "type" : "artifact-mapping-resource",
+            "file" : "Templates/vpkg-mapping.json"
+          },
+          "vfw-template" : {
+            "type" : "artifact-template-velocity",
+            "file" : "Templates/vfw-template.vtl"
+          },
+          "vfw-mapping" : {
+            "type" : "artifact-mapping-resource",
+            "file" : "Templates/vfw-mapping.json"
+          },
+          "vnf-template" : {
+            "type" : "artifact-template-velocity",
+            "file" : "Templates/vnf-template.vtl"
+          },
+          "vnf-mapping" : {
+            "type" : "artifact-mapping-resource",
+            "file" : "Templates/vnf-mapping.json"
+          },
+          "vsn-template" : {
+            "type" : "artifact-template-velocity",
+            "file" : "Templates/vsn-template.vtl"
+          },
+          "vsn-mapping" : {
+            "type" : "artifact-mapping-resource",
+            "file" : "Templates/vsn-mapping.json"
+          }
+        }
+      },
+      "config-deploy-process" : {
+        "type" : "component-resource-resolution",
+        "interfaces" : {
+          "ResourceResolutionComponent" : {
+            "operations" : {
+              "process" : {
+                "inputs" : {
+                  "artifact-prefix-names" : [ "nf-params" ]
+                }
+              }
+            }
+          }
+        },
+        "artifacts" : {
+          "nf-params-template" : {
+            "type" : "artifact-template-velocity",
+            "file" : "Templates/nf-params-template.vtl"
+          },
+          "nf-params-mapping" : {
+            "type" : "artifact-mapping-resource",
+            "file" : "Templates/nf-params-mapping.json"
+          }
+        }
+      }
+    }
+  }
+}
