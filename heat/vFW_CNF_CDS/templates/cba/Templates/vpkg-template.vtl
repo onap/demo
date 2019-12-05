@@ -56,7 +56,7 @@
       "param-name": "nfc-naming-code",
       "param-value": "${nfc-naming-code}"
     },
- 
+
     {
       "param-name": "vpg_image_name",
       "param-value": "${vpg_image_name}"
@@ -128,9 +128,19 @@
 	{
       "param-name": "vpg_onap_private_ip_0",
       "param-value": "${vpg_onap_private_ip_0}"
+    },
+    {
+      "param-name": "k8s-rb-definition-name",
+      "param-value": "${vf-module-model-invariant-id}"
+    },
+    {
+      "param-name": "k8s-rb-definition-version",
+      "param-value": "${vf-module-model-version-id}"
+    },
+    {
+      "param-name": "k8s-rb-profile-name",
+      "param-value": "${k8s-rb-profile-name}"
     }
-	
-	
   ],
   "capability-data": [
     {
@@ -222,7 +232,7 @@
         }
       ]
     },
-    
+
     {
       "capability-name": "aai-vf-module-put",
       "key-mapping": [
