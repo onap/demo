@@ -32,7 +32,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "management-prefix-id",
@@ -124,7 +124,7 @@
     ],
     "version": 0
   },
-  
+
     {
     "name": "int_private1_net_cidr",
     "property": {
@@ -165,8 +165,8 @@
     "dependencies": [],
     "version": 0
   },
-  
-  
+
+
     {
     "name": "int_private2_net_cidr",
     "property": {
@@ -187,8 +187,8 @@
     "dependencies": [],
     "version": 0
   },
-  
-  
+
+
   {
     "name": "demo_artifacts_version",
     "property": {
@@ -282,7 +282,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "public_net_id",
@@ -323,7 +323,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "vnf-id",
@@ -344,7 +344,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "vnf-model-customization-uuid",
@@ -428,7 +428,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "aic-cloud-region",
@@ -449,7 +449,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "onap_private_net_id",
@@ -470,7 +470,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "onap_private_subnet_id",
@@ -575,7 +575,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "service-instance-id",
@@ -583,7 +583,7 @@
     "dependencies": [],
     "version": 0
   },
- 
+
   {
     "name": "private1-prefix-id",
     "property": {
@@ -597,7 +597,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "private1-prefix-id",
@@ -618,12 +618,26 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "private2-prefix-id",
     "dictionary-source": "processor-db",
     "dependencies": [],
     "version": 0
+  },
+  {
+    "name": "k8s-rb-profile-name",
+    "property": {
+      "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "k8s-rb-profile-name",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
   }
 ]
