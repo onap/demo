@@ -43,7 +43,7 @@
     ],
     "version": 0
   },
-  
+
   {
     "name": "vf-module-name",
     "property": {
@@ -747,7 +747,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "private1-prefix-id",
@@ -768,7 +768,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "management-prefix-id",
@@ -789,12 +789,26 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "private2-prefix-id",
     "dictionary-source": "processor-db",
     "dependencies": [],
     "version": 0
+  },
+  {
+    "name": "k8s-rb-profile-name",
+    "property": {
+      "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "k8s-rb-profile-name",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
   }
 ]
