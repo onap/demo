@@ -122,6 +122,11 @@
             "type" : ""
           }
         },
+        "int_private1_gw_ip" : {
+          "description" : "Private unprotected network gateway ip",
+          "type" : "string",
+          "default" : "192.168.10.1/24"
+        },
         "sec_group" : {
           "description" : "",
           "required" : false,
@@ -256,6 +261,11 @@
             "type" : ""
           }
         },
+        "int_private2_subnet_id" : {
+          "description" : "Private protected subnetwork identification",
+          "type" : "string",
+          "default" : "${int_private2_subnet_id}"
+        },
         "vfccustomizationuuid" : {
           "description" : "",
           "required" : false,
@@ -265,6 +275,10 @@
           "entry_schema" : {
             "type" : ""
           }
+        },
+        "k8s-rb-profile-name" : {
+          "description" : "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+          "type" : "string"
         },
         "vsn_name_0" : {
           "description" : "",
@@ -359,6 +373,15 @@
             "type" : ""
           }
         },
+        "int_private2_net_id" : {
+          "description" : "Private protected network identification",
+          "type" : "string"
+        },
+        "int_private1_subnet_id" : {
+          "description" : "Private unprotected subnetwork identification",
+          "type" : "string",
+          "default" : "${int_private1_subnet_id}"
+        },
         "vnf_name" : {
           "description" : "",
           "required" : false,
@@ -409,6 +432,10 @@
             "type" : ""
           }
         },
+        "int_private2_gw_ip" : {
+          "description" : "Private protected network gateway ip",
+          "type" : "string"
+        },
         "vsn_image_name" : {
           "description" : "",
           "required" : false,
@@ -438,6 +465,11 @@
           "entry_schema" : {
             "type" : ""
           }
+        },
+        "onap_private_gw_ip" : {
+          "description" : "Private onap management network gateway ip",
+          "type" : "string",
+          "default" : "10.10.0.1/16"
         },
         "dcae_collector_port" : {
           "description" : "",
@@ -592,6 +624,11 @@
           "entry_schema" : {
             "type" : ""
           }
+        },
+        "int_private1_net_id" : {
+          "description" : "Private unprotected network identification",
+          "type" : "string",
+          "default" : "${int_private1_net_id}"
         }
       },
       "derived_from" : "tosca.datatypes.Dynamic"

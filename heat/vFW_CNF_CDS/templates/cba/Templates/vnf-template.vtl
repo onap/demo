@@ -4,10 +4,7 @@
       "param-name": "service-instance-id",
       "param-value": "${service-instance-id}"
     },
-    {
-      "param-name": "vnf_id",
-      "param-value": "${vnf-id}"
-    },
+
     {
       "param-name": "vnf-model-customization-uuid",
       "param-value": "${vnf-model-customization-uuid}"
@@ -76,6 +73,38 @@
 	{
       "param-name": "nexus_artifact_repo",
       "param-value": "${nexus_artifact_repo}"
+    },
+    {
+      "param-name": "k8s-rb-profile-name",
+      "param-value": "${k8s-rb-profile-name}"
+    },
+    {
+      "param-name": "int_private1_gw_ip",
+      "param-value": "${int_private1_gw_ip}"
+    },
+    {
+      "param-name": "int_private1_net_id",
+      "param-value": "${vnf_name}-unprotected-network"
+    },
+    {
+      "param-name": "int_private1_subnet_id",
+      "param-value": "${int_private1_net_id}-subnet-1"
+    },
+    {
+      "param-name": "int_private2_gw_ip",
+      "param-value": "${int_private2_gw_ip}"
+    },
+    {
+      "param-name": "int_private2_net_id",
+      "param-value": "${vnf_name}-protected-network"
+    },
+    {
+      "param-name": "int_private2_subnet_id",
+      "param-value": "${int_private2_net_id}-subnet-1"
+    },
+    {
+      "param-name": "onap_private_gw_ip",
+      "param-value": "${onap_private_gw_ip}"
     }
   ],
   "capability-data": [

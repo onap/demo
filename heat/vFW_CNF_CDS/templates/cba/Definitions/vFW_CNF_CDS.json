@@ -1,12 +1,13 @@
 {
   "tosca_definitions_version" : "controller_blueprint_1_0_0",
   "metadata" : {
-    "template_author" : "Abdelmuhaimen Seaudi",
+    "template_author" : "Samuli Silvius <s.silvius@partner.samsung.com>",
     "author-email" : "abdelmuhaimen.seaudi@orange.com",
     "user-groups" : "ADMIN, OPERATION",
-    "template_name" : "vFW_CDS",
+    "template_name" : "vFW_CNF_CDS",
     "template_version" : "1.0.0",
-    "template_tags" : "vFW-CDS, vfw-CDS, SCALE-OUT"
+    "template_tags" : "Samuli Silvius, vFW_CNF_CDS",
+    "template_type" : "DEFAULT"
   },
   "imports" : [ {
     "file" : "Definitions/data_types.json"
@@ -24,6 +25,12 @@
       "type" : "token-auth",
       "url" : "http://netbox-nginx:8080",
       "token" : "Token 0123456789abcdef0123456789abcdef01234567"
+    },
+    "vpkg-rest-api" : {
+      "type" : "basic-auth",
+      "url" : "http://",
+      "username" : "admin",
+      "password" : "admin"
     },
     "config-deploy-properties" : {
       "resolution-key" : {

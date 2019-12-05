@@ -6,7 +6,7 @@
       "description" : "active-streams",
       "type" : "string"
     },
-    "updated-by" : "Singal, Kapil <ks220y@att.com>",
+    "updated-by" : "MALAKOV, YURIY <yuriy.malakov@att.com>",
     "sources" : {
       "input" : {
         "type" : "source-input"
@@ -277,6 +277,41 @@
       }
     }
   },
+  "int_private1_gw_ip" : {
+    "tags" : "k8s, cnf, int_private1_gw_ip",
+    "name" : "int_private1_gw_ip",
+    "property" : {
+      "description" : "Private unprotected network gateway ip address",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      },
+      "sdnc" : {
+        "type" : "source-rest",
+        "properties" : {
+          "verb" : "GET",
+          "type" : "JSON",
+          "url-path" : "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/int_private1_gw_ip",
+          "path" : "/param/0/value",
+          "input-key-mapping" : {
+            "service-instance-id" : "service-instance-id",
+            "vnf-id" : "vnf-id"
+          },
+          "output-key-mapping" : {
+            "int_private1_gw_ip" : "value"
+          },
+          "key-dependencies" : [ "service-instance-id", "vnf-id" ]
+        }
+      }
+    }
+  },
   "int_private1_net_cidr" : {
     "tags" : "int_private1_net_cidr",
     "name" : "int_private1_net_cidr",
@@ -293,18 +328,6 @@
         "type" : "source-default",
         "properties" : { }
       },
-      "processor-db" : {
-        "type" : "source-db",
-        "properties" : {
-          "endpoint-selector" : "dynamic-db-source",
-          "type" : "SQL",
-          "query" : "select sdnctl.IPAM_IP_POOL.prefix as prefix from sdnctl.IPAM_IP_POOL where description = \"private1\"",
-          "input-key-mapping" : { },
-          "output-key-mapping" : {
-            "int_private1_net_cidr" : "prefix"
-          }
-        }
-      },
       "sdnc" : {
         "type" : "source-rest",
         "properties" : {
@@ -318,6 +341,123 @@
           },
           "output-key-mapping" : {
             "int_private1_net_cidr" : "value"
+          },
+          "key-dependencies" : [ "service-instance-id", "vnf-id" ]
+        }
+      },
+      "processor-db" : {
+        "type" : "source-db",
+        "properties" : {
+          "endpoint-selector" : "dynamic-db-source",
+          "type" : "SQL",
+          "query" : "select sdnctl.IPAM_IP_POOL.prefix as prefix from sdnctl.IPAM_IP_POOL where description = \"private1\"",
+          "input-key-mapping" : { },
+          "output-key-mapping" : {
+            "int_private1_net_cidr" : "prefix"
+          }
+        }
+      }
+    }
+  },
+  "int_private1_net_id" : {
+    "tags" : "k8s, cnf, int_private1_net_id",
+    "name" : "int_private1_net_id",
+    "property" : {
+      "description" : "Private network identification",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      },
+      "sdnc" : {
+        "type" : "source-rest",
+        "properties" : {
+          "verb" : "GET",
+          "type" : "JSON",
+          "url-path" : "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/int_private1_net_id",
+          "path" : "/param/0/value",
+          "input-key-mapping" : {
+            "service-instance-id" : "service-instance-id",
+            "vnf-id" : "vnf-id"
+          },
+          "output-key-mapping" : {
+            "int_private1_net_id" : "value"
+          },
+          "key-dependencies" : [ "service-instance-id", "vnf-id" ]
+        }
+      }
+    }
+  },
+  "int_private1_subnet_id" : {
+    "tags" : "k8s, cnf, int_private1_subnet_id",
+    "name" : "int_private1_subnet_id",
+    "property" : {
+      "description" : "Private unprotected subnetwork identification",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      },
+      "sdnc" : {
+        "type" : "source-rest",
+        "properties" : {
+          "verb" : "GET",
+          "type" : "JSON",
+          "url-path" : "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/int_private1_subnet_id",
+          "path" : "/param/0/value",
+          "input-key-mapping" : {
+            "service-instance-id" : "service-instance-id",
+            "vnf-id" : "vnf-id"
+          },
+          "output-key-mapping" : {
+            "int_private1_subnet_id" : "value"
+          },
+          "key-dependencies" : [ "service-instance-id", "vnf-id" ]
+        }
+      }
+    }
+  },
+  "int_private2_gw_ip" : {
+    "tags" : "k8s, cnf, int_private2_gw_ip",
+    "name" : "int_private2_gw_ip",
+    "property" : {
+      "description" : "Private protected network gateway ip address",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      },
+      "sdnc" : {
+        "type" : "source-rest",
+        "properties" : {
+          "verb" : "GET",
+          "type" : "JSON",
+          "url-path" : "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/int_private2_gw_ip",
+          "path" : "/param/0/value",
+          "input-key-mapping" : {
+            "service-instance-id" : "service-instance-id",
+            "vnf-id" : "vnf-id"
+          },
+          "output-key-mapping" : {
+            "int_private2_gw_ip" : "value"
           },
           "key-dependencies" : [ "service-instance-id", "vnf-id" ]
         }
@@ -340,6 +480,18 @@
         "type" : "source-default",
         "properties" : { }
       },
+      "processor-db" : {
+        "type" : "source-db",
+        "properties" : {
+          "endpoint-selector" : "dynamic-db-source",
+          "type" : "SQL",
+          "query" : "select sdnctl.IPAM_IP_POOL.prefix as prefix from sdnctl.IPAM_IP_POOL where description = \"private2\"",
+          "output-key-mapping" : {
+            "int_private2_net_cidr" : "prefix"
+          },
+          "input-key-mapping" : { }
+        }
+      },
       "sdnc" : {
         "type" : "source-rest",
         "properties" : {
@@ -356,17 +508,110 @@
           },
           "key-dependencies" : [ "service-instance-id", "vnf-id" ]
         }
+      }
+    }
+  },
+  "int_private2_net_id" : {
+    "tags" : "k8s, cnf, int_private2_net_id",
+    "name" : "int_private2_net_id",
+    "property" : {
+      "description" : "Private protected network identification",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
       },
-      "processor-db" : {
-        "type" : "source-db",
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      },
+      "sdnc" : {
+        "type" : "source-rest",
         "properties" : {
-          "endpoint-selector" : "dynamic-db-source",
-          "type" : "SQL",
-          "query" : "select sdnctl.IPAM_IP_POOL.prefix as prefix from sdnctl.IPAM_IP_POOL where description = \"private2\"",
-          "input-key-mapping" : { },
+          "verb" : "GET",
+          "type" : "JSON",
+          "url-path" : "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/int_private2_net_id",
+          "path" : "/param/0/value",
+          "input-key-mapping" : {
+            "service-instance-id" : "service-instance-id",
+            "vnf-id" : "vnf-id"
+          },
           "output-key-mapping" : {
-            "int_private2_net_cidr" : "prefix"
-          }
+            "int_private2_net_id" : "value"
+          },
+          "key-dependencies" : [ "service-instance-id", "vnf-id" ]
+        }
+      }
+    }
+  },
+  "int_private2_subnet_id" : {
+    "tags" : "k8s, cnf, int_private2_subnet_id",
+    "name" : "int_private2_subnet_id",
+    "property" : {
+      "description" : "Private protected subnetwork identification",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      },
+      "sdnc" : {
+        "type" : "source-rest",
+        "properties" : {
+          "verb" : "GET",
+          "type" : "JSON",
+          "url-path" : "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/int_private2_subnet_id",
+          "path" : "/param/0/value",
+          "input-key-mapping" : {
+            "service-instance-id" : "service-instance-id",
+            "vnf-id" : "vnf-id"
+          },
+          "output-key-mapping" : {
+            "int_private2_subnet_id" : "value"
+          },
+          "key-dependencies" : [ "service-instance-id", "vnf-id" ]
+        }
+      }
+    }
+  },
+  "k8s-rb-profile-name" : {
+    "tags" : "k8s, cnf, profile",
+    "name" : "k8s-rb-profile-name",
+    "property" : {
+      "description" : "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      },
+      "sdnc" : {
+        "type" : "source-rest",
+        "properties" : {
+          "verb" : "GET",
+          "type" : "JSON",
+          "url-path" : "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/k8s-rb-profile-name",
+          "path" : "/param/0/value",
+          "input-key-mapping" : {
+            "service-instance-id" : "service-instance-id",
+            "vnf-id" : "vnf-id"
+          },
+          "output-key-mapping" : {
+            "k8s-rb-profile-name" : "value"
+          },
+          "key-dependencies" : [ "service-instance-id", "vnf-id" ]
         }
       }
     }
@@ -517,6 +762,41 @@
           },
           "key-dependencies" : [ "vfccustomizationuuid" ],
           "endpoint-selector" : "dynamic-db-source"
+        }
+      }
+    }
+  },
+  "onap_private_gw_ip" : {
+    "tags" : "k8s, cnf, onap_private_gw_ip",
+    "name" : "onap_private_gw_ip",
+    "property" : {
+      "description" : "Private onap management network gateway ip address",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      },
+      "sdnc" : {
+        "type" : "source-rest",
+        "properties" : {
+          "verb" : "GET",
+          "type" : "JSON",
+          "url-path" : "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/onap_private_gw_ip",
+          "path" : "/param/0/value",
+          "input-key-mapping" : {
+            "service-instance-id" : "service-instance-id",
+            "vnf-id" : "vnf-id"
+          },
+          "output-key-mapping" : {
+            "onap_private_gw_ip" : "value"
+          },
+          "key-dependencies" : [ "service-instance-id", "vnf-id" ]
         }
       }
     }
@@ -809,8 +1089,15 @@
       "description" : "put-active-streams",
       "type" : "string"
     },
-    "updated-by" : "Singal, Kapil <ks220y@att.com>",
+    "updated-by" : "MALAKOV, YURIY <yuriy.malakov@att.com>",
     "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      },
       "sdnc" : {
         "type" : "source-rest",
         "properties" : {
@@ -827,13 +1114,6 @@
           "endpoint-selector" : "vpkg-rest-api",
           "payload" : "{\"streams\": {\"active-streams\": $active-streams}}"
         }
-      },
-      "input" : {
-        "type" : "source-input"
-      },
-      "default" : {
-        "type" : "source-default",
-        "properties" : { }
       }
     }
   },
@@ -1339,9 +1619,9 @@
       "sdnc" : {
         "type" : "source-rest",
         "properties" : {
+          "verb" : "GET",
           "type" : "JSON",
-          "verb": "GET",
-          "url-path" : "config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/name",
+          "url-path" : "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/vnf_name",
           "path" : "/param/0/value",
           "input-key-mapping" : {
             "service-instance-id" : "service-instance-id",
@@ -1351,24 +1631,6 @@
             "vnf_name" : "value"
           },
           "key-dependencies" : [ "service-instance-id", "vnf-id" ]
-        }
-      },
-      "aai-data": {
-        "type": "source-rest",
-        "properties": {
-          "type": "JSON",
-          "verb": "GET",
-          "url-path": "/aai/v14/network/generic-vnfs/generic-vnf/$vnf-id",
-          "path": "",
-          "input-key-mapping": {
-            "vnf-id": "vnf-id"
-          },
-          "output-key-mapping": {
-            "vnf_name": "vnf-name"
-          },
-          "key-dependencies": [
-            "vnf-id"
-          ]
         }
       }
     }
@@ -1425,14 +1687,14 @@
       "processor-db" : {
         "type" : "source-db",
         "properties" : {
+          "endpoint-selector" : "dynamic-db-source",
           "type" : "SQL",
           "query" : "select VFC_MODEL.version as vnfc_model_version from VFC_MODEL where customization_uuid=:vfccustomizationuuid",
-          "output-key-mapping" : {
-            "vnfc-model-version" : "vnfc_model_version"
-          },
-          "endpoint-selector" : "dynamic-db-source",
           "input-key-mapping" : {
             "vfccustomizationuuid" : "vfccustomizationuuid"
+          },
+          "output-key-mapping" : {
+            "vnfc-model-version" : "vnfc_model_version"
           },
           "key-dependencies" : [ "vfccustomizationuuid" ]
         }
@@ -1446,7 +1708,7 @@
       "description" : "vpg_int_private1_ip_0",
       "type" : "string"
     },
-    "updated-by" : "Singal, Kapil <ks220y@att.com>",
+    "updated-by" : "MALAKOV, YURIY <yuriy.malakov@att.com>",
     "sources" : {
       "input" : {
         "type" : "source-input"
@@ -1478,7 +1740,7 @@
     "tags" : "vpg_name_0",
     "name" : "vpg_name_0",
     "property" : {
-      "description" : "vlb_name_0",
+      "description" : "vpg_name_0",
       "type" : "string"
     },
     "updated-by" : "MALAKOV, YURIY <yuriy.malakov@att.com>",

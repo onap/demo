@@ -519,7 +519,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "private2-prefix-id",
@@ -540,7 +540,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "management-prefix-id",
@@ -769,5 +769,81 @@
       "vnf-id"
     ],
     "version": 0
+  },
+  {
+    "name": "dcae_collector_ip",
+    "property": {
+      "description": "",
+      "required": false,
+      "type": "string",
+      "status": "",
+      "constraints": [
+        {}
+      ],
+      "entry_schema": {
+        "type": ""
+      },
+      "default": "10.0.4.1"
+    },
+    "input-param": false,
+    "dictionary-name": "dcae_collector_ip",
+    "dictionary-source": "default",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ],
+    "version": 0
+  },
+  {
+    "name": "dcae_collector_port",
+    "property": {
+      "description": "",
+      "required": false,
+      "type": "string",
+      "status": "",
+      "constraints": [
+        {}
+      ],
+      "entry_schema": {
+        "type": ""
+      },
+      "default": "30235"
+    },
+    "input-param": false,
+    "dictionary-name": "dcae_collector_port",
+    "dictionary-source": "default",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ],
+    "version": 0
+  },
+  {
+    "name": "k8s-rb-profile-name",
+    "property": {
+      "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "k8s-rb-profile-name",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "int_private1_net_id",
+    "property": {
+      "description": "Private unprotected network identification",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private1_net_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
   }
 ]
