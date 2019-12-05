@@ -266,6 +266,11 @@
             "type" : ""
           }
         },
+        "k8s-rb-profile-name" : {
+          "description" : "Profile name used in multicloud/k8s plugin to identify Helm chart where this mapping is providing override values.",
+          "type" : "string",
+          "default" : "vfw-cnf-cds-base-profile"
+        },
         "vsn_name_0" : {
           "description" : "",
           "required" : false,
@@ -296,6 +301,9 @@
           "entry_schema" : {
             "type" : ""
           }
+        },
+        "vf-module-model-invariant-id" : {
+          "type" : "string"
         },
         "vnf-model-customization-uuid" : {
           "description" : "",
@@ -570,6 +578,9 @@
           "entry_schema" : {
             "type" : ""
           }
+        },
+        "vf-module-model-version-id" : {
+          "type" : "string"
         },
         "vpg_int_private1_ip_0" : {
           "description" : "",

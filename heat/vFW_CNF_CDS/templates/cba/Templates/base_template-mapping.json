@@ -298,7 +298,40 @@
       "vnf-id"
     ],
     "version": 0
+  },
+  {
+    "name": "vf-module-model-invariant-id",
+    "property": {
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "vf-module-model-invariant-id",
+    "dictionary-source": "input",
+    "dependencies": [
+    ]
+  },
+  {
+    "name": "vf-module-model-version-id",
+    "property": {
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "vf-module-model-version-id",
+    "dictionary-source": "input",
+    "dependencies": [
+    ]
+  },
+  {
+    "name": "k8s-rb-profile-name",
+    "property": {
+      "description": "Profile name used in multicloud/k8s plugin to identify Helm chart where this mapping is providing override values.",
+      "type": "string",
+      "default": "vfw-cnf-cds-base-profile"
+    },
+    "input-param": false,
+    "dictionary-name": "k8s-rb-profile-name",
+    "dictionary-source": "default",
+    "dependencies": [
+    ]
   }
-  
- 
 ]
