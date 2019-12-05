@@ -298,7 +298,145 @@
       "vnf-id"
     ],
     "version": 0
+  },
+  {
+    "name": "k8s-rb-profile-name",
+    "property": {
+      "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "k8s-rb-profile-name",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "int_private1_gw_ip",
+    "property": {
+      "description": "Private unprotected network gateway ip",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private1_gw_ip",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "int_private1_net_id",
+    "property": {
+      "description": "Private unprotected network identification",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private1_net_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "int_private1_subnet_id",
+    "property": {
+      "description": "Private unprotected subnetwork identification",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private1_subnet_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "int_private2_gw_ip",
+    "property": {
+      "description": "Private protected network gateway ip",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private2_gw_ip",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "int_private2_net_id",
+    "property": {
+      "description": "Private protected network identification",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private2_net_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "int_private2_subnet_id",
+    "property": {
+      "description": "Private protected subnetwork identification",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private2_subnet_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "onap_private_gw_ip",
+    "property": {
+      "description": "Private onap management network gateway ip",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "onap_private_gw_ip",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "onap_private_net_id",
+    "property": {
+      "description": "Private onap management network identification",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "onap_private_net_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "onap_private_subnet_id",
+    "property": {
+      "description": "Private onap management subnetwork identification",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "onap_private_subnet_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
   }
-  
- 
 ]

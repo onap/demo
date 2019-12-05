@@ -32,7 +32,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "management-prefix-id",
@@ -124,7 +124,7 @@
     ],
     "version": 0
   },
-  
+
     {
     "name": "int_private1_net_cidr",
     "property": {
@@ -165,8 +165,8 @@
     "dependencies": [],
     "version": 0
   },
-  
-  
+
+
     {
     "name": "int_private2_net_cidr",
     "property": {
@@ -187,8 +187,8 @@
     "dependencies": [],
     "version": 0
   },
-  
-  
+
+
   {
     "name": "demo_artifacts_version",
     "property": {
@@ -282,7 +282,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "public_net_id",
@@ -323,7 +323,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "vnf-id",
@@ -344,7 +344,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "vnf-model-customization-uuid",
@@ -394,7 +394,7 @@
     "dependencies": [],
     "version": 0
   },
-   {
+  {
     "name": "vpg_int_private1_ip_0",
     "property": {
       "description": "",
@@ -428,7 +428,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "aic-cloud-region",
@@ -449,7 +449,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "onap_private_net_id",
@@ -470,7 +470,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "onap_private_subnet_id",
@@ -521,27 +521,6 @@
     "version": 0
   },
   {
-    "name": "vfw_onap_private_ip_0",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      },
-      "default": "${vfw_onap_private_ip_0}"
-    },
-    "input-param": false,
-    "dictionary-name": "vfw_onap_private_ip_0",
-    "dictionary-source": "default",
-    "dependencies": [],
-    "version": 0
-  },
-  {
     "name": "vsn_int_private2_ip_0",
     "property": {
       "description": "",
@@ -575,7 +554,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "service-instance-id",
@@ -583,7 +562,7 @@
     "dependencies": [],
     "version": 0
   },
- 
+
   {
     "name": "private1-prefix-id",
     "property": {
@@ -597,7 +576,7 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "private1-prefix-id",
@@ -618,12 +597,116 @@
       "entry_schema": {
         "type": ""
       }
-      
+
     },
     "input-param": false,
     "dictionary-name": "private2-prefix-id",
     "dictionary-source": "processor-db",
     "dependencies": [],
     "version": 0
+  },
+  {
+    "name": "k8s-rb-profile-name",
+    "property": {
+      "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+      "type": "string",
+      "default": "vfw-cnf-cds-base-profile"
+    },
+    "input-param": false,
+    "dictionary-name": "k8s-rb-profile-name",
+    "dictionary-source": "default",
+    "dependencies": [
+    ]
+  },
+  {
+    "name": "int_private1_gw_ip",
+    "property": {
+      "description": "Private unprotected network gateway ip",
+      "type": "string",
+      "default": "192.168.10.1/24"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private1_gw_ip",
+    "dictionary-source": "default",
+    "dependencies": [
+    ]
+  },
+  {
+    "name": "int_private1_net_id",
+    "property": {
+      "description": "Private unprotected network identification",
+      "type": "string",
+      "default": "${int_private1_net_id}"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private1_net_id",
+    "dictionary-source": "default",
+    "dependencies": [
+    ]
+  },
+  {
+    "name": "int_private1_subnet_id",
+    "property": {
+      "description": "Private unprotected subnetwork identification",
+      "type": "string",
+      "default": "${int_private1_subnet_id}"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private1_subnet_id",
+    "dictionary-source": "default",
+    "dependencies": [
+    ]
+  },
+  {
+    "name": "int_private2_gw_ip",
+    "property": {
+      "description": "Private protected network gateway ip",
+      "type": "string",
+      "default": "192.168.20.1/24"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private2_gw_ip",
+    "dictionary-source": "default",
+    "dependencies": [
+    ]
+  },
+  {
+    "name": "int_private2_net_id",
+    "property": {
+      "description": "Private protected network identification",
+      "type": "string",
+      "default": "${int_private2_net_id}"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private2_net_id",
+    "dictionary-source": "default",
+    "dependencies": [
+    ]
+  },
+  {
+    "name": "int_private2_subnet_id",
+    "property": {
+      "description": "Private protected subnetwork identification",
+      "type": "string",
+      "default": "${int_private2_subnet_id}"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private2_subnet_id",
+    "dictionary-source": "default",
+    "dependencies": [
+    ]
+  },
+  {
+    "name": "onap_private_gw_ip",
+    "property": {
+      "description": "Private onap management network gateway ip",
+      "type": "string",
+      "default": "10.10.0.1/16"
+    },
+    "input-param": false,
+    "dictionary-name": "onap_private_gw_ip",
+    "dictionary-source": "default",
+    "dependencies": [
+    ]
   }
 ]

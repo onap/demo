@@ -21,7 +21,7 @@ service:
 
 # Static Defaults
 #
-# OPENSTACK PARAMETERS
+# Kubernetes PARAMETERS
 # Names
 vnf_name: test-vnf
 vsn_name_0: test-vnf-vsn

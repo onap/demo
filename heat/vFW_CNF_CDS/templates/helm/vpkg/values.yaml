@@ -14,10 +14,10 @@ service:
     port: 2831
     nodePort: 30831
 
-# OPENSTACK PARAMETERS
+# Kubernetes PARAMETERS
 # Names
 vpg_name_0: test-vnf-vpg
-vnf_name: test-vnf 
+vnf_name: test-vnf
 int_private1_net_id: unprotected-net
 onap_private_net_id: onap-private-net
 # Own Addresses

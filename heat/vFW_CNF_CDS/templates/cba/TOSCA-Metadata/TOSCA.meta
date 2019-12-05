@@ -1,6 +1,8 @@
 TOSCA-Meta-File-Version: 1.0.0
 CSAR-Version: 1.0
-Created-By: PLATANIA, MARCO <platania@research.att.com>
-Entry-Definitions: Definitions/vFW_CDS.json
-Template-Tags: vFW_CDS
-Content-Type: application/vnd.oasis.bpmn
+Created-By: Samuli Silvius <s.silvius@partner.samsung.com>
+Entry-Definitions: Definitions/vFW_CNF_CDS.json
+Template-Name: vFW_CNF_CDS
+Template-Version: 1.0.0
+Template-Type: DEFAULT
+Template-Tags: Samuli Silvius, vFW_CNF_CDS

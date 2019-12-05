@@ -189,6 +189,13 @@
           } ],
           "default" : "JSON"
         },
+        "headers" : {
+          "required" : false,
+          "type" : "map",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        },
         "verb" : {
           "required" : true,
           "type" : "string",
