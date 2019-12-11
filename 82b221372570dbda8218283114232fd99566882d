@@ -2,6 +2,121 @@
   "comments": [
     {
       "key": {
+        "uuid": "aa8e66fa_eefe68c8",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/data_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "vf-module-model-invariant-uuid instead",
+      "range": {
+        "startLine": 305,
+        "startChar": 9,
+        "endLine": 305,
+        "endChar": 37
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f03fa32e_aa4cef11",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/data_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "vf-module-model-version instead \n\nwhy we do not use the same format like for other data types? I understand that this is not required?",
+      "range": {
+        "startLine": 582,
+        "startChar": 9,
+        "endLine": 582,
+        "endChar": 35
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c026df5_d0aa19e1",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "We will have separate profiles created for each vf-module but for simplicity we can give the same name for all of them. Thats why we can assign this value on vnf level and on vf-module level it will be already taken from SDNC DB. so we should add here additional source with followign values\n\n      \"sdnc\" : {\n        \"type\" : \"source-rest\",\n        \"properties\" : {\n          \"verb\" : \"GET\",\n          \"type\" : \"JSON\",\n          \"url-path\" : \"/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/k8s-rb-profile-name\",\n          \"path\" : \"/param/0/value\",\n          \"input-key-mapping\" : {\n            \"service-instance-id\" : \"service-instance-id\",\n            \"vnf-id\" : \"vnf-id\"\n          },\n          \"output-key-mapping\" : {\n            \"k8s-rb-profile-name\" : \"value\"\n          },\n          \"key-dependencies\" : [ \"service-instance-id\", \"vnf-id\" ]\n        }\n      }",
+      "range": {
+        "startLine": 386,
+        "startChar": 0,
+        "endLine": 389,
+        "endChar": 7
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38ef48b9_94918bf3",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1002,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "lets rename it to vf-module-model-invariant-uuid to keep naming convention like in the sdnc database and similar to vf-module-model-customization-uuid.\n\ninvariant value does not have to be read from the input but instead it can be taken from the DB base on customization-uuud - the same like in vf-module-label case. \n\nThat\u0027s why I propose following form\n\n  \"vf-module-model-invariant-uuid\" : {\n    \"tags\" : \"vf-module-model-invariant-uuid\",\n    \"name\" : \"vf-module-model-invariant-uuid\",\n    \"property\" : {\n      \"description\" : \"vf-module-model-invariant-uuid\",\n      \"type\" : \"string\"\n    },\n    \"updated-by\" : \"Samuli, Silvius \u003cs.silvius@partner.samsung.com\u003e\",\n    \"sources\" : {\n      \"input\" : {\n        \"type\" : \"source-input\"\n      },\n      \"default\" : {\n        \"type\" : \"source-default\",\n        \"properties\" : { }\n      },\n      \"processor-db\" : {\n        \"type\" : \"source-db\",\n        \"properties\" : {\n          \"type\" : \"SQL\",\n          \"query\" : \"select sdnctl.VF_MODULE_MODEL.invariant_uuid as vf_module_model_invariant_uuid from sdnctl.VF_MODULE_MODEL where sdnctl.VF_MODULE_MODEL.customization_uuid\u003d:customizationid\",\n          \"input-key-mapping\" : {\n            \"customizationid\" : \"vf-module-model-customization-uuid\"\n          },\n          \"output-key-mapping\" : {\n            \"vf-module-model-invariant-uuid\" : \"vf_module_model_invariant_uuid\"\n          },\n          \"key-dependencies\" : [ \"vf-module-model-customization-uuid\" ],\n          \"endpoint-selector\" : \"dynamic-db-source\"\n        }\n      }\n    }\n  },",
+      "range": {
+        "startLine": 1002,
+        "startChar": 29,
+        "endLine": 1002,
+        "endChar": 31
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4ec2bc6_e032c61e",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1016,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "the name should be vf-module-model-version as in the DB it has such value like \u00271\u0027 and the column has just name \u0027version\u0027. Similar to invariant-uuid we should take this value from the db because we do not want to change request and it cannot be a request input\n\n  \"vf-module-model-version\" : {\n    \"tags\" : \"vf-module-model-version\",\n    \"name\" : \"vf-module-model-version\",\n    \"property\" : {\n      \"description\" : \"vf-module-model-version\",\n      \"type\" : \"string\"\n    },\n    \"updated-by\" : \"Samuli, Silvius \u003cs.silvius@partner.samsung.com\u003e\",\n    \"sources\" : {\n      \"input\" : {\n        \"type\" : \"source-input\"\n      },\n      \"default\" : {\n        \"type\" : \"source-default\",\n        \"properties\" : { }\n      },\n      \"processor-db\" : {\n        \"type\" : \"source-db\",\n        \"properties\" : {\n          \"type\" : \"SQL\",\n          \"query\" : \"select sdnctl.VF_MODULE_MODEL.version as vf_module_model_version from sdnctl.VF_MODULE_MODEL where sdnctl.VF_MODULE_MODEL.customization_uuid\u003d:customizationid\",\n          \"input-key-mapping\" : {\n            \"customizationid\" : \"vf-module-model-customization-uuid\"\n          },\n          \"output-key-mapping\" : {\n            \"vf-module-model-version\" : \"vf_module_model_version\"\n          },\n          \"key-dependencies\" : [ \"vf-module-model-customization-uuid\" ],\n          \"endpoint-selector\" : \"dynamic-db-source\"\n        }\n      }\n    }\n  },",
+      "range": {
+        "startLine": 1016,
+        "startChar": 2,
+        "endLine": 1016,
+        "endChar": 30
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3b37589_3bd52a0b",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CDS.json",
         "patchSetId": 2
@@ -96,6 +211,75 @@
     },
     {
       "key": {
+        "uuid": "dbe9ae5a_c56a1417",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "here it should be read from sdnc. more or less in this way\n\n  {\n    \"name\": \"k8s-rb-profile-name\",\n    \"property\": {\n      \"description\": \"Profile name used in multicloud/k8s plugin to identify Helm chart where this mapping is providing override values.\",\n      \"type\": \"string\",\n      \"default\": \"vfw-cnf-cds-base-profile\"\n    },\n    \"input-param\": false,\n    \"dictionary-name\": \"k8s-rb-profile-name\",\n    \"dictionary-source\": \"sdnc\",\n    \"dependencies\": [\n      \"service-instance-id\",\n      \"vnf-id\"\n    ]\n  }",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 336,
+        "endChar": 3
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b78a5b0b_0e1d1ff3",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-template.vtl",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "\"${vf-module-model-invariant-uuid}\"",
+      "range": {
+        "startLine": 41,
+        "startChar": 50,
+        "endLine": 41,
+        "endChar": 52
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36c7185b_cefa4622",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-template.vtl",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "\"${vf-module-model-version}\"",
+      "range": {
+        "startLine": 45,
+        "startChar": 21,
+        "endLine": 45,
+        "endChar": 52
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "85703b10_f2e5a96e",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-template.vtl",
         "patchSetId": 2
@@ -135,6 +319,53 @@
         "startLine": 47,
         "startChar": 0,
         "endLine": 50,
+        "endChar": 5
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f449174a_ef5d29a8",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-template.vtl",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "You are right, we do not have to wait for changes in the broker. The changes in sdnc request are not need what I explain in different comment.\n\nWe will have separate profiles but we can give them the same name. So this name can be given as input on vnf level template and on vf-module level it will be read from db. If we can store it in cds db instead of SDNC DB, why not - value on vnf level should be stored only for vf-module-level",
+      "parentUuid": "114e41e5_8d71b265",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 5
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1baa97d_eebc47d6",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/vnf-template.vtl",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T10:49:13Z",
+      "side": 1,
+      "message": "let\u0027s add here \n\n    {\n      \"param-name\": \"k8s-rb-profile-name\",\n      \"param-value\": \"${k8s-rb-profile-name}\"\n    }\n\nso in json file we need to add it as input",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 76,
         "endChar": 5
       },
       "revId": "82b221372570dbda8218283114232fd99566882d",
