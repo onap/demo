@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08d50e8b_823781fe",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T08:28:07Z",
+      "side": 1,
+      "message": "such change will require change in the SDNC request so in the vf-module config assign BB. We have \"vf-module-model-customization-uuid - why we cannot take both values: \"vf-module-model-invariant-id and vf-module-model-version-id base on customization id. I think we can. Moreover, in order to have k8s-rb-definiton-name and its version base on this parameters first we need to change artifact broker in multicloud.",
+      "range": {
+        "startLine": 302,
+        "startChar": 0,
+        "endLine": 323,
+        "endChar": 4
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85703b10_f2e5a96e",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-template.vtl",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-11T08:28:07Z",
+      "side": 1,
+      "message": "the name of profile can be common for all vf-modules. in this case, in VNF template we can define is an input and on vf-module level templates it should be taken from mdsal",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 5
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
