@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "b3b37589_3bd52a0b",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CDS.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4567
+      },
+      "writtenOn": "2019-12-11T10:14:02Z",
+      "side": 1,
+      "message": "please change the name to be k8s specific template name such as vFW_CDS_K8S. \n\nNOTE: We already have a vFW_CDS for openstack use case which is using the template name of vFW_CDS.",
+      "range": {
+        "startLine": 7,
+        "startChar": 23,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08d50e8b_823781fe",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
         "patchSetId": 2
