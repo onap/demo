@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "69b0f751_5ee1dadc",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/data_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2019-12-11T11:11:58Z",
+      "side": 1,
+      "message": "ok.\n\nWhat format? If you mean -/_ I had the same question in the review of our baseline. As \"traditionally\" cds models have been using format xx-yy and for some reason the latest updates in vFW model has added many variables in the format xx_yy. So what format we should use. I would prefer the xx-yy for cds models.",
+      "parentUuid": "f03fa32e_aa4cef11",
+      "range": {
+        "startLine": 582,
+        "startChar": 9,
+        "endLine": 582,
+        "endChar": 35
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6c026df5_d0aa19e1",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
         "patchSetId": 2
