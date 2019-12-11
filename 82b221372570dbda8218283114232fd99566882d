@@ -213,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "4b79242b_b2f0f712",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1016,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2019-12-11T11:22:42Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "c4ec2bc6_e032c61e",
+      "range": {
+        "startLine": 1016,
+        "startChar": 2,
+        "endLine": 1016,
+        "endChar": 30
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3b37589_3bd52a0b",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CDS.json",
         "patchSetId": 2
