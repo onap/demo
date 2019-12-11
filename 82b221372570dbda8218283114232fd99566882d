@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fb8273d8_d9d48fe2",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 389,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2019-12-11T11:22:42Z",
+      "side": 1,
+      "message": "yes if we do it that way.",
+      "parentUuid": "6c026df5_d0aa19e1",
+      "range": {
+        "startLine": 386,
+        "startChar": 0,
+        "endLine": 389,
+        "endChar": 7
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "38ef48b9_94918bf3",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
         "patchSetId": 2
@@ -130,6 +154,30 @@
       "writtenOn": "2019-12-11T10:49:13Z",
       "side": 1,
       "message": "lets rename it to vf-module-model-invariant-uuid to keep naming convention like in the sdnc database and similar to vf-module-model-customization-uuid.\n\ninvariant value does not have to be read from the input but instead it can be taken from the DB base on customization-uuud - the same like in vf-module-label case. \n\nThat\u0027s why I propose following form\n\n  \"vf-module-model-invariant-uuid\" : {\n    \"tags\" : \"vf-module-model-invariant-uuid\",\n    \"name\" : \"vf-module-model-invariant-uuid\",\n    \"property\" : {\n      \"description\" : \"vf-module-model-invariant-uuid\",\n      \"type\" : \"string\"\n    },\n    \"updated-by\" : \"Samuli, Silvius \u003cs.silvius@partner.samsung.com\u003e\",\n    \"sources\" : {\n      \"input\" : {\n        \"type\" : \"source-input\"\n      },\n      \"default\" : {\n        \"type\" : \"source-default\",\n        \"properties\" : { }\n      },\n      \"processor-db\" : {\n        \"type\" : \"source-db\",\n        \"properties\" : {\n          \"type\" : \"SQL\",\n          \"query\" : \"select sdnctl.VF_MODULE_MODEL.invariant_uuid as vf_module_model_invariant_uuid from sdnctl.VF_MODULE_MODEL where sdnctl.VF_MODULE_MODEL.customization_uuid\u003d:customizationid\",\n          \"input-key-mapping\" : {\n            \"customizationid\" : \"vf-module-model-customization-uuid\"\n          },\n          \"output-key-mapping\" : {\n            \"vf-module-model-invariant-uuid\" : \"vf_module_model_invariant_uuid\"\n          },\n          \"key-dependencies\" : [ \"vf-module-model-customization-uuid\" ],\n          \"endpoint-selector\" : \"dynamic-db-source\"\n        }\n      }\n    }\n  },",
+      "range": {
+        "startLine": 1002,
+        "startChar": 29,
+        "endLine": 1002,
+        "endChar": 31
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fe3d258_86bd6ceb",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1002,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2019-12-11T11:22:42Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "38ef48b9_94918bf3",
       "range": {
         "startLine": 1002,
         "startChar": 29,
