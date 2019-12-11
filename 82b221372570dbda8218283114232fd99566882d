@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4a7e91e5_79e0c21b",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/data_types.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2019-12-11T11:11:58Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "aa8e66fa_eefe68c8",
+      "range": {
+        "startLine": 305,
+        "startChar": 9,
+        "endLine": 305,
+        "endChar": 37
+      },
+      "revId": "82b221372570dbda8218283114232fd99566882d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f03fa32e_aa4cef11",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/data_types.json",
         "patchSetId": 2
