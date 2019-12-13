@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c7f7769_399bfe74",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CDS.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2019-12-13T10:31:28Z",
+      "side": 1,
+      "message": "Template-Name: vFW_CDS\nTemplate-Version: 1.0.0\n\nBoth must be added to TOSCA-meta",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 33
+      },
+      "revId": "d0e76f9f7bf11f38b49513dcf40474c904165c94",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
