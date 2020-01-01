@@ -280,6 +280,17 @@
           "description" : "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
           "type" : "string"
         },
+        "k8s-rb-profile-namespace" : {
+          "description" : "",
+          "required" : false,
+          "type" : "string",
+          "status" : "",
+          "constraints" : [ { } ],
+          "default": "default",
+          "entry_schema" : {
+            "type" : ""
+          }
+        },
         "vsn_name_0" : {
           "description" : "",
           "required" : false,
