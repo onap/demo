@@ -31,6 +31,18 @@
       "username" : "admin",
       "password" : "admin"
     },
+    "multicloud-k8s-api" : {
+      "type" : "basic-auth",
+      "username" : "admin",
+      "password" : "admin",
+      "url" : "http://multicloud-k8s:9015"
+    },
+    "profile-upload-properties" : {
+      "resolution-key" : {
+        "get_input" : "resolution-key"
+      },
+      "api-access": "*multicloud-k8s-api"
+    },
     "config-deploy-properties" : {
       "resolution-key" : {
         "get_input" : "resolution-key"
@@ -49,7 +61,24 @@
         "steps" : {
           "resource-assignment" : {
             "description" : "Resource Assign Workflow",
-            "target" : "resource-assignment"
+            "target" : "resource-assignment",
+            "activities": [
+              {
+                "call_operation": "ResourceResolutionComponent.process"
+              }
+            ],
+            "on_success": [
+              "profile-upload"
+            ]
+          },
+          "profile-upload" : {
+            "description" : "Upload K8s Profile",
+            "target" : "profile-upload",
+            "activities": [
+              {
+                "call_operation": "ComponentScriptExecutor.process"
+              }
+            ]
           }
         },
         "inputs" : {
@@ -58,6 +87,13 @@
             "type" : "list",
             "entry_schema" : {
               "type" : "string"
+            }
+          },
+          "resolution-key" : {
+            "required" : false,
+            "type" : "string",
+            "entry_schema" : {
+              "type" : ""
             }
           },
           "resource-assignment-properties" : {
@@ -110,6 +146,10 @@
                   "artifact-prefix-names" : {
                     "get_input" : "template-prefix"
                   }
+                },
+                "store-result": true,
+                "resolution-key": {
+                  "get_input" : "resolution-key"
                 }
               }
             }
@@ -155,6 +195,23 @@
           "vsn-mapping" : {
             "type" : "artifact-mapping-resource",
             "file" : "Templates/vsn-mapping.json"
+          }
+        }
+      },
+      "profile-upload" : {
+        "type" : "component-script-executor",
+        "interfaces" : {
+          "ComponentScriptExecutor" : {
+            "operations" : {
+              "process" : {
+                "inputs" : {
+                  "script-type" : "kotlin",
+                  "script-class-reference" : "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sProfileUpload",
+                  "instance-dependencies" : [ ],
+                  "dynamic-properties" : "*profile-upload-properties"
+                }
+              }
+            }
           }
         }
       },

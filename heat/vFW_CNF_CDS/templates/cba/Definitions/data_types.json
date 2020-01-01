@@ -271,6 +271,17 @@
           "type" : "string",
           "default" : "vfw-cnf-cds-base-profile"
         },
+        "k8s-rb-profile-namespace" : {
+          "description" : "",
+          "required" : false,
+          "type" : "string",
+          "status" : "",
+          "constraints" : [ { } ],
+          "default": "default",
+          "entry_schema" : {
+            "type" : ""
+          }
+        },
         "vsn_name_0" : {
           "description" : "",
           "required" : false,

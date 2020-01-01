@@ -828,5 +828,20 @@
       "service-instance-id",
       "vnf-id"
     ]
+  },
+  {
+    "name": "k8s-rb-profile-namespace",
+    "property": {
+      "description": "K8s namespace to create helm chart for specified profile",
+      "type": "string",
+      "default": "default"
+    },
+    "input-param": false,
+    "dictionary-name": "k8s-rb-profile-namespace",
+    "dictionary-source": "default",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
   }
 ]
