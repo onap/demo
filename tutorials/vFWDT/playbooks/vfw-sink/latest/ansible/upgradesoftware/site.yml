@@ -1,0 +1,28 @@
+---
+- hosts: vfw-sink
+  gather_facts: no
+  remote_user: ubuntu
+  tasks:
+  - debug: var="new_software_version"
+    failed_when:  new_software_version is not defined
+  - debug: var="existing_software_version"
+    failed_when:  existing_software_version is not defined
+  - name: Read OLD Software Version
+    shell: cat /opt/config/version.txt
+    register: old_version
+    become: true
+  - debug: var=old_version.stdout
+  - block:
+    - name: Update Software
+      shell: apt-get -y --force-yes -u update
+      args:
+        warn: no 
+    - name: Upgrade Version 
+      shell: echo {{new_software_version}} > /opt/config/version.txt
+    - debug:
+        msg: Software version has been upgraded to {{new_software_version}}
+    become: true
+    when: old_version.stdout != new_software_version
+  - debug:
+      msg: "The software version is up to date"
+    when: old_version.stdout == new_software_version

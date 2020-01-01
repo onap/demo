@@ -20,6 +20,7 @@
 '''
 
 import os
+import ssl
 import json
 import sys
 import uuid
@@ -32,6 +33,7 @@ import requests
 import simplejson
 import http.server
 import threading
+import urllib3
 from datetime import datetime
 from datetime import timedelta
 from simple_rest_client.api import API
@@ -44,9 +46,13 @@ from urllib3.exceptions import InsecureRequestWarning
 
 old_merge_environment_settings = requests.Session.merge_environment_settings
 
+
 hostname_cache = []
 ansible_inventory = {}
 osdf_response = {"last": { "id": "id", "data": None}}
+print_performance=False
+stats = open("stats.csv", "w")
+stats.write("operation;time\n")
 
 
 class BaseServer(http.server.BaseHTTPRequestHandler):
@@ -80,16 +86,43 @@ class BaseServer(http.server.BaseHTTPRequestHandler):
             simplejson.dump(data, outfile)
 
 
+class timing(object):
+
+    def __init__(self, description):
+        self.description = description
+
+    def __call__(self, f):
+        def wrap(*args, **kwargs):
+            req = None
+            if f.__name__ == "appc_lcm_request" or f.__name__ == "confirm_appc_lcm_action":
+                req = args[1]
+            description = self.description
+            if req is not None:
+                description = self.description + ' ' + req['input']['action']
+            if description.find('>') < 0 and print_performance:
+                print (('> {} START').format(description))
+            try:
+                time1 = time.time()
+                ret = f(*args, **kwargs)
+            finally:
+                time2 = time.time()
+                if print_performance:
+                    print ('> {} DONE {:0.3f} ms'.format(description, (time2-time1)*1000.0))
+                stats.write("{};{:0.3f}\n".format(description, (time2-time1)*1000.0).replace(".", ","))
+            return ret
+        return wrap
+
+
 def _run_osdf_resp_server():
     server_address = ('', 9000)
     httpd = http.server.HTTPServer(server_address, BaseServer)
     print('Starting OSDF Response Server...')
     httpd.serve_forever()
 
+
 @contextlib.contextmanager
 def _no_ssl_verification():
     opened_adapters = set()
-
     def merge_environment_settings(self, url, proxies, stream, verify, cert):
         # Verification happens only once per connection so we need to close
         # all the opened adapters once we're done. Otherwise, the effects of
@@ -102,7 +135,6 @@ def _no_ssl_verification():
         return settings
 
     requests.Session.merge_environment_settings = merge_environment_settings
-
     try:
         with warnings.catch_warnings():
             warnings.simplefilter('ignore', InsecureRequestWarning)
@@ -171,6 +203,7 @@ def _get_aai_rel_link_data(data, related_to, search_key=None, match_dict=None):
 class AAIApiResource(Resource):
     actions = {
         'generic_vnf': {'method': 'GET', 'url': 'network/generic-vnfs/generic-vnf/{}'},
+        'vnfc': {'method': 'GET', 'url': 'network/vnfcs/vnfc/{}'},
         'link': {'method': 'GET', 'url': '{}'},
         'service_instance': {'method': 'GET',
                              'url': 'business/customers/customer/{}/service-subscriptions/service-subscription/{}/service-instances/service-instance/{}'}
@@ -198,6 +231,9 @@ class APPCLcmApiResource(Resource):
         'upgrade_pre_check': {'method': 'POST', 'url': 'appc-provider-lcm:upgrade-pre-check/'},
         'upgrade_post_check': {'method': 'POST', 'url': 'appc-provider-lcm:upgrade-post-check/'},
         'action_status': {'method': 'POST', 'url': 'appc-provider-lcm:action-status/'},
+        'check_lock': {'method': 'POST', 'url': 'appc-provider-lcm:check-lock/'},
+        'lock': {'method': 'POST', 'url': 'appc-provider-lcm:lock/'},
+        'unlock': {'method': 'POST', 'url': 'appc-provider-lcm:unlock/'}
     }
 
 
@@ -276,6 +312,7 @@ def _init_python_appc_lcm_api(onap_ip):
     return api
 
 
+@timing("Load AAI Data")
 def load_aai_data(vfw_vnf_id, onap_ip):
     api = _init_python_aai_api(onap_ip)
     aai_data = {}
@@ -324,6 +361,7 @@ def load_aai_data(vfw_vnf_id, onap_ip):
     return aai_data
 
 
+@timing("> OSDF REQ")
 def _osdf_request(rancher_ip, onap_ip, aai_data, exclude, use_oof_cache):
     dirname = os.path.join('templates/oof-cache/', aai_data['vf-module-id'])
     if exclude:
@@ -395,6 +433,7 @@ def _osdf_request(rancher_ip, onap_ip, aai_data, exclude, use_oof_cache):
         raise Exception("No response for OOF request")
 
 
+@timing("> HAS REQ")
 def _has_request(onap_ip, aai_data, exclude, use_oof_cache):
     dirname = os.path.join('templates/oof-cache/', aai_data['vf-module-id'])
     if exclude:
@@ -454,7 +493,7 @@ def _has_request(onap_ip, aai_data, exclude, use_oof_cache):
     return result
 
 
-def _extract_has_appc_identifiers(has_result, demand):
+def _extract_has_appc_identifiers(has_result, demand, onap_ip):
     if demand == 'vPGN':
         v_server = has_result[demand]['attributes']['vservers'][0]
     else:
@@ -471,13 +510,19 @@ def _extract_has_appc_identifiers(has_result, demand):
         v_server['vserver-name'] = v_server['vserver-name'].replace("01", "02")
     hostname_cache.append(v_server['vserver-name'])
 
+    api = _init_python_aai_api(onap_ip)
+    vnfc_type = demand.lower()
+#    with _no_ssl_verification():
+#        response = api.aai.vnfc(v_server['vserver-name'], body=None, params={}, headers={})
+#        vnfc_type = response.body.get('nfc-naming-code')
+
     config = {
         'vnf-id': has_result[demand]['attributes']['nf-id'],
         'vf-module-id': has_result[demand]['attributes']['vf-module-id'],
         'ip': ip,
         'vserver-id': v_server['vserver-id'],
         'vserver-name': v_server['vserver-name'],
-        'vnfc-type': demand.lower(),
+        'vnfc-type': vnfc_type,
         'physical-location-id': has_result[demand]['attributes']['physical-location-id']
     }
     ansible_inventory_entry = "{} ansible_ssh_host={} ansible_ssh_user=ubuntu".format(config['vserver-name'], config['ip'])
@@ -487,7 +532,7 @@ def _extract_has_appc_identifiers(has_result, demand):
     return config
 
 
-def _extract_osdf_appc_identifiers(has_result, demand):
+def _extract_osdf_appc_identifiers(has_result, demand, onap_ip):
     if demand == 'vPGN':
         v_server = has_result[demand]['vservers'][0]
     else:
@@ -504,13 +549,19 @@ def _extract_osdf_appc_identifiers(has_result, demand):
         v_server['vserver-name'] = v_server['vserver-name'].replace("01", "02")
     hostname_cache.append(v_server['vserver-name'])
 
+    api = _init_python_aai_api(onap_ip)
+    vnfc_type = demand.lower(),
+    with _no_ssl_verification():
+        response = api.aai.vnfc(v_server['vserver-name'], body=None, params={}, headers={})
+        vnfc_type = response.body.get('nfc-naming-code')
+
     config = {
         'vnf-id': has_result[demand]['nf-id'],
         'vf-module-id': has_result[demand]['vf-module-id'],
         'ip': ip,
         'vserver-id': v_server['vserver-id'],
         'vserver-name': v_server['vserver-name'],
-        'vnfc-type': demand.lower(),
+        'vnfc-type': vnfc_type,
         'physical-location-id': has_result[demand]['locationId']
     }
     ansible_inventory_entry = "{} ansible_ssh_host={} ansible_ssh_user=ubuntu".format(config['vserver-name'], config['ip'])
@@ -536,7 +587,6 @@ def _extract_has_appc_dt_config(has_result, demand):
             "aic_version": has_result[demand]['attributes']['aic_version'],
             "ipv4-oam-address": has_result[demand]['attributes']['ipv4-oam-address'],
             "vnfHostName": has_result[demand]['candidate']['host_id'],
-            "ipv6-oam-address": has_result[demand]['attributes']['ipv6-oam-address'],
             "cloudOwner": has_result[demand]['candidate']['cloud_owner'],
             "isRehome": has_result[demand]['candidate']['is_rehome'],
             "locationId": has_result[demand]['candidate']['location_id'],
@@ -553,9 +603,9 @@ def _extract_osdf_appc_dt_config(osdf_result, demand):
         return osdf_result[demand]
 
 
-def _build_config_from_has(has_result):
-    v_pgn_result = _extract_has_appc_identifiers(has_result, 'vPGN')
-    v_fw_result = _extract_has_appc_identifiers(has_result, 'vFW-SINK')
+def _build_config_from_has(has_result, onap_ip):
+    v_pgn_result = _extract_has_appc_identifiers(has_result, 'vPGN', onap_ip)
+    v_fw_result = _extract_has_appc_identifiers(has_result, 'vFW-SINK', onap_ip)
     dt_config = _extract_has_appc_dt_config(has_result, 'vFW-SINK')
 
     config = {
@@ -588,10 +638,10 @@ def _build_osdf_result_demand(solution):
     return result
 
 
-def _build_config_from_osdf(osdf_result):
+def _build_config_from_osdf(osdf_result, onap_ip):
     osdf_result = _adapt_osdf_result(osdf_result)
-    v_pgn_result = _extract_osdf_appc_identifiers(osdf_result, 'vPGN')
-    v_fw_result = _extract_osdf_appc_identifiers(osdf_result, 'vFW-SINK')
+    v_pgn_result = _extract_osdf_appc_identifiers(osdf_result, 'vPGN', onap_ip)
+    v_fw_result = _extract_osdf_appc_identifiers(osdf_result, 'vFW-SINK', onap_ip)
     dt_config = _extract_osdf_appc_dt_config(osdf_result, 'vFW-SINK')
 
     config = {
@@ -632,10 +682,10 @@ def _build_appc_lcm_dt_payload(demand, oof_config, action, traffic_presence):
 
     config = {
         "configuration-parameters": {
-            #"node_list": node_list,
-            "ne_id": config['vserver-name'],
-            "fixed_ip_address": config['ip'],
             "file_parameter_content":  json.dumps(file_content)
+        },
+        "request-parameters": {
+            "vserver-id": config['vserver-id']
         }
     }
     if book_name != '':
@@ -653,12 +703,12 @@ def _build_appc_lcm_upgrade_payload(demand, oof_config, action, old_version, new
 
     config = {
         "configuration-parameters": {
-            #"node_list": node_list,
-            "ne_id": config['vserver-name'],
-            "fixed_ip_address": config['ip'],
             "file_parameter_content":  json.dumps(file_content),
             "existing-software-version": old_version,
             "new-software-version": new_version
+        },
+        "request-parameters": {
+            "vserver-id": config['vserver-id']
         }
     }
     if book_name != '':
@@ -683,6 +733,16 @@ def _build_appc_lcm_status_body(req):
     return template
 
 
+@timing("> DT REQ BODY")
+def _build_appc_lcm_lock_request_body(is_vpkg, config, req_id, action):
+    if is_vpkg:
+        demand = 'vPGN'
+    else:
+        demand = 'vFW-SINK'
+    return _build_appc_lcm_request_body(None, demand, config, req_id, action)
+
+
+@timing("> DT REQ BODY")
 def _build_appc_lcm_dt_request_body(is_vpkg, config, req_id, action, traffic_presence=None):
     if is_vpkg:
         demand = 'vPGN'
@@ -692,6 +752,7 @@ def _build_appc_lcm_dt_request_body(is_vpkg, config, req_id, action, traffic_pre
     return _build_appc_lcm_request_body(payload, demand, config, req_id, action)
 
 
+@timing("> UP REQ BODY")
 def _build_appc_lcm_upgrade_request_body(config, req_id, action, old_version, new_version):
     demand = 'vFW-SINK'
     payload = _build_appc_lcm_upgrade_payload(demand, config, action, old_version, new_version)
@@ -699,9 +760,13 @@ def _build_appc_lcm_upgrade_request_body(config, req_id, action, old_version, ne
 
 
 def _build_appc_lcm_request_body(payload, demand, config, req_id, action):
+    #print(config[demand])
     template = json.loads(open('templates/appcRestconfLcm.json').read())
     template['input']['action'] = action
-    template['input']['payload'] = payload
+    if payload is not None:
+        template['input']['payload'] = payload
+    else:
+        del template['input']['payload']
     template['input']['common-header']['request-id'] = req_id
     template['input']['common-header']['sub-request-id'] = str(uuid.uuid4())
     template['input']['action-identifiers']['vnf-id'] = config[demand]['vnf-id']
@@ -715,6 +780,7 @@ def _set_appc_lcm_timestamp(body, timestamp=None):
     body['input']['common-header']['timestamp'] = timestamp
 
 
+@timing("Load OOF Data and Build APPC REQ")
 def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, if_close_loop_vfw, new_version=None):
     if_has = True
 
@@ -726,8 +792,8 @@ def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, 
         else:
             migrate_to = _has_request(onap_ip, aai_data, True, use_oof_cache)
 
-        migrate_from = _build_config_from_has(migrate_from)
-        migrate_to = _build_config_from_has(migrate_to)
+        migrate_from = _build_config_from_has(migrate_from, onap_ip)
+        migrate_to = _build_config_from_has(migrate_to, onap_ip)
     else:
         migrate_from = _osdf_request(rancher_ip, onap_ip, aai_data, False, use_oof_cache)
 
@@ -736,8 +802,8 @@ def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, 
         else:
             migrate_to = _osdf_request(rancher_ip, onap_ip, aai_data, True, use_oof_cache)
 
-        migrate_from = _build_config_from_osdf(migrate_from)
-        migrate_to = _build_config_from_osdf(migrate_to)
+        migrate_from = _build_config_from_osdf(migrate_from, onap_ip)
+        migrate_to = _build_config_from_osdf(migrate_to, onap_ip)
 
     #print(json.dumps(migrate_from, indent=4))
     #print(json.dumps(migrate_to, indent=4))
@@ -748,15 +814,31 @@ def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, 
     if new_version is not None and new_version != "1.0":
         old_version = 1.0
 
+    requests = list()
+    include_lock = True
+
+    if include_lock:
+        result.append({"payload": _build_appc_lcm_lock_request_body(True, migrate_from, req_id, 'CheckLock'), "breakOnFailure": True,
+                      "description": "Check vPGN Lock Status"})
+        result.append({"payload": _build_appc_lcm_lock_request_body(False, migrate_from, req_id, 'CheckLock'), "breakOnFailure": True,
+                      "description": "Check vFW-1 Lock Status"})
+        result.append({"payload": _build_appc_lcm_lock_request_body(False, migrate_to, req_id, 'CheckLock'), "breakOnFailure": True,
+                      "description": "Check vFW-2 Lock "})
+
+        result.append({"payload": _build_appc_lcm_lock_request_body(True, migrate_from, req_id, 'Lock'), "breakOnFailure": True,
+                      "description": "Lock vPGN"})
+        result.append({"payload": _build_appc_lcm_lock_request_body(False, migrate_from, req_id, 'Lock'), "breakOnFailure": True,
+                      "description": "Lock vFW-1"})
+        result.append({"payload": _build_appc_lcm_lock_request_body(False, migrate_to, req_id, 'Lock'), "breakOnFailure": True,
+                      "description": "Lock vFW-2"})
+
     if if_dt_only:
-        #_build_appc_lcm_dt_request_body(is_vpkg, config, req_id, action, traffic_presence=None):
         payload_dt_check_vpkg = _build_appc_lcm_dt_request_body(True, migrate_from, req_id, 'DistributeTrafficCheck', True)
         payload_dt_vpkg_to = _build_appc_lcm_dt_request_body(True, migrate_to, req_id, 'DistributeTraffic')
         payload_dt_check_vfw_from = _build_appc_lcm_dt_request_body(False, migrate_from, req_id, 'DistributeTrafficCheck',
-                                                                 False)
+                                                                    False)
         payload_dt_check_vfw_to = _build_appc_lcm_dt_request_body(False, migrate_to, req_id, 'DistributeTrafficCheck', True)
 
-        requests = list()
         requests.append({"payload": payload_dt_vpkg_to, "breakOnFailure": True, "description": "Migrating source vFW traffic to destination vFW"})
         requests.append({"payload": payload_dt_check_vfw_from, "breakOnFailure": True, "description": "Checking traffic has been stopped on the source vFW"})
         requests.append({"payload": payload_dt_check_vfw_to, "breakOnFailure": True, "description": "Checking traffic has appeared on the destination vFW"})
@@ -777,7 +859,6 @@ def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, 
         payload_new_version_check_vfw_from =  _build_appc_lcm_upgrade_request_body(migrate_from, req_id, 'UpgradePostCheck', old_version, new_version)
         payload_upgrade_vfw_from =  _build_appc_lcm_upgrade_request_body(migrate_from, req_id, 'UpgradeSoftware', old_version, new_version)
 
-        requests = list()
         migrate_requests = list()
         migrate_requests.append({"payload": payload_dt_vpkg_to, "breakOnFailure": True, "description": "Migrating source vFW traffic to destination vFW"})
         migrate_requests.append({"payload": payload_dt_check_vfw_from_absent, "breakOnFailure": True, "description": "Checking traffic has been stopped on the source vFW"})
@@ -794,10 +875,20 @@ def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, 
         result.append({"payload": payload_old_version_check_vfw_from, "breakOnFailure": False, "description": "Check current software version on source vFW",
                       "workflow": {"requests": requests, "description": "Migrate Traffic and Upgrade Software"}})
 
+    if include_lock:
+        result.append({"payload": _build_appc_lcm_lock_request_body(True, migrate_from, req_id, 'Unlock'), "breakOnFailure": False,
+                      "description": "Unlock vPGN"})
+        result.append({"payload": _build_appc_lcm_lock_request_body(False, migrate_from, req_id, 'Unlock'), "breakOnFailure": False,
+                      "description": "Unlock vFW-1"})
+        result.append({"payload": _build_appc_lcm_lock_request_body(False, migrate_to, req_id, 'Unlock'), "breakOnFailure": False,
+                      "description": "Unlock vFW-2"})
+
     return result
 
 
+@timing("> Execute APPC REQ")
 def appc_lcm_request(onap_ip, req):
+    print(req)
     api = _init_python_appc_lcm_api(onap_ip)
     with _no_ssl_verification():
     #print(json.dumps(req, indent=4))
@@ -811,13 +902,32 @@ def appc_lcm_request(onap_ip, req):
             result = api.lcm.upgrade_pre_check(body=req, params={}, headers={})
         elif req['input']['action'] == "UpgradePostCheck":
             result = api.lcm.upgrade_post_check(body=req, params={}, headers={})
+        elif req['input']['action'] == "CheckLock":
+            result = api.lcm.check_lock(body=req, params={}, headers={})
+        elif req['input']['action'] == "Lock":
+            result = api.lcm.lock(body=req, params={}, headers={})
+        elif req['input']['action'] == "Unlock":
+            result = api.lcm.unlock(body=req, params={}, headers={})
         else:
             raise Exception("{} action not supported".format(req['input']['action']))
 
     if result.body['output']['status']['code'] == 400:
-        print("SUCCESSFUL")
+        if req['input']['action'] == "CheckLock":
+            if result.body['output']['locked'] == "FALSE":
+                print("UNLOCKED")
+            else:
+                print("LOCKED")
+                result.body['output']['status']['code'] = 401
+        else:
+            print("SUCCESSFUL")
     elif result.body['output']['status']['code'] == 100:
         print("ACCEPTED")
+    elif result.body['output']['status']['code'] >= 300 and result.body['output']['status']['code'] < 400:
+        print("APPC LCM <<{}>> REJECTED [{} - {}]".format(req['input']['action'], result.body['output']['status']['code'],
+                                         result.body['output']['status']['message']))
+    elif result.body['output']['status']['code'] > 400 and result.body['output']['status']['code'] < 500:
+        print("APPC LCM <<{}>> FAILED [{} - {}]".format(req['input']['action'], result.body['output']['status']['code'],
+                                         result.body['output']['status']['message']))
 #    elif result.body['output']['status']['code'] == 311:
 #        timestamp = result.body['output']['common-header']['timestamp']
 #        _set_appc_lcm_timestamp(req, timestamp)
@@ -834,7 +944,7 @@ def appc_lcm_status_request(onap_ip, req):
     api = _init_python_appc_lcm_api(onap_ip)
     status_body = _build_appc_lcm_status_body(req)
     _set_appc_lcm_timestamp(status_body)
-
+    print("CHECK STATUS")
     with _no_ssl_verification():
         result = api.lcm.action_status(body=status_body, params={}, headers={})
 
@@ -846,6 +956,7 @@ def appc_lcm_status_request(onap_ip, req):
                                          result.body['output']['status']['message']))
 
 
+@timing("> Confirm APPC REQ")
 def confirm_appc_lcm_action(onap_ip, req, check_appc_result):
     print("APPC LCM << {} >> [Status]".format(req['input']['action']))
 
@@ -864,6 +975,7 @@ def confirm_appc_lcm_action(onap_ip, req, check_appc_result):
             return True
 
 
+@timing("Execute APPC LCM REQs")
 def _execute_lcm_requests(workflow, onap_ip, check_result):
     lcm_requests = workflow["requests"]
     print("WORKFLOW << {} >>".format(workflow["description"]))
@@ -872,18 +984,23 @@ def _execute_lcm_requests(workflow, onap_ip, check_result):
        #print(json.dumps(req, indent=4))
        print("APPC LCM << {} >> [{}]".format(req['input']['action'], lcm_requests[i]["description"]))
        _set_appc_lcm_timestamp(req)
+       conf_result = False
        result = appc_lcm_request(onap_ip, req)
+       print("Result {}".format(result))
+
        if result == 100:
            conf_result = confirm_appc_lcm_action(onap_ip, req, check_result)
-           if not conf_result:
-               if lcm_requests[i]["breakOnFailure"]:
-                   raise Exception("APPC LCM << {} >> FAILED".format(req['input']['action']))
-               elif "workflow" in lcm_requests[i]:
-                   print("WORKFLOW << {} >> SKIP".format(lcm_requests[i]["workflow"]["description"]))
-           elif "workflow" in lcm_requests[i]:
-               _execute_lcm_requests(lcm_requests[i]["workflow"], onap_ip, check_result)
-            
            #time.sleep(30)
+       elif result == 400:
+           conf_result = True
+
+       if not conf_result:
+           if lcm_requests[i]["breakOnFailure"]:
+               raise Exception("APPC LCM << {} >> FAILED".format(req['input']['action']))
+           elif "workflow" in lcm_requests[i]:
+               print("WORKFLOW << {} >> SKIP".format(lcm_requests[i]["workflow"]["description"]))
+       elif "workflow" in lcm_requests[i]:
+           _execute_lcm_requests(lcm_requests[i]["workflow"], onap_ip, check_result)
 
 
 
@@ -920,6 +1037,7 @@ def execute_workflow(vfw_vnf_id, rancher_ip, onap_ip, use_oof_cache, if_close_lo
     _execute_lcm_requests({"requests": lcm_requests, "description": "Migrate vFW Traffic Conditionally"}, onap_ip, check_result)
 
 
+
 help = """\npython3 workflow.py <VNF-ID> <RANCHER-NODE-IP> <K8S-NODE-IP> <IF-CACHE> <IF-VFWCL> <INITIAL-ONLY> <CHECK-STATUS> <VERSION>
 \n<VNF-ID> - vnf-id of vFW VNF instance that traffic should be migrated out from
 <RANCHER-NODE-IP> - External IP of ONAP Rancher Node i.e. 10.12.5.160 (If Rancher Node is missing this is NFS node)
@@ -939,6 +1057,9 @@ new_version = None
 if len(sys.argv) > 8:
     new_version = sys.argv[8]
 
-#vnf_id, Rancher node IP, K8s node IP, use OOF cache, if close loop vfw, if info_only, if check APPC result
-execute_workflow(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4].lower() == 'true', sys.argv[5].lower() == 'true',
-                 sys.argv[6].lower() == 'true', sys.argv[7].lower() == 'true', new_version)
+try:
+    #vnf_id, Rancher node IP, K8s node IP, use OOF cache, if close loop vfw, if info_only, if check APPC result
+    execute_workflow(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4].lower() == 'true', sys.argv[5].lower() == 'true',
+                     sys.argv[6].lower() == 'true', sys.argv[7].lower() == 'true', new_version)
+finally:
+    stats.close()

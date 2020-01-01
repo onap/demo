@@ -19,9 +19,9 @@
 
 #change IP addresses and upload to playbooks folder darkstat and server.py before
 
-SINK1=10.254.184.217
-SINK2=10.254.184.210
-VFW1=10.254.184.208
+SINK1=10.254.184.195
+SINK2=10.254.184.218
+VFW1=10.254.184.196
 VFW2=10.254.184.216
 
 echo $VFW1 > vfw_mgt_ip.txt
