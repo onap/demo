@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72b13d5f_d61321f1",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/KotlinK8sProfileUpload.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-02T07:44:45Z",
+      "side": 1,
+      "message": "would put these lines inside prepareProfileFile method.",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 76
+      },
+      "revId": "5773fa24c9be376d3533990229cf7000308a9e5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
