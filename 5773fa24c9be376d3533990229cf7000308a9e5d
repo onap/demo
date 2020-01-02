@@ -96,6 +96,29 @@
     },
     {
       "key": {
+        "uuid": "1d835f7f_4588c1a6",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/KotlinK8sProfileUpload.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2020-01-02T20:45:15Z",
+      "side": 1,
+      "message": "Samuli, both parameters are not defined in your change. Should I add them in my change or you will do it instead - the naming of these parameters can be changed in here if necessary.",
+      "range": {
+        "startLine": 88,
+        "startChar": 12,
+        "endLine": 89,
+        "endChar": 106
+      },
+      "revId": "5773fa24c9be376d3533990229cf7000308a9e5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "72b13d5f_d61321f1",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/KotlinK8sProfileUpload.kt",
         "patchSetId": 1
