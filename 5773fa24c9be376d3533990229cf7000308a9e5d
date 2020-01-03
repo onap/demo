@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "589b41dd_af15bcb2",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-03T06:43:21Z",
+      "side": 1,
+      "message": "yes I have implemented imperative workflow in our internal project. \nThere I seems to have it like:\n            \"activities\": [{\n              \"call_operation\": \"\"\n            }],\nand it\u0027s there as it came from example I took it. Actually I never tried if it works without. But anyway I don\u0027t need to have anything in call_operation.",
+      "parentUuid": "a6ba6716_3086ca7b",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 69,
+        "endChar": 14
+      },
+      "revId": "5773fa24c9be376d3533990229cf7000308a9e5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "23233560_1f598d4c",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
         "patchSetId": 1
@@ -107,6 +131,30 @@
       "writtenOn": "2020-01-02T20:45:15Z",
       "side": 1,
       "message": "Samuli, both parameters are not defined in your change. Should I add them in my change or you will do it instead - the naming of these parameters can be changed in here if necessary.",
+      "range": {
+        "startLine": 88,
+        "startChar": 12,
+        "endLine": 89,
+        "endChar": 106
+      },
+      "revId": "5773fa24c9be376d3533990229cf7000308a9e5d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98830289_971d9e35",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/KotlinK8sProfileUpload.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-03T06:43:21Z",
+      "side": 1,
+      "message": "Yes, we (with Konrad) on purpose removed those before Xmas. Yesterday we discussed why we did it. There was a clear reason as those are not anymore needed to be returned by CDS as SO knows those already when sending instantiation to multicloud/k8s. But We missed the fact that these are needed internally here by CDS when creating profile and yes thta means we can freely name those parameters. \n\nI will add them back to my change. Just need to check if it\u0027s possible to just add them to mapping and not to template (and still got resolved) as we don\u0027t need to template them and return in payload.",
+      "parentUuid": "1d835f7f_4588c1a6",
       "range": {
         "startLine": 88,
         "startChar": 12,
