@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "18f8e1d1_541de5a8",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 1344,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-09T13:57:26Z",
+      "side": 1,
+      "message": "ok, so what format actually this should be? \nChange version to uuid?",
+      "parentUuid": "6a2a2486_8bcd976f",
+      "range": {
+        "startLine": 1344,
+        "startChar": 51,
+        "endLine": 1344,
+        "endChar": 59
+      },
+      "revId": "8132bc02106e6ff726f6566594c07bf9eedde884",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d112d2ff_c750b17d",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2020-01-09T13:50:30Z",
       "side": 1,
       "message": "we need also these parameters in the vtl files",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 306,
+        "endChar": 6
+      },
+      "revId": "8132bc02106e6ff726f6566594c07bf9eedde884",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9b77da4_cb032f73",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-09T13:57:26Z",
+      "side": 1,
+      "message": "We do not need to return these in CDS response so should not need. I also tested ones that it works (resolution) even if it\u0027s not in template, cds still resolves those.",
+      "parentUuid": "d112d2ff_c750b17d",
       "range": {
         "startLine": 305,
         "startChar": 22,
