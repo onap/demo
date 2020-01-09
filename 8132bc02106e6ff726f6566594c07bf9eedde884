@@ -141,6 +141,30 @@
       "revId": "8132bc02106e6ff726f6566594c07bf9eedde884",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f540f315_411450e1",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-09T14:10:25Z",
+      "side": 1,
+      "message": "yes it will be. At least according to my experience. Let\u0027s come back if it does not work as cds changed very fast. But I tested this last week.",
+      "parentUuid": "05820ae8_25814db8",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 306,
+        "endChar": 6
+      },
+      "revId": "8132bc02106e6ff726f6566594c07bf9eedde884",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
