@@ -85,8 +85,8 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
 
             val payloadObject = JacksonUtils.jsonNode(payload) as ObjectNode
 
-            val vfModuleModelInvariantUuid: String = getResolvedParameter(payloadObject, "vf_module_model_invariant_uuid")
-            val vfModuleModelUuid: String = getResolvedParameter(payloadObject, "vf_module_model_version")
+            val vfModuleModelInvariantUuid: String = getResolvedParameter(payloadObject, "vf-module-model-invariant-uuid")
+            val vfModuleModelUuid: String = getResolvedParameter(payloadObject, "vf-module-model-version")
             val k8sRbProfileName: String = getResolvedParameter(payloadObject, "k8s-rb-profile-name")
             val k8sRbProfileNamespace: String = getResolvedParameter(payloadObject, "k8s-rb-profile-namespace")
 
@@ -103,7 +103,7 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
                 if (api.hasProfile(k8sRbProfileName)) {
                     log.info("Profile Already Existing - skipping upload")
                 } else {
-                    profileFilePath = prepareProfileFile(k8sRbProfileName)
+                    val profileFilePath = prepareProfileFile(k8sRbProfileName)
 
                     var profile = K8sProfile()
                     profile.profileName = k8sRbProfileName

@@ -1296,6 +1296,64 @@
       }
     }
   },
+  "vf-module-model-invariant-uuid" : {
+    "tags" : "vnf, vf-module",
+    "name" : "vf-module-model-invariant-uuid",
+    "property" : {
+      "description" : "vf module model invariant uuid",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "processor-db" : {
+        "type" : "source-db",
+        "properties" : {
+          "type" : "SQL",
+          "query" : "select sdnctl.VF_MODULE_MODEL.invariant_uuid as vf_module_model_invariant_uuid from sdnctl.VF_MODULE_MODEL where sdnctl.VF_MODULE_MODEL.customization_uuid=:customizationid",
+          "input-key-mapping" : {
+            "customizationid" : "vf-module-model-customization-uuid"
+          },
+          "output-key-mapping" : {
+            "vf-module-model-invariant-uuid" : "vf_module_model_invariant_uuid"
+          },
+          "key-dependencies" : [ "vf-module-model-customization-uuid" ],
+          "endpoint-selector" : "dynamic-db-source"
+        }
+      }
+    }
+  },
+  "vf-module-model-version" : {
+    "tags" : "vnf, vf-module",
+    "name" : "vf-module-model-version",
+    "property" : {
+      "description" : "vf module model version",
+      "type" : "string"
+    },
+    "updated-by" : "Samuli, Silvius <s.silvius@partner.samsung.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "processor-db" : {
+        "type" : "source-db",
+        "properties" : {
+          "type" : "SQL",
+          "query" : "select sdnctl.VF_MODULE_MODEL.uuid as vf_module_model_version from sdnctl.VF_MODULE_MODEL where sdnctl.VF_MODULE_MODEL.customization_uuid=:customizationid",
+          "input-key-mapping" : {
+            "customizationid" : "vf-module-model-customization-uuid"
+          },
+          "output-key-mapping" : {
+            "vf-module-model-version" : "vf_module_model_version"
+          },
+          "key-dependencies" : [ "vf-module-model-customization-uuid" ],
+          "endpoint-selector" : "dynamic-db-source"
+        }
+      }
+    }
+  },
   "vf-module-name" : {
     "tags" : "vf-module-name",
     "name" : "vf-module-name",
