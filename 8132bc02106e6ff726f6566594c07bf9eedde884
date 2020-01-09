@@ -165,6 +165,30 @@
       "revId": "8132bc02106e6ff726f6566594c07bf9eedde884",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9935e79e_d6dcb972",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2020-01-09T14:55:48Z",
+      "side": 1,
+      "message": "Value is resolved but it cannot be read in the Kotlin script if is not present in the vtl\n\n)2020-01-09 14:50:55,386|||DefaultDispatcher-worker-4|||o.o.c.c.b.s.e.AbstractScriptComponentFunction| failed in K8sProfileUpload : K8s RB Definition (/) not found \norg.onap.ccsdk.cds.controllerblueprints.core.BluePrintProcessorException: K8s RB Definition (/) not found \n\tat org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sProfileUpload.processNB$suspendImpl(KotlinK8sProfileUpload.kt:101)\n\tat org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sProfileUpload$processNB$1.invokeSuspend(KotlinK8sProfileUpload.kt)\n\nyou can see that both values are empty.",
+      "parentUuid": "f540f315_411450e1",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 306,
+        "endChar": 6
+      },
+      "revId": "8132bc02106e6ff726f6566594c07bf9eedde884",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
