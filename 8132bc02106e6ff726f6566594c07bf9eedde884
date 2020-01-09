@@ -189,6 +189,30 @@
       "revId": "8132bc02106e6ff726f6566594c07bf9eedde884",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c33c456_7f6c32cc",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-09T17:40:13Z",
+      "side": 1,
+      "message": "That\u0027s totally insane! As you and in developer level now, you could fix this behaviour of CDS code:)",
+      "parentUuid": "9935e79e_d6dcb972",
+      "range": {
+        "startLine": 305,
+        "startChar": 22,
+        "endLine": 306,
+        "endChar": 6
+      },
+      "revId": "8132bc02106e6ff726f6566594c07bf9eedde884",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
