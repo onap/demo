@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7053f312_704b6cff",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/KotlinK8sProfileUpload.kt",
+        "patchSetId": 4
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2020-01-09T14:55:48Z",
+      "side": 1,
+      "message": "could you change \"profileFilePath\" into \"val profileFilePath\". Latest quick change which was not tested...",
+      "range": {
+        "startLine": 106,
+        "startChar": 20,
+        "endLine": 106,
+        "endChar": 36
+      },
+      "revId": "957f6d9c929dbb838cca8ceee49d8b2c03358e7e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
