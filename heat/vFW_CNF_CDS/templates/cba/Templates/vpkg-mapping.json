@@ -819,6 +819,30 @@
     "version": 0
   },
   {
+    "name": "vf-module-model-invariant-uuid",
+    "property": {
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "vf-module-model-invariant-uuid",
+    "dictionary-source": "processor-db",
+    "dependencies": [
+      "vf-module-model-customization-uuid"
+    ]
+  },
+  {
+    "name": "vf-module-model-version",
+    "property": {
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "vf-module-model-version",
+    "dictionary-source": "processor-db",
+    "dependencies": [
+      "vf-module-model-customization-uuid"
+    ]
+  },
+  {
     "name": "k8s-rb-profile-name",
     "property": {
       "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
