@@ -60,6 +60,12 @@ apt-get update
 apt-get install --allow-unauthenticated -y make gcc wget openjdk-8-jdk bridge-utils libcurl4-openssl-dev apt-transport-https ca-certificates git maven
 sleep 1
 
+# Install fd.io certificate
+HOST=nexus.fd.io
+PORT=443
+TRUST_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+bash -c "echo -n | openssl s_client -showcerts -connect $HOST:$PORT 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' >> $TRUST_CERT_FILE"
+
 # Download vLB demo code for load balancer
 cd /opt
 unzip -p -j /opt/vlbms-scripts-$INSTALL_SCRIPT_VERSION.zip v_lb_init.sh > /opt/v_lb_init.sh

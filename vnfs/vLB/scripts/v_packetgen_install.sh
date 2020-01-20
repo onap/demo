@@ -51,6 +51,12 @@ apt-get update
 apt-get install --allow-unauthenticated -y make wget openjdk-8-jdk gcc libcurl4-openssl-dev python-pip bridge-utils apt-transport-https ca-certificates
 pip install jsonschema
 
+# Install fd.io certificate
+HOST=nexus.fd.io
+PORT=443
+TRUST_CERT_FILE="/etc/ssl/certs/ca-certificates.crt"
+bash -c "echo -n | openssl s_client -showcerts -connect $HOST:$PORT 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' >> $TRUST_CERT_FILE"
+
 # Download vFirewall demo code for packet generator
 cd /opt
 unzip -p -j /opt/vlb-scripts-$INSTALL_SCRIPT_VERSION.zip v_packetgen_init.sh > /opt/v_packetgen_init.sh
