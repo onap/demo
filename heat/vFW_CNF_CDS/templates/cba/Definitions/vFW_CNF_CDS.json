@@ -144,13 +144,13 @@
             "operations" : {
               "process" : {
                 "inputs" : {
+                  "resolution-key": {
+                    "get_input" : "resolution-key"
+                  },
                   "artifact-prefix-names" : {
                     "get_input" : "template-prefix"
-                  }
-                },
-                "store-result": true,
-                "resolution-key": {
-                  "get_input" : "resolution-key"
+                  },
+                  "store-result": true
                 }
               }
             }
@@ -208,7 +208,6 @@
                 "inputs" : {
                   "script-type" : "kotlin",
                   "script-class-reference" : "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sProfileUpload",
-                  "instance-dependencies" : [ ],
                   "dynamic-properties" : "*profile-upload-properties"
                 }
               }
