@@ -20,9 +20,9 @@
             "process" : {
               "inputs" : {
                 "resolution-key" : {
-                  "description" : "Key for service instance related correlation.",
-                  "required" : false,
-                  "type" : "string"
+                    "description" : "Key for service instance related correlation.",
+                    "required" : false,
+                    "type" : "string"
                 },
                 "occurrence" : {
                   "description" : "Number of time to perform the resolution.",
