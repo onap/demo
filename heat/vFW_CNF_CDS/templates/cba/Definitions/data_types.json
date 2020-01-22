@@ -122,6 +122,16 @@
             "type" : ""
           }
         },
+        "resolution-key" : {
+          "description" : "",
+          "required" : false,
+          "type" : "string",
+          "status" : "",
+          "constraints" : [ { } ],
+          "entry_schema" : {
+            "type" : ""
+          }
+        },
         "int_private1_gw_ip" : {
           "description" : "Private unprotected network gateway ip",
           "type" : "string",
