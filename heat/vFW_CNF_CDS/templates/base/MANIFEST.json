@@ -3,6 +3,10 @@
     "description": "",
     "data": [
         {
+            "file": "vFW_CDS_CNF.zip",
+            "type": "CONTROLLER_BLUEPRINT_ARCHIVE"
+        },
+        {
             "file": "base_template.yaml",
             "type": "HEAT",
             "isBase": "true",
