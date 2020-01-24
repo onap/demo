@@ -1,20 +1,27 @@
-.PHONY: all clean helm base
+.PHONY: all clean helm base cba
+CSAR_NAME ?= vfw_k8s_demo
+CBA_NAME ?= vFW_CDS_CNF
 
 
-all: csar/ helm base
-	cd csar/ && zip -r vfw_k8s_demo.csar .
-	mv csar/vfw_k8s_demo.csar .
+all: csar/ helm base cba
+	#Can't use .csar extension or SDC will panic
+	cd csar/ && zip -r $(CSAR_NAME).zip .
+	mv csar/$(CSAR_NAME).zip .
 
 helm: csar/
 	make -C helm
-	cp helm/*.tgz csar/
+	mv helm/*.tgz csar/
 
 base: csar/
 	cp base/* csar/
+
+cba: csar/
+	cd cba/ && zip -r $(CBA_NAME).zip .
+	mv cba/$(CBA_NAME).zip csar/
 
 csar/:
 	mkdir csar/
 
 clean:
 	rm -rf csar/
-	rm -f vfw_k8s_demo.csar
+	rm -f $(CSAR_NAME).zip

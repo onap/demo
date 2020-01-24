@@ -2,11 +2,9 @@ apiVersion: k8s.plugin.opnfv.org/v1alpha1
 kind: Network
 metadata:
   name: {{ .Values.onap_private_net_id }}
-  labels:
-    vnf-name: {{ .Values.vnf_name }}
 spec:
   cniType : ovn4nfv
   ipv4Subnets:
   - name: {{ .Values.onap_private_subnet_id }}
     subnet: {{ .Values.onap_private_net_cidr }}
-    gateway: {{ .Values.onap_private_gw_ip }}
+    gateway: {{ .Values.onap_private_gw_ip }}/{{ (splitn "/" 2 .Values.onap_private_net_cidr)._1 }}
