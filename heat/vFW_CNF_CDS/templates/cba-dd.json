@@ -1,4 +1,50 @@
 [
+    {
+        "name": "k8s-rb-profile-namespace",
+        "tags": "k8s, cnf, profile",
+        "data_type": "string",
+        "description": "Profile namespace used in multicloud/k8s plugin",
+        "entry_schema": "string",
+        "updatedBy": "Samuli, Silvius <s.silvius@partner.samsung.com>",
+        "definition": {
+            "tags": "k8s-rb-profile-namespace",
+            "name": "k8s-rb-profile-namespace",
+            "property": {
+                "description": "Profile name used in multicloud/k8s plugin",
+                "type": "string"
+            },
+            "updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>",
+            "sources": {
+                "input": {
+                    "type": "source-input"
+                },
+                "default": {
+                    "type": "source-default",
+                    "properties": {}
+                },
+                "sdnc": {
+                    "type": "source-rest",
+                    "properties": {
+                        "verb": "GET",
+                        "type": "JSON",
+                        "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/k8s-rb-profile-namespace",
+                        "path": "/param/0/value",
+                        "input-key-mapping": {
+                            "service-instance-id": "service-instance-id",
+                            "vnf-id": "vnf-id"
+                        },
+                        "output-key-mapping": {
+                            "k8s-rb-profile-namespace": "value"
+                        },
+                        "key-dependencies": [
+                            "service-instance-id",
+                            "vnf-id"
+                        ]
+                    }
+                }
+            }
+        }
+    },
   {
     "name": "k8s-rb-profile-name",
     "tags": "k8s, cnf, profile",
@@ -424,5 +470,50 @@
          }
       }
     }
+  },
+  {
+      "name": "int_private1_subnet_id",
+      "tags": "k8s, cnf",
+      "data_type": "string",
+      "description": "Private unprotected subnetwork identification",
+      "entry_schema": "string",
+      "updatedBy": "Bańka, Konrad <k.banka@samsung.com>",
+      "definition": {
+          "tags": "k8s, cnf",
+          "name": "int_private1_subnet_id",
+          "property": {
+              "description": "Private unprotected subnetwork identification",
+              "type": "string"
+          },
+          "updated-by": "Bańka, Konrad <k.banka@samsung.com>",
+          "sources": {
+              "input": {
+                  "type": "source-input"
+              },
+              "default": {
+                  "type": "source-default"
+              },
+              "sdnc": {
+                  "type": "source-rest",
+                  "properties": {
+                      "verb": "GET",
+                      "type": "JSON",
+                      "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/int_private1_subnet_id",
+                      "path": "/param/0/value",
+                      "input-key-mapping": {
+                          "service-instance-id": "service-instance-id",
+                          "vnf-id": "vnf-id"
+                      },
+                      "output-key-mapping": {
+                          "int_private1_subnet_id": "value"
+                      },
+                      "key-dependencies": [
+                          "service-instance-id",
+                          "vnf-id"
+                      ]
+                  }
+              }
+          }
+      }
   }
 ]

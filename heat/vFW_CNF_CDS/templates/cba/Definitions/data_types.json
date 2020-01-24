@@ -230,6 +230,9 @@
             "type" : ""
           }
         },
+        "vf-module-model-invariant-uuid" : {
+          "type" : "string"
+        },
         "vpg_name_0" : {
           "description" : "",
           "required" : false,
@@ -276,20 +279,12 @@
             "type" : ""
           }
         },
+        "vf-module-model-version" : {
+          "type" : "string"
+        },
         "k8s-rb-profile-name" : {
           "description" : "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
           "type" : "string"
-        },
-        "k8s-rb-profile-namespace" : {
-          "description" : "",
-          "required" : false,
-          "type" : "string",
-          "status" : "",
-          "constraints" : [ { } ],
-          "default": "default",
-          "entry_schema" : {
-            "type" : ""
-          }
         },
         "vsn_name_0" : {
           "description" : "",
@@ -387,6 +382,11 @@
         "int_private2_net_id" : {
           "description" : "Private protected network identification",
           "type" : "string"
+        },
+        "k8s-rb-profile-namespace" : {
+          "description" : "K8s namespace to create helm chart for specified profile",
+          "type" : "string",
+          "default" : "default"
         },
         "int_private1_subnet_id" : {
           "description" : "Private unprotected subnetwork identification",
