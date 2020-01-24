@@ -19,7 +19,6 @@ package org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.onap.ccsdk.cds.blueprintsprocessor.core.api.data.ExecutionServiceInput
-import org.onap.ccsdk.cds.blueprintsprocessor.functions.resource.resolution.storedContentFromResolvedArtifactNB
 import org.onap.ccsdk.cds.blueprintsprocessor.rest.BasicAuthRestClientProperties
 import org.onap.ccsdk.cds.blueprintsprocessor.rest.RestClientProperties
 import org.onap.ccsdk.cds.blueprintsprocessor.rest.service.BasicAuthRestClientService
@@ -67,8 +66,6 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
 
     override suspend fun processNB(executionRequest: ExecutionServiceInput) {
         log.info("executing K8s Profile Upload script")
-        val resolution_key = getDynamicProperties("resolution-key").asText()
-        log.info("resolution_key: $resolution_key")
 
         val baseK8sApiUrl = getDynamicProperties("api-access").get("url").asText()
         val k8sApiUsername = getDynamicProperties("api-access").get("username").asText()
@@ -80,10 +77,10 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
             if (prefix.toLowerCase().equals("vnf"))
                 continue
 
-            val payload = storedContentFromResolvedArtifactNB(resolution_key, prefix)
-            log.info("Uploading K8S profile for template prefix $prefix")
+            val assignmentParams = getDynamicProperties("assignment-params")
+            val payloadObject = JacksonUtils.jsonNode(assignmentParams.get(prefix).asText()) as ObjectNode
 
-            val payloadObject = JacksonUtils.jsonNode(payload) as ObjectNode
+            log.info("Uploading K8S profile for template prefix $prefix")
 
             val vfModuleModelInvariantUuid: String = getResolvedParameter(payloadObject, "vf-module-model-invariant-uuid")
             val vfModuleModelUuid: String = getResolvedParameter(payloadObject, "vf-module-model-version")

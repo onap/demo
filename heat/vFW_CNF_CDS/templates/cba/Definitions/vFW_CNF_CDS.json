@@ -39,8 +39,8 @@
       "url" : "http://multicloud-k8s:9015"
     },
     "profile-upload-properties" : {
-      "resolution-key" : {
-        "get_input" : "resolution-key"
+      "assignment-params": {
+        "get_attribute" : [ "resource-assignment", "assignment-params" ]
       },
       "api-access": "*multicloud-k8s-api"
     },
