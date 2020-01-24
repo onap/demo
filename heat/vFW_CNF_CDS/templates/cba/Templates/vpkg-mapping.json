@@ -176,52 +176,6 @@
     "version": 0
   },
   {
-    "name": "onap_private_net_id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "onap_private_net_id",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "onap_private_subnet_id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "onap_private_subnet_id",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
     "name": "public_net_id",
     "property": {
       "description": "",
@@ -857,6 +811,48 @@
     ]
   },
   {
+    "name": "onap_private_net_id",
+    "property": {
+      "description": "onap private net id",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "onap_private_net_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "onap_private_subnet_id",
+    "property": {
+      "description": "onap private subnet id",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "onap_private_subnet_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "int_private1_net_id",
+    "property": {
+      "description": "private1 net id",
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "int_private1_net_id",
+    "dictionary-source": "sdnc",
+    "dependencies": [
+      "service-instance-id",
+      "vnf-id"
+    ]
+  },
+  {
     "name": "k8s-rb-profile-namespace",
     "property": {
       "description": "K8s namespace to create helm chart for specified profile",
@@ -866,20 +862,6 @@
     "input-param": false,
     "dictionary-name": "k8s-rb-profile-namespace",
     "dictionary-source": "default",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ]
-  },
-  {
-    "name": "int_private1_net_id",
-    "property": {
-      "description": "Private unprotected network identification",
-      "type": "string"
-    },
-    "input-param": false,
-    "dictionary-name": "int_private1_net_id",
-    "dictionary-source": "sdnc",
     "dependencies": [
       "service-instance-id",
       "vnf-id"

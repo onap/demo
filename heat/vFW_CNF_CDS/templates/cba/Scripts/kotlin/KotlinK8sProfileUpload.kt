@@ -74,8 +74,10 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
         val prefixList: ArrayList<String> = getTemplatePrefixList(executionRequest)
 
         for (prefix in prefixList) {
-            if (prefix.toLowerCase().equals("vnf"))
+            if (prefix.toLowerCase().equals("vnf")) {
+                log.info("For vnf-level resource-assignment, profile upload is not performed")
                 continue
+            }
 
             val assignmentParams = getDynamicProperties("assignment-params")
             val payloadObject = JacksonUtils.jsonNode(assignmentParams.get(prefix).asText()) as ObjectNode
@@ -95,7 +97,10 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
 
             log.info("k8s-rb-profile-name: $k8sRbProfileName")
             if (k8sRbProfileName.equals("")) {
-                log.info("Profile Name Not Defined - skipping upload")
+                throw BluePrintProcessorException("K8s rb profile name is empty! Either define profile name to use or choose default")
+            }
+            if (k8sRbProfileName.equals("default") and api.hasProfile(k8sRbProfileName)) {
+                log.info("Using default profile - skipping upload")
             } else {
                 if (api.hasProfile(k8sRbProfileName)) {
                     log.info("Profile Already Existing - skipping upload")
@@ -164,7 +169,7 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
             var basicAuthRestClientProperties: BasicAuthRestClientProperties = BasicAuthRestClientProperties()
             basicAuthRestClientProperties.username = username
             basicAuthRestClientProperties.password = password
-            basicAuthRestClientProperties.url = "$baseUrl/api/multicloud-k8s/v1/v1/rb/definition/${definition}/${definitionVersion}"
+            basicAuthRestClientProperties.url = "$baseUrl/v1/rb/definition/${definition}/${definitionVersion}"
             basicAuthRestClientProperties.additionalHeaders = mapOfHeaders
 
             this.service = UploadFileRestClientService(basicAuthRestClientProperties)

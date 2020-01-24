@@ -6,7 +6,6 @@ metadata:
     app: {{ .Values.vsn_name_0 }}
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
-    vnf-name: {{ .Values.vnf_name }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,3 +14,4 @@ spec:
   selector:
     app: {{ .Values.vsn_name_0 }}
     release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
