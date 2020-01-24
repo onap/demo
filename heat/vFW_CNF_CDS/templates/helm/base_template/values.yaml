@@ -1,18 +1,18 @@
-# Kubernetes PARAMETERS
+vnf_name: test-vnf
 #unprotected
 int_private1_net_cidr: 192.168.10.0/24
-int_private1_gw_ip: 192.168.10.1/24 #No typo here
+int_private1_gw_ip: 192.168.10.1
 int_private1_net_id: unprotected-net
 int_private1_subnet_id: unprotected-subnet-1
 #protected
 int_private2_net_cidr: 192.168.20.0/24
-int_private2_gw_ip: 192.168.20.1/24 #No typo here
+int_private2_gw_ip: 192.168.20.1
 int_private2_net_id: protected-net
 int_private2_subnet_id: protected-subnet-1
 #onap mgmt net
 onap_private_net_cidr: 10.10.0.0/16
-onap_private_gw_ip: 10.10.0.1/16 #No typo here
+onap_private_gw_ip: 10.10.0.1
 onap_private_net_id: onap-private-net
 onap_private_subnet_id: onap-subnet-1
-#vnf name
-vnf_name: test-vnf
+#Network attachment
+net_attachment_definition: vfw-net-attach

@@ -115,7 +115,7 @@
       "entry_schema": {
         "type": ""
       },
-	  "default":"vpg_onap_private_ip_0"
+	  "default":"${vpg_onap_private_ip_0}"
     },
     "input-param": false,
     "dictionary-name": "vpg_onap_private_ip_0",
@@ -437,48 +437,6 @@
     "version": 0
   },
   {
-    "name": "onap_private_net_id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-
-    },
-    "input-param": false,
-    "dictionary-name": "onap_private_net_id",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "onap_private_subnet_id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-
-    },
-    "input-param": false,
-    "dictionary-name": "onap_private_subnet_id",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
     "name": "vfw_int_private2_ip_0",
     "property": {
       "description": "",
@@ -638,36 +596,10 @@
     "property": {
       "description": "Private unprotected network gateway ip",
       "type": "string",
-      "default": "192.168.10.1/24"
+      "default": "${int_private1_gw_ip}"
     },
     "input-param": false,
     "dictionary-name": "int_private1_gw_ip",
-    "dictionary-source": "default",
-    "dependencies": [
-    ]
-  },
-  {
-    "name": "int_private1_net_id",
-    "property": {
-      "description": "Private unprotected network identification",
-      "type": "string",
-      "default": "${int_private1_net_id}"
-    },
-    "input-param": false,
-    "dictionary-name": "int_private1_net_id",
-    "dictionary-source": "default",
-    "dependencies": [
-    ]
-  },
-  {
-    "name": "int_private1_subnet_id",
-    "property": {
-      "description": "Private unprotected subnetwork identification",
-      "type": "string",
-      "default": "${int_private1_subnet_id}"
-    },
-    "input-param": false,
-    "dictionary-name": "int_private1_subnet_id",
     "dictionary-source": "default",
     "dependencies": [
     ]
@@ -677,36 +609,10 @@
     "property": {
       "description": "Private protected network gateway ip",
       "type": "string",
-      "default": "192.168.20.1/24"
+      "default": "${int_private2_gw_ip}"
     },
     "input-param": false,
     "dictionary-name": "int_private2_gw_ip",
-    "dictionary-source": "default",
-    "dependencies": [
-    ]
-  },
-  {
-    "name": "int_private2_net_id",
-    "property": {
-      "description": "Private protected network identification",
-      "type": "string",
-      "default": "${int_private2_net_id}"
-    },
-    "input-param": false,
-    "dictionary-name": "int_private2_net_id",
-    "dictionary-source": "default",
-    "dependencies": [
-    ]
-  },
-  {
-    "name": "int_private2_subnet_id",
-    "property": {
-      "description": "Private protected subnetwork identification",
-      "type": "string",
-      "default": "${int_private2_subnet_id}"
-    },
-    "input-param": false,
-    "dictionary-name": "int_private2_subnet_id",
     "dictionary-source": "default",
     "dependencies": [
     ]
@@ -716,7 +622,7 @@
     "property": {
       "description": "Private onap management network gateway ip",
       "type": "string",
-      "default": "10.10.0.1/16"
+      "default": "${onap_private_gw_ip}"
     },
     "input-param": false,
     "dictionary-name": "onap_private_gw_ip",

@@ -7,19 +7,18 @@ image:
 resources:
   limits:
     memory: 4Gi
-service:
-#service port value for packetgen service
+service: #service for packetgen management
   type: NodePort
   ports:
     port: 2831
     nodePort: 30831
 
-# Kubernetes PARAMETERS
 # Names
-vpg_name_0: test-vnf-vpg
 vnf_name: test-vnf
+vpg_name_0: test-vnf-vpg
 int_private1_net_id: unprotected-net
 onap_private_net_id: onap-private-net
+net_attachment_definition: vfw-net-attach
 # Own Addresses
 vpg_int_private1_ip_0: 192.168.10.2
 vpg_onap_private_ip_0: 10.10.100.2

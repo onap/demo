@@ -3,22 +3,23 @@ kind: Deployment
 metadata:
   name: {{ .Values.vpg_name_0 }}
   labels:
-    release: {{ .Release.Name }}
-    app: {{ .Values.vpg_name_0 }}
-    chart: {{ .Chart.Name }}
     vnf-name: {{ .Values.vnf_name }}
+    vf-module-name: {{ .Values.vpg_name_0 }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.vpg_name_0 }}
-      release: {{ .Release.Name }}
+      vnf-name: {{ .Values.vnf_name }}
+      vf-module-name: {{ .Values.vpg_name_0 }}
   template:
     metadata:
       labels:
-        app: {{ .Values.vpg_name_0 }}
-        release: {{ .Release.Name }}
         vnf-name: {{ .Values.vnf_name }}
+        vf-module-name: {{ .Values.vpg_name_0 }}
+        release: {{ .Release.Name }}
+        chart: {{ .Chart.Name }}
       annotations:
         VirtletLibvirtCPUSetting: |
           mode: host-model
@@ -37,7 +38,7 @@ spec:
             - wget -O packetgen.sh https://git.onap.org/multicloud/k8s/plain/kud/tests/vFW/packetgen
             - bash -c 'set -a; . /etc/cloud/environment; bash packetgen.sh'
         VirtletRootVolumeSize: 5Gi
-        k8s.v1.cni.cncf.io/networks: "{{ .Values.vnf_name }}-ovn-attachment"
+        k8s.v1.cni.cncf.io/networks: "{{ .Values.net_attachment_definition }}"
         k8s.plugin.opnfv.org/nfn-network: |
             { "type": "ovn4nfv",
               "interface": [

@@ -1,9 +1,11 @@
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition
 metadata:
-  name: {{ .Values.vnf_name }}-ovn-attachment
+  name: {{ .Values.net_attachment_definition }}
   labels:
-      vnf-name: {{ .Values.vnf_name }}
+    vnf-name: {{ .Values.vnf_name }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
 spec:
   config: |
     {

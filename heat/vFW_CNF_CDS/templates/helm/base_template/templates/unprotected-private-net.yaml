@@ -4,9 +4,11 @@ metadata:
   name: {{ .Values.int_private1_net_id }}
   labels:
     vnf-name: {{ .Values.vnf_name }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
 spec:
   cniType : ovn4nfv
   ipv4Subnets:
   - name: {{ .Values.int_private1_subnet_id }}
     subnet: {{ .Values.int_private1_net_cidr }}
-    gateway: {{ .Values.int_private1_gw_ip }}
+    gateway: {{ .Values.int_private1_gw_ip }}/{{ (splitn "/" 2 .Values.int_private1_net_cidr)._1 }}
