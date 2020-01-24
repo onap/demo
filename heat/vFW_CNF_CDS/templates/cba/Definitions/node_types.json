@@ -85,6 +85,63 @@
       },
       "derived_from" : "tosca.nodes.Component"
     },
+    "component-script-executor" : {
+      "description" : "This is CLI Transaction Configuration Component API",
+      "version" : "1.0.0",
+      "attributes" : {
+        "response-data" : {
+          "required" : false,
+          "type" : "json"
+        }
+      },
+      "capabilities" : {
+        "component-node" : {
+          "type" : "tosca.capabilities.Node"
+        }
+      },
+      "interfaces" : {
+        "ComponentScriptExecutor" : {
+          "operations" : {
+            "process" : {
+              "inputs" : {
+                "script-type" : {
+                  "description" : "Script type, kotlin type is supported",
+                  "required" : true,
+                  "type" : "string",
+                  "constraints" : [ {
+                    "valid_values" : [ "kotlin", "jython", "internal" ]
+                  } ],
+                  "default" : "internal"
+                },
+                "script-class-reference" : {
+                  "description" : "Kotlin Script class name or jython script name.",
+                  "required" : true,
+                  "type" : "string"
+                },
+                "dynamic-properties" : {
+                  "description" : "Dynamic Json Content or DSL Json reference.",
+                  "required" : false,
+                  "type" : "json"
+                }
+              },
+              "outputs" : {
+                "response-data" : {
+                  "description" : "Execution Response Data.",
+                  "required" : false,
+                  "type" : "string"
+                },
+                "status" : {
+                  "description" : "Status of the Component Execution ( success or failure )",
+                  "required" : true,
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "derived_from" : "tosca.nodes.Component"
+    },
     "source-capability" : {
       "description" : "This is Component Resource Source Node Type",
       "version" : "1.0.0",
@@ -262,69 +319,6 @@
       "description" : "TOSCA base type for Resource Sources",
       "version" : "1.0.0",
       "derived_from" : "tosca.nodes.Root"
-    },
-    "component-script-executor":{
-      "description": "This is CLI Transaction Configuration Component API",
-      "version": "1.0.0",
-      "attributes": {
-        "response-data": {
-          "required": false,
-          "type": "json"
-        }
-      },
-      "capabilities": {
-        "component-node": {
-          "type": "tosca.capabilities.Node"
-        }
-      },
-      "interfaces": {
-        "ComponentScriptExecutor": {
-          "operations": {
-            "process": {
-              "inputs": {
-                "script-type": {
-                  "description": "Script type, kotlin type is supported",
-                  "required": true,
-                  "type": "string",
-                  "default": "internal",
-                  "constraints": [
-                    {
-                      "valid_values": [
-                        "kotlin",
-                        "jython",
-                        "internal"
-                      ]
-                    }
-                  ]
-                },
-                "script-class-reference": {
-                  "description": "Kotlin Script class name or jython script name.",
-                  "required": true,
-                  "type": "string"
-                },
-                "dynamic-properties": {
-                  "description": "Dynamic Json Content or DSL Json reference.",
-                  "required": false,
-                  "type": "json"
-                }
-              },
-              "outputs": {
-                "response-data": {
-                  "description": "Execution Response Data.",
-                  "required": false,
-                  "type": "string"
-                },
-                "status": {
-                  "description": "Status of the Component Execution ( success or failure )",
-                  "required": true,
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      },
-      "derived_from": "tosca.nodes.Component"
     }
   }
 }

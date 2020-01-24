@@ -5,7 +5,7 @@
     "author-email" : "abdelmuhaimen.seaudi@orange.com",
     "user-groups" : "ADMIN, OPERATION",
     "template_name" : "vFW_CNF_CDS",
-    "template_version" : "1.0.0",
+    "template_version" : "1.0.1",
     "template_tags" : "Samuli Silvius, vFW_CNF_CDS",
     "template_type" : "DEFAULT"
   },
@@ -39,10 +39,10 @@
       "url" : "http://multicloud-k8s:9015"
     },
     "profile-upload-properties" : {
-      "assignment-params": {
+      "assignment-params" : {
         "get_attribute" : [ "resource-assignment", "assignment-params" ]
       },
-      "api-access": "*multicloud-k8s-api"
+      "api-access" : "*multicloud-k8s-api"
     },
     "config-deploy-properties" : {
       "resolution-key" : {
@@ -63,23 +63,17 @@
           "resource-assignment" : {
             "description" : "Resource Assign Workflow",
             "target" : "resource-assignment",
-            "activities": [
-              {
-                "call_operation": "ResourceResolutionComponent.process"
-              }
-            ],
-            "on_success": [
-              "profile-upload"
-            ]
+            "activities" : [ {
+              "call_operation" : "ResourceResolutionComponent.process"
+            } ],
+            "on_success" : [ "profile-upload" ]
           },
           "profile-upload" : {
             "description" : "Upload K8s Profile",
             "target" : "profile-upload",
-            "activities": [
-              {
-                "call_operation": "ComponentScriptExecutor.process"
-              }
-            ]
+            "activities" : [ {
+              "call_operation" : "ComponentScriptExecutor.process"
+            } ]
           }
         },
         "inputs" : {
@@ -204,7 +198,6 @@
                 "inputs" : {
                   "script-type" : "kotlin",
                   "script-class-reference" : "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sProfileUpload",
-                  "instance-dependencies" : [ ],
                   "dynamic-properties" : "*profile-upload-properties"
                 }
               }
