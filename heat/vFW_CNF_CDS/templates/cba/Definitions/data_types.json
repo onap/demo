@@ -125,7 +125,7 @@
         "int_private1_gw_ip" : {
           "description" : "Private unprotected network gateway ip",
           "type" : "string",
-          "default" : "192.168.10.1/24"
+          "default" : "${int_private1_gw_ip}"
         },
         "sec_group" : {
           "description" : "",
@@ -194,7 +194,7 @@
           "type" : "string",
           "status" : "",
           "constraints" : [ { } ],
-          "default" : "vpg_onap_private_ip_0",
+          "default" : "${vpg_onap_private_ip_0}",
           "entry_schema" : {
             "type" : ""
           }
@@ -229,6 +229,9 @@
           "entry_schema" : {
             "type" : ""
           }
+        },
+        "vf-module-model-invariant-uuid" : {
+          "type" : "string"
         },
         "vpg_name_0" : {
           "description" : "",
@@ -276,20 +279,12 @@
             "type" : ""
           }
         },
+        "vf-module-model-version" : {
+          "type" : "string"
+        },
         "k8s-rb-profile-name" : {
           "description" : "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
           "type" : "string"
-        },
-        "k8s-rb-profile-namespace" : {
-          "description" : "",
-          "required" : false,
-          "type" : "string",
-          "status" : "",
-          "constraints" : [ { } ],
-          "default": "default",
-          "entry_schema" : {
-            "type" : ""
-          }
         },
         "vsn_name_0" : {
           "description" : "",
@@ -388,6 +383,11 @@
           "description" : "Private protected network identification",
           "type" : "string"
         },
+        "k8s-rb-profile-namespace" : {
+          "description" : "K8s namespace to create helm chart for specified profile",
+          "type" : "string",
+          "default" : "default"
+        },
         "int_private1_subnet_id" : {
           "description" : "Private unprotected subnetwork identification",
           "type" : "string",
@@ -480,7 +480,7 @@
         "onap_private_gw_ip" : {
           "description" : "Private onap management network gateway ip",
           "type" : "string",
-          "default" : "10.10.0.1/16"
+          "default" : "${onap_private_gw_ip}"
         },
         "dcae_collector_port" : {
           "description" : "",

@@ -305,52 +305,6 @@
     ],
     "version": 0
   },
-  {
-    "name": "onap_private_net_id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "onap_private_net_id",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "onap_private_subnet_id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "onap_private_subnet_id",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
     {
     "name": "int_private1_net_cidr",
     "property": {
@@ -911,34 +865,6 @@
     "input-param": false,
     "dictionary-name": "k8s-rb-profile-namespace",
     "dictionary-source": "default",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ]
-  },
-  {
-    "name": "int_private1_net_id",
-    "property": {
-      "description": "Private unprotected network identification",
-      "type": "string"
-    },
-    "input-param": false,
-    "dictionary-name": "int_private1_net_id",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ]
-  },
-  {
-    "name": "int_private2_net_id",
-    "property": {
-      "description": "Private protected network identification",
-      "type": "string"
-    },
-    "input-param": false,
-    "dictionary-name": "int_private2_net_id",
-    "dictionary-source": "sdnc",
     "dependencies": [
       "service-instance-id",
       "vnf-id"
