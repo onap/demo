@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8368c61a_895cc994",
+        "filename": "heat/vFW_CNF_CDS/templates/cba-dd.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-27T13:09:52Z",
+      "side": 1,
+      "message": "don\u0027t need to add this as it\u0027s available in cds, need to add sdnc source",
+      "range": {
+        "startLine": 474,
+        "startChar": 2,
+        "endLine": 475,
+        "endChar": 39
+      },
+      "revId": "133680593ba330e3de6c70f423ede1da2ee70243",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a16ec07_27281dd4",
         "filename": "heat/vFW_CNF_CDS/templates/cba-dd.json",
         "patchSetId": 9
