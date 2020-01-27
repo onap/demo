@@ -45,6 +45,75 @@
       "revId": "133680593ba330e3de6c70f423ede1da2ee70243",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5aa44fa2_2ade203c",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 1419,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-27T19:19:06Z",
+      "side": 1,
+      "message": "this one we changed to uuid on purpose based on Lukazs proposal. Enrichment will drop this change until we fix cds started DD repo.",
+      "range": {
+        "startLine": 1419,
+        "startChar": 33,
+        "endLine": 1419,
+        "endChar": 59
+      },
+      "revId": "133680593ba330e3de6c70f423ede1da2ee70243",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa3535a4_060804c2",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 1776,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-27T19:19:06Z",
+      "side": 1,
+      "message": "again bug I fixed in our cba but enrichment will bring it back until we fix cds repo.",
+      "range": {
+        "startLine": 1761,
+        "startChar": 3,
+        "endLine": 1776,
+        "endChar": 9
+      },
+      "revId": "133680593ba330e3de6c70f423ede1da2ee70243",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c95ac83b_56a85875",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 1818,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-27T19:19:06Z",
+      "side": 1,
+      "message": "bug in cds repo and enrichemnt will bring it here.",
+      "range": {
+        "startLine": 1818,
+        "startChar": 24,
+        "endLine": 1818,
+        "endChar": 167
+      },
+      "revId": "133680593ba330e3de6c70f423ede1da2ee70243",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

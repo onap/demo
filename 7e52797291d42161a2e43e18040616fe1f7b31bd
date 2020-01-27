@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "726e8fe9_2c4a734b",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/resources_definition_types.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 1399,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-27T19:19:06Z",
+      "side": 0,
+      "message": "there are many of dropped endpoint-selectors, again because the cds starter DD is not fixed on these and enrichment will drop these.",
+      "range": {
+        "startLine": 1399,
+        "startChar": 10,
+        "endLine": 1399,
+        "endChar": 52
+      },
+      "revId": "7e52797291d42161a2e43e18040616fe1f7b31bd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14442d44_7f4e4f57",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-27T19:19:06Z",
+      "side": 0,
+      "message": "prob we can add it back",
+      "range": {
+        "startLine": 207,
+        "startChar": 18,
+        "endLine": 207,
+        "endChar": 48
+      },
+      "revId": "7e52797291d42161a2e43e18040616fe1f7b31bd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
