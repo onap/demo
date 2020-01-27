@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a16ec07_27281dd4",
+        "filename": "heat/vFW_CNF_CDS/templates/cba-dd.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-01-27T13:08:30Z",
+      "side": 1,
+      "message": "Consider updating cba repository instead of such modifications here",
+      "range": {
+        "startLine": 496,
+        "startChar": 14,
+        "endLine": 515,
+        "endChar": 15
+      },
+      "revId": "133680593ba330e3de6c70f423ede1da2ee70243",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
