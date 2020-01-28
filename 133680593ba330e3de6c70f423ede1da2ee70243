@@ -137,6 +137,29 @@
       "revId": "133680593ba330e3de6c70f423ede1da2ee70243",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2302b652_c2c61d1b",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-28T12:39:44Z",
+      "side": 1,
+      "message": "based on new info (https://gerrit.onap.org/r/#/c/ccsdk/cds/+/100839/), remove this.",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 5
+      },
+      "revId": "133680593ba330e3de6c70f423ede1da2ee70243",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
