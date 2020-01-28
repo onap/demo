@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5f702092_24818133",
+        "filename": "heat/vFW_CNF_CDS/templates/cba-dd.json",
+        "patchSetId": 9
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-01-28T06:28:42Z",
+      "side": 1,
+      "message": "and btw it\u0027s already here, so o need to add.",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 301,
+        "endChar": 4
+      },
+      "revId": "133680593ba330e3de6c70f423ede1da2ee70243",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8368c61a_895cc994",
         "filename": "heat/vFW_CNF_CDS/templates/cba-dd.json",
         "patchSetId": 9
