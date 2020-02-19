@@ -1,0 +1,77 @@
+{
+    "reference_data": [
+        {
+            "action": "DistributeTraffic",
+            "action-level": "vnf",
+            "scope": {
+                "vnf-type": "vFWDT 2020-02-03 14:40:/vFWDT_vPKG 81793128-bca7 0",
+                "vnfc-type-list": [],
+                "vnfc-type": ""
+            },
+            "template": "Y",
+            "vm": [],
+            "device-protocol": "ANSIBLE",
+            "user-name": "admin",
+            "port-number": "8000",
+            "artifact-list": [
+                {
+                    "artifact-name": "template_DistributeTraffic_vFWDT2020-02-0314:40:_vFWDT_vPKG81793128-bca70_0.0.1V.json",
+                    "artifact-type": "config_template"
+                },
+                {
+                    "artifact-name": "pd_DistributeTraffic_vFWDT2020-02-0314:40:_vFWDT_vPKG81793128-bca70_0.0.1V.yaml",
+                    "artifact-type": "parameter_definitions"
+                },
+                {
+                    "artifact-name": "param_DistributeTraffic_vFWDT2020-02-0314:40:_vFWDT_vPKG81793128-bca70_0.0.1V.json",
+                    "artifact-type": "param_values"
+                }
+            ],
+            "scopeType": "vnf-type"
+        },
+        {
+            "action": "AllAction",
+            "action-level": "vnf",
+            "scope": {
+                "vnf-type": "vFWDT 2020-02-03 14:40:/vFWDT_vPKG 81793128-bca7 0",
+                "vnfc-type-list": [],
+                "vnfc-type": ""
+            },
+            "artifact-list": [
+                {
+                    "artifact-name": "reference_AllAction_vFWDT2020-02-0314:40:_vFWDT_vPKG81793128-bca70_0.0.1V.json",
+                    "artifact-type": "reference_template"
+                }
+            ]
+        },
+        {
+            "action": "DistributeTrafficCheck",
+            "action-level": "vnf",
+            "scope": {
+                "vnf-type": "vFWDT 2020-02-03 14:40:/vFWDT_vPKG 81793128-bca7 0",
+                "vnfc-type-list": [],
+                "vnfc-type": ""
+            },
+            "template": "Y",
+            "vm": [],
+            "device-protocol": "ANSIBLE",
+            "user-name": "admin",
+            "port-number": "8000",
+            "artifact-list": [
+                {
+                    "artifact-name": "template_DistributeTrafficCheck_vFWDT2020-02-0314:40:_vFWDT_vPKG81793128-bca70_0.0.1V.json",
+                    "artifact-type": "config_template"
+                },
+                {
+                    "artifact-name": "pd_DistributeTrafficCheck_vFWDT2020-02-0314:40:_vFWDT_vPKG81793128-bca70_0.0.1V.yaml",
+                    "artifact-type": "parameter_definitions"
+                },
+                {
+                    "artifact-name": "param_DistributeTrafficCheck_vFWDT2020-02-0314:40:_vFWDT_vPKG81793128-bca70_0.0.1V.json",
+                    "artifact-type": "param_values"
+                }
+            ],
+            "scopeType": "vnf-type"
+        }
+    ]
+}

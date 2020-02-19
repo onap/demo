@@ -1003,6 +1003,167 @@ def _execute_lcm_requests(workflow, onap_ip, check_result):
            _execute_lcm_requests(lcm_requests[i]["workflow"], onap_ip, check_result)
 
 
+def _generate_cdt_artifact_request(req_id, artifact, action, vnfc_type):
+    req = {
+      'input': {
+          'design-request': {
+              'request-id': req_id,
+              'action': "uploadArtifact",
+              'payload': json.dumps(artifact['payload'])
+          }
+       }
+    }
+
+    file = "{}_{}_{}.json".format(artifact['type'], action.lower(), vnfc_type)
+    dirname = "templates/cdt-requests"
+    #print(file)
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)
+    f = open("{}/{}".format(dirname, file), 'w')
+    f.write(json.dumps(req, indent=4))
+    f.close()
+
+    return req
+
+
+def _get_name_of_artifact(prefix, action, vnf_type):
+    return "{}_{}_{}_0.0.1V.json".format(prefix, action, vnf_type)
+
+
+def _set_artifact_payload(vnf_type, vnfc_type, action, artifact):
+    sw_upgrade = False
+    if action == "DistributeTraffic" or action == "DistributeTrafficCheck" or action == "AllAction":
+        pass
+    elif action == "UpgradeSoftware" or action == "UpgradePreCheck" or action == "UpgradePostCheck":
+        sw_upgrade = True
+    else:
+        raise Exception("{} action not supported".format(action))
+
+    artifact_contents = ''
+    if artifact['type'] == 'config_template':
+        file = 'templates/cdt-templates/templates/action-template.json'
+        template_file = 'templates/cdt-templates/{}/{}'
+        if sw_upgrade:
+            template_file = template_file.format(vnfc_type, 'upgrade.json')
+        else:
+            template_file = template_file.format(vnfc_type, 'traffic.json')
+
+        artifact_contents = json.dumps(json.loads(open(template_file).read()))
+    elif artifact['type'] == 'parameter_definitions':
+        file = 'templates/cdt-templates/templates/{}'
+        if sw_upgrade:
+            file = file.format('upgrade-params.json')
+        else:
+            file = file.format('traffic-params.json')
+    elif artifact['type'] == 'param_values':
+        file = 'templates/cdt-templates/templates/{}'
+        if sw_upgrade:
+            file = file.format('upgrade-params-list.json')
+        else:
+            file = file.format('traffic-params-list.json')
+    elif artifact['type'] == 'reference_template':
+        file = 'templates/cdt-templates/templates/reference-all-actions.json'
+    else:
+        raise Exception("{} not supported artifact type".format(artifact['type']))
+
+    payload = json.loads(open(file).read())
+    payload['vnf-type'] = vnf_type
+    payload['artifact-name'] = artifact['name']
+    payload['action'] = action
+
+    if artifact['type'] == 'config_template':
+        artifact['artifact-contents'] = artifact_contents
+    artifact['payload'] = payload
+
+
+def _generate_artifacts_for_cdt(vnf_type, vnf_type_formatted, vnfc_type, action):
+    artifacts = []
+    artifacts.append({
+        'name': _get_name_of_artifact("template", action, vnf_type_formatted),
+        'type': 'config_template',
+        'payload': {'test': 'test'}
+    })
+    artifacts.append({
+        'name': _get_name_of_artifact("pd", action, vnf_type_formatted),
+        'type': 'parameter_definitions',
+        'payload': {'test': 'test'}
+    })
+    artifacts.append({
+        'name': _get_name_of_artifact("param", action, vnf_type_formatted),
+        'type': 'param_values',
+        'payload': {'test': 'test'}
+    })
+
+    _set_artifact_payload(vnf_type, vnfc_type, action, artifacts[0])
+    _set_artifact_payload(vnf_type, vnfc_type, action, artifacts[1])
+    _set_artifact_payload(vnf_type, vnfc_type, action, artifacts[2])
+
+    return artifacts
+
+
+def _generate_cdt_payloads_for_vnf(vnf_info, vnfc_type, actions):
+    req_id = str(uuid.uuid4()).replace('-','')
+    vnf_type_formatted = vnf_info['vnf-type'].replace(' ','').replace('/', '_')
+    artifacts = {
+        'AllAction': [{
+            'name': _get_name_of_artifact("reference", 'AllAction', vnf_type_formatted),
+            'type': 'reference_template'
+        }]
+    }
+
+    all_action_artifact = artifacts['AllAction'][0]
+
+    _set_artifact_payload(vnf_info['vnf-type'], vnfc_type, 'AllAction', all_action_artifact)
+
+    for action in actions:
+        action_artifacts = _generate_artifacts_for_cdt(vnf_info['vnf-type'], vnf_type_formatted, vnfc_type, action)
+        artifacts[action] = action_artifacts
+
+    all_action_artifacts = list()
+
+    for action in artifacts:
+        artifact_list = list()
+        action_info = {
+            'action': action,
+            'action-level': "vnf",
+            'scope': {
+                 'vnf-type': vnf_info['vnf-type'],
+                 'vnfc-type-list': [],
+                 'vnfc-type': ""
+            },
+            'artifact-list': artifact_list
+        }
+
+        if action != 'AllAction':
+            action_info.update({
+                'template': "Y",
+                'vm': [],
+                'device-protocol': "ANSIBLE",
+                'user-name': "admin",
+                'port-number': "8000",
+                'scopeType': "vnf-type"
+            })
+
+        for action_artifact in artifacts[action]:
+            artifact_list.append({'artifact-name': action_artifact['name'], 'artifact-type': action_artifact['type']})
+            if action != 'AllAction':
+                req = _generate_cdt_artifact_request(req_id, action_artifact, action, vnfc_type)
+                #print(json.dumps(req, indent=4))
+
+        #print(json.dumps(action_info, indent=4))
+        all_action_artifacts.append(action_info)
+
+    all_action_artifact['payload']['artifact-contents'] = json.dumps({'reference_data': all_action_artifacts})
+    req = _generate_cdt_artifact_request(req_id, all_action_artifact, 'AllAction', vnfc_type)
+    #print(json.dumps(req, indent=4))
+
+
+def _generate_cdt_payloads(aai_data):
+    vfw_actions = ["DistributeTrafficCheck", "UpgradeSoftware", "UpgradePreCheck", "UpgradePostCheck", "UpgradeSoftware"]
+    vpgn_actions = ["DistributeTraffic", "DistributeTrafficCheck"]
+    _generate_cdt_payloads_for_vnf(aai_data["vfw-model-info"], "vfw-sink", vfw_actions)
+    _generate_cdt_payloads_for_vnf(aai_data["vpgn-model-info"], "vpgn", vpgn_actions)
+
 
 def execute_workflow(vfw_vnf_id, rancher_ip, onap_ip, use_oof_cache, if_close_loop_vfw, info_only, check_result, new_version=None):
     print("\nExecuting workflow for VNF ID '{}' on Rancher with IP {} and ONAP with IP {}".format(
@@ -1029,6 +1190,8 @@ def execute_workflow(vfw_vnf_id, rancher_ip, onap_ip, use_oof_cache, if_close_lo
     f = open("Ansible_inventory", 'w+')
     f.write(inventory)
     f.close()
+
+    _generate_cdt_payloads(aai_data)
 
     if info_only:
         return

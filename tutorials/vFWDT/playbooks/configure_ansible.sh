@@ -17,6 +17,32 @@
 #
 # ============LICENSE_END=========================================================
 
+if [ ! -f playbooks/onap.pem ]; then
+	echo "onap.pem file does not exist"
+	exit
+fi
+
+K8S_NODE_IP=`kubectl get nodes -o=wide | grep 01 |  awk {'print $6'}`
+
+CDT_REQ_DIR="workflow/templates/cdt-requests"
+
+echo "APPC Artifacts configuration"
+
+for f in $CDT_REQ_DIR/*.json; do
+	echo ""
+	echo "Uploading $f"
+	RES=`curl -k -s -X POST -H "Content-Type: application/json" -d @$f  https://$K8S_NODE_IP:30211/cdtService/getDesigns`
+	echo "$RES"
+
+	if [[ $RES != *'"code":"400","message":"success"'* ]]; then
+		echo "CDT Artifact Upload failed"
+		exit
+	fi
+done
+
+echo "APPC Artifacts configuration completed"
+
+echo "APPC Ansible configuration"
 
 ANSIBLE=`kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' | grep appc-ansible`
 echo $ANSIBLE

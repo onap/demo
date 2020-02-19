@@ -1,0 +1,15 @@
+{
+    "InventoryNames": "VM",
+    "PlaybookName": "${()=(book_name)}",
+    "AutoNodeList": true,
+    "EnvParameters": {
+        "ConfigFileName": "../config.json",
+        "vnf_instance": "vfwdt",
+        "new_software_version": "${()=(new-software-version)}",
+        "existing_software_version": "${()=(existing-software-version)}"
+    },
+    "FileParameters": {
+        "config.json": "${()=(file_parameter_content)}"
+    },
+    "Timeout": 3600
+}

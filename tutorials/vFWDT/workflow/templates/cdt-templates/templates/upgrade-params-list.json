@@ -1,0 +1,9 @@
+{
+    "userID": "demo",
+    "vnf-type": "vFWDT 2020-02-03 14:40:/vFWDT_vFWSNK 3f9e7507-b8de 0",
+    "action": "UpgradeSoftware",
+    "artifact-name": "param_UpgradeSoftware_vFWDT2020-02-0314:40:_vFWDT_vFWSNK3f9e7507-b8de0_0.0.1V.json",
+    "artifact-type": "APPC-CONFIG",
+    "artifact-version": "0.0.1",
+    "artifact-contents": "[{\"book_name\":\"\",\"new-software-version\":\"\",\"existing-software-version\":\"\",\"file_parameter_content\":\"\"}]"
+}

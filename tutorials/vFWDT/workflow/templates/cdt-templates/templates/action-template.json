@@ -1,0 +1,9 @@
+{
+    "userID": "demo",
+    "vnf-type": "vFWDT 2020-02-03 14:40:/vFWDT_vPKG 81793128-bca7 0",
+    "action": "DistributeTrafficCheck",
+    "artifact-name": "template_DistributeTrafficCheck_vFWDT2020-02-0314:40:_vFWDT_vPKG81793128-bca70_0.0.1V.json",
+    "artifact-type": "APPC-CONFIG",
+    "artifact-version": "0.0.1",
+    "artifact-contents": "{\r\n    \"InventoryNames\": \"VM\",\r\n    \"PlaybookName\": \"${book_name}\",\r\n    \"AutoNodeList\": True,\r\n    \"EnvParameters\": {\r\n        \"ConfigFileName\": \"../traffic_distribution_config.json\",\r\n        \"vnf_instance\": \"vfwdt\",\r\n    },\r\n    \"FileParameters\": {\r\n        \"traffic_distribution_config.json\": \"${file_parameter_content}\"\r\n    },\r\n    \"Timeout\": 3600\r\n}"
+}
