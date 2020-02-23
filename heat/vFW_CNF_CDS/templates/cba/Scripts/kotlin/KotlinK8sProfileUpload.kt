@@ -26,6 +26,8 @@ import org.onap.ccsdk.cds.blueprintsprocessor.rest.service.BlueprintWebClientSer
 import org.onap.ccsdk.cds.blueprintsprocessor.rest.service.RestLoggerService
 import org.onap.ccsdk.cds.blueprintsprocessor.services.execution.AbstractScriptComponentFunction
 import org.onap.ccsdk.cds.controllerblueprints.core.utils.JacksonUtils
+import org.onap.ccsdk.cds.controllerblueprints.core.utils.BluePrintArchiveUtils
+import org.onap.ccsdk.cds.controllerblueprints.core.utils.ArchiveType
 import org.apache.commons.io.IOUtils
 import org.apache.commons.io.FilenameUtils
 import org.apache.http.client.entity.EntityBuilder
@@ -50,11 +52,6 @@ import org.springframework.http.MediaType
 import java.nio.charset.Charset
 import java.util.Base64
 import org.onap.ccsdk.cds.controllerblueprints.core.BluePrintProcessorException
-
-import java.io.BufferedInputStream
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.util.zip.GZIPInputStream
 
 open class K8sProfileUpload : AbstractScriptComponentFunction() {
 
@@ -105,7 +102,7 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
                 if (api.hasProfile(k8sRbProfileName)) {
                     log.info("Profile Already Existing - skipping upload")
                 } else {
-                    val profileFilePath = prepareProfileFile(k8sRbProfileName)
+                    val profileFilePath: Path = prepareProfileFile(k8sRbProfileName)
 
                     var profile = K8sProfile()
                     profile.profileName = k8sRbProfileName
@@ -131,6 +128,25 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
 
         if (!profileFile.exists())
             throw BluePrintProcessorException("K8s Profile template file ${profileFilePath} does not exists")
+
+        val tempMainPath: File = createTempDir("k8s-profile-", "")
+        val tempProfilePath: File = createTempDir("${k8sRbProfileName}-", "", tempMainPath)
+        log.info("Decompressing profile to ${tempProfilePath.toString()}")
+
+        val decompressedProfile: File = BluePrintArchiveUtils.deCompress(profileFilePath.toFile(),
+                "${tempProfilePath.toString()}", ArchiveType.TarGz)
+
+        log.info("${profileFilePath.toString()} decompression completed")
+
+        //Here we can add extra files inside the archive
+        profileFilePath = Paths.get(tempMainPath.toString().plus(File.separator).plus("${k8sRbProfileName}.tar.gz"))
+
+        if (!BluePrintArchiveUtils.compress(decompressedProfile, profileFilePath.toFile(),
+                        ArchiveType.TarGz)) {
+            throw BluePrintProcessorException("Profile compression has failed")
+        }
+
+        log.info("${profileFilePath.toString()} compression completed")
 
         return profileFilePath
     }
