@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28d703da_3f5f2b43",
+        "filename": "heat/vFW_CNF_CDS/templates/helm/vsn/templates/service.yaml",
+        "patchSetId": 16
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-02-25T17:24:40Z",
+      "side": 0,
+      "message": "vnf-nmae that is also unique how, would be important label",
+      "revId": "42ecc70c1f5a05c4de5dda414a7964398552b47d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
