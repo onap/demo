@@ -599,7 +599,7 @@
     }
   },
   "k8s-rb-profile-name" : {
-    "tags" : "k8s, cnf, profile",
+    "tags" : "k8s, cnf, profile, k8s-rb-profile-name",
     "name" : "k8s-rb-profile-name",
     "property" : {
       "description" : "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
@@ -635,7 +635,7 @@
     }
   },
   "k8s-rb-profile-namespace" : {
-    "tags" : "k8s-rb-profile-namespace",
+    "tags" : "k8s, cnf, profile, namespace, k8s-rb-profile-namespace",
     "name" : "k8s-rb-profile-namespace",
     "property" : {
       "description" : "Profile name used in multicloud/k8s plugin",
