@@ -13,6 +13,6 @@ spec:
     - port: {{ .Values.service.ports.port  }}
       nodePort: {{ .Values.service.ports.nodePort }}
   selector:
-    app: {{ .Values.vpg_name_0 }}
+    vf-module-name: {{ .Values.vpg_name_0 }}
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
