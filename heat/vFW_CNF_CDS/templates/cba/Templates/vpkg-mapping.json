@@ -825,20 +825,6 @@
     ]
   },
   {
-    "name": "onap_private_subnet_id",
-    "property": {
-      "description": "onap private subnet id",
-      "type": "string"
-    },
-    "input-param": false,
-    "dictionary-name": "onap_private_subnet_id",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ]
-  },
-  {
     "name": "int_private1_net_id",
     "property": {
       "description": "private1 net id",

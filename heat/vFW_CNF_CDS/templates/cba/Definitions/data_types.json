@@ -264,11 +264,6 @@
             "type" : ""
           }
         },
-        "int_private2_subnet_id" : {
-          "description" : "Private protected subnetwork identification",
-          "type" : "string",
-          "default" : "${int_private2_subnet_id}"
-        },
         "vfccustomizationuuid" : {
           "description" : "",
           "required" : false,
@@ -388,22 +383,7 @@
           "type" : "string",
           "default" : "default"
         },
-        "int_private1_subnet_id" : {
-          "description" : "Private unprotected subnetwork identification",
-          "type" : "string",
-          "default" : "${int_private1_subnet_id}"
-        },
         "vnf_name" : {
-          "description" : "",
-          "required" : false,
-          "type" : "string",
-          "status" : "",
-          "constraints" : [ { } ],
-          "entry_schema" : {
-            "type" : ""
-          }
-        },
-        "onap_private_subnet_id" : {
           "description" : "",
           "required" : false,
           "type" : "string",
