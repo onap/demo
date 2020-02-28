@@ -11,7 +11,7 @@ spec:
   type: NodePort
   ports:
     - port: 22
-      nodePort: 30022 #TemplateMe
+      nodePort: ${vpg-management-port}
   selector:
     vf-module-name: {{ .Values.vpg_name_0 }}
     release: {{ .Release.Name }}

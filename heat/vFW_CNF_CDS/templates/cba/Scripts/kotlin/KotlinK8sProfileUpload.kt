@@ -42,6 +42,7 @@ import org.springframework.web.client.RestTemplate
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.ArrayList
+import java.util.LinkedHashMap
 import java.io.IOException
 import java.io.File
 import java.nio.file.Files
@@ -52,6 +53,7 @@ import org.springframework.http.MediaType
 import java.nio.charset.Charset
 import java.util.Base64
 import org.onap.ccsdk.cds.controllerblueprints.core.BluePrintProcessorException
+import org.yaml.snakeyaml.Yaml
 
 open class K8sProfileUpload : AbstractScriptComponentFunction() {
 
@@ -102,7 +104,7 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
                 if (api.hasProfile(k8sRbProfileName)) {
                     log.info("Profile Already Existing - skipping upload")
                 } else {
-                    val profileFilePath: Path = prepareProfileFile(k8sRbProfileName)
+                    val profileFilePath: Path = prepareProfileFile(k8sRbProfileName, prefix.equals("vpkg"))
 
                     var profile = K8sProfile()
                     profile.profileName = k8sRbProfileName
@@ -118,7 +120,7 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
         }
     }
 
-    fun prepareProfileFile(k8sRbProfileName: String): Path {
+    fun prepareProfileFile(k8sRbProfileName: String, profileModificationAllowed: Boolean): Path {
         val bluePrintContext = bluePrintRuntimeService.bluePrintContext()
         val bluePrintBasePath: String = bluePrintContext.rootPath
         var profileFilePath: Path = Paths.get(bluePrintBasePath.plus(File.separator).plus("Templates").plus(File.separator).plus("k8s-profiles").plus(File.separator).plus("${k8sRbProfileName}.tar.gz"))
@@ -138,7 +140,39 @@ open class K8sProfileUpload : AbstractScriptComponentFunction() {
 
         log.info("${profileFilePath.toString()} decompression completed")
 
-        //Here we can add extra files inside the archive
+        if (profileModificationAllowed) {
+            //Here we can add extra files inside the archive
+            val profileModificationDecisionData = getDynamicProperties("profile-modification-decision-data")
+            log.info("Profile modification decision data: ${profileModificationDecisionData}")
+            if (profileModificationDecisionData != null && profileModificationDecisionData.asText().toInt() > 0) {
+                log.info("Modification of profile content")
+
+                val profileArtifacts = getDynamicProperties("profile-artifacts")
+                val sshServiceFileContent = profileArtifacts.get("ssh-service").asText()
+                val sshServiceFileName = "ssh-service.yaml"
+                val serviceFilePath = tempProfilePath.toString().plus(File.separator).plus(sshServiceFileName)
+                File(serviceFilePath).bufferedWriter().use { out -> out.write(sshServiceFileContent) }
+                val manifestFileName = tempProfilePath.toString().plus(File.separator).plus("manifest.yaml")
+                var finalManifest = ""
+                File(manifestFileName).bufferedReader().use { inr ->
+                    val manifestYaml = Yaml()
+                    val manifestObject: Map<String, Any> = manifestYaml.load(inr)
+                    val typeObject: MutableMap<String, Any> = manifestObject.get("type") as MutableMap<String, Any>
+                    if (!typeObject.containsKey("configresource"))
+                        typeObject.put("configresource", ArrayList<LinkedHashMap<String, Any>>())
+                    val configFiles: MutableList<LinkedHashMap<String, Any>> = typeObject.get("configresource") as MutableList<LinkedHashMap<String, Any>>
+                    val sshConfigFile = LinkedHashMap<String, Any>()
+                    sshConfigFile.put("filepath", sshServiceFileName)
+                    sshConfigFile.put("chartpath", "vpkg/templates/${sshServiceFileName}")
+                    configFiles.add(sshConfigFile)
+                    finalManifest = manifestYaml.dump(manifestObject)
+                }
+                File(manifestFileName).bufferedWriter().use { out -> out.write(finalManifest) }
+
+                log.info("Modification of profile completed")
+            }
+        }
+
         profileFilePath = Paths.get(tempMainPath.toString().plus(File.separator).plus("${k8sRbProfileName}.tar.gz"))
 
         if (!BluePrintArchiveUtils.compress(decompressedProfile, profileFilePath.toFile(),
