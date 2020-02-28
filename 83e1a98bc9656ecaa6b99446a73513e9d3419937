@@ -45,6 +45,29 @@
       "revId": "83e1a98bc9656ecaa6b99446a73513e9d3419937",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3aeb557_0accbf9c",
+        "filename": "heat/vFW_CNF_CDS/templates/cba2dd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-02-28T13:58:40Z",
+      "side": 1,
+      "message": "maybe restrain from providing default variable so the script fails early if someone omits it?",
+      "range": {
+        "startLine": 81,
+        "startChar": 24,
+        "endLine": 81,
+        "endChar": 35
+      },
+      "revId": "83e1a98bc9656ecaa6b99446a73513e9d3419937",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
