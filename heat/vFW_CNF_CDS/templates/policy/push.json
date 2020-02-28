@@ -1,0 +1,5 @@
+{
+    "pdpGroup": "default",
+    "policyName": "SDNC_Policy.ONAP_CNF_NAMING_TIMESTAMP",
+    "policyType": "MicroService"
+}

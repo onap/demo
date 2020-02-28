@@ -365,7 +365,7 @@
       "entry_schema": {
         "type": ""
       },
-      "default": "SDNC_Policy.Config_MS_ONAP_VNF_NAMING_TIMESTAMP"
+      "default": "SDNC_Policy.Config_MS_ONAP_CNF_NAMING_TIMESTAMP"
     },
     "input-param": false,
     "dictionary-name": "vf-naming-policy",
