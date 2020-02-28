@@ -598,6 +598,24 @@
       }
     }
   },
+  "vpg-management-port" : {
+    "tags" : "vpg-management-port",
+    "name" : "vpg-management-port",
+    "property" : {
+      "description" : "vpg-management-port",
+      "type" : "string"
+    },
+    "updated-by" : "Rajewski, Lukasz <lukasz.rajewski@orange.com>",
+    "sources" : {
+      "input" : {
+        "type" : "source-input"
+      },
+      "default" : {
+        "type" : "source-default",
+        "properties" : { }
+      }
+    }
+  },
   "key_name" : {
     "tags" : "key_name",
     "name" : "key_name",
