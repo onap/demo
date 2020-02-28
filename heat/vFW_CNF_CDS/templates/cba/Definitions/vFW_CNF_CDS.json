@@ -5,7 +5,7 @@
     "author-email" : "abdelmuhaimen.seaudi@orange.com",
     "user-groups" : "ADMIN, OPERATION",
     "template_name" : "vFW_CNF_CDS",
-    "template_version" : "1.0.13",
+    "template_version" : "1.0.14",
     "template_tags" : "Samuli Silvius, vFW_CNF_CDS",
     "template_type" : "DEFAULT"
   },
