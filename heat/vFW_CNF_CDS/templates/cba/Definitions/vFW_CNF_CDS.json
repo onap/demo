@@ -34,10 +34,16 @@
       "url" : "http://multicloud-k8s:9015"
     },
     "profile-upload-properties" : {
-      "assignment-params" : {
+      "assignment-params": {
         "get_attribute" : [ "resource-assignment", "assignment-params" ]
       },
-      "api-access" : "*multicloud-k8s-api"
+      "profile-modification-decision-data": {
+        "get_input" : "vpg-management-port"
+      },
+      "profile-artifacts": {
+        "get_attribute" : [ "profile-modification", "assignment-params" ]
+      },
+      "api-access": "*multicloud-k8s-api"
     },
     "config-deploy-properties" : {
       "resolution-key" : {
@@ -58,17 +64,35 @@
           "resource-assignment" : {
             "description" : "Resource Assign Workflow",
             "target" : "resource-assignment",
-            "activities" : [ {
-              "call_operation" : "ResourceResolutionComponent.process"
-            } ],
-            "on_success" : [ "profile-upload" ]
+            "activities": [
+              {
+                "call_operation": "ResourceResolutionComponent.process"
+              }
+            ],
+            "on_success": [
+              "profile-modification"
+            ]
+          },
+          "profile-modification" : {
+            "description" : "Profile Modification Resources",
+            "target" : "profile-modification",
+            "activities": [
+              {
+                "call_operation": "ResourceResolutionComponent.process"
+              }
+            ],
+            "on_success": [
+              "profile-upload"
+            ]
           },
           "profile-upload" : {
             "description" : "Upload K8s Profile",
             "target" : "profile-upload",
-            "activities" : [ {
-              "call_operation" : "ComponentScriptExecutor.process"
-            } ]
+            "activities": [
+              {
+                "call_operation": "ComponentScriptExecutor.process"
+              }
+            ]
           }
         },
         "inputs" : {
@@ -181,6 +205,30 @@
           "vsn-mapping" : {
             "type" : "artifact-mapping-resource",
             "file" : "Templates/vsn-mapping.json"
+          }
+        }
+      },
+      "profile-modification" : {
+        "type" : "component-resource-resolution",
+        "interfaces" : {
+          "ResourceResolutionComponent" : {
+            "operations" : {
+              "process" : {
+                "inputs" : {
+                  "artifact-prefix-names" : [ "ssh-service" ]
+                }
+              }
+            }
+          }
+        },
+        "artifacts" : {
+          "ssh-service-template" : {
+            "type" : "artifact-template-velocity",
+            "file" : "Templates/k8s-profiles/ssh-service-template.vtl"
+          },
+          "ssh-service-mapping" : {
+            "type" : "artifact-mapping-resource",
+            "file" : "Templates/k8s-profiles/ssh-service-mapping.json"
           }
         }
       },
