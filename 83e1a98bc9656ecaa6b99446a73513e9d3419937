@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "60ec1c01_ad90172c",
+        "filename": "heat/vFW_CNF_CDS/templates/cba2dd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-02-28T14:08:25Z",
+      "side": 1,
+      "message": "yes I know. this was last change and just used _ to be cool.",
+      "parentUuid": "266307f5_9039736a",
+      "range": {
+        "startLine": 45,
+        "startChar": 1,
+        "endLine": 46,
+        "endChar": 40
+      },
+      "revId": "83e1a98bc9656ecaa6b99446a73513e9d3419937",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6f447559_34628560",
         "filename": "heat/vFW_CNF_CDS/templates/cba2dd.py",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "b7b8c2e6_ff25aef5",
+        "filename": "heat/vFW_CNF_CDS/templates/cba2dd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-02-28T14:08:25Z",
+      "side": 1,
+      "message": "yes I know, but wanted to left formatting for user.",
+      "parentUuid": "6f447559_34628560",
+      "range": {
+        "startLine": 75,
+        "startChar": 3,
+        "endLine": 75,
+        "endChar": 50
+      },
+      "revId": "83e1a98bc9656ecaa6b99446a73513e9d3419937",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3aeb557_0accbf9c",
         "filename": "heat/vFW_CNF_CDS/templates/cba2dd.py",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2020-02-28T13:58:40Z",
       "side": 1,
       "message": "maybe restrain from providing default variable so the script fails early if someone omits it?",
+      "range": {
+        "startLine": 81,
+        "startChar": 24,
+        "endLine": 81,
+        "endChar": 35
+      },
+      "revId": "83e1a98bc9656ecaa6b99446a73513e9d3419937",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd449a24_98a3ec48",
+        "filename": "heat/vFW_CNF_CDS/templates/cba2dd.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-02-28T14:08:25Z",
+      "side": 1,
+      "message": "ok, sure. with empty it fails for sure too. But yes.",
+      "parentUuid": "e3aeb557_0accbf9c",
       "range": {
         "startLine": 81,
         "startChar": 24,
