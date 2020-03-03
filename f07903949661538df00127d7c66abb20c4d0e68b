@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "11965d01_cfee6087",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2020-03-03T09:13:00Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "2cc12730_550862e7",
+      "range": {
+        "startLine": 227,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 29
+      },
+      "revId": "f07903949661538df00127d7c66abb20c4d0e68b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fe587ba4_55c2bfa4",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/KotlinK8sProfileUpload.kt",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2020-03-02T19:42:25Z",
       "side": 1,
       "message": "might be valuable to log the templated result manifest",
+      "range": {
+        "startLine": 172,
+        "startChar": 27,
+        "endLine": 172,
+        "endChar": 57
+      },
+      "revId": "f07903949661538df00127d7c66abb20c4d0e68b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37d49597_9381e5e5",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/KotlinK8sProfileUpload.kt",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2020-03-03T09:13:00Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "fe587ba4_55c2bfa4",
       "range": {
         "startLine": 172,
         "startChar": 27,
