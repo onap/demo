@@ -441,28 +441,6 @@
     "dependencies": [],
     "version": 0
   },
-
-  {
-    "name": "vfw_name_0",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      },
-      "default": "${vfw_name_0}"
-    },
-    "input-param": false,
-    "dictionary-name": "vfw_name_0",
-    "dictionary-source": "default",
-    "dependencies": [],
-    "version": 0
-  },
     {
     "name": "vfw_onap_private_ip_0",
     "property": {

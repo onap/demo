@@ -780,6 +780,32 @@
         }
     },
     {
+        "name": "vpg-management-port",
+        "tags": "vpg-management-port",
+        "data_type": "string",
+        "description": "vpg-management-port",
+        "entry_schema": "string",
+        "updatedBy": "Rajewski, Lukasz <lukasz.rajewski@orange.com>",
+        "definition": {
+            "tags": "vpg-management-port",
+            "name": "vpg-management-port",
+            "property": {
+                "description": "vpg-management-port",
+                "type": "string"
+            },
+            "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>",
+            "sources": {
+                "input": {
+                    "type": "source-input"
+                },
+                "default": {
+                    "type": "source-default",
+                    "properties": {}
+                }
+            }
+        }
+    },
+    {
         "name": "key_name",
         "tags": "key_name",
         "data_type": "string",

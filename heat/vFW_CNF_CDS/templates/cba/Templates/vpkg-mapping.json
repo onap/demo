@@ -440,27 +440,6 @@
     "version": 0
   },
   {
-    "name": "vpg_name_0",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      },
-      "default": "${vpg_name_0}"
-    },
-    "input-param": false,
-    "dictionary-name": "vpg_name_0",
-    "dictionary-source": "default",
-    "dependencies": [],
-    "version": 0
-  },
-  {
     "name": "private2-prefix-id",
     "property": {
       "description": "",
