@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3aeea68d_29445718",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-04T14:39:17Z",
+      "side": 1,
+      "message": "to",
+      "range": {
+        "startLine": 7,
+        "startChar": 12,
+        "endLine": 7,
+        "endChar": 14
+      },
+      "revId": "0ab5fb0798cd0aae032625acd301ccf4121e86c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7df131c_4558dd0e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-04T14:39:17Z",
+      "side": 1,
+      "message": "maybe reserves a bit more describtion",
+      "revId": "0ab5fb0798cd0aae032625acd301ccf4121e86c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68883011_41609e9c",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-template.vtl",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-04T14:39:17Z",
+      "side": 1,
+      "message": "don\u0027t get this",
+      "range": {
+        "startLine": 82,
+        "startChar": 13,
+        "endLine": 82,
+        "endChar": 56
+      },
+      "revId": "0ab5fb0798cd0aae032625acd301ccf4121e86c8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
