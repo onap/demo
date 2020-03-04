@@ -469,27 +469,6 @@
     "version": 0
   },
   {
-    "name": "vsn_name_0",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      },
-      "default": "${vsn_name_0}"
-    },
-    "input-param": false,
-    "dictionary-name": "vsn_name_0",
-    "dictionary-source": "default",
-    "dependencies": [],
-    "version": 0
-  },
-  {
     "name": "vnf-id",
     "property": {
       "description": "",

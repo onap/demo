@@ -38,10 +38,6 @@
                         {
                             "param-name": "VF_MODULE_LABEL",
                             "param-value": "${vf-module-label}"
-                        },
-                        {
-                            "param-name": "VF_MODULE_TYPE",
-                            "param-value": "${vf-module-type}"
                         }
                     ]
                 }
@@ -92,6 +88,19 @@
                         {
                             "param-name": "vf-module",
                             "param-value": "vf-module"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "capability-name": "unresolved-composite-data",
+            "key-mapping": [
+                {
+                    "output-key-mapping": [
+                        {
+                            "resource-name": "vfw_name_0",
+                            "resource-value": "${vf_module_name}"
                         }
                     ]
                 }
@@ -238,22 +247,6 @@
         {
             "param-name": "k8s-rb-profile-namespace",
             "param-value": "${k8s-rb-profile-namespace}"
-        },
-        {
-            "param-name": "onap_private_net_id",
-            "param-value": "${vnf-id}-management-network"
-        },
-        {
-            "param-name": "int_private2_net_id",
-            "param-value": "${vnf-id}-protected-network"
-        },
-        {
-            "param-name": "int_private1_net_id",
-            "param-value": "${vnf-id}-unprotected-network"
-        },
-        {
-            "param-name": "vfw_name_0",
-            "param-value": "vfw-${vf-module-id}"
         }
     ]
 }
