@@ -277,6 +277,31 @@
                     ]
                 }
             ]
+        },
+        {
+            "capability-name": "unresolved-composite-data",
+            "key-mapping": [
+                {
+                    "output-key-mapping": [
+                        {
+                            "resource-name": "int_private2_net_id",
+                            "resource-value": "${vnf_name}-protected-network"
+                        },
+                        {
+                            "resource-name": "int_private1_net_id",
+                            "resource-value": "${vnf_name}-unprotected-network"
+                        },
+                        {
+                            "resource-name": "onap_private_net_id",
+                            "resource-value": "${vnf_name}-management-network"
+                        },
+                        {
+                            "resource-name": "net_attachment_definition",
+                            "resource-value": "${vnf_name}-ovn-nat"
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "resource-accumulator-resolved-data": [
@@ -327,10 +352,6 @@
         {
             "param-name": "install_script_version",
             "param-value": "${install_script_version}"
-        },
-        {
-            "param-name": "net_attachment_definition",
-            "param-value": "${vnf-id}-ovn-nat"
         },
         {
             "param-name": "pub_key",
