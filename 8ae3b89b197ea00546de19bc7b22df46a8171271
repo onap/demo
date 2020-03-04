@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f47a3827_d46f34d6",
+        "filename": "heat/vFW_CNF_CDS/templates/policy/README.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-04T14:50:26Z",
+      "side": 1,
+      "message": "yes jiras wil be also created and referenced in doc in addition to explanation of this own naming policy.\nKonrad wants to make own commits to doc for these updates.",
+      "parentUuid": "8ef38853_b00afe94",
+      "revId": "8ae3b89b197ea00546de19bc7b22df46a8171271",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3a43bf6_528fbfcb",
         "filename": "heat/vFW_CNF_CDS/templates/policy/policy.sh",
         "patchSetId": 1
