@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "7ab2c5d6_5f1d770a",
+        "filename": "heat/vFW_CNF_CDS/templates/policy/README.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-05T06:33:12Z",
+      "side": 1,
+      "message": "Described reasoning behind in jira ticket and linked it to this document",
+      "parentUuid": "f47a3827_d46f34d6",
+      "revId": "8ae3b89b197ea00546de19bc7b22df46a8171271",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3a43bf6_528fbfcb",
         "filename": "heat/vFW_CNF_CDS/templates/policy/policy.sh",
         "patchSetId": 1
@@ -102,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "12c4bebf_ba65ed75",
+        "filename": "heat/vFW_CNF_CDS/templates/policy/policy.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-05T06:33:12Z",
+      "side": 1,
+      "message": "Agree, unfortunately, it\u0027s POST",
+      "parentUuid": "0c260c09_512e4730",
+      "range": {
+        "startLine": 40,
+        "startChar": 21,
+        "endLine": 40,
+        "endChar": 25
+      },
+      "revId": "8ae3b89b197ea00546de19bc7b22df46a8171271",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "823a8549_9c791533",
         "filename": "heat/vFW_CNF_CDS/templates/policy/policy.sh",
         "patchSetId": 1
@@ -113,6 +155,30 @@
       "writtenOn": "2020-03-04T14:18:29Z",
       "side": 1,
       "message": "unify as only url end is different",
+      "range": {
+        "startLine": 42,
+        "startChar": 1,
+        "endLine": 50,
+        "endChar": 53
+      },
+      "revId": "8ae3b89b197ea00546de19bc7b22df46a8171271",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53457f08_5c1fc2c5",
+        "filename": "heat/vFW_CNF_CDS/templates/policy/policy.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-05T06:33:12Z",
+      "side": 1,
+      "message": "Changed",
+      "parentUuid": "823a8549_9c791533",
       "range": {
         "startLine": 42,
         "startChar": 1,
