@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "aecc9302_a52a8dc0",
+        "filename": "heat/vFW_CNF_CDS/templates/policy/README.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-05T11:47:24Z",
+      "side": 1,
+      "message": "This Issue-ID points to ticket that would solve our issue so that we don\u0027t have to provide this workaround (workaround is under this commit\u0027s JIRA)",
+      "parentUuid": "319ed0c9_b5d1398a",
+      "range": {
+        "startLine": 2,
+        "startChar": 99,
+        "endLine": 2,
+        "endChar": 108
+      },
+      "revId": "940e3ca63a82ced763cb45da8ed25a68a88c6b26",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8bda475e_a4a4373d",
         "filename": "heat/vFW_CNF_CDS/templates/policy/README.txt",
         "patchSetId": 2
@@ -65,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "449a9306_66b58a87",
+        "filename": "heat/vFW_CNF_CDS/templates/policy/README.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-05T11:47:24Z",
+      "side": 1,
+      "message": "It actually works. Line above I tell user to go one directory up and then copy entire directory",
+      "parentUuid": "5a1864d6_2c01c6a0",
+      "revId": "940e3ca63a82ced763cb45da8ed25a68a88c6b26",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a17b1b17_68884efa",
         "filename": "heat/vFW_CNF_CDS/templates/policy/create.json",
         "patchSetId": 2
@@ -76,6 +118,30 @@
       "writtenOn": "2020-03-05T11:19:19Z",
       "side": 1,
       "message": "Escaping is really legitimate here?",
+      "range": {
+        "startLine": 2,
+        "startChar": 21,
+        "endLine": 2,
+        "endChar": 23
+      },
+      "revId": "940e3ca63a82ced763cb45da8ed25a68a88c6b26",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8439717d_c3ee1d36",
+        "filename": "heat/vFW_CNF_CDS/templates/policy/create.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-05T11:47:24Z",
+      "side": 1,
+      "message": "I don\u0027t like it, but yet, it\u0027s \"correct\"",
+      "parentUuid": "a17b1b17_68884efa",
       "range": {
         "startLine": 2,
         "startChar": 21,
