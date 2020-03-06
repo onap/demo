@@ -66,75 +66,6 @@
     "version": 0
   },
   {
-    "name": "nfc-naming-code",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "nfc-naming-code",
-    "dictionary-source": "processor-db",
-    "dependencies": [
-      "vfccustomizationuuid"
-    ],
-    "version": 0
-  },
-  {
-    "name": "demo_artifacts_version",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "demo_artifacts_version",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-
-  {
-    "name": "install_script_version",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "install_script_version",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
     "name": "vnf_name",
     "property": {
       "description": "",
@@ -219,52 +150,6 @@
     },
     "input-param": false,
     "dictionary-name": "int_private1_net_cidr",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "public_net_id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "public_net_id",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "sec_group",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "sec_group",
     "dictionary-source": "sdnc",
     "dependencies": [
       "service-instance-id",
@@ -418,53 +303,6 @@
     "dictionary-source": "processor-db",
     "dependencies": [
       "vf-module-model-customization-uuid"
-    ],
-    "version": 0
-  },
-
-  {
-    "name": "vsn_flavor_name",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "flavor_name",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-	   "service-instance-id",
-      "vnf-id"
-	  ],
-    "version": 0
-  },
-  {
-    "name": "vsn_image_name",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "image_name",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
     ],
     "version": 0
   },

@@ -41,46 +41,6 @@
     "version": 0
   },
     {
-    "name": "key_name",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": true,
-    "dictionary-name": "key_name",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-      {
-    "name": "flavor_name",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": true,
-    "dictionary-name": "flavor_name",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-    {
     "name": "nexus_artifact_repo",
     "property": {
       "description": "",
@@ -187,8 +147,6 @@
     "dependencies": [],
     "version": 0
   },
-
-
   {
     "name": "demo_artifacts_version",
     "property": {
@@ -201,112 +159,12 @@
       ],
       "entry_schema": {
         "type": ""
-      }
+      },
+      "default": "1.5.0"
     },
     "input-param": false,
     "dictionary-name": "demo_artifacts_version",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "image_name",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "image_name",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "install_script_version",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "install_script_version",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "pub_key",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "pub_key",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "public_net_id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-
-    },
-    "input-param": false,
-    "dictionary-name": "public_net_id",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "sec_group",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "sec_group",
-    "dictionary-source": "input",
+    "dictionary-source": "default",
     "dependencies": [],
     "version": 0
   },
@@ -344,7 +202,6 @@
       "entry_schema": {
         "type": ""
       }
-
     },
     "input-param": false,
     "dictionary-name": "vnf-model-customization-uuid",

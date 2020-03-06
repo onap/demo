@@ -279,29 +279,6 @@
     "version": 0
   },
   {
-    "name": "pub_key",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "pub_key",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
     "name": "vf-module-model-invariant-uuid",
     "property": {
       "type": "string"
