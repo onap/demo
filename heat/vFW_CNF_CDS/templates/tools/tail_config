@@ -1,0 +1,17 @@
+#!/bin/bash
+
+NAMESPACE="onap"
+
+TAILS=(
+  "/app/logs/apih/metrics.log so"
+  "/app/logs/bpmn/debug.log so-bpmn-infra"
+  "/app/logs/vnfm-adapter/debug.log so-vnfm-adapter"
+  "/var/log/onap/sdnc/karaf.log sdnc"
+  "/tmp/app.out network-name-gen"
+  "POD_LOG cds-blueprints-processor"
+  "POD_LOG multicloud multicloud"
+  "POD_LOG multicloud-k8s multicloud-k8s"
+  "POD_LOG multicloud-k8s framework-artifactbroker"
+  "/app/logs/openstack/error.log so-openstack-adapter"
+  "/app/logs/openstack/debug.log so-openstack-adapter"
+)
