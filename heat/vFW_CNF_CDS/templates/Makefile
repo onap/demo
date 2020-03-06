@@ -1,7 +1,10 @@
-.PHONY: all clean helm base cba
+.PHONY: all clean helm base cba clean_all
 CSAR_NAME ?= vfw_k8s_demo
 CBA_NAME ?= vFW_CDS_CNF
 
+clean_all:
+	$(MAKE) clean
+	$(MAKE) all
 
 all: csar/ helm base cba
 	#Can't use .csar extension or SDC will panic

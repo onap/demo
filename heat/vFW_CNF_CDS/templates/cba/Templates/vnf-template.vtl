@@ -97,32 +97,6 @@
                 {
                     "output-key-mapping": [
                         {
-                            "resource-name": "onap_private_gw_ip",
-                            "resource-value": "${onap_private_gw_ip}"
-                        }
-                    ],
-                    "payload": [
-                        {
-                            "param-name": "service-instance-id",
-                            "param-value": "${service-instance-id}"
-                        },
-                        {
-                            "param-name": "prefix-id",
-                            "param-value": "${management-prefix-id}"
-                        },
-                        {
-                            "param-name": "vnf-id",
-                            "param-value": "${vnf-id}"
-                        },
-                        {
-                            "param-name": "external_key",
-                            "param-value": "${vnf-id}-onap_private_gw_ip"
-                        }
-                    ]
-                },
-                {
-                    "output-key-mapping": [
-                        {
                             "resource-name": "vfw_int_private2_ip_0",
                             "resource-value": "${vfw_int_private2_ip_0}"
                         }
@@ -175,32 +149,6 @@
                 {
                     "output-key-mapping": [
                         {
-                            "resource-name": "vfw_int_private2_floating_ip",
-                            "resource-value": "${vfw_int_private2_floating_ip}"
-                        }
-                    ],
-                    "payload": [
-                        {
-                            "param-name": "service-instance-id",
-                            "param-value": "${service-instance-id}"
-                        },
-                        {
-                            "param-name": "prefix-id",
-                            "param-value": "${private1-prefix-id}"
-                        },
-                        {
-                            "param-name": "vnf-id",
-                            "param-value": "${vnf-id}"
-                        },
-                        {
-                            "param-name": "external_key",
-                            "param-value": "${vnf-id}-vfw_int_private2_floating_ip"
-                        }
-                    ]
-                },
-                {
-                    "output-key-mapping": [
-                        {
                             "resource-name": "vsn_int_private2_ip_0",
                             "resource-value": "${vsn_int_private2_ip_0}"
                         }
@@ -221,32 +169,6 @@
                         {
                             "param-name": "external_key",
                             "param-value": "${vnf-id}-vsn_int_private2_ip_0"
-                        }
-                    ]
-                },
-                {
-                    "output-key-mapping": [
-                        {
-                            "resource-name": "vpg_onap_private_ip_0",
-                            "resource-value": "${vpg_onap_private_ip_0}"
-                        }
-                    ],
-                    "payload": [
-                        {
-                            "param-name": "service-instance-id",
-                            "param-value": "${service-instance-id}"
-                        },
-                        {
-                            "param-name": "prefix-id",
-                            "param-value": "${management-prefix-id}"
-                        },
-                        {
-                            "param-name": "vnf-id",
-                            "param-value": "${vnf-id}"
-                        },
-                        {
-                            "param-name": "external_key",
-                            "param-value": "${vnf-id}-vpg_onap_private_ip_0"
                         }
                     ]
                 },
@@ -306,32 +228,16 @@
     ],
     "resource-accumulator-resolved-data": [
         {
-            "param-name": "service-instance-id",
-            "param-value": "${service-instance-id}"
-        },
-        {
-            "param-name": "vnf-model-customization-uuid",
-            "param-value": "${vnf-model-customization-uuid}"
-        },
-        {
-            "param-name": "aic-cloud-region",
-            "param-value": "${aic-cloud-region}"
-        },
-        {
             "param-name": "vf-naming-policy",
             "param-value": "${vf-naming-policy}"
         },
         {
-            "param-name": "image_name",
-            "param-value": "${image_name}"
+            "param-name": "dcae_collector_ip",
+            "param-value": "${dcae_collector_ip}"
         },
         {
-            "param-name": "flavor_name",
-            "param-value": "${flavor_name}"
-        },
-        {
-            "param-name": "public_net_id",
-            "param-value": "${public_net_id}"
+            "param-name": "dcae_collector_port",
+            "param-value": "${dcae_collector_port}"
         },
         {
             "param-name": "int_private1_net_cidr",
@@ -348,26 +254,6 @@
         {
             "param-name": "demo_artifacts_version",
             "param-value": "${demo_artifacts_version}"
-        },
-        {
-            "param-name": "install_script_version",
-            "param-value": "${install_script_version}"
-        },
-        {
-            "param-name": "pub_key",
-            "param-value": "${pub_key}"
-        },
-        {
-            "param-name": "cloud_env",
-            "param-value": "${cloud_env}"
-        },
-        {
-            "param-name": "sec_group",
-            "param-value": "${sec_group}"
-        },
-        {
-            "param-name": "nexus_artifact_repo",
-            "param-value": "${nexus_artifact_repo}"
         },
         {
             "param-name": "k8s-rb-profile-name",
