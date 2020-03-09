@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5d4adfcb_5210bc27",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-09T08:57:00Z",
+      "side": 1,
+      "message": "agree",
+      "parentUuid": "3f9dab9b_8e24071e",
+      "range": {
+        "startLine": 23,
+        "startChar": 60,
+        "endLine": 23,
+        "endChar": 76
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d2e600c_a1501066",
         "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2020-03-09T07:09:51Z",
       "side": 1,
       "message": "Shouldn\u0027t this echo be printed to stderr?",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 8
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a90e8978_0a6b04f0",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-09T08:57:00Z",
+      "side": 1,
+      "message": "depends how it\u0027s wanted. Now it\u0027s on purpose to stdout and it\u0027s coming as first line into result log.",
+      "parentUuid": "7d2e600c_a1501066",
       "range": {
         "startLine": 31,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "ffbb2338_21e4a574",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-09T08:57:00Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "8c3e908f_019be77a",
+      "range": {
+        "startLine": 102,
+        "startChar": 17,
+        "endLine": 102,
+        "endChar": 28
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f7d8bf09_44304ba8",
         "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
         "patchSetId": 1
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "a064049f_0af0064e",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-09T08:57:00Z",
+      "side": 1,
+      "message": "definetly",
+      "parentUuid": "f7d8bf09_44304ba8",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 14
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e15a24f2_6a16c764",
         "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
         "patchSetId": 1
@@ -105,6 +201,30 @@
       "writtenOn": "2020-03-09T07:09:51Z",
       "side": 1,
       "message": "Consider adding information in help regarding syntax of tail_config file (TAILS array especially)",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 24
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bfe881fa_da6817e0",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-09T08:57:00Z",
+      "side": 1,
+      "message": "yes. This is quite short",
+      "parentUuid": "e15a24f2_6a16c764",
       "range": {
         "startLine": 132,
         "startChar": 0,
