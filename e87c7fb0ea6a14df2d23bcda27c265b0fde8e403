@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f9dab9b_8e24071e",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-09T07:09:51Z",
+      "side": 1,
+      "message": "Consider using builtin formatting instead of parsing by external command, for example with `-o jsonpath\u003d\u0027{ .items[0].metadata.name }\u0027`",
+      "range": {
+        "startLine": 23,
+        "startChar": 60,
+        "endLine": 23,
+        "endChar": 76
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d2e600c_a1501066",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-09T07:09:51Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this echo be printed to stderr?",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 8
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c3e908f_019be77a",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-09T07:09:51Z",
+      "side": 1,
+      "message": "please quote arguments to `[` in order to prevent possible misbehavior when variable expands to less/more than one variable",
+      "range": {
+        "startLine": 102,
+        "startChar": 17,
+        "endLine": 102,
+        "endChar": 28
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7d8bf09_44304ba8",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-09T07:09:51Z",
+      "side": 1,
+      "message": "This can be quite conveniently shortened by using w\u003d\"${x[y]:-$z}\"",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 14
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e15a24f2_6a16c764",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-09T07:09:51Z",
+      "side": 1,
+      "message": "Consider adding information in help regarding syntax of tail_config file (TAILS array especially)",
+      "range": {
+        "startLine": 132,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 24
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
