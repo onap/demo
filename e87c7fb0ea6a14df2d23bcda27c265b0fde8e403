@@ -96,6 +96,53 @@
     },
     {
       "key": {
+        "uuid": "c97a4ed3_7babfd7e",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-09T10:21:12Z",
+      "side": 1,
+      "message": "Okay, didn\u0027t notice that parsing below\n\u003e line_count\u003d$(echo -e \"${line_count}\" | tail -1 | cut -d\u0027 \u0027 -f1)\nI\u0027d prefer it not to be part of generic function stdout (exec_in_pod), but if some handling is done from calling function, then possibly it could be left as is",
+      "parentUuid": "a90e8978_0a6b04f0",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 8
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a12282f2_f380c1db",
+        "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-09T10:21:12Z",
+      "side": 1,
+      "message": "This won\u0027t work with turned `set -e`",
+      "range": {
+        "startLine": 66,
+        "startChar": 13,
+        "endLine": 66,
+        "endChar": 15
+      },
+      "revId": "e87c7fb0ea6a14df2d23bcda27c265b0fde8e403",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c3e908f_019be77a",
         "filename": "heat/vFW_CNF_CDS/templates/tools/tail_all.sh",
         "patchSetId": 1
