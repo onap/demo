@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "0ce89531_acb876fb",
+        "filename": "heat/vFW_CNF_CDS/templates/.gitignore",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-13T13:03:52Z",
+      "side": 1,
+      "message": "yes, we can keep it away as we officially do not use helper.sh. And I would change the helper.sh script anyway to place the generated package to somewhere else.",
+      "parentUuid": "ccd167e2_b845ef87",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 8
+      },
+      "revId": "68842cceefba2f35f22a53fbfa02d96b5e35c043",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6e043ca_62f86701",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
         "patchSetId": 5
@@ -323,6 +347,30 @@
       "side": 1,
       "message": "Yes, Yaml would be much better, but at this actual line, we\u0027re speaking about accepted reponse from REST call by SDNC, so it\u0027s not CDS fault (this time :D)",
       "parentUuid": "10c0d0b8_197b6d4b",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 9
+      },
+      "revId": "68842cceefba2f35f22a53fbfa02d96b5e35c043",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd2cb020_24aebdac",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-template.vtl",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-03-13T13:03:52Z",
+      "side": 1,
+      "message": "ok, so it\u0027s vtl comment.",
+      "parentUuid": "ec34fc9d_6be7519b",
       "range": {
         "startLine": 92,
         "startChar": 0,
