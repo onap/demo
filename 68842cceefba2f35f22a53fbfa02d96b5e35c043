@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4906e4fd_ea138999",
+        "filename": "heat/vFW_CNF_CDS/templates/.gitignore",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2020-03-13T12:24:27Z",
+      "side": 1,
+      "message": "why not to use gitignore for that purpose?",
+      "parentUuid": "3dd09602_3ca082aa",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 8
+      },
+      "revId": "68842cceefba2f35f22a53fbfa02d96b5e35c043",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6e043ca_62f86701",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
         "patchSetId": 5
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "I wanted to point with this comment, that these values are not required by Helm application, but we need to include them in .vtl or else they are not accessible in kotlin script.\nI can remove comment or change it if you think so?",
       "parentUuid": "95001ca3_f32759a2",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 9
+      },
+      "revId": "68842cceefba2f35f22a53fbfa02d96b5e35c043",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07867a8a_cd31c2f8",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-template.vtl",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2020-03-13T12:24:27Z",
+      "side": 1,
+      "message": "this is valid JSON from the point of view of SDNC?",
+      "parentUuid": "923996f1_b9a5ae42",
       "range": {
         "startLine": 92,
         "startChar": 0,
