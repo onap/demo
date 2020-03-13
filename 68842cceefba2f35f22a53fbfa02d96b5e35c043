@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "ccd167e2_b845ef87",
+        "filename": "heat/vFW_CNF_CDS/templates/.gitignore",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-13T12:34:32Z",
+      "side": 1,
+      "message": "Well, I was using helper.sh with our created cba-dd.json file to enrich package, so it helped me, but I can remove it if you see it this way.\nBut it\u0027s just as if I were using vim or eclipse and put .*.swp or other temp editor files into .gitignore",
+      "parentUuid": "62bffd64_5e50bd59",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 8
+      },
+      "revId": "68842cceefba2f35f22a53fbfa02d96b5e35c043",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6e043ca_62f86701",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-mapping.json",
         "patchSetId": 5
@@ -275,6 +299,30 @@
       "side": 1,
       "message": "Yes, this is VTL comment so this whole line (starting from ##) is not rendered",
       "parentUuid": "07867a8a_cd31c2f8",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 9
+      },
+      "revId": "68842cceefba2f35f22a53fbfa02d96b5e35c043",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ec34fc9d_6be7519b",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/base_template-template.vtl",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-03-13T12:34:32Z",
+      "side": 1,
+      "message": "Yes, Yaml would be much better, but at this actual line, we\u0027re speaking about accepted reponse from REST call by SDNC, so it\u0027s not CDS fault (this time :D)",
+      "parentUuid": "10c0d0b8_197b6d4b",
       "range": {
         "startLine": 92,
         "startChar": 0,
