@@ -33,7 +33,7 @@
            "transmittedTotalPacketsDelta": "$(tmp_t1PacketsOut - tmp_t0PacketsOut)",
            "valuesAreSuspect": "true",
            "vNicIdentifier": "$tmp_device"
-       }
+       },
        "cpuUsage": {
            "tmp_cpuuse_command": {
                 "tmp_cpuUseCmd": "/usr/bin/top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 | cut -d ':' -f2",

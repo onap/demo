@@ -12,7 +12,7 @@
        "tmp_device": ["lo", "enp0s3", "docker0"]
 
     },
-    "tmp_indirectParameters":   [
+    "tmp_indirectParameters": {
        "tmp_faultInstance01": {
           "eventName": "Fault_vFirewall-AT&T_linkDownError",
           "eventCategory": "link",
@@ -67,5 +67,5 @@
                "alarmCondition": "service up trap_alarm"
           }
        }
-   ]
+    }
 }
