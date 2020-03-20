@@ -1,14 +1,14 @@
 {
-    "name": "", 
-    "description": "", 
+    "name": "",
+    "description": "",
     "data": [
         {
-            "file": "base_vcpe_vbrgemu.yaml", 
-            "type": "HEAT", 
-            "isBase": "true", 
+            "file": "base_vcpe_vbrgemu.yaml",
+            "type": "HEAT",
+            "isBase": "true",
             "data": [
                 {
-                    "file": "base_vcpe_vbrgemu.env", 
+                    "file": "base_vcpe_vbrgemu.env",
                     "type": "HEAT_ENV"
                 }
             ]

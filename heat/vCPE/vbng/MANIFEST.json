@@ -1,14 +1,14 @@
 {
-    "name": "", 
-    "description": "", 
+    "name": "",
+    "description": "",
     "data": [
         {
-            "file": "base_vcpe_vbng.yaml", 
-            "type": "HEAT", 
-            "isBase": "true", 
+            "file": "base_vcpe_vbng.yaml",
+            "type": "HEAT",
+            "isBase": "true",
             "data": [
                 {
-                    "file": "base_vcpe_vbng.env", 
+                    "file": "base_vcpe_vbng.env",
                     "type": "HEAT_ENV"
                 }
             ]
