@@ -13,7 +13,7 @@
                 "vnf-networks": [],
                 "vnf-vms": []
             },
-             "vnf-parameters": [
+            "vnf-parameters": [
                 {
                     "vnf-parameter-name": "nexus_artifact_repo",
                     "vnf-parameter-value": "https://nexus.onap.org"
@@ -105,8 +105,8 @@
         },
         "sdnc-request-header": {
             "svc-request-id": "robot12",
-            "svc-notification-url": "http:\/\/openecomp.org:8080\/adapters\/rest\/SDNCNotify",
+            "svc-notification-url": "http://openecomp.org:8080/adapters/rest/SDNCNotify",
             "svc-action": "reserve"
         }
-    }    
+    }
 }

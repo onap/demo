@@ -3,7 +3,11 @@
     "title": "Vendor Event Listener API - eventThrottlingState",
     "type": "object",
     "properties": {
-        "eventThrottlingState": {"$ref": "#/definitions/eventThrottlingState"}
+        "eventThrottlingState": {
+            "$ref": "#/definitions/eventThrottlingState"
+        }
     },
-    "required": ["eventThrottlingState"]
+    "required": [
+        "eventThrottlingState"
+    ]
 }
