@@ -1,14 +1,14 @@
 {
-    "name": "", 
-    "description": "", 
+    "name": "",
+    "description": "",
     "data": [
         {
-            "file": "base_vcpe_infra.yaml", 
-            "type": "HEAT", 
-            "isBase": "true", 
+            "file": "base_vcpe_infra.yaml",
+            "type": "HEAT",
+            "isBase": "true",
             "data": [
                 {
-                    "file": "base_vcpe_infra.env", 
+                    "file": "base_vcpe_infra.env",
                     "type": "HEAT_ENV"
                 }
             ]
