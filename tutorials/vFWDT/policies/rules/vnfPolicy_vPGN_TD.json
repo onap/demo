@@ -16,26 +16,32 @@
             "vPGN"
         ],
         "policyType": "vnfPolicy",
-        "resources": ["vPGN"],
+        "resources": [
+            "vPGN"
+        ],
         "applicableResources": "any",
-        "vnfProperties": [{
-            "inventoryProvider": "aai",
-            "serviceType": "",
-            "inventoryType": "vfmodule",
-            "customerId": {
-                "get_param": "chosen_customer_id"
-            },
-            "equipmentRole": "",
-            "attributes": {
-                "orchestrationStatus": ["active"],
-                "provStatus": "ACTIVE",
-                "cloudRegionId": {
-                    "get_param": "chosen_region"
+        "vnfProperties": [
+            {
+                "inventoryProvider": "aai",
+                "serviceType": "",
+                "inventoryType": "vfmodule",
+                "customerId": {
+                    "get_param": "chosen_customer_id"
                 },
-                "service_instance_id": {
-                    "get_param": "service_id"
+                "equipmentRole": "",
+                "attributes": {
+                    "orchestrationStatus": [
+                        "active"
+                    ],
+                    "provStatus": "ACTIVE",
+                    "cloudRegionId": {
+                        "get_param": "chosen_region"
+                    },
+                    "service_instance_id": {
+                        "get_param": "service_id"
+                    }
                 }
             }
-        }]
+        ]
     }
 }
