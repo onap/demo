@@ -1,1 +1,6 @@
-[{"op": "remove","path": "/spec/remoteWrite"}]
+[
+    {
+        "op": "remove",
+        "path": "/spec/remoteWrite"
+    }
+]

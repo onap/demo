@@ -13,7 +13,7 @@
                 "vnf-networks": [],
                 "vnf-vms": []
             },
-             "vnf-parameters": [
+            "vnf-parameters": [
                 {
                     "vnf-parameter-name": "nexus_artifact_repo",
                     "vnf-parameter-value": "https://nexus.onap.org"
@@ -42,39 +42,38 @@
                     "vnf-parameter-name": "vgmux_private_net_cidr",
                     "vnf-parameter-value": "192.168.30.0/24"
                 },
-		{
+                {
                     "vnf-parameter-name": "vbng_private_ip_0",
                     "vnf-parameter-value": "192.168.10.2"
                 },
-		{
+                {
                     "vnf-parameter-name": "vbng_private_ip_1",
                     "vnf-parameter-value": "10.2.30.13"
                 },
-		{
+                {
                     "vnf-parameter-name": "vbng_private_ip_2",
                     "vnf-parameter-value": "192.168.20.3"
                 },
-		{
+                {
                     "vnf-parameter-name": "vgmux_private_ip_0",
                     "vnf-parameter-value": "192.168.20.2"
                 },
-		{
+                {
                     "vnf-parameter-name": "vgmux_private_ip_1",
                     "vnf-parameter-value": "10.2.30.12"
                 },
-		{
+                {
                     "vnf-parameter-name": "vgmux_private_ip_2",
                     "vnf-parameter-value": "192.168.30.2"
                 },
-		{
+                {
                     "vnf-parameter-name": "vbng_name_0",
                     "vnf-parameter-value": "zdcpe1cpe01bng01"
                 },
-		{
+                {
                     "vnf-parameter-name": "vgmux_name_0",
                     "vnf-parameter-value": "zdcpe11cpe01mux01"
                 },
-
                 {
                     "vnf-parameter-name": "vbng_in_private_net_id",
                     "vnf-parameter-value": "zdfw1bngin01_private"
@@ -118,8 +117,8 @@
         },
         "sdnc-request-header": {
             "svc-request-id": "robot12",
-            "svc-notification-url": "http:\/\/openecomp.org:8080\/adapters\/rest\/SDNCNotify",
+            "svc-notification-url": "http://openecomp.org:8080/adapters/rest/SDNCNotify",
             "svc-action": "reserve"
         }
-    }    
+    }
 }

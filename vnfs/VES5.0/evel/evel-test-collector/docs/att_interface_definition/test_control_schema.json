@@ -3,13 +3,16 @@
     "title": "Test Collector Test Control API - commands",
     "type": "object",
     "properties": {
-		"commandList": {
-			"description": "array of commands from an event collector toward an event source",
-			"type": "array",
-			"items": {
-			    "$ref": "#/definitions/commandListEntry"
-			},
-			"minItems": 0}
+        "commandList": {
+            "description": "array of commands from an event collector toward an event source",
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/commandListEntry"
+            },
+            "minItems": 0
+        }
     },
-    "required": ["commandList"]
+    "required": [
+        "commandList"
+    ]
 }
