@@ -1,752 +1,746 @@
 [
-  {
-    "name": "cloud_env",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      },
-      "default": "openstack"
-    },
-    "input-param": false,
-    "dictionary-name": "cloud_env",
-    "dictionary-source": "default",
-    "dependencies": [],
-    "version": 0
-  },
     {
-    "name": "nexus_artifact_repo",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
+        "name": "cloud_env",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            },
+            "default": "openstack"
+        },
+        "input-param": false,
+        "dictionary-name": "cloud_env",
+        "dictionary-source": "default",
+        "dependencies": [],
+        "version": 0
     },
-    "input-param": false,
-    "dictionary-name": "nexus_artifact_repo",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-
-  {
-    "name": "vf-module-name",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      },
-      "default": "${vf-module-name}"
-    },
-    "input-param": false,
-    "dictionary-name": "vf-module-name",
-    "dictionary-source": "default",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "nfc-naming-code",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "nfc-naming-code",
-    "dictionary-source": "processor-db",
-    "dependencies": [
-      "vfccustomizationuuid"
-    ],
-    "version": 0
-  },
-  {
-    "name": "demo_artifacts_version",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "demo_artifacts_version",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-
-  {
-    "name": "install_script_version",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "install_script_version",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "vnf_name",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vnf_name",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "onap_private_net_cidr",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "onap_private_net_cidr",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "int_private2_net_cidr",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "int_private2_net_cidr",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "int_private1_net_cidr",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "int_private1_net_cidr",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "public_net_id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "public_net_id",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "sec_group",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "sec_group",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "service-instance-id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "service-instance-id",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "vf-module-id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vf-module-id",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "vf-module-label",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vf-module-label",
-    "dictionary-source": "processor-db",
-    "dependencies": [
-      "vf-module-model-customization-uuid"
-    ],
-    "version": 0
-  },
-  {
-    "name": "vf-module-model-customization-uuid",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vf-module-model-customization-uuid",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "vf-module-type",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vf-module-type",
-    "dictionary-source": "processor-db",
-    "dependencies": [
-      "vf-module-model-customization-uuid"
-    ],
-    "version": 0
-  },
-  {
-    "name": "vf-naming-policy",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vf-naming-policy",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "vfccustomizationuuid",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vfccustomizationuuid",
-    "dictionary-source": "processor-db",
-    "dependencies": [
-      "vf-module-model-customization-uuid"
-    ],
-    "version": 0
-  },
-
-  {
-    "name": "vsn_flavor_name",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "flavor_name",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-	   "service-instance-id",
-      "vnf-id"
-	  ],
-    "version": 0
-  },
-  {
-    "name": "vsn_image_name",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "image_name",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "vnf-id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vnf-id",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "vnf-model-customization-uuid",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vnf-model-customization-uuid",
-    "dictionary-source": "input",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "vnfc-model-invariant-uuid",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vnfc-model-invariant-uuid",
-    "dictionary-source": "processor-db",
-    "dependencies": [
-      "vfccustomizationuuid"
-    ],
-    "version": 0
-  },
-  {
-    "name": "vnfc-model-version",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vnfc-model-version",
-    "dictionary-source": "processor-db",
-    "dependencies": [
-      "vfccustomizationuuid"
-    ],
-    "version": 0
-  },
-  {
-    "name": "vsn_int_private2_ip_0",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vsn_int_private2_ip_0",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "vfw_int_private2_ip_0",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-    },
-    "input-param": false,
-    "dictionary-name": "vfw_int_private2_ip_0",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ],
-    "version": 0
-  },
-  {
-    "name": "vsn_onap_private_ip_0",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      },
-      "default": "${vsn_onap_private_ip_0}"
-    },
-    "input-param": false,
-    "dictionary-name": "vsn_onap_private_ip_0",
-    "dictionary-source": "default",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "private1-prefix-id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-
-    },
-    "input-param": false,
-    "dictionary-name": "private1-prefix-id",
-    "dictionary-source": "processor-db",
-    "dependencies": [],
-    "version": 0
-  },
     {
-    "name": "management-prefix-id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-
+        "name": "nexus_artifact_repo",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "nexus_artifact_repo",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
     },
-    "input-param": false,
-    "dictionary-name": "management-prefix-id",
-    "dictionary-source": "processor-db",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "private2-prefix-id",
-    "property": {
-      "description": "",
-      "required": false,
-      "type": "string",
-      "status": "",
-      "constraints": [
-        {}
-      ],
-      "entry_schema": {
-        "type": ""
-      }
-
+    {
+        "name": "vf-module-name",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            },
+            "default": "${vf-module-name}"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-name",
+        "dictionary-source": "default",
+        "dependencies": [],
+        "version": 0
     },
-    "input-param": false,
-    "dictionary-name": "private2-prefix-id",
-    "dictionary-source": "processor-db",
-    "dependencies": [],
-    "version": 0
-  },
-  {
-    "name": "vf-module-model-invariant-uuid",
-    "property": {
-      "type": "string"
+    {
+        "name": "nfc-naming-code",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "nfc-naming-code",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vfccustomizationuuid"
+        ],
+        "version": 0
     },
-    "input-param": false,
-    "dictionary-name": "vf-module-model-invariant-uuid",
-    "dictionary-source": "processor-db",
-    "dependencies": [
-      "vf-module-model-customization-uuid"
-    ]
-  },
-  {
-    "name": "vf-module-model-version",
-    "property": {
-      "type": "string"
+    {
+        "name": "demo_artifacts_version",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "demo_artifacts_version",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
     },
-    "input-param": false,
-    "dictionary-name": "vf-module-model-version",
-    "dictionary-source": "processor-db",
-    "dependencies": [
-      "vf-module-model-customization-uuid"
-    ]
-  },
-  {
-    "name": "k8s-rb-profile-name",
-    "property": {
-      "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
-      "type": "string"
+    {
+        "name": "install_script_version",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "install_script_version",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
     },
-    "input-param": false,
-    "dictionary-name": "k8s-rb-profile-name",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ]
-  },
-  {
-    "name": "k8s-rb-profile-namespace",
-    "property": {
-      "description": "K8s namespace to create helm chart for specified profile",
-      "type": "string",
-      "default": "default"
+    {
+        "name": "vnf_name",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vnf_name",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
     },
-    "input-param": false,
-    "dictionary-name": "k8s-rb-profile-namespace",
-    "dictionary-source": "default",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ]
-  },
-  {
-    "name": "int_private2_gw_ip",
-    "property": {
-      "description": "Private protected network gateway ip",
-      "type": "string"
+    {
+        "name": "onap_private_net_cidr",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "onap_private_net_cidr",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
     },
-    "input-param": false,
-    "dictionary-name": "int_private2_gw_ip",
-    "dictionary-source": "sdnc",
-    "dependencies": [
-      "service-instance-id",
-      "vnf-id"
-    ]
-  }
+    {
+        "name": "int_private2_net_cidr",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "int_private2_net_cidr",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "int_private1_net_cidr",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "int_private1_net_cidr",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "public_net_id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "public_net_id",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "sec_group",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "sec_group",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "service-instance-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "service-instance-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-module-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-module-label",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-label",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vf-module-model-customization-uuid",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-model-customization-uuid",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-module-type",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-type",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vf-naming-policy",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vf-naming-policy",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vfccustomizationuuid",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vfccustomizationuuid",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vsn_flavor_name",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "flavor_name",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vsn_image_name",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "image_name",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vnf-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vnf-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vnf-model-customization-uuid",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vnf-model-customization-uuid",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vnfc-model-invariant-uuid",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vnfc-model-invariant-uuid",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vfccustomizationuuid"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vnfc-model-version",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vnfc-model-version",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vfccustomizationuuid"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vsn_int_private2_ip_0",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vsn_int_private2_ip_0",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vfw_int_private2_ip_0",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vfw_int_private2_ip_0",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vsn_onap_private_ip_0",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            },
+            "default": "${vsn_onap_private_ip_0}"
+        },
+        "input-param": false,
+        "dictionary-name": "vsn_onap_private_ip_0",
+        "dictionary-source": "default",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "private1-prefix-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "private1-prefix-id",
+        "dictionary-source": "processor-db",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "management-prefix-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "management-prefix-id",
+        "dictionary-source": "processor-db",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "private2-prefix-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "private2-prefix-id",
+        "dictionary-source": "processor-db",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-module-model-invariant-uuid",
+        "property": {
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-model-invariant-uuid",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ]
+    },
+    {
+        "name": "vf-module-model-version",
+        "property": {
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-model-version",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ]
+    },
+    {
+        "name": "k8s-rb-profile-name",
+        "property": {
+            "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-name",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "k8s-rb-profile-namespace",
+        "property": {
+            "description": "K8s namespace to create helm chart for specified profile",
+            "type": "string",
+            "default": "default"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-namespace",
+        "dictionary-source": "default",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "int_private2_gw_ip",
+        "property": {
+            "description": "Private protected network gateway ip",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "int_private2_gw_ip",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    }
 ]
