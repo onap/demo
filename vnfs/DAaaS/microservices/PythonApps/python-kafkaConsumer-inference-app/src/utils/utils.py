@@ -5,4 +5,3 @@ class utils:
 
     def readFile(self, fileName):
         pass
-

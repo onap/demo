@@ -13,9 +13,9 @@ License
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
-  
+
           http://www.apache.org/licenses/LICENSE-2.0
-  
+
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ template_404 = b'''POST {0}'''
 def set_404_content(url):
     '''
     Called at initialization to set the base URL so that we can serve helpful
-    diagnostics as part of the 404 response. 
+    diagnostics as part of the 404 response.
     '''
     global base_url
     base_url = url
@@ -43,7 +43,7 @@ def set_404_content(url):
 def notfound_404(environ, start_response):
     '''
     Serve the 404 Not Found response.
-    
+
     Provides diagnostics in the 404 response showing the hierarchy of valid
     REST resources.
     '''

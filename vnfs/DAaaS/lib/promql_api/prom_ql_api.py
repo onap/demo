@@ -128,7 +128,7 @@ def validate_parameters(map_of_parameters):
             raise Exception(':: Value Paramter of key: \'{}\' NOT a string! Values should be string ::'.format(k))
     return True
 
-        
+
 def query_range(map_of_parameters):
     list_of_result_sets = []
     set_log_config()
@@ -136,7 +136,7 @@ def query_range(map_of_parameters):
         LOG.info(':::Validation of map_of_parameters done::')
     load_and_validate_env_vars(LIST_OF_ENV_VARIABLES)
     LOG.info("Forming the query_range request ...")
-    
+
     list_of_substrings = []
     list_of_substrings.append(MAP_ENV_VARIABLES['DATA_ENDPOINT'])
     list_of_substrings.append(QUERY_RANGE_API_VERSION)

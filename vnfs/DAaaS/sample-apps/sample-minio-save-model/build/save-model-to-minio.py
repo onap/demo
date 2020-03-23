@@ -35,7 +35,7 @@ client = Minio(os.environ['S3_ENDPOINT'],
                secure=False)
 
 
-def load_model(bucket_name, object_name, filepath):    
+def load_model(bucket_name, object_name, filepath):
     try:
         client.fget_object(bucket_name, object_name, filepath)
     except ResponseError as err:
@@ -48,14 +48,14 @@ if __name__ == "__main__":
     filepath = "/app/" + model
     if not client.bucket_exists(bucket_name):
         client.make_bucket(bucket_name, location=location)
-    
+
     found = False
     try:
         client.stat_object(bucket_name, model);
         found = True
     except Exception as err:
         found = False
-    
+
     metadata = {
         "X-Amz-Meta-model-description": "Sample numpy model",
         "X-Amz-Meta-model-type": "scikit-learn/numpy",
@@ -66,4 +66,3 @@ if __name__ == "__main__":
             client.fput_object(bucket_name, model, filepath, metadata=metadata)
         except expression as identifier:
             print(err)
-        

@@ -43,6 +43,6 @@ def main():
         demo_query()
         demo_query_range()
 
-    
+
 if __name__ == "__main__":
         main()

@@ -35,7 +35,7 @@ client = Minio(os.environ['S3_ENDPOINT'],
                secure=False)
 
 
-def load_model(bucket_name, object_name, filepath):    
+def load_model(bucket_name, object_name, filepath):
     try:
         client.fget_object(bucket_name, object_name, filepath)
     except ResponseError as err:
