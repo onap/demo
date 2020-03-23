@@ -25,7 +25,6 @@ License
 '''
 import optparse
 import requests
-import json
 
 ###############################################################################
 # Functions to build up commandList contents

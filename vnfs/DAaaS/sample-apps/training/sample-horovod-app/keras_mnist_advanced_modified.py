@@ -1,5 +1,4 @@
 from __future__ import print_function
-import keras
 import os
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras.models import Sequential
@@ -7,10 +6,6 @@ from tensorflow.keras.layers import Dense, Dropout, Flatten
 from tensorflow.keras.layers import Conv2D, MaxPooling2D
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import backend as K
-from tensorflow_estimator.python.estimator.export import export as export_helpers
-from tensorflow.python.saved_model import builder as saved_model_builder
-from tensorflow.python.saved_model import tag_constants, signature_constants
-from tensorflow.python.saved_model.signature_def_utils_impl import predict_signature_def
 import tensorflow as tf
 import horovod.tensorflow.keras as hvd
 

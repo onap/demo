@@ -3,9 +3,6 @@
 # from .consumer.CustomKafkaConsumer import CustomKafkaConsumer
 # from .producer.CustomKafkaProducer import CustomKafkaProducer
 
-import sys
-import os, threading
-import traceback
 import json
 import concurrent.futures
 import logging

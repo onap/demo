@@ -22,9 +22,7 @@
 
 # python imports
 
-import json
 import os
-import time
 from minio import Minio
 from minio.error import ResponseError
 

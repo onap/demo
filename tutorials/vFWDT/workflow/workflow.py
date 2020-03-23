@@ -20,27 +20,22 @@
 '''
 
 import os
-import ssl
 import json
 import sys
 import uuid
 import time
 import copy
-import netifaces as ni
 import warnings
 import contextlib
 import requests
 import simplejson
 import http.server
 import threading
-import urllib3
 from datetime import datetime
 from datetime import timedelta
 from simple_rest_client.api import API
 from simple_rest_client.resource import Resource
 from basicauth import encode
-from pprint import pprint
-from random import randint
 from urllib3.exceptions import InsecureRequestWarning
 
 
