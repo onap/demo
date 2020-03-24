@@ -159,7 +159,7 @@ def _get_aai_rel_link_data(data, related_to, search_key=None, match_dict=None):
         m_value = None
     rel_dict = data.get(rel_lst)
     if rel_dict:  # check if data has relationship lists
-        for key, rel_list in rel_dict.items():
+        for key, rel_list in rel_dict.items(): # pylint: disable=W0612
             for rel in rel_list:
                 if rel.get("related-to") == related_to:
                     dval = None
@@ -398,7 +398,7 @@ def _osdf_request(rancher_ip, onap_ip, aai_data, exclude, use_oof_cache):
     #print(json.dumps(template, indent=4))
 
     with _no_ssl_verification():
-        response = api.osdf.placement(body=template, params={}, headers={})
+        response = api.osdf.placement(body=template, params={}, headers={}) # pylint: disable=W0612
         #if response.body.get('error_message') is not None:
         #    raise Exception(response.body['error_message']['explanation'])
 
@@ -505,7 +505,7 @@ def _extract_has_appc_identifiers(has_result, demand, onap_ip):
         v_server['vserver-name'] = v_server['vserver-name'].replace("01", "02")
     hostname_cache.append(v_server['vserver-name'])
 
-    api = _init_python_aai_api(onap_ip)
+    api = _init_python_aai_api(onap_ip) # pylint: disable=W0612
     vnfc_type = demand.lower()
 #    with _no_ssl_verification():
 #        response = api.aai.vnfc(v_server['vserver-name'], body=None, params={}, headers={})
@@ -1142,7 +1142,7 @@ def _generate_cdt_payloads_for_vnf(vnf_info, vnfc_type, actions):
         for action_artifact in artifacts[action]:
             artifact_list.append({'artifact-name': action_artifact['name'], 'artifact-type': action_artifact['type']})
             if action != 'AllAction':
-                req = _generate_cdt_artifact_request(req_id, action_artifact, action, vnfc_type)
+                req = _generate_cdt_artifact_request(req_id, action_artifact, action, vnfc_type) # pylint: disable=W0612
                 #print(json.dumps(req, indent=4))
 
         #print(json.dumps(action_info, indent=4))

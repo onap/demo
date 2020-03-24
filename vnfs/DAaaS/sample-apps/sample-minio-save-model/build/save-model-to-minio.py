@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     found = False
     try:
-        client.stat_object(bucket_name, model);
+        client.stat_object(bucket_name, model)
         found = True
     except Exception as err:
         found = False
@@ -62,5 +62,5 @@ if __name__ == "__main__":
     if not found:
         try:
             client.fput_object(bucket_name, model, filepath, metadata=metadata)
-        except expression as identifier:
+        except Exception as identifier:
             print(err)

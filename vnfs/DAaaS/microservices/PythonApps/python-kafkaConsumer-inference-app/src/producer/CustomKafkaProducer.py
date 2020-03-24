@@ -23,8 +23,7 @@ class CustomKafkaProducer:
             )
             self.producer.flush()
 
-        except Exception as e:
-            #print("Error during producing to kafka topic. Stacktrace is %s",e)
+        except Exception:
             logging.error("Error during producing to kafka topic.")
             traceback.print_exc()
 
