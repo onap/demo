@@ -43,9 +43,9 @@ def command_interval(interval):
 def command_throttle(domain, fields, pairs):
     "return a throttlingSpecification"
     throttle_spec = {'eventDomain' : domain}
-    if len(fields):
+    if fields:
         throttle_spec['suppressedFieldNames'] = fields
-    if len(pairs):
+    if pairs:
         throttle_spec['suppressedNvPairsList'] = pairs
     return {'command':
             {'commandType': 'throttlingSpecification',

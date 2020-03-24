@@ -526,7 +526,7 @@ USAGE
             raise RuntimeError('Invalid Vendor Event Listener port ({0}) '
                                'specified'.format(vel_port))
 
-        if (len(vel_path) > 0 and vel_path[-1] != '/'):
+        if (vel_path and vel_path[-1] != '/'):
             logger.warning('Event Listener Path ({0}) should have terminating '
                            '"/"!  Adding one on to configured string.'.format(
                                                                      vel_path))
@@ -590,8 +590,7 @@ USAGE
                    format(vel_path,
                           api_version,
                           '/' + vel_topic_name
-                          if len(vel_topic_name) > 0
-                          else '')
+                          if vel_topic_name else '')
         throttle_url = '/{0}eventListener/v{1}/clientThrottlingState'.\
                        format(vel_path, api_version)
         batch_url = '/{0}eventListener/v{1}/eventBatch'.\

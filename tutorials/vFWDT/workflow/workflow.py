@@ -188,7 +188,7 @@ def _get_aai_rel_link_data(data, related_to, search_key=None, match_dict=None):
                         response.append(
                             {"link": link, "d_value": dval}
                         )
-    if len(response) == 0:
+    if response:
         response.append(
             {"link": None, "d_value": None}
         )
