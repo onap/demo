@@ -975,27 +975,27 @@ def _execute_lcm_requests(workflow, onap_ip, check_result):
     lcm_requests = workflow["requests"]
     print("WORKFLOW << {} >>".format(workflow["description"]))
     for i in range(len(lcm_requests)):
-       req = lcm_requests[i]["payload"]
-       #print(json.dumps(req, indent=4))
-       print("APPC LCM << {} >> [{}]".format(req['input']['action'], lcm_requests[i]["description"]))
-       _set_appc_lcm_timestamp(req)
-       conf_result = False
-       result = appc_lcm_request(onap_ip, req)
-       print("Result {}".format(result))
+        req = lcm_requests[i]["payload"]
+        #print(json.dumps(req, indent=4))
+        print("APPC LCM << {} >> [{}]".format(req['input']['action'], lcm_requests[i]["description"]))
+        _set_appc_lcm_timestamp(req)
+        conf_result = False
+        result = appc_lcm_request(onap_ip, req)
+        print("Result {}".format(result))
 
-       if result == 100:
-           conf_result = confirm_appc_lcm_action(onap_ip, req, check_result)
-           #time.sleep(30)
-       elif result == 400:
-           conf_result = True
+        if result == 100:
+            conf_result = confirm_appc_lcm_action(onap_ip, req, check_result)
+            #time.sleep(30)
+        elif result == 400:
+            conf_result = True
 
-       if not conf_result:
-           if lcm_requests[i]["breakOnFailure"]:
-               raise Exception("APPC LCM << {} >> FAILED".format(req['input']['action']))
-           elif "workflow" in lcm_requests[i]:
-               print("WORKFLOW << {} >> SKIP".format(lcm_requests[i]["workflow"]["description"]))
-       elif "workflow" in lcm_requests[i]:
-           _execute_lcm_requests(lcm_requests[i]["workflow"], onap_ip, check_result)
+        if not conf_result:
+            if lcm_requests[i]["breakOnFailure"]:
+                raise Exception("APPC LCM << {} >> FAILED".format(req['input']['action']))
+            elif "workflow" in lcm_requests[i]:
+                print("WORKFLOW << {} >> SKIP".format(lcm_requests[i]["workflow"]["description"]))
+        elif "workflow" in lcm_requests[i]:
+            _execute_lcm_requests(lcm_requests[i]["workflow"], onap_ip, check_result)
 
 
 def _generate_cdt_artifact_request(req_id, artifact, action, vnfc_type):

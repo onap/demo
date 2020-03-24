@@ -29,20 +29,20 @@ MAP_OF_PARAMETERS = {'query': 'up', 'start': '2019-06-19T20:10:30.781Z', 'end': 
 #MAP_OF_PARAMETERS = {'query': 'up', 'start': '2019-06-19T20:10:30.781Z', 'end': '2019-06-19T20:10:45.781Z', 'step': '15s', 'timeout':'600s'}
 
 def demo_query():
-        list_of_result_sets = query(QUERY_STRING)
-        if list_of_result_sets:
-                for each_result in list_of_result_sets:
-                    pprint.pprint(each_result)
+    list_of_result_sets = query(QUERY_STRING)
+    if list_of_result_sets:
+        for each_result in list_of_result_sets:
+            pprint.pprint(each_result)
 
 def demo_query_range():
-        list_of_result_sets = query_range(MAP_OF_PARAMETERS)
-        pprint.pprint(list_of_result_sets)
+    list_of_result_sets = query_range(MAP_OF_PARAMETERS)
+    pprint.pprint(list_of_result_sets)
 
 
 def main():
-        demo_query()
-        demo_query_range()
+    demo_query()
+    demo_query_range()
 
 
 if __name__ == "__main__":
-        main()
+    main()

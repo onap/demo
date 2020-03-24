@@ -154,7 +154,7 @@ def query_range(map_of_parameters):
             LOG.error("::::ERROR:::: {}".format(response.json()['error']))
         print(f'Check logs..HTTP error occurred: {http_err}')
     except Exception as err:
-            print(f'Check logs..Other error occurred: {err}')
+        print(f'Check logs..Other error occurred: {err}')
     else:
         if response.json()['status'] == "error":
             LOG.error("::::ERROR OCCURED!::::")

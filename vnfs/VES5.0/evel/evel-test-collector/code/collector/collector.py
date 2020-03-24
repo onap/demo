@@ -468,25 +468,25 @@ USAGE
                                                        backupCount=10)
 
         if (transport_prot.lower() == 'https' ):
-           transport_prot = transport_prot.lower()
-           ca_file = config.get(config_section, 'ca_file', vars=overrides)
-           cert_file = config.get(config_section, 'cert_file', vars=overrides)
-           key_file = config.get(config_section, 'key_file', vars=overrides)
-           if not os.path.exists(ca_file):
+            transport_prot = transport_prot.lower()
+            ca_file = config.get(config_section, 'ca_file', vars=overrides)
+            cert_file = config.get(config_section, 'cert_file', vars=overrides)
+            key_file = config.get(config_section, 'key_file', vars=overrides)
+            if not os.path.exists(ca_file):
                 logger.error('Event Listener SSL CA File ({0}) not found. '
-                           'No validation will be undertaken.'.format(ca_file))
+                             'No validation will be undertaken.'.format(ca_file))
                 raise RuntimeError('Invalid CA file ({0}) '
-                               'specified'.format(ca_file))
-           if not os.path.exists(cert_file):
+                                   'specified'.format(ca_file))
+            if not os.path.exists(cert_file):
                 logger.error('Event Listener SSL Certificate File ({0}) not found. '
-                           'No validation will be undertaken.'.format(cert_file))
+                             'No validation will be undertaken.'.format(cert_file))
                 raise RuntimeError('Invalid Certificate file ({0}) '
-                               'specified'.format(cert_file))
-           if not os.path.exists(key_file):
+                                   'specified'.format(cert_file))
+            if not os.path.exists(key_file):
                 logger.error('Event Listener SSL Key File ({0}) not found. '
-                           'No validation will be undertaken.'.format(key_file))
+                             'No validation will be undertaken.'.format(key_file))
                 raise RuntimeError('Invalid Key file ({0}) '
-                               'specified'.format(key_file))
+                                   'specified'.format(key_file))
 
         if (platform.system() == 'Windows'):
             date_format = '%Y-%m-%d %H:%M:%S'
