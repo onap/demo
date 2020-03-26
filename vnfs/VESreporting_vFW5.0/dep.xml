@@ -15,6 +15,7 @@
 	<include>*.md</include>
 	<include>*.TXT</include>
 	<include>*.c</include>
+	<include>*.crt</include>
 	<include>Makefile</include>
       </includes>
     </fileSet>
