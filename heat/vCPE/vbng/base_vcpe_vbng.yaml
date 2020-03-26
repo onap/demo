@@ -237,9 +237,9 @@ resources:
             __bng_gmux_cidr__: { get_param: bng_gmux_private_net_cidr }
             __dcae_collector_ip__: { get_param: dcae_collector_ip }
             __dcae_collector_port__: { get_param: dcae_collector_port }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __script_version__ : { get_param: script_version }
-            __cloud_env__ : { get_param: cloud_env }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __script_version__: { get_param: script_version }
+            __cloud_env__: { get_param: cloud_env }
             __sdnc_ip_addr__: { get_param: sdnc_ip_addr }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |

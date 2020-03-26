@@ -7,4 +7,3 @@ metadata:
 data:
   #hdfs_url: hdfs1-namenode-1.hdfs1-namenode.hdfs1:8020
   hdfs_url: hdfs1-namenode:8020
-  

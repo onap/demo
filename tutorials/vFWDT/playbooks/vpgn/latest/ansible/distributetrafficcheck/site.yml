@@ -88,7 +88,7 @@
     debug: msg='interface_name {{ interface_name.stdout }}'
 
   - name: Traffic check if trafficpresence is TRUE
-    when:  trafficpresence == true
+    when: trafficpresence == true
     block:
     - name: Traffic check if trafficpresence is TRUE
       raw: |
@@ -119,7 +119,7 @@
       when: traffic_check.rc == 0
 
   - name: Traffic check if trafficpresence is FALSE
-    when:  trafficpresence == false
+    when: trafficpresence == false
     block:
     - name: Traffic check trafficpresence is FALSE
       raw: |
@@ -148,4 +148,3 @@
         msg: 'traffic present {{ traffic_check.stdout_lines }} traffic_check.rc {{ traffic_check.rc }}'
       when: traffic_check.rc == 0
       failed_when: traffic_check.rc == 0
-
