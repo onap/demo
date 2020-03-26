@@ -39,7 +39,7 @@ spec:
             - bash -c 'set -a; . /etc/cloud/environment; bash firewall.sh'
         VirtletRootVolumeSize: 5Gi
         k8s.v1.cni.cncf.io/networks: "{{ .Values.net_attachment_definition }}"
-        k8s.plugin.opnfv.org/nfn-network: | 
+        k8s.plugin.opnfv.org/nfn-network: |
             { "type": "ovn4nfv",
               "interface": [
                 { "name": {{ .Values.int_private1_net_id | quote }},

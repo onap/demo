@@ -201,17 +201,17 @@ resources:
       user_data:
         str_replace:
           params:
-            __dcae_collector_ip__ : { get_param: dcae_collector_ip }
-            __dcae_collector_port__ : { get_param: dcae_collector_port }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __vfw_private_ip_0__ : { get_param: vfw_int_private1_ip_0 }
-            __vfw_private_ip_1__ : { get_param: vfw_int_private2_ip_0 }
-            __vfw_private_ip_2__ : { get_param: vfw_onap_private_ip_0 }
-            __unprotected_private_net_cidr__ : { get_param: int_private1_net_cidr }
-            __protected_private_net_cidr__ : { get_param: int_private2_net_cidr }
-            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
-            __cloud_env__ : { get_param: cloud_env }
+            __dcae_collector_ip__: { get_param: dcae_collector_ip }
+            __dcae_collector_port__: { get_param: dcae_collector_port }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __vfw_private_ip_0__: { get_param: vfw_int_private1_ip_0 }
+            __vfw_private_ip_1__: { get_param: vfw_int_private2_ip_0 }
+            __vfw_private_ip_2__: { get_param: vfw_onap_private_ip_0 }
+            __unprotected_private_net_cidr__: { get_param: int_private1_net_cidr }
+            __protected_private_net_cidr__: { get_param: int_private2_net_cidr }
+            __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
+            __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash

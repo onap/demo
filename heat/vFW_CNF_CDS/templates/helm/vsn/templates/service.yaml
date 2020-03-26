@@ -10,8 +10,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.ports.port  }}
-      nodePort: {{ .Values.service.ports.nodePort }} 
+    - port: {{ .Values.service.ports.port }}
+      nodePort: {{ .Values.service.ports.nodePort }}
   selector:
     vf-module-name: {{ .Values.vsn_name_0 }}
     release: {{ .Release.Name }}

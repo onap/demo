@@ -108,7 +108,7 @@ parameters:
   vsn_private_ip_1:
     type: string
     label: vSink private IP address towards the ONAP management network
-    description: Private IP address that is assigned to the vSink to communicate with ONAP components        
+    description: Private IP address that is assigned to the vSink to communicate with ONAP components
   vfw_private_0_port_vnic_type:
     type: string
     description: vfw port 0 vnic type (normal, direct)
@@ -127,7 +127,7 @@ parameters:
     default: normal
   vsn_private_1_port_vnic_type:
     type: string
-    description: vsn port 1 vnic type (normal, direct) 
+    description: vsn port 1 vnic type (normal, direct)
     default: normal
   vfw_name_0:
     type: string
@@ -275,17 +275,17 @@ resources:
       user_data:
         str_replace:
           params:
-            __dcae_collector_ip__ : { get_param: dcae_collector_ip }
-            __dcae_collector_port__ : { get_param: dcae_collector_port }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __vfw_private_ip_0__ : { get_param: vfw_private_ip_0 }
-            __vfw_private_ip_1__ : { get_param: vfw_private_ip_1 }
-            __vfw_private_ip_2__ : { get_param: vfw_private_ip_2 }
-            __unprotected_private_net_cidr__ : { get_param: unprotected_private_net_cidr }
-            __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
-            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
-            __cloud_env__ : { get_param: cloud_env }
+            __dcae_collector_ip__: { get_param: dcae_collector_ip }
+            __dcae_collector_port__: { get_param: dcae_collector_port }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __vfw_private_ip_0__: { get_param: vfw_private_ip_0 }
+            __vfw_private_ip_1__: { get_param: vfw_private_ip_1 }
+            __vfw_private_ip_2__: { get_param: vfw_private_ip_2 }
+            __unprotected_private_net_cidr__: { get_param: unprotected_private_net_cidr }
+            __protected_private_net_cidr__: { get_param: protected_private_net_cidr }
+            __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
+            __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
@@ -353,12 +353,12 @@ resources:
           params:
             __protected_net_gw__: { get_param: vfw_private_ip_1 }
             __unprotected_net__: { get_param: unprotected_private_net_cidr }
-            __install_script_version__ : { get_param: install_script_version }
-            __vsn_private_ip_0__ : { get_param: vsn_private_ip_0 }
-            __vsn_private_ip_1__ : { get_param: vsn_private_ip_1 }
-            __protected_private_net_cidr__ : { get_param: protected_private_net_cidr }
-            __onap_private_net_cidr__ : { get_param: onap_private_net_cidr }
-            __cloud_env__ : { get_param: cloud_env }
+            __install_script_version__: { get_param: install_script_version }
+            __vsn_private_ip_0__: { get_param: vsn_private_ip_0 }
+            __vsn_private_ip_1__: { get_param: vsn_private_ip_1 }
+            __protected_private_net_cidr__: { get_param: protected_private_net_cidr }
+            __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
+            __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash

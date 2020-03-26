@@ -139,13 +139,13 @@ resources:
       user_data:
         str_replace:
           params:
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __script_version__ : { get_param: script_version }
-            __cloud_env__ : { get_param: cloud_env }
-            __vpp_source_repo_url__ : { get_param: vpp_source_repo_url }
-            __vpp_source_repo_release_tag__ : { get_param: vpp_source_repo_release_tag }
-            __vpp_patch_url__ : { get_param: vpp_patch_url }
-            __compile_state__ : { get_param: compile_state }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __script_version__: { get_param: script_version }
+            __cloud_env__: { get_param: cloud_env }
+            __vpp_source_repo_url__: { get_param: vpp_source_repo_url }
+            __vpp_source_repo_release_tag__: { get_param: vpp_source_repo_release_tag }
+            __vpp_patch_url__: { get_param: vpp_patch_url }
+            __compile_state__: { get_param: compile_state }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash

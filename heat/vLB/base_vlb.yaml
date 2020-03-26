@@ -1,7 +1,7 @@
 ##########################################################################
 #
 #==================LICENSE_START==========================================
-# 
+#
 #
 # Copyright (c) 2017 AT&T Intellectual Property. All rights reserved.
 #
@@ -186,12 +186,12 @@ resources:
   my_keypair:
     type: OS::Nova::KeyPair
     properties:
-      name: 
+      name:
         str_replace:
           template: base_rand
           params:
             base: { get_param: key_name }
-            rand: { get_resource: random-str }  
+            rand: { get_resource: random-str }
       public_key: { get_param: pub_key }
       save_private_key: false
 
