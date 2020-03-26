@@ -4,7 +4,7 @@ description: ETSI NFV SOL 001 pnfd types definitions version 2.5.1
 imports:
   - etsi_nfv_sol001_vnfd_2_5_1_types.yaml
 
-data_types:  
+data_types: 
   tosca.datatypes.nfv.L2AddressData:
     derived_from: tosca.datatypes.Root
     description: Describes the information on the MAC addresses to be assigned to a connection point. 
@@ -76,7 +76,7 @@ data_types:
   
   tosca.datatypes.nfv.LocationInfo:
     derived_from: tosca.datatypes.Root
-    description:  Represents geographical information on the location where a PNF is deployed.
+    description: Represents geographical information on the location where a PNF is deployed.
     properties:
       country_code:
         type: string # two-letter ISO 3166 country code
@@ -91,7 +91,7 @@ data_types:
 
   tosca.datatypes.nfv.CivicAddressElement:
     derived_from: tosca.datatypes.Root
-    description:  Represents an element of a civic location as specified in IETF RFC 4776 [11]. 
+    description: Represents an element of a civic location as specified in IETF RFC 4776 [11]. 
     properties:
       ca_type:
         type: string # RFC4776
@@ -116,7 +116,7 @@ relationship_types:
 node_types:
   tosca.nodes.nfv.Cp:
     derived_from: tosca.nodes.Root
-    description:  Provides information regarding the purpose of the connection point 
+    description: Provides information regarding the purpose of the connection point 
     properties:
       layer_protocols:
         type: list

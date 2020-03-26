@@ -7,7 +7,7 @@ metadata:
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
 spec:
-  cniType : ovn4nfv
+  cniType: ovn4nfv
   ipv4Subnets:
   - name: {{ .Values.onap_private_subnet_id }}
     subnet: {{ .Values.onap_private_net_cidr }}

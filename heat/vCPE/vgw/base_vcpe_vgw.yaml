@@ -205,13 +205,13 @@ resources:
       user_data:
         str_replace:
           params:
-            __mux_gw_private_net_ipaddr__ : { get_param: vgw_private_ip_0 }
-            __oam_ipaddr__ : { get_param: vgw_private_ip_1 }
-            __oam_cidr__ : { get_param: onap_private_net_cidr }
-            __cpe_public_net_cidr__ : { get_param: cpe_public_net_cidr }
-            __mux_gw_private_net_cidr__ : { get_param: mux_gw_private_net_cidr }
-            __script_version__ : { get_param: script_version }
-            __cloud_env__ : { get_param: cloud_env }
+            __mux_gw_private_net_ipaddr__: { get_param: vgw_private_ip_0 }
+            __oam_ipaddr__: { get_param: vgw_private_ip_1 }
+            __oam_cidr__: { get_param: onap_private_net_cidr }
+            __cpe_public_net_cidr__: { get_param: cpe_public_net_cidr }
+            __mux_gw_private_net_cidr__: { get_param: mux_gw_private_net_cidr }
+            __script_version__: { get_param: script_version }
+            __cloud_env__: { get_param: cloud_env }
             __mux_ip_addr__: { get_param: mux_ip_addr }
             __vg_vgmux_tunnel_vni__: { get_param: vg_vgmux_tunnel_vni }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
@@ -240,4 +240,3 @@ resources:
             cd /opt
             chmod +x v_gw_install.sh
             ./v_gw_install.sh
-

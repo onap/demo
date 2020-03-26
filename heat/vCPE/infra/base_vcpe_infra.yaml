@@ -239,9 +239,9 @@ resources:
             __oam_ipaddr__: { get_param: vaaa_private_ip_1 }
             __oam_cidr__: { get_param: onap_private_net_cidr }
             __cpe_signal_net_cidr__: { get_param: cpe_signal_net_cidr }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __cloud_env__ : { get_param: cloud_env }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
@@ -299,13 +299,13 @@ resources:
       user_data:
         str_replace:
           params:
-            __oam_ipaddr__ : { get_param: vdns_private_ip_1 }
+            __oam_ipaddr__: { get_param: vdns_private_ip_1 }
             __cpe_public_net_ipaddr__: { get_param: vdns_private_ip_0 }
             __oam_cidr__: { get_param: onap_private_net_cidr }
             __cpe_public_net_cidr__: { get_param: cpe_public_net_cidr }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __cloud_env__ : { get_param: cloud_env }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
@@ -361,15 +361,15 @@ resources:
       user_data:
         str_replace:
           params:
-            __oam_ipaddr__ : { get_param: vdhcp_private_ip_1 }
-            __cpe_signal_ipaddr__ : { get_param: vdhcp_private_ip_0 }
-            __oam_cidr__ : { get_param: onap_private_net_cidr }
-            __cpe_signal_net_cidr__ : { get_param: cpe_signal_net_cidr }
-            __mr_ip_addr__ : { get_param: mr_ip_addr }
-            __mr_ip_port__ : { get_param: mr_ip_port }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __cloud_env__ : { get_param: cloud_env }
+            __oam_ipaddr__: { get_param: vdhcp_private_ip_1 }
+            __cpe_signal_ipaddr__: { get_param: vdhcp_private_ip_0 }
+            __oam_cidr__: { get_param: onap_private_net_cidr }
+            __cpe_signal_net_cidr__: { get_param: cpe_signal_net_cidr }
+            __mr_ip_addr__: { get_param: mr_ip_addr }
+            __mr_ip_port__: { get_param: mr_ip_port }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash
@@ -427,13 +427,13 @@ resources:
       user_data:
         str_replace:
           params:
-            __oam_ipaddr__ : { get_param: vweb_private_ip_1 }
+            __oam_ipaddr__: { get_param: vweb_private_ip_1 }
             __cpe_public_ipaddr__: { get_param: vweb_private_ip_0 }
             __oam_cidr__: { get_param: onap_private_net_cidr }
             __cpe_public_net_cidr__: { get_param: cpe_public_net_cidr }
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __install_script_version__ : { get_param: install_script_version }
-            __cloud_env__ : { get_param: cloud_env }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash

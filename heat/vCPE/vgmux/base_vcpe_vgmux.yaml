@@ -204,16 +204,16 @@ resources:
       user_data:
         str_replace:
           params:
-            __mux_to_bng_net_ipaddr__ : { get_param: vgmux_private_ip_0 }
-            __oam_ipaddr__ : { get_param: vgmux_private_ip_1 }
-            __mux_gw_net_ipaddr__ : { get_param: vgmux_private_ip_2 }
-            __bng_to_mux_ipaddr__ : { get_param: bng_gmux_private_ip }
-            __bng_mux_net_cidr__ : { get_param: bng_gmux_private_net_cidr }
-            __oam_cidr__ : { get_param: onap_private_net_cidr }
-            __mux_gw_net_cidr__ : { get_param: mux_gw_private_net_cidr }
-            __brg_bng_net_cidr__ : { get_param: brgemu_bng_private_net_cidr }
-            __script_version__ : { get_param: script_version }
-            __cloud_env__ : { get_param: cloud_env }
+            __mux_to_bng_net_ipaddr__: { get_param: vgmux_private_ip_0 }
+            __oam_ipaddr__: { get_param: vgmux_private_ip_1 }
+            __mux_gw_net_ipaddr__: { get_param: vgmux_private_ip_2 }
+            __bng_to_mux_ipaddr__: { get_param: bng_gmux_private_ip }
+            __bng_mux_net_cidr__: { get_param: bng_gmux_private_net_cidr }
+            __oam_cidr__: { get_param: onap_private_net_cidr }
+            __mux_gw_net_cidr__: { get_param: mux_gw_private_net_cidr }
+            __brg_bng_net_cidr__: { get_param: brgemu_bng_private_net_cidr }
+            __script_version__: { get_param: script_version }
+            __cloud_env__: { get_param: cloud_env }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
           template: |
             #!/bin/bash

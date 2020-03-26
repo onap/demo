@@ -12,4 +12,4 @@ spec:
     TypesDB     "/opt/collectd/share/collectd/vcmts.types.db"
     #Hostname "localhost"
     Interval 1
-  configMap:  typesdb-configmap
+  configMap: typesdb-configmap

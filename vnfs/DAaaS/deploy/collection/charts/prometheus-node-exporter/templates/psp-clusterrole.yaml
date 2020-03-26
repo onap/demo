@@ -8,7 +8,7 @@ metadata:
 rules:
 - apiGroups: ['extensions']
   resources: ['podsecuritypolicies']
-  verbs:     ['use']
+  verbs:    ['use']
   resourceNames:
   - {{ template "prometheus-node-exporter.fullname" . }}
 {{- end }}

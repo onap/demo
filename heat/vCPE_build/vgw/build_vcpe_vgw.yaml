@@ -147,21 +147,21 @@ resources:
       name: { get_param: vgw_name_0 }
       key_name: { get_resource: my_keypair }
       networks:
-        - network: { get_param: public_net_id } 
+        - network: { get_param: public_net_id }
       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
       user_data_format: RAW
       user_data:
         str_replace:
           params:
-            __demo_artifacts_version__ : { get_param: demo_artifacts_version }
-            __script_version__ : { get_param: script_version }
-            __cloud_env__ : { get_param: cloud_env }
-            __vpp_source_repo_url__ : { get_param: vpp_source_repo_url }
-            __vpp_source_repo_release_tag__ : { get_param: vpp_source_repo_release_tag }
-            __hc2vpp_source_repo_url__ : { get_param: hc2vpp_source_repo_url }
-            __hc2vpp_source_repo_release_tag__ : { get_param: hc2vpp_source_repo_release_tag }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __script_version__: { get_param: script_version }
+            __cloud_env__: { get_param: cloud_env }
+            __vpp_source_repo_url__: { get_param: vpp_source_repo_url }
+            __vpp_source_repo_release_tag__: { get_param: vpp_source_repo_release_tag }
+            __hc2vpp_source_repo_url__: { get_param: hc2vpp_source_repo_url }
+            __hc2vpp_source_repo_release_tag__: { get_param: hc2vpp_source_repo_release_tag }
             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-            __compile_state__ : {get_param : compile_state}
+            __compile_state__: {get_param: compile_state}
           template: |
             #!/bin/bash
 
@@ -186,4 +186,3 @@ resources:
             cd /opt
             chmod +x v_gw_build.sh
             ./v_gw_build.sh
-

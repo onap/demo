@@ -22,7 +22,7 @@
     register: fw_ppnet_iface
 
   - name: Traffic check if trafficpresence is TRUE
-    when:  trafficpresence == true
+    when: trafficpresence == true
     block:
     - name: Traffic check if trafficpresence is TRUE
       raw: |
@@ -59,7 +59,7 @@
       when: traffic_check.rc == 0
 
   - name: Traffic check if trafficpresence is FALSE
-    when:  trafficpresence == false
+    when: trafficpresence == false
     block:
     - name: Traffic check trafficpresence is FALSE
       raw: |
@@ -92,4 +92,3 @@
         msg: 'traffic present {{ traffic_check.stdout_lines }} '
       when: traffic_check.rc == 1
       failed_when: traffic_check.rc == 1
-

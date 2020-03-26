@@ -18,6 +18,6 @@ spec:
         queryTimeout: 50s
       readOnly: false
   grafana:
-    url:  http://vis-grafana.default.svc.cluster.local
+    url: http://vis-grafana.default.svc.cluster.local
     username: admin
     password: admin
