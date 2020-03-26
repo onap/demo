@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e77e63d0_3cd9bab0",
+        "filename": "vnfs/vFW/scripts/v_firewall_install.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 29
+      },
+      "writtenOn": "2020-03-26T13:24:32Z",
+      "side": 1,
+      "message": "that must be wrong - onap-ca.crt isnt in that location",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 38
+      },
+      "revId": "1d6595410ee82574ba1df8debeba90dd37dfa8da",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
