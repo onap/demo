@@ -19,7 +19,7 @@ node_types:
                     type: string
                     consraints:
                     - valid_values:
-                        - zone
+                          - zone
             identity:
                 type: string
                 required: true
@@ -30,8 +30,8 @@ node_types:
                     type: string
                     constraints:
                     - valid_values:
-                        - any
-                        - all
+                          - any
+                          - all
             affinityProperties:
                 type: policy.data.affinityProperties_properties
                 required: true
@@ -51,8 +51,8 @@ data_types:
                     type: string
                     constraints:
                     - valid_values:
-                        - same
-                        - different
+                          - same
+                          - different
             category:
                 type: string
                 required: true

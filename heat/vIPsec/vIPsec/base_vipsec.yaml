@@ -741,58 +741,58 @@ resources:
       floating_network_id: { get_param: public_net_id }
       port_id: { get_resource: vpg_private_1_port }
 
-   vpg_0:
-     type: OS::Nova::Server
-     properties:
-       image: { get_param: basic_image_name }
-       flavor: { get_param: packetgen_flavor_name }
-       name: { get_param: vpg_name_0 }
-       key_name: { get_resource: my_keypair }
-       networks:
-         - port: { get_resource: vpg_private_0_port }
-         - port: { get_resource: vpg_private_1_port }
-       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
-       user_data_format: RAW
-       user_data:
-         str_replace:
-           params:
-             __ipsec_ipaddr__: { get_param: vipsec_A_private_ip_0 }
-             __protected_clientB_net_cidr__: { get_param: protected_clientB_private_net_cidr }
-             __sink_ipaddr__: { get_param: vsn_private_ip_0 }
-             __demo_artifacts_version__: { get_param: demo_artifacts_version }
-             __install_script_version__: { get_param: install_script_version }
-             __vpg_private_ip_0__: { get_param: vpg_private_ip_0 }
-             __vpg_private_ip_1__: { get_param: vpg_private_ip_1 }
-             __protected_clientA_net_cidr__: { get_param: protected_clientA_private_net_cidr }
-             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
-             __cloud_env__: { get_param: cloud_env }
-             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-           template: |
-             #!/bin/bash
+  vpg_0:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: basic_image_name }
+      flavor: { get_param: packetgen_flavor_name }
+      name: { get_param: vpg_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - port: { get_resource: vpg_private_0_port }
+        - port: { get_resource: vpg_private_1_port }
+      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __ipsec_ipaddr__: { get_param: vipsec_A_private_ip_0 }
+            __protected_clientB_net_cidr__: { get_param: protected_clientB_private_net_cidr }
+            __sink_ipaddr__: { get_param: vsn_private_ip_0 }
+            __demo_artifacts_version__: { get_param: demo_artifacts_version }
+            __install_script_version__: { get_param: install_script_version }
+            __vpg_private_ip_0__: { get_param: vpg_private_ip_0 }
+            __vpg_private_ip_1__: { get_param: vpg_private_ip_1 }
+            __protected_clientA_net_cidr__: { get_param: protected_clientA_private_net_cidr }
+            __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
+            __cloud_env__: { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+          template: |
+            #!/bin/bash
 
-             # Create configuration files
-             mkdir /opt/config
-             echo "__ipsec_ipaddr__" > /opt/config/vipsec_ipaddr.txt
-             echo "__protected_clientB_net_cidr__" > /opt/config/protected_clientB_net_cidr.txt
-             echo "__sink_ipaddr__" > /opt/config/sink_ipaddr.txt
-             echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
-             echo "__install_script_version__" > /opt/config/install_script_version.txt
-             echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
-             echo "__vpg_private_ip_1__" > /opt/config/vpg_private_ip_1.txt
-             echo "__protected_clientA__net_cidr__" > /opt/config/protected_clientA_net_cidr.txt
-             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
-             echo "__cloud_env__" > /opt/config/cloud_env.txt
-             echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+            # Create configuration files
+            mkdir /opt/config
+            echo "__ipsec_ipaddr__" > /opt/config/vipsec_ipaddr.txt
+            echo "__protected_clientB_net_cidr__" > /opt/config/protected_clientB_net_cidr.txt
+            echo "__sink_ipaddr__" > /opt/config/sink_ipaddr.txt
+            echo "__demo_artifacts_version__" > /opt/config/demo_artifacts_version.txt
+            echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__vpg_private_ip_0__" > /opt/config/vpg_private_ip_0.txt
+            echo "__vpg_private_ip_1__" > /opt/config/vpg_private_ip_1.txt
+            echo "__protected_clientA__net_cidr__" > /opt/config/protected_clientA_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
-             # Download and run install script
-             apt-get update
-             apt-get -y install unzip
-             if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
-             unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_packetgen_install.sh
-             cd /opt
-             chmod +x v_packetgen_install.sh
-             ./v_packetgen_install.sh
+            # Download and run install script
+            apt-get update
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
+            unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_packetgen_install.sh
+            cd /opt
+            chmod +x v_packetgen_install.sh
+            ./v_packetgen_install.sh
 
 
   # Virtual Sink instantiation
@@ -820,51 +820,51 @@ resources:
       floating_network_id: { get_param: public_net_id }
       port_id: { get_resource: vsn_private_1_port }
 
-   vsn_0:
-     type: OS::Nova::Server
-     properties:
-       image: { get_param: basic_image_name }
-       flavor: { get_param: sink_flavor_name }
-       name: { get_param: vsn_name_0 }
-       key_name: { get_resource: my_keypair }
-       networks:
-         - port: { get_resource: vsn_private_0_port }
-         - port: { get_resource: vsn_private_1_port }
-       metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
-       user_data_format: RAW
-       user_data:
-         str_replace:
-           params:
-             __protected_net_gw__: { get_param: vipsec_B_private_ip_0 }
-             __protected_net_A__: { get_param: protected_clientA_private_net_cidr }
-             __install_script_version__: { get_param: install_script_version }
-             __vsn_private_ip_0__: { get_param: vsn_private_ip_0 }
-             __vsn_private_ip_1__: { get_param: vsn_private_ip_1 }
-             __protected_clientB_private_net_cidr__: { get_param: protected_clientB_private_net_cidr }
-             __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
-             __cloud_env__: { get_param: cloud_env }
-             __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
-           template: |
-             #!/bin/bash
+  vsn_0:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: basic_image_name }
+      flavor: { get_param: sink_flavor_name }
+      name: { get_param: vsn_name_0 }
+      key_name: { get_resource: my_keypair }
+      networks:
+        - port: { get_resource: vsn_private_0_port }
+        - port: { get_resource: vsn_private_1_port }
+      metadata: {vnf_id: { get_param: vnf_id }, vf_module_id: { get_param: vf_module_id }}
+      user_data_format: RAW
+      user_data:
+        str_replace:
+          params:
+            __protected_net_gw__: { get_param: vipsec_B_private_ip_0 }
+            __protected_net_A__: { get_param: protected_clientA_private_net_cidr }
+            __install_script_version__: { get_param: install_script_version }
+            __vsn_private_ip_0__: { get_param: vsn_private_ip_0 }
+            __vsn_private_ip_1__: { get_param: vsn_private_ip_1 }
+            __protected_clientB_private_net_cidr__: { get_param: protected_clientB_private_net_cidr }
+            __onap_private_net_cidr__: { get_param: onap_private_net_cidr }
+            __cloud_env__: { get_param: cloud_env }
+            __nexus_artifact_repo__: { get_param: nexus_artifact_repo }
+          template: |
+            #!/bin/bash
 
-             # Create configuration files
-             mkdir /opt/config
-             echo "__protected_net_gw__" > /opt/config/protected_net_gw.txt
-             echo "__protected_net_A__" > /opt/config/protected_net_A.txt
-             echo "__install_script_version__" > /opt/config/install_script_version.txt
-             echo "__vsn_private_ip_0__" > /opt/config/vsn_private_ip_0.txt
-             echo "__vsn_private_ip_1__" > /opt/config/vsn_private_ip_1.txt
-             echo "__protected_clientB_private_net_cidr__" > /opt/config/protected_clientB_private_net_cidr.txt
-             echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
-             echo "__cloud_env__" > /opt/config/cloud_env.txt
-             echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
+            # Create configuration files
+            mkdir /opt/config
+            echo "__protected_net_gw__" > /opt/config/protected_net_gw.txt
+            echo "__protected_net_A__" > /opt/config/protected_net_A.txt
+            echo "__install_script_version__" > /opt/config/install_script_version.txt
+            echo "__vsn_private_ip_0__" > /opt/config/vsn_private_ip_0.txt
+            echo "__vsn_private_ip_1__" > /opt/config/vsn_private_ip_1.txt
+            echo "__protected_clientB_private_net_cidr__" > /opt/config/protected_clientB_private_net_cidr.txt
+            echo "__onap_private_net_cidr__" > /opt/config/onap_private_net_cidr.txt
+            echo "__cloud_env__" > /opt/config/cloud_env.txt
+            echo "__nexus_artifact_repo__" > /opt/config/nexus_artifact_repo.txt
 
-             # Download and run install script
-             apt-get update
-             apt-get -y install unzip
-             if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
-             curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
-             unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_sink_install.sh
-             cd /opt
-             chmod +x v_sink_install.sh
-             ./v_sink_install.sh
+            # Download and run install script
+            apt-get update
+            apt-get -y install unzip
+            if [[ "__install_script_version__" =~ "SNAPSHOT" ]]; then REPO=snapshots; else REPO=releases; fi
+            curl -k -L "__nexus_artifact_repo__/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf.vipsec&a=vipsec-scripts&e=zip&v=__install_script_version__" -o /opt/vipsec-scripts-__install_script_version__.zip
+            unzip -j /opt/vipsec-scripts-__install_script_version__.zip -d /opt v_sink_install.sh
+            cd /opt
+            chmod +x v_sink_install.sh
+            ./v_sink_install.sh

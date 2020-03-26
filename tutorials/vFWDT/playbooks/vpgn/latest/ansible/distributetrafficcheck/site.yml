@@ -28,43 +28,43 @@
     set_fact:
       vserver2_interfaces: "{{destinations[0].vservers[1]['l-interfaces'] | list}}"
   - block:
-     - name: length interfaces vserver1
-       set_fact:
-         length1: "{{ vserver1_interfaces |length }}"
-     - name: length interfaces vserver2
-       set_fact:
-         length2: "{{ vserver2_interfaces |length }}"
+      - name: length interfaces vserver1
+        set_fact:
+          length1: "{{ vserver1_interfaces |length }}"
+      - name: length interfaces vserver2
+        set_fact:
+          length2: "{{ vserver2_interfaces |length }}"
   - block:
-     - name: adress 1 vserver
-       set_fact:
-         sink_addresses:
-           - "{{destinations[0].vservers[0]['l-interfaces'][0]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[0]['l-interfaces'][1]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[0]['l-interfaces'][2]['ipv4-addresses'][0]}}"
-     - name: adress 2 vserver
-       set_fact:
-         fw_addresses:
-           - "{{destinations[0].vservers[1]['l-interfaces'][0]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[1]['l-interfaces'][1]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[1]['l-interfaces'][2]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[1]['l-interfaces'][3]['ipv4-addresses'][0]}}"
+      - name: adress 1 vserver
+        set_fact:
+          sink_addresses:
+            - "{{destinations[0].vservers[0]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[0]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[0]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+      - name: adress 2 vserver
+        set_fact:
+          fw_addresses:
+            - "{{destinations[0].vservers[1]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[1]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[1]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[1]['l-interfaces'][3]['ipv4-addresses'][0]}}"
     when:
       - length1 == "3"
       - length2 == "4"
   - block:
-     - name: adress 1 vserver
-       set_fact:
-         fw_addresses:
-           - "{{destinations[0].vservers[0]['l-interfaces'][0]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[0]['l-interfaces'][1]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[0]['l-interfaces'][2]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[0]['l-interfaces'][3]['ipv4-addresses'][0]}}"
-     - name: adress 2 vserver
-       set_fact:
-         sink_addresses:
-           - "{{destinations[0].vservers[1]['l-interfaces'][0]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[1]['l-interfaces'][1]['ipv4-addresses'][0]}}"
-           - "{{destinations[0].vservers[1]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+      - name: adress 1 vserver
+        set_fact:
+          fw_addresses:
+            - "{{destinations[0].vservers[0]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[0]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[0]['l-interfaces'][2]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[0]['l-interfaces'][3]['ipv4-addresses'][0]}}"
+      - name: adress 2 vserver
+        set_fact:
+          sink_addresses:
+            - "{{destinations[0].vservers[1]['l-interfaces'][0]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[1]['l-interfaces'][1]['ipv4-addresses'][0]}}"
+            - "{{destinations[0].vservers[1]['l-interfaces'][2]['ipv4-addresses'][0]}}"
     when:
       - length1 == "4"
       - length2 == "3"

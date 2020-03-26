@@ -19,7 +19,7 @@ node_types:
                     type: string
                     consraints:
                     - valid_values:
-                        - vnfPolicy
+                          - vnfPolicy
             identity:
                 type: string
                 required: true
@@ -35,8 +35,8 @@ node_types:
                     type: string
                     constraints:
                     - valid_values:
-                        - any
-                        - all
+                          - any
+                          - all
             vnfProperties:
                 type: list
                 required: true
@@ -59,10 +59,10 @@ data_types:
                     type: string
                     constraints:
                     - valid_values:
-                        - serviceInstanceId
-                        - vnfName
-                        - cloudRegionId
-                        - vimId
+                          - serviceInstanceId
+                          - vnfName
+                          - cloudRegionId
+                          - vimId
             customerId:
                 type: string
                 required: true

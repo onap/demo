@@ -17,9 +17,9 @@ metadata:
   name: keycloak
   namespace: keycloak
 image:
-    repository: jboss/keycloak
-    tag: 6.0.1
-    pullPolicy: IfNotPresent
+  repository: jboss/keycloak
+  tag: 6.0.1
+  pullPolicy: IfNotPresent
 spec:
   replicas: 1
   selector:

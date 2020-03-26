@@ -21,18 +21,18 @@ spec:
   mtls: true
   autoInjectionNamespaces:
   -
-  sds:
-    enabled: true
-    udsPath: "unix:/var/run/sds/uds_path"
-    useTrustworthyJwt: false
-    useNormalJwt: true
-  gateways:
-    enabled: true
-    ingress:
+    sds:
       enabled: true
-      sds:
+      udsPath: "unix:/var/run/sds/uds_path"
+      useTrustworthyJwt: false
+      useNormalJwt: true
+    gateways:
+      enabled: true
+      ingress:
         enabled: true
-        image: "docker.io/istio/node-agent-k8s:1.2.2"
-  nodeAgent:
-    enabled: true
-    image: "docker.io/istio/node-agent-k8s:1.2.2"
+        sds:
+          enabled: true
+          image: "docker.io/istio/node-agent-k8s:1.2.2"
+    nodeAgent:
+      enabled: true
+      image: "docker.io/istio/node-agent-k8s:1.2.2"

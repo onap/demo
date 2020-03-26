@@ -19,7 +19,7 @@ node_types:
                     type: string
                     consraints:
                     - valid_values:
-                        - request_param_query
+                          - request_param_query
             identity:
                 type: string
                 required: true

@@ -82,8 +82,8 @@ resources:
 
   #SDC won't allow too dummy resource as it has to find 'topology_template' TOSCA equivalent in heat templates
   dummy_base:
-      type: OS::Nova::Server
-      properties:
-          name: test
-          image: test
-          flavor: test
+    type: OS::Nova::Server
+    properties:
+      name: test
+      image: test
+      flavor: test
