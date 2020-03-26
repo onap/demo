@@ -108,6 +108,7 @@ cd /opt/VES/evel/evel-library/bldjobs/
 make clean
 make
 sleep 1
+cp onap-ca.crt /opt/config/onap-ca.crt
 
 # Run instantiation script
 cd /opt
