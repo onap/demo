@@ -46,7 +46,7 @@ topology_template:
       default: 10.0.11.1
     mr_ip_port:
       type: string
-      description: IP port of the Message Router that for vDHCP configuration 
+      description: IP port of the Message Router that for vDHCP configuration
       default: "3904"
     dcae_collector_ip:
       type: string
@@ -735,4 +735,3 @@ topology_template:
           #file: { get_input: vcpe_image_name }
           file: ../Artifacts/Deployment/OTHER/image
           type: tosca.artifacts.nfv.SwImage
-

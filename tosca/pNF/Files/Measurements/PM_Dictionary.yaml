@@ -39,148 +39,148 @@ pmDictionary:
         vendor: Acme
     pmDictionaryMeasurements:
 
-    -   measType: DRB.UEThpDl
-        measDescription: Average DL UE throughput in gNB
-        measCondition: See 3GPP TS 28.552
-        measResultType: integer
-        measResultRange: 0-4294967295
-        measResultUnits: kbps
-        measObjClass: NRCellDU
-        measCollectionMethod: DER
-        measLastChange: 1.0
-        measChangeType: added
-        measInfoId: "Data Radio Bearer"
-        measFamily: DRB
-        measAdditionalFields: {
-            "measurementStatus": "USED",
-            "initialValue": 0,
-            "acmeParameter1": 0,
-            "acmeParameter2": true,
-            "acmeParameter3": "acmeParameterValue3"}
-            
-    -   measType: VS.ifInDiscards    
-        measDescription: The number of inbound packets which were chosen to be discarded
-        measCondition: The number of inbound packets which were chosen to be
-            discarded even though no errors had been detected to prevent
-            their being deliverable to a higher-layer protocol.  One
-            possible reason for discarding such a packet could be to
-            free up buffer space.
-            Discontinuities in the value of this counter can occur at
-            re-initialization of the management system, and at other
-            times as indicated by the value of
-            ifCounterDiscontinuityTime.
-        measResultType: integer
-        measResultRange: 0-4294967295
-        measResultUnits: number
-        measObjClass: EthernetPort
-        measCollectionMethod: CC
-        measLastChange: 1.0
-        measChangeType: added
-        measInfoId: "IP Management"
-        measFamily: IP
-        measAdditionalFields: {
-            "measurementStatus": "USED",
-            "initialValue": 0,
-            "acmeParameter1": 0,
-            "acmeParameter2": true,
-            "acmeParameter3": "acmeParameterValue3"}
+    - measType: DRB.UEThpDl
+      measDescription: Average DL UE throughput in gNB
+      measCondition: See 3GPP TS 28.552
+      measResultType: integer
+      measResultRange: 0-4294967295
+      measResultUnits: kbps
+      measObjClass: NRCellDU
+      measCollectionMethod: DER
+      measLastChange: 1.0
+      measChangeType: added
+      measInfoId: "Data Radio Bearer"
+      measFamily: DRB
+      measAdditionalFields: {
+          "measurementStatus": "USED",
+          "initialValue": 0,
+          "acmeParameter1": 0,
+          "acmeParameter2": true,
+          "acmeParameter3": "acmeParameterValue3"}
 
-    -   measType: VS.ifInErrors
-        measDescription: Number of inbound packets that contained errors
-        measCondition: For packet-oriented interfaces, the number of inbound
-            packets that contained errors preventing them from being
-            deliverable to a higher-layer protocol.  For character-
-            oriented or fixed-length interfaces, the number of inbound
-            transmission units that contained errors preventing them
-            from being deliverable to a higher-layer protocol.
-        measResultType: integer
-        measResultRange: 0-4294967295
-        measResultUnits: number
-        measObjClass: EthernetPort
-        measCollectionMethod: Gauge
-        measLastChange: 1.0
-        measChangeType: added
-        measInfoId: "IP Management"
-        measFamily: IP
-        measAdditionalFields: {
-            "measurementStatus": "USED",
-            "initialValue": 0,
-            "acmeParameter1": 0,
-            "acmeParameter3": "acmeParameterValue3"}
+    - measType: VS.ifInDiscards
+      measDescription: The number of inbound packets which were chosen to be discarded
+      measCondition: The number of inbound packets which were chosen to be
+          discarded even though no errors had been detected to prevent
+          their being deliverable to a higher-layer protocol.  One
+          possible reason for discarding such a packet could be to
+          free up buffer space.
+          Discontinuities in the value of this counter can occur at
+          re-initialization of the management system, and at other
+          times as indicated by the value of
+          ifCounterDiscontinuityTime.
+      measResultType: integer
+      measResultRange: 0-4294967295
+      measResultUnits: number
+      measObjClass: EthernetPort
+      measCollectionMethod: CC
+      measLastChange: 1.0
+      measChangeType: added
+      measInfoId: "IP Management"
+      measFamily: IP
+      measAdditionalFields: {
+          "measurementStatus": "USED",
+          "initialValue": 0,
+          "acmeParameter1": 0,
+          "acmeParameter2": true,
+          "acmeParameter3": "acmeParameterValue3"}
 
-    -   measType: VS.ifInUnknownProtos
-        measDescription: Number of inbound packets received via an unknown or usupported protocol
-        measCondition: For packet-oriented interfaces, the number of packets
-            received via the interface which were discarded because of
-            an unknown or unsupported protocol.  For character-oriented
-            or fixed-length interfaces that support protocol
-            multiplexing the number of transmission units received via
-            the interface which were discarded because of an unknown or
-            unsupported protocol.  For any interface that does not
-            support protocol multiplexing, this counter will always be
-            0.
-        measResultType: integer
-        measResultRange: 0-4294967295
-        measResultUnits: number
-        measObjClass: EthernetPort
-        measCollectionMethod: CC
-        measLastChange: 1.0
-        measChangeType: added
-        measInfoId: "IP Management"
-        measFamily: IP
-        measAdditionalFields: {
-            "measurementStatus": "USED",
-            "initialValue": 0,
-            "acmeParameter1": 0,
-            "acmeParameter2": true}
+    - measType: VS.ifInErrors
+      measDescription: Number of inbound packets that contained errors
+      measCondition: For packet-oriented interfaces, the number of inbound
+          packets that contained errors preventing them from being
+          deliverable to a higher-layer protocol.  For character-
+          oriented or fixed-length interfaces, the number of inbound
+          transmission units that contained errors preventing them
+          from being deliverable to a higher-layer protocol.
+      measResultType: integer
+      measResultRange: 0-4294967295
+      measResultUnits: number
+      measObjClass: EthernetPort
+      measCollectionMethod: Gauge
+      measLastChange: 1.0
+      measChangeType: added
+      measInfoId: "IP Management"
+      measFamily: IP
+      measAdditionalFields: {
+          "measurementStatus": "USED",
+          "initialValue": 0,
+          "acmeParameter1": 0,
+          "acmeParameter3": "acmeParameterValue3"}
 
-    -   measType: VS.ifHCInBroadcastPkts
-        measDescription: Number of the broadcasted inbound packets delivered to the higher (sub-)layer
-        measCondition: The number of packets, delivered by this sub-layer to a
-            higher (sub-)layer, which were addressed to a broadcast
-            address at this sub-layer. This object is a 64-bit version
-            of ifInBroadcastPkts.
-            Discontinuities in the value of this counter can occur at
-            re-initialization of the management system, and at other
-            times as indicated by the value of
-            ifCounterDiscontinuityTime.
-        measResultType: integer
-        measResultRange: 0-4294967295
-        measResultUnits: number
-        measObjClass: EthernetPort
-        measCollectionMethod: CC
-        measLastChange: 1.0
-        measChangeType: added
-        measInfoId: "IP Management"
-        measFamily: IP
-        measAdditionalFields: {
-            "measurementStatus": "USED",
-            "initialValue": 0,
-            "acmeParameter1": 0}
+    - measType: VS.ifInUnknownProtos
+      measDescription: Number of inbound packets received via an unknown or usupported protocol
+      measCondition: For packet-oriented interfaces, the number of packets
+          received via the interface which were discarded because of
+          an unknown or unsupported protocol.  For character-oriented
+          or fixed-length interfaces that support protocol
+          multiplexing the number of transmission units received via
+          the interface which were discarded because of an unknown or
+          unsupported protocol.  For any interface that does not
+          support protocol multiplexing, this counter will always be
+          0.
+      measResultType: integer
+      measResultRange: 0-4294967295
+      measResultUnits: number
+      measObjClass: EthernetPort
+      measCollectionMethod: CC
+      measLastChange: 1.0
+      measChangeType: added
+      measInfoId: "IP Management"
+      measFamily: IP
+      measAdditionalFields: {
+          "measurementStatus": "USED",
+          "initialValue": 0,
+          "acmeParameter1": 0,
+          "acmeParameter2": true}
 
-    -   measType: VS.ifHCOutBroadcastPkts
-        measDescription: Number of the broadcasted outsbound packets delivered to the higher (sub-)layer
-        measCondition: The total number of packets that higher-level protocols
-            requested be transmitted, and which were addressed to a
-            broadcast address at this sub-layer, including those that
-            were discarded or not sent.  This object is a 64-bit version
-            of ifOutBroadcastPkts.
-            Discontinuities in the value of this counter can occur at
-            re-initialization of the management system, and at other
-            times as indicated by the value of
-            ifCounterDiscontinuityTime.
-        measResultType: integer
-        measResultRange: 0-4294967295
-        measResultUnits: number
-        measObjClass: EthernetPort
-        measCollectionMethod: CC
-        measLastChange: 1.0
-        measChangeType: added
-        measInfoId: "IP Management"
-        measFamily: IP
-        measAdditionalFields: {
-            "measurementStatus": "USED",
-            "initialValue": 0,
-            "acmeParameter1": 0,
-            "acmeParameter2": true,
-            "acmeParameter3": "acmeParameterValue3"}
+    - measType: VS.ifHCInBroadcastPkts
+      measDescription: Number of the broadcasted inbound packets delivered to the higher (sub-)layer
+      measCondition: The number of packets, delivered by this sub-layer to a
+          higher (sub-)layer, which were addressed to a broadcast
+          address at this sub-layer. This object is a 64-bit version
+          of ifInBroadcastPkts.
+          Discontinuities in the value of this counter can occur at
+          re-initialization of the management system, and at other
+          times as indicated by the value of
+          ifCounterDiscontinuityTime.
+      measResultType: integer
+      measResultRange: 0-4294967295
+      measResultUnits: number
+      measObjClass: EthernetPort
+      measCollectionMethod: CC
+      measLastChange: 1.0
+      measChangeType: added
+      measInfoId: "IP Management"
+      measFamily: IP
+      measAdditionalFields: {
+          "measurementStatus": "USED",
+          "initialValue": 0,
+          "acmeParameter1": 0}
+
+    - measType: VS.ifHCOutBroadcastPkts
+      measDescription: Number of the broadcasted outsbound packets delivered to the higher (sub-)layer
+      measCondition: The total number of packets that higher-level protocols
+          requested be transmitted, and which were addressed to a
+          broadcast address at this sub-layer, including those that
+          were discarded or not sent.  This object is a 64-bit version
+          of ifOutBroadcastPkts.
+          Discontinuities in the value of this counter can occur at
+          re-initialization of the management system, and at other
+          times as indicated by the value of
+          ifCounterDiscontinuityTime.
+      measResultType: integer
+      measResultRange: 0-4294967295
+      measResultUnits: number
+      measObjClass: EthernetPort
+      measCollectionMethod: CC
+      measLastChange: 1.0
+      measChangeType: added
+      measInfoId: "IP Management"
+      measFamily: IP
+      measAdditionalFields: {
+          "measurementStatus": "USED",
+          "initialValue": 0,
+          "acmeParameter1": 0,
+          "acmeParameter2": true,
+          "acmeParameter3": "acmeParameterValue3"}

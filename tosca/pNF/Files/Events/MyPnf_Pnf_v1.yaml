@@ -1,10 +1,10 @@
 ---
 event:
     presence: required
-    structure: 
+    structure:
         commonEventHeader:
             presence: required
-            structure: 
+            structure:
                 domain: {presence: required, value: notification}
                 eventName: {presence: required, value: Noti_MyPnf-Acme_FileReady}
                 priority: {presence: required, value: Normal}
@@ -20,14 +20,14 @@ event:
                 lastEpochMicrosec: {presence: required}
         notificationFields:
             presence: required
-            structure:  
+            structure:
                 changeIdentifier: {presence: required, value: PM_MEAS_FILES}
                 changeType: {presence: required, value: fileReady}
                 notificationFieldsVersion: {presence: required, value: 2.0}
                 arrayOfNamedHashMap:
                     presence: required
                     array:
-                        - name: {presence: required} 
+                        - name: {presence: required}
                           hashMap: {presence: required, structure: {
                               keyValuePair: {presence: required, structure: {key: {presence: required, value: location}, value: {presence: required}}},
                               keyValuePair: {presence: required, structure: {key: {presence: required, value: compression}, value: {presence: required, value: gzip}}},
@@ -71,7 +71,7 @@ event:
 event:
     presence: required
     action: [ any, any, null, null, null ]
-    comment: " 
+    comment: "
         ALARM NAME: CertMAutomaticEnrollmentFailed,
         ALARM DESCRIPTION: ‘See alarm OPI x/1111-ABC 123 4567/1 Uen’,
         ALARM EFFECT: 'See alarm OPI x/2222-ABC 123 4567/1 Uen',
@@ -205,9 +205,9 @@ event:
                 eventSeverity: {presence: required}
                 vfStatus: {presence: required, value: Active}
                 alarmAdditionalInformation: {presence: required, structure: {
-                    keyValuePair: {presence: required, structure: {key: {presence: required, value: source},value: {presence: required}}},
-                    keyValuePair: {presence: required, structure: {key: {presence: required, value: probableCause},value: {presence: required, value: 'FileError'}}},
-                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalText},value: {presence: optional}}},
-                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalInfo},value: {presence: optional}}}}
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: source}, value: {presence: required}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: probableCause}, value: {presence: required, value: 'FileError'}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalText}, value: {presence: optional}}},
+                    keyValuePair: {presence: required, structure: {key: {presence: required, value: additionalInfo}, value: {presence: optional}}}}
                 }
 ...

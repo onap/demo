@@ -43,7 +43,7 @@ topology_template:
       description: The CIDR of the vCPE public
     vaaa_private_ip_0:
       type: string
-      description: Private IP address that is assigned to the vAAA to communicate with the vCPE components 
+      description: Private IP address that is assigned to the vAAA to communicate with the vCPE components
     vaaa_private_ip_1:
       type: string
       description: Private IP address that is assigned to the vAAA to communicate with ONAP components
@@ -61,7 +61,7 @@ topology_template:
       description: Private IP address that is assigned to the vDHCP to communicate with ONAP components
     vweb_private_ip_0:
       type: string
-      description: Private IP address that is assigned to the vWEB to communicate with the vGWs 
+      description: Private IP address that is assigned to the vWEB to communicate with the vGWs
     vweb_private_ip_1:
       type: string
       description: Private IP address that is assigned to the vWEB to communicate with ONAP components
@@ -76,7 +76,7 @@ topology_template:
       description: Name of the vDHCP
     vweb_name_0:
       type: string
-      description: Name of the vWEB 
+      description: Name of the vWEB
     vnf_id:
       type: string
       description: The VNF ID is provided by ONAP
@@ -110,7 +110,7 @@ topology_template:
     cloud_env:
       type: string
 
-  
+
 ##################
 #                #
 # NODE TEMPLATES #
@@ -134,7 +134,7 @@ topology_template:
         use_external_resource: true
         resource_id: { get_input: onap_private_net_id }
         multivim_config: { get_input: multivim_config }
-  
+
     onap_private_subnet:
       type: onap.multivim.nodes.Subnet
       properties:
@@ -207,22 +207,22 @@ topology_template:
           userdata: { concat: [
                               "#!/bin/bash\n",
                               "mkdir /opt/config\n",
-                              "echo ",{ get_input: dcae_collector_ip}," > /opt/config/dcae_collector_ip.txt\n",
-                              "echo ",{ get_input: dcae_collector_port}," > /opt/config/dcae_collector_port.txt\n",
-                              "echo ",{ get_input: vaaa_private_ip_0}," > /opt/config/cpe_signal_net_ipaddr.txt\n",
-                              "echo ",{ get_input: vaaa_private_ip_1}," > /opt/config/oam_ipaddr.txt\n",
-                              "echo ",{ get_input: onap_private_net_cidr}," > /opt/config/oam_cidr.txt\n",
-                              "echo ",{ get_input: cpe_signal_net_cidr}," > /opt/config/cpe_signal_net_cidr.txt\n",
-                              "echo ",{ get_input: repo_url_blob}," > /opt/config/repo_url_blob.txt\n",
-                              "echo ",{ get_input: repo_url_artifacts}," > /opt/config/repo_url_artifacts.txt\n",
-                              "echo ",{ get_input: demo_artifacts_version}," > /opt/config/demo_artifacts_version.txt\n",
-                              "echo ",{ get_input: install_script_version}," > /opt/config/install_script_version.txt\n",
-                              "echo ",{ get_input: cloud_env}," > /opt/config/cloud_env.txt\n",
-                              "curl -k ",{get_input: repo_url_blob},"/org.onap.demo/vnfs/vcpe/",{get_input: install_script_version},"/v_aaa_install.sh -o /opt/v_aaa_install.sh\n",
+                              "echo ", { get_input: dcae_collector_ip}, " > /opt/config/dcae_collector_ip.txt\n",
+                              "echo ", { get_input: dcae_collector_port}, " > /opt/config/dcae_collector_port.txt\n",
+                              "echo ", { get_input: vaaa_private_ip_0}, " > /opt/config/cpe_signal_net_ipaddr.txt\n",
+                              "echo ", { get_input: vaaa_private_ip_1}, " > /opt/config/oam_ipaddr.txt\n",
+                              "echo ", { get_input: onap_private_net_cidr}, " > /opt/config/oam_cidr.txt\n",
+                              "echo ", { get_input: cpe_signal_net_cidr}, " > /opt/config/cpe_signal_net_cidr.txt\n",
+                              "echo ", { get_input: repo_url_blob}, " > /opt/config/repo_url_blob.txt\n",
+                              "echo ", { get_input: repo_url_artifacts}, " > /opt/config/repo_url_artifacts.txt\n",
+                              "echo ", { get_input: demo_artifacts_version}, " > /opt/config/demo_artifacts_version.txt\n",
+                              "echo ", { get_input: install_script_version}, " > /opt/config/install_script_version.txt\n",
+                              "echo ", { get_input: cloud_env}, " > /opt/config/cloud_env.txt\n",
+                              "curl -k ", {get_input: repo_url_blob}, "/org.onap.demo/vnfs/vcpe/", {get_input: install_script_version}, "/v_aaa_install.sh -o /opt/v_aaa_install.sh\n",
                               "cd /opt\n",
                               "chmod +x v_aaa_install.sh\n",
                               "./v_aaa_install.sh\n"
-                            ] 
+                            ]
                    }
       requirements:
         - key_pair: my_keypair
@@ -259,22 +259,22 @@ topology_template:
           userdata: { concat: [
                               "#!/bin/bash\n",
                               "mkdir /opt/config\n",
-                              "echo ",{get_input: vdns_private_ip_1}," > /opt/config/oam_ipaddr.txt\n",
-                              "echo ",{get_input: vdns_private_ip_0}," > /opt/config/cpe_public_net_ipaddr.txt\n",
-                              "echo ",{get_input: onap_private_net_cidr}," > /opt/config/oam_cidr.txt\n",
-                              "echo ",{get_input: cpe_public_net_cidr}," > /opt/config/cpe_public_net_cidr.txt\n",
-                              "echo ",{get_input: repo_url_blob}," > /opt/config/repo_url_blob.txt\n",
-                              "echo ",{get_input: repo_url_artifacts}," > /opt/config/repo_url_artifacts.txt\n",
-                              "echo ",{get_input: demo_artifacts_version}," > /opt/config/demo_artifacts_version.txt\n",
-                              "echo ",{get_input: install_script_version}," > /opt/config/install_script_version.txt\n",
-                              "echo ",{get_input: cloud_env}," > /opt/config/cloud_env.txt\n",
-                              "curl -k ",{get_input: repo_url_blob},"/org.onap.demo/vnfs/vcpe/",{get_input: install_script_version},"/v_dns_install.sh -o /opt/v_dns_install.sh\n",
+                              "echo ", {get_input: vdns_private_ip_1}, " > /opt/config/oam_ipaddr.txt\n",
+                              "echo ", {get_input: vdns_private_ip_0}, " > /opt/config/cpe_public_net_ipaddr.txt\n",
+                              "echo ", {get_input: onap_private_net_cidr}, " > /opt/config/oam_cidr.txt\n",
+                              "echo ", {get_input: cpe_public_net_cidr}, " > /opt/config/cpe_public_net_cidr.txt\n",
+                              "echo ", {get_input: repo_url_blob}, " > /opt/config/repo_url_blob.txt\n",
+                              "echo ", {get_input: repo_url_artifacts}, " > /opt/config/repo_url_artifacts.txt\n",
+                              "echo ", {get_input: demo_artifacts_version}, " > /opt/config/demo_artifacts_version.txt\n",
+                              "echo ", {get_input: install_script_version}, " > /opt/config/install_script_version.txt\n",
+                              "echo ", {get_input: cloud_env}, " > /opt/config/cloud_env.txt\n",
+                              "curl -k ", {get_input: repo_url_blob}, "/org.onap.demo/vnfs/vcpe/", {get_input: install_script_version}, "/v_dns_install.sh -o /opt/v_dns_install.sh\n",
                               "cd /opt\n",
                               "chmod +x v_dns_install.sh\n",
                               "./v_dns_install.sh\n"
                             ]
                    }
-      requirements:    
+      requirements:
         - port: vdns_private_0_port
         - port: vdns_private_1_port
 
@@ -309,16 +309,16 @@ topology_template:
           userdata: { concat: [
                               "#!/bin/bash\n",
                               "mkdir /opt/config\n",
-                              "echo ",{get_input: vdns_private_ip_1}," > /opt/config/oam_ipaddr.txt\n",
-                              "echo ",{get_input: vdhcp_private_ip_0}," > /opt/config/cpe_signal_ipaddr.txt\n",
-                              "echo ",{get_input: onap_private_net_cidr}," > /opt/config/oam_cidr.txt\n",
-                              "echo ",{get_input: cpe_signal_net_cidr}," > /opt/config/cpe_signal_net_cidr.txt\n",
-                              "echo ",{get_input: repo_url_blob}," > /opt/config/repo_url_blob.txt\n",
-                              "echo ",{get_input: repo_url_artifacts}," > /opt/config/repo_url_artifacts.txt\n",
-                              "echo ",{get_input: demo_artifacts_version}," > /opt/config/demo_artifacts_version.txt\n",
-                              "echo ",{get_input: install_script_version}," > /opt/config/install_script_version.txt\n",
-                              "echo ",{get_input: cloud_env}," > /opt/config/cloud_env.txt\n",
-                              "curl -k ",{get_input: repo_url_blob},"/org.onap.demo/vnfs/vcpe/",{get_input: install_script_version},"/v_dhcp_install.sh -o /opt/v_dhcp_install.sh\n",
+                              "echo ", {get_input: vdns_private_ip_1}, " > /opt/config/oam_ipaddr.txt\n",
+                              "echo ", {get_input: vdhcp_private_ip_0}, " > /opt/config/cpe_signal_ipaddr.txt\n",
+                              "echo ", {get_input: onap_private_net_cidr}, " > /opt/config/oam_cidr.txt\n",
+                              "echo ", {get_input: cpe_signal_net_cidr}, " > /opt/config/cpe_signal_net_cidr.txt\n",
+                              "echo ", {get_input: repo_url_blob}, " > /opt/config/repo_url_blob.txt\n",
+                              "echo ", {get_input: repo_url_artifacts}, " > /opt/config/repo_url_artifacts.txt\n",
+                              "echo ", {get_input: demo_artifacts_version}, " > /opt/config/demo_artifacts_version.txt\n",
+                              "echo ", {get_input: install_script_version}, " > /opt/config/install_script_version.txt\n",
+                              "echo ", {get_input: cloud_env}, " > /opt/config/cloud_env.txt\n",
+                              "curl -k ", {get_input: repo_url_blob}, "/org.onap.demo/vnfs/vcpe/", {get_input: install_script_version}, "/v_dhcp_install.sh -o /opt/v_dhcp_install.sh\n",
                               "cd /opt\n",
                               "chmod +x v_dhcp_install.sh\n",
                               "./v_dhcp_install.sh\n"
@@ -361,16 +361,16 @@ topology_template:
           userdata: { concat: [
                                "#!/bin/bash\n",
                                "mkdir /opt/config\n",
-                               "echo ",{get_input: vweb_private_ip_1}," > /opt/config/oam_ipaddr.txt\n",
-                               "echo ",{get_input: vweb_private_ip_0}," > /opt/config/cpe_public_ipaddr.txt\n",
-                               "echo ",{get_input: onap_private_net_cidr}," > /opt/config/oam_cidr.txt\n",
-                               "echo ",{get_input: cpe_public_net_cidr}," > /opt/config/cpe_public_net_cidr.txt\n",
-                               "echo ",{get_input: repo_url_blob}," > /opt/config/repo_url_blob.txt\n",
-                               "echo ",{get_input: repo_url_artifacts}," > /opt/config/repo_url_artifacts.txt\n",
-                               "echo ",{get_input: demo_artifacts_version}," > /opt/config/demo_artifacts_version.txt\n",
-                               "echo ",{get_input: install_script_version}," > /opt/config/install_script_version.txt\n",
-                               "echo ",{get_input: cloud_env}," > /opt/config/cloud_env.txt\n",
-                               "curl -k ",{get_input: repo_url_blob},"/org.onap.demo/vnfs/vcpe/",{get_input: install_script_version},"/v_web_install.sh -o /opt/v_web_install.sh\n",
+                               "echo ", {get_input: vweb_private_ip_1}, " > /opt/config/oam_ipaddr.txt\n",
+                               "echo ", {get_input: vweb_private_ip_0}, " > /opt/config/cpe_public_ipaddr.txt\n",
+                               "echo ", {get_input: onap_private_net_cidr}, " > /opt/config/oam_cidr.txt\n",
+                               "echo ", {get_input: cpe_public_net_cidr}, " > /opt/config/cpe_public_net_cidr.txt\n",
+                               "echo ", {get_input: repo_url_blob}, " > /opt/config/repo_url_blob.txt\n",
+                               "echo ", {get_input: repo_url_artifacts}, " > /opt/config/repo_url_artifacts.txt\n",
+                               "echo ", {get_input: demo_artifacts_version}, " > /opt/config/demo_artifacts_version.txt\n",
+                               "echo ", {get_input: install_script_version}, " > /opt/config/install_script_version.txt\n",
+                               "echo ", {get_input: cloud_env}, " > /opt/config/cloud_env.txt\n",
+                               "curl -k ", {get_input: repo_url_blob}, "/org.onap.demo/vnfs/vcpe/", {get_input: install_script_version}, "/v_web_install.sh -o /opt/v_web_install.sh\n",
                                "cd /opt\n",
                                "chmod +x v_web_install.sh\n",
                                "./v_web_install.sh\n"
@@ -380,4 +380,3 @@ topology_template:
         - key_pair: my_keypair
         - port: vweb_private_0_port
         - port: vweb_private_1_port
-        
