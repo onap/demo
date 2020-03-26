@@ -31,22 +31,22 @@ spec:
           value: "8080"
         - name: BROKER
           valueFrom:
-            configMapKeyRef:  
+            configMapKeyRef:
               name: configmap-kafka
               key: broker
         - name: GROUP
           valueFrom:
-            configMapKeyRef:  
+            configMapKeyRef:
               name: configmap-kafka
               key: group
         - name: TOPIC
           valueFrom:
-            configMapKeyRef:  
+            configMapKeyRef:
               name: configmap-kafka
               key: topic
         - name: HDFS_URL
           valueFrom:
-            configMapKeyRef:  
+            configMapKeyRef:
               name: configmap-hdfs
               key: hdfs_url
         resources:
@@ -56,7 +56,7 @@ spec:
           limits:
             memory: "1280Mi"
             cpu: "5000m"
-      volumes: 
+      volumes:
         - name: config-volume
           configMap:
             name: config-json

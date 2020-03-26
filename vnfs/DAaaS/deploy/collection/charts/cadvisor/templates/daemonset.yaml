@@ -17,7 +17,7 @@
 apiVersion: apps/v1beta2
 kind: DaemonSet
 metadata:
-  name: {{ template "fullname" . }} 
+  name: {{ template "fullname" . }}
   labels:
     app: {{ template "name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}

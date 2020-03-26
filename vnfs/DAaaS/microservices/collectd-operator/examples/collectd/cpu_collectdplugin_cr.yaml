@@ -11,4 +11,3 @@ spec:
       ReportByState false
       ReportByCpu false
     </Plugin>
- 

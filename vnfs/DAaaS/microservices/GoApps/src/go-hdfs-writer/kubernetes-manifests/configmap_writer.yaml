@@ -1,4 +1,4 @@
-#Preserving a sample config of writer. 
+#Preserving a sample config of writer.
 #NOTE : The writer config shall come through the REST request
 apiVersion: v1
 kind: ConfigMap
@@ -19,4 +19,3 @@ data:
         }
     }
     ]
- 

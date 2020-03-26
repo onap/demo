@@ -37,7 +37,7 @@ prometheus:
         - port: cadvisor-prometheus
           interval: 10s
           path: /metrics
- 
+
   resources: {}
   service:
     type: ClusterIP

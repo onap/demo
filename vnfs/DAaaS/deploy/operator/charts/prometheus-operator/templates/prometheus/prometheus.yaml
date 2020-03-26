@@ -103,7 +103,7 @@ spec:
   ruleSelector:
 {{ toYaml .Values.prometheus.prometheusSpec.ruleSelector | indent 4}}
 {{- else if .Values.prometheus.prometheusSpec.ruleSelectorNilUsesHelmValues }}
-  ruleSelector:    
+  ruleSelector:
     matchLabels:
       app: {{ template "prometheus-operator.name" . }}
       release: {{ .Release.Name | quote }}

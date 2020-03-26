@@ -17,7 +17,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cadvisor 
+  name: cadvisor
   labels:
     app: cadvisor
     release: {{ .Release.Name }}
@@ -27,7 +27,7 @@ spec:
   selector:
 {{ include "rangeskipempty" .Values.cadvisor_prometheus.service.selector | indent 4 }}
   ports:
-  - name: cadvisor-prometheus 
+  - name: cadvisor-prometheus
     {{- if eq .Values.cadvisor_prometheus.service.type "NodePort" }}
     nodePort: {{ .Values.global.nodePortPrefix }}{{ .Values.cadvisor_prometheus.service.nodePort }}
     {{- end }}

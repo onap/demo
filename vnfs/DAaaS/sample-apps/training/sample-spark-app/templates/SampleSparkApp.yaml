@@ -2,7 +2,7 @@ apiVersion: "sparkoperator.k8s.io/v1beta1"
 kind: SparkApplication
 metadata:
   name: {{ .Values.nameOfTheSparkApp }}
-  namespace: {{ .Release.Namespace  }}
+  namespace: {{ .Release.Namespace }}
 spec:
   type: {{ .Values.programmingLanguageType }}
   mode: {{ .Values.modeOfSparkApp | default "cluster" }}
@@ -10,7 +10,7 @@ spec:
   imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" }}
   mainClass: {{ .Values.mainClassOfTheSparkApp }}
   mainApplicationFile: {{ .Values.mainApplicationFileOfTheSparkApp }}
-  arguments:  
+  arguments:
 	{{- range .Values.argumentsOfTheSparkProgram }}
    - {{ . }}
     {{ end }}

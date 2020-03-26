@@ -11,4 +11,3 @@ spec:
     - nodePort: 30303
       port: 9393
       targetPort: 9393
-      

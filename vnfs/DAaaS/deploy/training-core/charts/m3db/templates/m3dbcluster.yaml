@@ -20,5 +20,3 @@ spec:
     limits:
       memory: 12Gi
       cpu: '4'
-
-  

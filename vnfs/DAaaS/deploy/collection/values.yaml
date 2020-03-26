@@ -31,9 +31,9 @@ global:
 # Enable or disable components
 #################################################################
 
-cadvisor: 
+cadvisor:
   enabled: true
- 
+
 collectd:
   enabled: true
 

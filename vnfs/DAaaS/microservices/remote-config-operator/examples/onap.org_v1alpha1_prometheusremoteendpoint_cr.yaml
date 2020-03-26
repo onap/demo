@@ -1,5 +1,5 @@
 apiVersion: onap.org/v1alpha1
-kind:  PrometheusRemoteEndpoint
+kind: PrometheusRemoteEndpoint
 metadata:
   name: relabelconfig-m3db1
   labels:

@@ -6,7 +6,7 @@ spec:
   datasources:
     - name: InfluxDB
       type: influxdb
-      url: http://localhost:8086 
+      url: http://localhost:8086
       isDefault: false
       access: proxy
       withCredentials: true
@@ -19,6 +19,6 @@ spec:
       jsonData:
         timeInterval: 15s
   grafana:
-    url:  http://vis-grafana.default.svc.cluster.local
+    url: http://vis-grafana.default.svc.cluster.local
     username: admin
     password: admin

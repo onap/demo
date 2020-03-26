@@ -35,10 +35,10 @@ worker:
   image:
     repository: spark-tf-keras-horovod-pytorch
     tag: latest
-    pullPolicy: Never 
+    pullPolicy: Never
 master:
   image:
-    repository: spark-tf-keras-horovod-pytorch 
+    repository: spark-tf-keras-horovod-pytorch
     tag: latest
     pullPolicy: Never
   args:

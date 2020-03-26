@@ -34,6 +34,6 @@ grafana:
         editable: true
         options:
           path: /var/lib/grafana/dashboards/dashboard1
-    
+
   dashboardsConfigMaps:
     dashboard1: "custom-dashboard1"
