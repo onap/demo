@@ -90,9 +90,12 @@ mv sample-distribution-$DEMO_ARTIFACTS_VERSION honeycomb
 sed -i 's/"restconf-binding-address": "127.0.0.1",/"restconf-binding-address": "0.0.0.0",/g' honeycomb/sample-distribution-$DEMO_ARTIFACTS_VERSION/config/honeycomb.json
 rm *.tar.gz
 
+cp  /opt/VES/evel/evel-library/code/VESreporting/onap-ca.crt /opt/config/onap-ca.crt
+
 chmod +x v_firewall_init.sh
 chmod +x vfirewall.sh
 chmod +x /opt/VES/evel/evel-library/code/VESreporting/go-client.sh
+
 
 # Install VPP
 export UBUNTU="trusty"

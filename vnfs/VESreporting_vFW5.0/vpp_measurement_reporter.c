@@ -67,6 +67,10 @@ int main(int argc, char** argv)
 
   char* fqdn = argv[1];
   int port = atoi(argv[2]);
+  char* caFile = "/opt/config/onap-ca.crt";
+  char* userName = "sample1";
+  char* passWord = "sample1";
+
   if(argc == 6)
   {
      fqdn2 = argv[3];
@@ -97,15 +101,15 @@ int main(int argc, char** argv)
                      NULL,                         /* optional path         */
                      NULL,                         /* optional topic        */
                      100,                          /* Ring Buffer size      */
-                     0,                            /* HTTPS?                */
+                     1,                            /* HTTPS?                */
                      NULL,                         /* cert file             */
                      NULL,                         /* key  file             */
-                     NULL,                         /* ca   info             */
-                     NULL,                         /* ca   file             */
+                     caFile,                       /* ca   file             */
+                     NULL,                         /* ca   directory        */
                      0,                            /* verify peer           */
                      0,                            /* verify host           */
-                     "sample1",                    /* Username              */
-                     "sample1",                    /* Password              */
+                     userName,                     /* Username              */
+                     passWord,                     /* Password              */
                      "sample1",                    /* Username2             */
                      "sample1",                    /* Password2             */
                      NULL,                         /* Source ip             */
