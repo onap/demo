@@ -18,7 +18,7 @@ node_types:
                 entry_schema:
                     type: string
                     consraints:
-                    -   valid_values:
+                    - valid_values:
                         - request_param_query
             identity:
                 type: string

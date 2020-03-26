@@ -18,7 +18,7 @@ node_types:
                 entry_schema:
                     type: string
                     consraints:
-                    -   valid_values:
+                    - valid_values:
                         - vnfPolicy
             identity:
                 type: string
@@ -34,7 +34,7 @@ node_types:
                 entry_schema:
                     type: string
                     constraints:
-                    -   valid_values:
+                    - valid_values:
                         - any
                         - all
             vnfProperties:
@@ -58,7 +58,7 @@ data_types:
                 entry_schema:
                     type: string
                     constraints:
-                    -   valid_values:
+                    - valid_values:
                         - serviceInstanceId
                         - vnfName
                         - cloudRegionId

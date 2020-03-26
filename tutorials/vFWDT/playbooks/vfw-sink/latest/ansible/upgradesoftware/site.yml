@@ -4,9 +4,9 @@
   remote_user: ubuntu
   tasks:
   - debug: var="new_software_version"
-    failed_when:  new_software_version is not defined
+    failed_when: new_software_version is not defined
   - debug: var="existing_software_version"
-    failed_when:  existing_software_version is not defined
+    failed_when: existing_software_version is not defined
   - name: Read OLD Software Version
     shell: cat /opt/config/version.txt
     register: old_version
@@ -16,8 +16,8 @@
     - name: Update Software
       shell: apt-get -y --force-yes -u update
       args:
-        warn: no 
-    - name: Upgrade Version 
+        warn: no
+    - name: Upgrade Version
       shell: echo {{new_software_version}} > /opt/config/version.txt
     - debug:
         msg: Software version has been upgraded to {{new_software_version}}
