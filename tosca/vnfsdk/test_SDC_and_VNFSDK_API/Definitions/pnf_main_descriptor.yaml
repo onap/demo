@@ -1,0 +1,28 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+description: service template of an Acme PNF
+
+imports:
+  - etsi_nfv_sol001_pnfd_2_5_1_types.yaml
+
+topology_template:
+  node_templates:
+    myPnf:
+      type: tosca.nodes.nfv.PNF
+      properties:
+        descriptor_id: b1bb0ce7-ebca-4fa7-95ed-4840d70a2233
+        function_description: Acme PNF
+        provider: Acme
+        version: 1.0
+        descriptor_invariant_id: 1111-2222-ccaa-bbdd
+        name: Acme PNF
+        
+    pnfExtCp_1:
+      type: tosca.nodes.nfv.PnfExtCp
+      properties:
+        trunk_mode: false
+        layer_protocols: [ ipv4 ]
+        role: leaf
+        description: External connection point to access Acme myPnf
+      requirements: 
+        - dependency: myPnf
