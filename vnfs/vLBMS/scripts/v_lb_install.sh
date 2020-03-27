@@ -82,6 +82,7 @@ mv ves-$DEMO_ARTIFACTS_VERSION VES
 tar -zmxvf ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION VESreporting_vLB
 mv VESreporting_vLB /opt/VES/evel/evel-library/code/VESreporting
+cp /opt/VES/evel/evel-library/code/VESreporting/onap-ca.crt /opt/config/onap-ca.crt
 
 # Download Honeycomb artifacts
 wget -O vlb-vnf-onap-distribution-$DEMO_ARTIFACTS_VERSION-hc.tar.gz "${NEXUS_ARTIFACT_REPO}/service/local/artifact/maven/redirect?r=${REPO}&g=org.onap.demo.vnf&a=vlb-vnf-onap-distribution&c=hc&e=tar.gz&v=$DEMO_ARTIFACTS_VERSION"

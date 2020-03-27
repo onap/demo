@@ -122,6 +122,10 @@ int main(int argc, char** argv)
   char* vnic = argv[3];
   char* fqdn2 = NULL;
   int port2 = 0;
+  char* caFile = "/opt/config/onap-ca.crt";
+  char* userName = "sample1";
+  char* passWord = "sample1";
+
 
   if(argc == 6)
   {
@@ -157,15 +161,15 @@ int main(int argc, char** argv)
                        NULL,                         /* optional path         */
                        NULL,                         /* optional topic        */
                        100,                          /* Ring Buffer size      */
-                       0,                            /* HTTPS?                */
+                       1,                            /* HTTPS?                */
                        NULL,                         /* cert file             */
                        NULL,                         /* key  file             */
-                       NULL,                         /* ca   info             */
+                       caFile,                         /* ca   info             */
                        NULL,                         /* ca   file             */
                        0,                            /* verify peer           */
                        0,                            /* verify host           */
-                       "sample1",                    /* Username              */
-                       "sample1",                    /* Password              */
+                       userName,                    /* Username              */
+                       passWord,                    /* Password              */
                        "sample1",                    /* Username2             */
                        "sample1",                    /* Password2             */
                        NULL,                         /* Source ip             */

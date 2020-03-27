@@ -85,6 +85,8 @@ tar -zmxvf ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION-demo.tar.gz
 mv ves_vlb_reporting-$DEMO_ARTIFACTS_VERSION VESreporting_vLB
 
 mv VESreporting_vLB /opt/VES/evel/evel-library/code/VESreporting
+cp /opt/VES/evel/evel-library/code/VESreporting/onap-ca.crt /opt/config/onap-ca.crt
+
 mv dns-manager-$DEMO_ARTIFACTS_VERSION.jar /opt/FDserver/dns-manager-$DEMO_ARTIFACTS_VERSION.jar
 mv dnsmembership.sh /opt/FDserver/dnsmembership.sh
 mv add_dns.sh /opt/FDserver/add_dns.sh
