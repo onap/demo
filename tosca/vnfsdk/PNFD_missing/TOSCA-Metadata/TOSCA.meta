@@ -1,0 +1,6 @@
+TOSCA-Meta-File-Version: 1.0
+CSAR-Version: 1.1
+Created-by: Acme
+Entry-Definitions: Definitions/pnf_main_descriptor.yaml
+ETSI-Entry-Manifest: pnf_main_descriptor.mf
+ETSI-Entry-Change-Log: Files/ChangeLog.txt

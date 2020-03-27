@@ -1,0 +1,22 @@
+metadata:
+    pnfd_name: RadioNode
+    pnfd_provider: Ericsson
+    pnfd_archive_version: 1.0
+
+#The manifest file shall include a list of all files contained in or referenced from the VNF package with their location
+source: Definitions/MainServiceTemplate.yaml
+source: Definitions/etsi_nfv_sol001_vnfd_2_5_1_types.yamls
+
+non_mano_artifact_sets:
+
+    onap_ves_events:
+        Source: Artifacts/Deployment/Events/RadioNode_Pnf_v1.yaml
+
+    onap_pm_dictionary:
+        Source: Artifacts/Deployment/Measurements/PM_Dictionary.yml
+
+    onap_yang_modules:
+        Source: Artifacts/Deployment/Yang_module/yang-module1.yang
+
+    onap_others:
+        Source: Artifacts/Other/my_script.csh
