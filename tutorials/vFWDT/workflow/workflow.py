@@ -199,6 +199,7 @@ class AAIApiResource(Resource):
     actions = {
         'generic_vnf': {'method': 'GET', 'url': 'network/generic-vnfs/generic-vnf/{}'},
         'vnfc': {'method': 'GET', 'url': 'network/vnfcs/vnfc/{}'},
+        'vnfc_patch': {'method': 'PATCH', 'url': 'network/vnfcs/vnfc/{}'},
         'link': {'method': 'GET', 'url': '{}'},
         'service_instance': {'method': 'GET',
                              'url': 'business/customers/customer/{}/service-subscriptions/service-subscription/{}/service-instances/service-instance/{}'}
@@ -232,7 +233,7 @@ class APPCLcmApiResource(Resource):
     }
 
 
-def _init_python_aai_api(onap_ip):
+def _init_python_aai_api(onap_ip, content_type='application/json'):
     api = API(
         api_root_url="https://{}:30233/aai/v14/".format(onap_ip),
         params={},
@@ -240,7 +241,7 @@ def _init_python_aai_api(onap_ip):
             'Authorization': encode("AAI", "AAI"),
             'X-FromAppId': 'SCRIPT',
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            'Content-Type': content_type,
             'X-TransactionId': str(uuid.uuid4()),
         },
         timeout=30,
@@ -449,8 +450,8 @@ def _has_request(onap_ip, aai_data, exclude, use_oof_cache):
     node['chosen_customer_id'] = aai_data['service-info']['global-customer-id']
     node['service_id'] = aai_data['service-info']['service-instance-id']
     node = template['template']['demands']['vFW-SINK'][0]
-    node['attributes']['model-invariant-id'] = aai_data['vfw-model-info']['model-invariant-id']
-    node['attributes']['model-version-id'] = aai_data['vfw-model-info']['model-version-id']
+    node['filtering_attributes']['model-invariant-id'] = aai_data['vfw-model-info']['model-invariant-id']
+    node['filtering_attributes']['model-version-id'] = aai_data['vfw-model-info']['model-version-id']
     if exclude:
         node['excluded_candidates'][0]['candidate_id'][0] = aai_data['vf-module-id']
         del node['required_candidates']
@@ -458,8 +459,8 @@ def _has_request(onap_ip, aai_data, exclude, use_oof_cache):
         node['required_candidates'][0]['candidate_id'][0] = aai_data['vf-module-id']
         del node['excluded_candidates']
     node = template['template']['demands']['vPGN'][0]
-    node['attributes']['model-invariant-id'] = aai_data['vpgn-model-info']['model-invariant-id']
-    node['attributes']['model-version-id'] = aai_data['vpgn-model-info']['model-version-id']
+    node['filtering_attributes']['model-invariant-id'] = aai_data['vpgn-model-info']['model-invariant-id']
+    node['filtering_attributes']['model-version-id'] = aai_data['vpgn-model-info']['model-version-id']
 
     #print(json.dumps(template, indent=4))
 
@@ -524,7 +525,19 @@ def _extract_has_appc_identifiers(has_result, demand, onap_ip):
     if demand.lower() not in ansible_inventory:
         ansible_inventory[demand.lower()] = {}
     ansible_inventory[demand.lower()][config['vserver-name']] = ansible_inventory_entry
+
+    _verify_vnfc_data(api, onap_ip, config['vserver-name'], config['ip'])
     return config
+
+
+def _verify_vnfc_data(aai_api, onap_ip, vnfc_name, oam_ip):
+    with _no_ssl_verification():
+        response = aai_api.aai.vnfc(vnfc_name, body=None, params=None, headers={})
+        #print(json.dumps(response.body))
+        if "ipaddress-v4-oam-vip" not in response.body:
+            print("VNFC information update for {}".format(vnfc_name))
+            api = _init_python_aai_api(onap_ip, 'application/merge-patch+json')
+            response = api.aai.vnfc_patch(vnfc_name, body={"ipaddress-v4-oam-vip": oam_ip, "vnfc-name": vnfc_name}, params=None, headers={})
 
 
 def _extract_osdf_appc_identifiers(has_result, demand, onap_ip):
@@ -804,10 +817,10 @@ def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, 
     #print(json.dumps(migrate_to, indent=4))
     req_id = str(uuid.uuid4())
     result = list()
-    old_version = 2.0
+    old_version = "2.0"
     if_dt_only = new_version is None
     if new_version is not None and new_version != "1.0":
-        old_version = 1.0
+        old_version = "1.0"
 
     requests = list()
     include_lock = True
@@ -883,7 +896,7 @@ def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, 
 
 @timing("> Execute APPC REQ")
 def appc_lcm_request(onap_ip, req):
-    print(req)
+    #print(req)
     api = _init_python_appc_lcm_api(onap_ip)
     with _no_ssl_verification():
     #print(json.dumps(req, indent=4))
@@ -939,7 +952,7 @@ def appc_lcm_status_request(onap_ip, req):
     api = _init_python_appc_lcm_api(onap_ip)
     status_body = _build_appc_lcm_status_body(req)
     _set_appc_lcm_timestamp(status_body)
-    print("CHECK STATUS")
+    #print("CHECK STATUS")
     with _no_ssl_verification():
         result = api.lcm.action_status(body=status_body, params={}, headers={})
 
@@ -981,7 +994,7 @@ def _execute_lcm_requests(workflow, onap_ip, check_result):
         _set_appc_lcm_timestamp(req)
         conf_result = False
         result = appc_lcm_request(onap_ip, req)
-        print("Result {}".format(result))
+        #print("Result {}".format(result))
 
         if result == 100:
             conf_result = confirm_appc_lcm_action(onap_ip, req, check_result)
@@ -1042,8 +1055,9 @@ def _set_artifact_payload(vnf_type, vnfc_type, action, artifact):
             template_file = template_file.format(vnfc_type, 'upgrade.json')
         else:
             template_file = template_file.format(vnfc_type, 'traffic.json')
-
-        artifact_contents = json.dumps(json.loads(open(template_file).read()))
+        #print("Template for action {} in {}".format(action, template_file))
+        #print(json.dumps(json.loads(open(template_file).read()), indent=4))
+        artifact_contents = json.dumps(json.loads(open(template_file).read()), indent=4).replace("\n", "\r\n")
     elif artifact['type'] == 'parameter_definitions':
         file = 'templates/cdt-templates/templates/{}'
         if sw_upgrade:
@@ -1067,7 +1081,7 @@ def _set_artifact_payload(vnf_type, vnfc_type, action, artifact):
     payload['action'] = action
 
     if artifact['type'] == 'config_template':
-        artifact['artifact-contents'] = artifact_contents
+        payload['artifact-contents'] = artifact_contents
     artifact['payload'] = payload
 
 

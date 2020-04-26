@@ -1,5 +1,5 @@
 ---
-- hosts: vfw-sink
+- hosts: vFWDT
   gather_facts: no
   remote_user: ubuntu
   vars:
