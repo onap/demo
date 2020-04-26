@@ -1,13 +1,13 @@
 {
     "InventoryNames": "VM",
-    "PlaybookName": "${()=(book_name)}",
+    "PlaybookName": "${book_name}",
     "AutoNodeList": true,
     "EnvParameters": {
         "ConfigFileName": "../traffic_distribution_config.json",
         "vnf_instance": "vfwdt"
     },
     "FileParameters": {
-        "traffic_distribution_config.json": "${()=(file_parameter_content)}"
+        "traffic_distribution_config.json": "${file_parameter_content}"
     },
     "Timeout": 3600
 }

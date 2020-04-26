@@ -1,5 +1,5 @@
 ---
-- hosts: vpgn
+- hosts: vFWDT
   gather_facts: no
   remote_user: ubuntu
   tasks:

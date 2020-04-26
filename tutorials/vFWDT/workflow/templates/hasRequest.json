@@ -37,7 +37,7 @@
         "demands": {
             "vFW-SINK": [
                 {
-                    "attributes": {
+                    "filtering_attributes": {
                         "global-customer-id": {
                             "get_param": "chosen_customer_id"
                         },
@@ -46,13 +46,12 @@
                         },
                         "model-version-id": "202d2fd8-a045-4c9a-b767-2a1639c10291",
                         "orchestration-status": [
-                            "active"
+                            "Active"
                         ],
                         "model-invariant-id": "6f3fd439-fd5f-4a2d-95bc-b6bf8787001a",
                         "service_instance_id": {
                             "get_param": "service_id"
-                        },
-                        "prov-status": "ACTIVE"
+                        }
                     },
                     "inventory_provider": "aai",
                     "service_resource_id": "vFW-SINK-XX",
@@ -78,7 +77,7 @@
             ],
             "vPGN": [
                 {
-                    "attributes": {
+                    "filtering_attributes": {
                         "global-customer-id": {
                             "get_param": "chosen_customer_id"
                         },
@@ -87,13 +86,12 @@
                         },
                         "model-version-id": "6bfe954e-bb00-4111-be3c-33eed9d20a8c",
                         "orchestration-status": [
-                            "active"
+                            "Active"
                         ],
                         "model-invariant-id": "3f356335-7b36-41ee-8f74-72d0a2ec3ebf",
                         "service_instance_id": {
                             "get_param": "service_id"
-                        },
-                        "prov-status": "ACTIVE"
+                        }
                     },
                     "inventory_provider": "aai",
                     "service_resource_id": "vPGN-XX",

@@ -1,5 +1,5 @@
 ---
-- hosts: vfw-sink
+- hosts: vFWDT
   gather_facts: no
   remote_user: ubuntu
   tasks:
@@ -7,9 +7,23 @@
     failed_when: new_software_version is not defined
   - debug: var="existing_software_version"
     failed_when: existing_software_version is not defined
+  - name: Check if version is known
+    stat:
+      path: /opt/config/version.txt
+    register: version_file
+  - name: Default version
+    shell: echo '{{existing_software_version}}' >> /opt/config/version.txt
+    when: version_file.stat.exists == false
+    become: true
   - name: Read OLD Software Version
     shell: cat /opt/config/version.txt
     register: old_version
     become: true
-  - debug: var=old_version.stdout
+  - name: Check existing version
+    debug:
+      msg: "{{old_version.stdout}} == {{existing_software_version}}"
+    failed_when: old_version.stdout != existing_software_version
+  - name: Check if upgrade is needed
+    debug:
+      msg: "{{old_version.stdout}} -> {{new_software_version}}"
     failed_when: old_version.stdout == new_software_version
