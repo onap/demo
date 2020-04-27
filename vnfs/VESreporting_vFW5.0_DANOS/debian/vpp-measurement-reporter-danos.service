@@ -1,0 +1,10 @@
+[Unit]
+Description=ONAP VES Reporting
+
+[Service]
+EnvironmentFile=/run/VES/dcae_collector.env
+ExecStart=/opt/VES/bin/vpp-measurement-reporter-danos   $DCAE_COLLECTOR_IP  $DCAE_COLLECTOR_PORT  $PORT_TO_REPORT
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
