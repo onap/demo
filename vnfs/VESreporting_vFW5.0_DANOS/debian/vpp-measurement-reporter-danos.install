@@ -1,0 +1,5 @@
+#!/usr/bin/dh-exec
+dcae_collector.env    run/VES/
+evel/evel-library/libs/x86_64/libevel.so  usr/lib/${DEB_HOST_MULTIARCH}
+onap-ca.crt  opt/VES/config
+vpp-measurement-reporter-danos opt/VES/bin/

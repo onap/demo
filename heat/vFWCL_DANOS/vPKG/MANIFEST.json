@@ -1,0 +1,17 @@
+{
+    "name": "",
+    "description": "",
+    "data": [
+        {
+            "file": "base_vpkg.yaml",
+            "type": "HEAT",
+            "isBase": "true",
+            "data": [
+                {
+                    "file": "base_vpkg.env",
+                    "type": "HEAT_ENV"
+                }
+            ]
+        }
+    ]
+}

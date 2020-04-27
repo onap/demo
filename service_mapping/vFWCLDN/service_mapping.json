@@ -1,0 +1,42 @@
+{
+    "GLOBAL_SERVICE_FOLDER_MAPPING": {
+        "vFWCLDN": [
+            "vFWCLDN/vFWSNK",
+            "vFWCLDN/vPKG"
+        ]
+    },
+    "GLOBAL_SERVICE_VNF_MAPPING": {
+        "vFWCLDN": [
+            "vFWCLDNvFWSNK",
+            "vFWCLDNvPKG"
+        ]
+    },
+    "GLOBAL_SERVICE_GEN_NEUTRON_NETWORK_MAPPING": {
+        "vFWCLDN": []
+    },
+    "GLOBAL_SERVICE_DEPLOYMENT_ARTIFACT_MAPPING": {
+        "vFWCLDN": []
+    },
+    "GLOBAL_SERVICE_TEMPLATE_MAPPING": {
+        "vFWCLDNvFWSNK": [
+            {
+                "isBase": "true",
+                "template": "vfwsnk_preload.template",
+                "vnf_index": "0",
+                "name_pattern": "base_vfw"
+            }
+        ],
+        "vFWCLDNvPKG": [
+            {
+                "isBase": "true",
+                "template": "vpkg_preload.template",
+                "vnf_index": "1",
+                "name_pattern": "base_vpkg"
+            }
+        ]
+    },
+    "GLOBAL_VALIDATE_NAME_MAPPING": {
+        "vFWCLDNvFWSNK": "vfw_name_0",
+        "vFWCLDNvPKG": "vpg_name_0"
+    }
+}
