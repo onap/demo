@@ -1,0 +1,599 @@
+2020/04/22 21:57:38 pulling environment registry.hub.docker.com/jsouthworth/danos-buildpackage:1908
+{"status":"Pulling from jsouthworth/danos-buildpackage","id":"1908"}
+{"status":"Digest: sha256:a412799a35cf331b9d1e74fa1fac373ebd942bad1911f3045f89dc2e8f634f7d"}
+{"status":"Status: Image is up to date for registry.hub.docker.com/jsouthworth/danos-buildpackage:1908"}
+2020/04/22 21:57:38 creating environment registry.hub.docker.com/jsouthworth/danos-buildpackage:1908
+2020/04/22 21:57:38 containerID 8fbe0bf389490690698f807a7224d975619f7fd776444985578b42a9dc98ede8
+2020/04/22 21:57:38 building package 8fbe0bf389490690698f807a7224d975619f7fd776444985578b42a9dc98ede8
+cp: cannot stat '/mnt/pkgs/*.deb': No such file or directory
+/tmp/pkgs /build/src
+dpkg-scanpackages: info: Wrote 0 entries to output Packages file.
+/build/src
+Get:1 file:/tmp/pkgs  InRelease
+Ign:1 file:/tmp/pkgs  InRelease
+Get:2 file:/tmp/pkgs  Release
+Ign:2 file:/tmp/pkgs  Release
+Get:3 file:/tmp/pkgs  Packages
+Ign:3 file:/tmp/pkgs  Packages
+Get:3 file:/tmp/pkgs  Packages
+Ign:3 file:/tmp/pkgs  Packages
+Get:3 file:/tmp/pkgs  Packages
+Ign:3 file:/tmp/pkgs  Packages
+Get:3 file:/tmp/pkgs  Packages [20 B]
+Get:4 http://security.debian.org/debian-security stretch/updates InRelease [94.3 kB]
+Ign:5 http://deb.debian.org/debian stretch InRelease
+Get:6 http://deb.debian.org/debian stretch-updates InRelease [91.0 kB]
+Get:7 http://deb.debian.org/debian stretch Release [118 kB]
+Get:8 http://deb.debian.org/debian stretch Release.gpg [2410 B]
+Hit:9 http://s3-us-west-1.amazonaws.com/repos.danosproject.org/standard 1908 InRelease
+Get:10 http://security.debian.org/debian-security stretch/updates/main amd64 Packages [521 kB]
+Hit:11 http://s3-us-west-1.amazonaws.com/repos.danosproject.org/bootstrap 1908 InRelease
+Get:12 http://deb.debian.org/debian stretch-updates/main amd64 Packages.diff/Index [13.0 kB]
+Get:13 http://deb.debian.org/debian stretch-updates/main amd64 Packages 2020-02-23-2017.41.pdiff [1539 B]
+Get:13 http://deb.debian.org/debian stretch-updates/main amd64 Packages 2020-02-23-2017.41.pdiff [1539 B]
+Get:14 http://deb.debian.org/debian stretch/main amd64 Packages [7083 kB]
+Fetched 7925 kB in 4s (1862 kB/s)
+Reading package lists...
+dh_testdir
+dh_testroot
+dh_prep
+dh_testdir
+dh_testroot
+dh_install
+dh_install: Compatibility levels before 9 are deprecated (level 7 in use)
+dh_installdocs
+dh_installdocs: Compatibility levels before 9 are deprecated (level 7 in use)
+dh_installchangelogs
+dh_compress
+dh_fixperms
+dh_installdeb
+dh_installdeb: Compatibility levels before 9 are deprecated (level 7 in use)
+dh_gencontrol
+dh_md5sums
+dh_builddeb
+dpkg-deb: building package 'vpp-measurement-reporter-danos-build-deps' in '../vpp-measurement-reporter-danos-build-deps_0.1_all.deb'.
+
+The package has been created.
+Attention, the package has been created in the current directory,
+not in ".." as indicated by the message above!
+Selecting previously unselected package vpp-measurement-reporter-danos-build-deps.
+(Reading database ... 26880 files and directories currently installed.)
+Preparing to unpack vpp-measurement-reporter-danos-build-deps_0.1_all.deb ...
+Unpacking vpp-measurement-reporter-danos-build-deps (0.1) ...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+Correcting dependencies...Starting pkgProblemResolver with broken count: 0
+Starting 2 pkgProblemResolver with broken count: 0
+Done
+ Done
+Starting pkgProblemResolver with broken count: 0
+Starting 2 pkgProblemResolver with broken count: 0
+Done
+The following additional packages will be installed:
+  libcurl3 libcurl4-openssl-dev libjansson4 liburiparser1 libvyatta-cfg-dev
+  libvyatta-cfg1 libvyatta-util1
+Suggested packages:
+  libcurl4-doc libcurl3-dbg libidn11-dev libkrb5-dev libldap2-dev librtmp-dev
+  libssh2-1-dev libssl1.0-dev | libssl-dev pkg-config zlib1g-dev
+Recommended packages:
+  configd
+The following NEW packages will be installed:
+  libcurl3 libcurl4-openssl-dev libjansson4 liburiparser1 libvyatta-cfg-dev
+  libvyatta-cfg1 libvyatta-util1
+0 upgraded, 7 newly installed, 0 to remove and 24 not upgraded.
+1 not fully installed or removed.
+Need to get 939 kB of archives.
+After this operation, 3527 kB of additional disk space will be used.
+Get:1 http://deb.debian.org/debian stretch/main amd64 libjansson4 amd64 2.9-1 [28.1 kB]
+Get:2 http://deb.debian.org/debian stretch/main amd64 liburiparser1 amd64 0.8.4-1+deb9u1 [42.2 kB]
+Get:3 http://security.debian.org/debian-security stretch/updates/main amd64 libcurl3 amd64 7.52.1-5+deb9u10 [292 kB]
+Get:4 http://security.debian.org/debian-security stretch/updates/main amd64 libcurl4-openssl-dev amd64 7.52.1-5+deb9u10 [375 kB]
+Get:5 http://s3-us-west-1.amazonaws.com/repos.danosproject.org/standard 1908/main amd64 libvyatta-util1 amd64 0.29 [8792 B]
+Get:6 http://s3-us-west-1.amazonaws.com/repos.danosproject.org/standard 1908/main amd64 libvyatta-cfg1 amd64 1.23.1.1 [70.3 kB]
+Get:7 http://s3-us-west-1.amazonaws.com/repos.danosproject.org/standard 1908/main amd64 libvyatta-cfg-dev amd64 1.23.1.1 [123 kB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 939 kB in 0s (2048 kB/s)
+Selecting previously unselected package libjansson4:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 26884 files and directories currently installed.)
+Preparing to unpack .../0-libjansson4_2.9-1_amd64.deb ...
+Unpacking libjansson4:amd64 (2.9-1) ...
+Selecting previously unselected package liburiparser1:amd64.
+Preparing to unpack .../1-liburiparser1_0.8.4-1+deb9u1_amd64.deb ...
+Unpacking liburiparser1:amd64 (0.8.4-1+deb9u1) ...
+Selecting previously unselected package libvyatta-util1.
+Preparing to unpack .../2-libvyatta-util1_0.29_amd64.deb ...
+Unpacking libvyatta-util1 (0.29) ...
+Selecting previously unselected package libvyatta-cfg1.
+Preparing to unpack .../3-libvyatta-cfg1_1.23.1.1_amd64.deb ...
+Unpacking libvyatta-cfg1 (1.23.1.1) ...
+Selecting previously unselected package libvyatta-cfg-dev.
+Preparing to unpack .../4-libvyatta-cfg-dev_1.23.1.1_amd64.deb ...
+Unpacking libvyatta-cfg-dev (1.23.1.1) ...
+Selecting previously unselected package libcurl3:amd64.
+Preparing to unpack .../5-libcurl3_7.52.1-5+deb9u10_amd64.deb ...
+Unpacking libcurl3:amd64 (7.52.1-5+deb9u10) ...
+Selecting previously unselected package libcurl4-openssl-dev:amd64.
+Preparing to unpack .../6-libcurl4-openssl-dev_7.52.1-5+deb9u10_amd64.deb ...
+Unpacking libcurl4-openssl-dev:amd64 (7.52.1-5+deb9u10) ...
+Setting up libcurl3:amd64 (7.52.1-5+deb9u10) ...
+Setting up libjansson4:amd64 (2.9-1) ...
+Processing triggers for libc-bin (2.24-11+deb9u4) ...
+Processing triggers for man-db (2.7.6.1-2) ...
+Setting up libcurl4-openssl-dev:amd64 (7.52.1-5+deb9u10) ...
+Setting up liburiparser1:amd64 (0.8.4-1+deb9u1) ...
+Setting up libvyatta-util1 (0.29) ...
+Setting up libvyatta-cfg1 (1.23.1.1) ...
+Setting up libvyatta-cfg-dev (1.23.1.1) ...
+Setting up vpp-measurement-reporter-danos-build-deps (0.1) ...
+Processing triggers for libc-bin (2.24-11+deb9u4) ...
+ dpkg-buildpackage -rfakeroot -us -uc -i -b
+dpkg-buildpackage: info: source package vpp-measurement-reporter-danos
+dpkg-buildpackage: info: source version 0.1
+dpkg-buildpackage: info: source distribution unstable
+dpkg-buildpackage: info: source changed by Brian Freeman <bf1936@att.com>
+ dpkg-source -i --before-build src
+dpkg-buildpackage: info: host architecture amd64
+ fakeroot debian/rules clean
+dh --list
+autoreconf
+autotools-dev
+bash-completion
+build-stamp
+perl-openssl
+pypy
+python-support
+python2
+python3
+systemd
+xml-core
+ls /build/src/evel/evel-library/libs/x86_64
+README
+libevel.a
+libevel.so
+ls /usr/lib/
+apt
+compat-ld
+dpkg
+exim4
+file
+gcc
+gettext
+git-core
+gnupg
+gnupg2
+gold-ld
+groff
+ldscripts
+libCfgClient.a
+libCfgClient.so
+libCfgClientPerl.a
+libCfgClientPerl.so
+libgettextlib-0.19.8.1.so
+libgettextsrc-0.19.8.1.so
+libgsasl.so.7
+libgsasl.so.7.9.6
+libvyatta-config.a
+libvyatta-config.so
+libvyatta-config.so.1
+libvyatta-config.so.1.0.0
+libvyatta-cstore-compat.a
+libvyatta-cstore-compat.so
+libvyatta-cstore-compat.so.1
+libvyatta-cstore-compat.so.1.0.0
+libvyatta-util.so.1
+libvyatta-util.so.1.0.0
+locale
+man-db
+mime
+openssh
+os-release
+preloadable_libintl.so
+python2.7
+python3
+python3.5
+sasl2
+sendmail
+ssl
+systemd
+tar
+tc
+tmpfiles.d
+valgrind
+x86_64-linux-gnu
+ls 
+LICENSE.TXT
+Makefile
+README.md
+debian
+dep.xml
+evel
+junk
+log_file
+onap-ca.crt
+pom.xml
+target
+vpp-measurement-reporter-danos-build-deps_0.1_all.deb
+vpp-measurement-reporter-danos.c
+dh clean --with=systemd
+   dh_testdir
+   dh_auto_clean
+	make -j1 clean
+make[1]: Entering directory '/build/src'
+rm -f vpp-measurement-reporter-danos
+make[1]: Leaving directory '/build/src'
+   dh_clean
+ debian/rules build
+dh --list
+autoreconf
+autotools-dev
+bash-completion
+build-stamp
+perl-openssl
+pypy
+python-support
+python2
+python3
+systemd
+xml-core
+ls /build/src/evel/evel-library/libs/x86_64
+README
+libevel.a
+libevel.so
+ls /usr/lib/
+apt
+compat-ld
+dpkg
+exim4
+file
+gcc
+gettext
+git-core
+gnupg
+gnupg2
+gold-ld
+groff
+ldscripts
+libCfgClient.a
+libCfgClient.so
+libCfgClientPerl.a
+libCfgClientPerl.so
+libgettextlib-0.19.8.1.so
+libgettextsrc-0.19.8.1.so
+libgsasl.so.7
+libgsasl.so.7.9.6
+libvyatta-config.a
+libvyatta-config.so
+libvyatta-config.so.1
+libvyatta-config.so.1.0.0
+libvyatta-cstore-compat.a
+libvyatta-cstore-compat.so
+libvyatta-cstore-compat.so.1
+libvyatta-cstore-compat.so.1.0.0
+libvyatta-util.so.1
+libvyatta-util.so.1.0.0
+locale
+man-db
+mime
+openssh
+os-release
+preloadable_libintl.so
+python2.7
+python3
+python3.5
+sasl2
+sendmail
+ssl
+systemd
+tar
+tc
+tmpfiles.d
+valgrind
+x86_64-linux-gnu
+ls 
+LICENSE.TXT
+Makefile
+README.md
+debian
+dep.xml
+evel
+junk
+log_file
+onap-ca.crt
+pom.xml
+target
+vpp-measurement-reporter-danos-build-deps_0.1_all.deb
+vpp-measurement-reporter-danos.c
+dh build --with=systemd
+   dh_testdir
+   dh_update_autotools_config
+   dh_auto_configure
+   dh_auto_build
+	make -j1
+make[1]: Entering directory '/build/src'
+make -C /build/src/evel/evel-library/bldjobs  all
+make[2]: Entering directory '/build/src/evel/evel-library/bldjobs'
+Making dependency file jsmn.d for jsmn.c
+Making dependency file evel_batch.d for evel_batch.c
+Making dependency file evel_logging.d for evel_logging.c
+Making dependency file evel_voicequality.d for evel_voicequality.c
+Making dependency file evel_threshold_cross.d for evel_threshold_cross.c
+Making dependency file evel_event_mgr.d for evel_event_mgr.c
+Making dependency file evel_internal_event.d for evel_internal_event.c
+Making dependency file evel_throttle.d for evel_throttle.c
+Making dependency file evel_syslog.d for evel_syslog.c
+Making dependency file evel_strings.d for evel_strings.c
+Making dependency file evel_state_change.d for evel_state_change.c
+Making dependency file evel_scaling_measurement.d for evel_scaling_measurement.c
+Making dependency file evel_sipsignaling.d for evel_sipsignaling.c
+Making dependency file evel_heartbeat_fields.d for evel_heartbeat_fields.c
+Making dependency file evel_reporting_measurement.d for evel_reporting_measurement.c
+Making dependency file evel_json_buffer.d for evel_json_buffer.c
+Making dependency file evel_other.d for evel_other.c
+Making dependency file evel_jsonobject.d for evel_jsonobject.c
+Making dependency file evel_option.d for evel_option.c
+Making dependency file evel_mobile_flow.d for evel_mobile_flow.c
+Making dependency file evel_fault.d for evel_fault.c
+Making dependency file evel_event.d for evel_event.c
+Making dependency file hashtable.d for hashtable.c
+Making dependency file double_list.d for double_list.c
+Making dependency file ring_buffer.d for ring_buffer.c
+Making dependency file metadata.d for metadata.c
+Making dependency file evel.d for evel.c
+Making evel.o from evel.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel.c: In function 'evel_free_event':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel.c:458:7: warning: implicit declaration of function 'evel_free_hrtbt_field' [-Wimplicit-function-declaration]
+       evel_free_hrtbt_field((EVENT_HEARTBEAT_FIELD *)evt_ptr);
+       ^~~~~~~~~~~~~~~~~~~~~
+Making metadata.o from metadata.c
+Making ring_buffer.o from ring_buffer.c
+Making double_list.o from double_list.c
+Making hashtable.o from hashtable.c
+Making evel_event.o from evel_event.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_event.c: In function 'evel_json_encode_eventtype':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_event.c:649:11: warning: implicit declaration of function 'evel_json_encode_voice_quality' [-Wimplicit-function-declaration]
+           evel_json_encode_voice_quality(jbuf, (EVENT_VOICE_QUALITY *)event);
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_event.c:653:11: warning: implicit declaration of function 'evel_json_encode_threshold_cross' [-Wimplicit-function-declaration]
+           evel_json_encode_threshold_cross(jbuf, (EVENT_THRESHOLD_CROSS *)event);
+           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Making evel_fault.o from evel_fault.c
+Making evel_mobile_flow.o from evel_mobile_flow.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_mobile_flow.c: In function 'evel_json_encode_mobile_flow':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_mobile_flow.c:965:12: warning: implicit declaration of function 'evel_throttle_suppress_nv_pair' [-Wimplicit-function-declaration]
+       if (!evel_throttle_suppress_nv_pair(jbuf->throttle_spec,
+            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Making evel_option.o from evel_option.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_option.c: In function 'evel_force_option_intheader':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_option.c:393:18: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   option->object = value;
+                  ^
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_option.c: In function 'evel_set_option_intheader':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_option.c:426:20: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+     option->object = value;
+                    ^
+Making evel_jsonobject.o from evel_jsonobject.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_jsonobject.c: In function 'evel_new_jsonobjinstance':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_jsonobject.c:99:14: warning: unused variable 'key' [-Wunused-variable]
+   jsmntok_t *key;
+              ^~~
+Making evel_other.o from evel_other.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c: In function 'evel_other_field_add_namedarray':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:172:46: warning: passing argument 2 of 'ht_get' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   list = (DLIST *)ht_get(other->namedarrays, hashname);
+                                              ^~~~~~~~
+In file included from /build/src/evel/evel-library/bldjobs/../code/evel_library/evel.h:44:0,
+                 from /build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:29:
+/build/src/evel/evel-library/bldjobs/../code/evel_library/hashtable.h:95:7: note: expected 'char *' but argument is of type 'const char *'
+ void *ht_get( HASHTABLE_T *hashtable, char *key );
+       ^~~~~~
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:178:33: warning: passing argument 2 of 'ht_set' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+      ht_set(other->namedarrays, hashname,(void*)nlist);
+                                 ^~~~~~~~
+In file included from /build/src/evel/evel-library/bldjobs/../code/evel_library/evel.h:44:0,
+                 from /build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:29:
+/build/src/evel/evel-library/bldjobs/../code/evel_library/hashtable.h:86:6: note: expected 'char *' but argument is of type 'const char *'
+ void ht_set( HASHTABLE_T *hashtable, char *key, void *value );
+      ^~~~~~
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c: In function 'evel_json_encode_other':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:302:27: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+         for( idx = 0; idx < ht->size; idx++ ) {
+                           ^
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:347:25: warning: suggest braces around empty body in an 'if' statement [-Wempty-body]
+     if(jsonobjp != NULL);
+                         ^
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:347:5: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+     if(jsonobjp != NULL);
+     ^~
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:348:5: note: ...this statement, but the latter is misleadingly indented as if it is guarded by the 'if'
+     {
+     ^
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:361:15: warning: implicit declaration of function 'evel_enc_kv_object' [-Wimplicit-function-declaration]
+               evel_enc_kv_object(jbuf, "objectInstance", jsonobjinst->jsonstring);
+               ^~~~~~~~~~~~~~~~~~
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:366:10: warning: variable 'item_added3' set but not used [-Wunused-but-set-variable]
+     bool item_added3 = false;
+          ^~~~~~~~~~~
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:277:8: warning: unused variable 'itm_added' [-Wunused-variable]
+   bool itm_added = false;
+        ^~~~~~~~~
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c: In function 'evel_free_other':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_other.c:474:16: warning: unused variable 'other_field_item' [-Wunused-variable]
+   DLIST_ITEM * other_field_item = NULL;
+                ^~~~~~~~~~~~~~~~
+Making evel_json_buffer.o from evel_json_buffer.c
+Making evel_reporting_measurement.o from evel_reporting_measurement.c
+Making evel_heartbeat_fields.o from evel_heartbeat_fields.c
+Making evel_sipsignaling.o from evel_sipsignaling.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_sipsignaling.c: In function 'evel_json_encode_signaling':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_sipsignaling.c:485:3: warning: implicit declaration of function 'evel_json_encode_vendor_field' [-Wimplicit-function-declaration]
+   evel_json_encode_vendor_field(jbuf, &event->vnfname_field);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Making evel_scaling_measurement.o from evel_scaling_measurement.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_scaling_measurement.c: In function 'evel_json_encode_measurement':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_scaling_measurement.c:3140:15: warning: implicit declaration of function 'evel_enc_kv_object' [-Wimplicit-function-declaration]
+               evel_enc_kv_object(jbuf, "objectInstance", jsonobjinst->jsonstring);
+               ^~~~~~~~~~~~~~~~~~
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_scaling_measurement.c:3145:10: warning: variable 'item_added3' set but not used [-Wunused-but-set-variable]
+     bool item_added3 = false;
+          ^~~~~~~~~~~
+Making evel_state_change.o from evel_state_change.c
+Making evel_strings.o from evel_strings.c
+Making evel_syslog.o from evel_syslog.c
+Making evel_throttle.o from evel_throttle.c
+Making evel_internal_event.o from evel_internal_event.c
+Making evel_event_mgr.o from evel_event_mgr.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_event_mgr.c: In function 'evel_send_to_another_collector':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_event_mgr.c:1020:12: warning: variable 'curl_rc' set but not used [-Wunused-but-set-variable]
+   CURLcode curl_rc;
+            ^~~~~~~
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_event_mgr.c: In function 'event_handler':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_event_mgr.c:1196:15: warning: implicit declaration of function 'sleep' [-Wimplicit-function-declaration]
+               sleep(EVEL_COLLECTOR_RECONNECTION_WAIT_TIME);
+               ^~~~~
+Making evel_threshold_cross.o from evel_threshold_cross.c
+Making evel_voicequality.o from evel_voicequality.c
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_voicequality.c: In function 'evel_json_encode_voice_quality':
+/build/src/evel/evel-library/bldjobs/../code/evel_library/evel_voicequality.c:489:3: warning: implicit declaration of function 'evel_json_encode_vendor_field' [-Wimplicit-function-declaration]
+   evel_json_encode_vendor_field(jbuf, &event->vendorVnfNameFields);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Making evel_logging.o from evel_logging.c
+Making evel_batch.o from evel_batch.c
+Making jsmn.o from jsmn.c
+Linking API Shared Library
+Linking API Static Library
+make[2]: Leaving directory '/build/src/evel/evel-library/bldjobs'
+gcc  -Wall -g -fPIC -o vpp-measurement-reporter-danos \
+                                    -L /build/src/evel/evel-library/libs/x86_64 \
+                                    -I /build/src/evel/evel-library/code/evel_library \
+                               vpp-measurement-reporter-danos.c \
+                              -lpthread \
+                              -level \
+		      -lvyatta-config \
+                              -lcurl
+ls -l /build/src/evel/evel-library/libs
+total 8
+drwxr-xr-x 2 builduser builduser 4096 Apr 22 21:57 aarch64
+drwxr-xr-x 2 builduser builduser 4096 Apr 22 21:58 x86_64
+ls -l /build/src/evel/evel-library/libs/x86_64/
+total 1148
+-rw-r--r-- 1 builduser builduser     20 Apr 22 21:57 README
+-rwxr-xr-x 1 builduser builduser 582096 Apr 22 21:58 libevel.a
+-rwxr-xr-x 1 builduser builduser 582096 Apr 22 21:58 libevel.so
+ls -l
+total 88
+-rw-r--r-- 1 builduser builduser  1059 Apr 22 21:57 LICENSE.TXT
+-rw-r--r-- 1 builduser builduser  2089 Apr 22 21:57 Makefile
+-rw-r--r-- 1 builduser builduser  1534 Apr 22 21:57 README.md
+drwxr-xr-x 3 builduser builduser  4096 Apr 22 21:57 debian
+-rw-r--r-- 1 builduser builduser   759 Apr 22 21:57 dep.xml
+drwxr-xr-x 3 builduser builduser  4096 Apr 22 21:57 evel
+-rw-r--r-- 1 builduser builduser   527 Apr 22 21:57 junk
+-rw-r--r-- 1 builduser builduser  2219 Apr 22 21:57 log_file
+-rw-r--r-- 1 builduser builduser  6124 Apr 22 21:57 onap-ca.crt
+-rw-r--r-- 1 builduser builduser  2747 Apr 22 21:57 pom.xml
+drwxr-xr-x 4 builduser builduser  4096 Apr 22 21:57 target
+-rwxr-xr-x 1 builduser builduser 24184 Apr 22 21:58 vpp-measurement-reporter-danos
+-rw-r--r-- 1 root      root       2050 Apr 22 21:57 vpp-measurement-reporter-danos-build-deps_0.1_all.deb
+-rw-r--r-- 1 builduser builduser 10104 Apr 22 21:57 vpp-measurement-reporter-danos.c
+make[1]: Leaving directory '/build/src'
+   dh_auto_test
+   create-stamp debian/debhelper-build-stamp
+ fakeroot debian/rules binary
+dh --list
+autoreconf
+autotools-dev
+bash-completion
+build-stamp
+perl-openssl
+pypy
+python-support
+python2
+python3
+systemd
+xml-core
+ls /build/src/evel/evel-library/libs/x86_64
+README
+libevel.a
+libevel.so
+ls /usr/lib/
+apt
+compat-ld
+dpkg
+exim4
+file
+gcc
+gettext
+git-core
+gnupg
+gnupg2
+gold-ld
+groff
+ldscripts
+libCfgClient.a
+libCfgClient.so
+libCfgClientPerl.a
+libCfgClientPerl.so
+libgettextlib-0.19.8.1.so
+libgettextsrc-0.19.8.1.so
+libgsasl.so.7
+libgsasl.so.7.9.6
+libvyatta-config.a
+libvyatta-config.so
+libvyatta-config.so.1
+libvyatta-config.so.1.0.0
+libvyatta-cstore-compat.a
+libvyatta-cstore-compat.so
+libvyatta-cstore-compat.so.1
+libvyatta-cstore-compat.so.1.0.0
+libvyatta-util.so.1
+libvyatta-util.so.1.0.0
+locale
+man-db
+mime
+openssh
+os-release
+preloadable_libintl.so
+python2.7
+python3
+python3.5
+sasl2
+sendmail
+ssl
+systemd
+tar
+tc
+tmpfiles.d
+valgrind
+x86_64-linux-gnu
+ls 
+LICENSE.TXT
+Makefile
+README.md
+debian
+dep.xml
+evel
+junk
+log_file
+onap-ca.crt
+pom.xml
+target
+vpp-measurement-reporter-danos
+vpp-measurement-reporter-danos-build-deps_0.1_all.deb
+vpp-measurement-reporter-danos.c
+dh binary --with=systemd
+   create-stamp debian/debhelper-build-stamp
+   dh_testroot
+   dh_prep
+   dh_auto_install
+   dh_install
+Segmentation fault
+/build/src/vpp-measurement-reporter-danos: error while loading shared libraries: libevel.so: cannot open shared object file: No such file or directory
+dh_install: debian/vpp-measurement-reporter-danos.install (executable config) returned exit code 127
+debian/rules:7: recipe for target 'binary' failed
+make: *** [binary] Error 127
+dpkg-buildpackage: error: fakeroot debian/rules binary gave error exit status 2
+debuild: fatal error at line 1116:
+dpkg-buildpackage -rfakeroot -us -uc -i -b failed
+cp: cannot stat '../*.deb': No such file or directory
+2020/04/22 21:58:07 deleting environment 8fbe0bf389490690698f807a7224d975619f7fd776444985578b42a9dc98ede8

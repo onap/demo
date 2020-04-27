@@ -8,3 +8,8 @@ target/
 *.iml
 .gitconfig
 .tox/
+*.o
+*.deb
+*.d
+*.tgz
+vpp_measurement_reporter
