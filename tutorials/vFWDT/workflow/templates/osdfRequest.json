@@ -44,7 +44,6 @@
             {
                 "resourceModuleName": "vPGN",
                 "serviceResourceId": "vPGN-XX",
-                "unique": "false",
                 "resourceModelInfo": {
                     "modelInvariantId": "f2f88e29-d571-49ef-aea3-b8d13900c16f",
                     "modelVersionId": "3ccebc76-66e1-47c8-aee9-98f30d08db97"
