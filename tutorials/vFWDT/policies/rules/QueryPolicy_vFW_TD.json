@@ -1,46 +1,54 @@
 {
-    "service": "queryPolicy",
-    "policyName": "OSDF_DUBLIN.QueryPolicy_vFW_TD",
-    "description": "Query policy for vFW TD",
-    "templateVersion": "OpenSource.version.1",
-    "version": "OpenSource.version.1",
-    "priority": "3",
-    "riskType": "test",
-    "riskLevel": "2",
-    "guard": "False",
-    "content": {
-        "queryProperties": [
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "topology_template": {
+        "policies": [
             {
-                "attribute": "customerLatitude",
-                "attribute_location": "customerLatitude",
-                "value": 1.1
-            },
-            {
-                "attribute": "customerLongitude",
-                "attribute_location": "customerLongitude",
-                "value": 2.2
-            },
-            {
-                "attribute": "chosen_region",
-                "attribute_location": "chosenRegion"
-            },
-            {
-                "attribute": "chosen_customer_id",
-                "attribute_location": "chosenCustomerId"
+                "OSDF_FRANKFURT.queryPolicy_vFW_TD": {
+                    "type": "onap.policies.optimization.service.QueryPolicy",
+                    "version": "1.0.0",
+                    "type_version": "1.0.0",
+                    "metadata": {
+                        "policy-id": "OSDF_FRANKFURT.queryPolicy_vFW_TD",
+                        "policy-version": 1
+                    },
+                    "properties": {
+                        "scope": [
+                            "OSDF_FRANKFURT"
+                        ],
+                        "services": [
+                            "vFW_TD"
+                        ],
+                        "resources": [
+                            "vFW-SINK",
+                            "vPGN"
+                        ],
+                        "geography": [
+                            "US"
+                        ],
+                        "identity": "vFW_TD_Query_Policy",
+                        "queryProperties": [
+                            {
+                                "attribute": "chosen_region",
+                                "attribute_location": "chosenRegion"
+                            },
+                            {
+                                "attribute": "chosen_customer_id",
+                                "attribute_location": "chosenCustomerId"
+                            },
+                            {
+                                "attribute": "customerLatitude",
+                                "attribute_location": "customerLatitude",
+                                "value": 1.1
+                            },
+                            {
+                                "attribute": "customerLongitude",
+                                "attribute_location": "customerLongitude",
+                                "value": 2.2
+                            }
+                        ]
+                    }
+                }
             }
-        ],
-        "policyScope": [
-            "td",
-            "us",
-            "vFW-SINK",
-            "vPGN"
-        ],
-        "policyType": "request_param_query",
-        "serviceName": "vFW_TD",
-        "identity": "vFW_TD_Query_Policy",
-        "resources": [
-            "vFW-SINK",
-            "vPGN"
         ]
     }
 }
