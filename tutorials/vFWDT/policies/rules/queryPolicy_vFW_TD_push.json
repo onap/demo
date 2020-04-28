@@ -1,0 +1,8 @@
+{
+    "policies": [
+        {
+            "policy-id": "OSDF_FRANKFURT.queryPolicy_vFW_TD",
+            "policy-version": "1.0.0"
+        }
+    ]
+}
