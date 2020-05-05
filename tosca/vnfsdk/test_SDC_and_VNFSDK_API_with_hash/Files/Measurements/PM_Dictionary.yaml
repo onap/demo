@@ -1,0 +1,186 @@
+pmDictionary:
+    presence: required
+    structure:
+        pmDictionaryHeader:
+            presence: required
+            structure:
+                pmDefVsn: { presence: required, comment: "Version of the PM Dictionary. Version is vendor defined."}
+                pmDefSchemaVsn: { presence: required, comment: "Version of the PM Dictionary Schema used for this PM Dictionary. Schema versions are specified in the VES Specifications."}
+                nfType: { presence: required, comment: "NF type to whom this PM Dictionary applies. nfType is vendor defined and should match the string used in eventName."}
+                vendor: { presence: required, value: Acme, comment: "Vendor of the NF type to whom this PM Dictionary applies."}
+        pmDictionaryMeasurements:
+            presence: required
+            array:
+                - measType: { presence: required, comment: "Measurement name used in PM file, in 3GPP format where specified, else vendor defined. Names for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 item e). Names for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 item e). Vendor defined names are preceded with VS."}
+                  measDescription: { presence: required, comment: "Text description of the purpose of the measurement, what information does the measurement provide. Descriptions for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 item a). Descriptions for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 item a). Vendors are free to augment or modify the 3GPP-provided descriptions to more accurately describe their measurements as needed."}
+                  measCondition: { presence: required, comment: "Text description of the condition that causes the measurement to be updated. Conditions for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 item c). Conditions for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 item c). Vendors are free to augment or modify the 3GPP-provided conditions to more accurately describe their measurements as needed."}
+                  measResultType: { presence: required, value: [integer], comment: "Data type of the measurement result. Result data types for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 item d). Result data types for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 item d). The measResultType values supported by a vendor are specified in the PM Dictionary YAML using the 'value' attribute and may include vendor-defined data types not specified by 3GPP; for example boolean."}
+                  measResultRange: { presence: optional, comment: "Range for the measurement result. The range is specified as a comma separated list of discrete values or a range of values specified as minimum value-maximum value with no spaces. Result ranges for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 item d) if applicable. Result ranges for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 item d) if applicable. "}
+                  measResultUnits: { presence: required, value: [seconds, minutes, nanoseconds, microseconds, kbps], comment: "Unit of measure for the result; e.g. milliseconds, bytes, kilobytes, packets, number. Unit of measure for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 item d) if applicable. Unit of measure for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 item d) if applicable. The measResultsUnits values supported by a vendor are specified in the PM Dictionary YAML using the 'value' attribute and may include vendor-defined units of measure not specified by 3GPP; for example ethernet frames."}
+                  measObjClass: { presence: required, value: [NRCellCU, NRCellDU, NRBTS, IPNO, ETHIF], comment: "Measurement Object Class. Object classes for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 item f). Object classes for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 item f). The measObjClass values supported by a vendor are specified in the PM Dictionary YAML using the “value” attribute and may include vendor-defined objects not specified by 3GPP; for example IPSEC."}
+                  measCollectionMethod: { presence: required, value: [CC, GUAGE, DER, SI], comment: "Collection Method for the measurement. 3GPP-defined collection methods are CC, SI, DER and Gauge. Collection Methods for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 item b). Collection Methods for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 item c). The measCollectionMethod values supported by a vendor are specified in the PM Dictionary YAML using the 'value' attribute and may include vendor-defined collection methods not specified by 3GPP; for example Average."}
+                  measLastChange: { presence: required, comment: "PM Dictionary version the last time this measurement was changed, added or deleted."}
+                  measChangeType: { presence: required, value: [added, modified, deleted], comment: "For the measLastChange, indicates the type of change made for this measurement. Valid values are added, modified or deleted. Deleted measurements may be kept in the PM Dictionary for one release or more or permanently for historical purposes, if desired."}
+                  measInfoId: { presence: required, comment: "Name for a group of related measurements, in 3GPP format where specified, else vendor defined. Family names for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 Section 3.1. Family names for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 Section 3.4."}
+                  measFamily: { presence: required, comment: "Abbreviation for a family of measurements, in 3GPP format where specified, else vendor defined. Family name abbreviations for 3GPP-defined 4G measurements are specified in 3GPP TS 32.425 Section 3.1. Family name abbreviations for 3GPP-defined 5G measurements are specified in 3GPP TS 28.552 Section 3.4. "}
+                  measAdditionalFields: { presence: required, comment: "Hashmap of vendor specific PM Dictionary fields in key value pair format.", structure: {
+                      keyValuePair: { presence: required, structure: { key: { presence: required, value: measurementStatus, comment: "Contains the status of the measurement."}, value: { presence: required, value: [USED, DEPRECATED, OBSOLETE, PRELIMINARY] }}},
+                      keyValuePair: { presence: required, structure: { key: { presence: required, value: initialValue, comment: "The initial value to which the Measurement Type is set at the beginning of a new granularity period."}, value: { presence: required }}},
+                      keyValuePair: { presence: required, structure: { key: { presence: required, value: acmeParameter1, comment: "Extra vendor specific parameter 1."}, value: { presence: required }}},
+                      keyValuePair: { presence: optional, structure: { key: { presence: required, value: acmeParameter2, comment: "Extra vendor specific parameter 2."}, value: { presence: required, value: [true, false] }}},
+                      keyValuePair: { presence: optional, structure: { key: { presence: required, value: acmeParameter3, comment: "Extra vendor specific parameter 3."}, value: { presence: required }}}}
+                  }
+---
+pmDictionary:
+    pmDictionaryHeader:
+        pmDefVsn: AcmeNumber.1.0
+        pmDefSchemaVsn: 1.0
+        nfType: myPnf
+        vendor: Acme
+    pmDictionaryMeasurements:
+
+    -   measType: DRB.UEThpDl
+        measDescription: Average DL UE throughput in gNB
+        measCondition: See 3GPP TS 28.552
+        measResultType: integer
+        measResultRange: 0-4294967295
+        measResultUnits: kbps
+        measObjClass: NRCellDU
+        measCollectionMethod: DER
+        measLastChange: 1.0
+        measChangeType: added
+        measInfoId: "Data Radio Bearer"
+        measFamily: DRB
+        measAdditionalFields: {
+            "measurementStatus": "USED",
+            "initialValue": 0,
+            "acmeParameter1": 0,
+            "acmeParameter2": true,
+            "acmeParameter3": "acmeParameterValue3"}
+            
+    -   measType: VS.ifInDiscards    
+        measDescription: The number of inbound packets which were chosen to be discarded
+        measCondition: The number of inbound packets which were chosen to be
+            discarded even though no errors had been detected to prevent
+            their being deliverable to a higher-layer protocol.  One
+            possible reason for discarding such a packet could be to
+            free up buffer space.
+            Discontinuities in the value of this counter can occur at
+            re-initialization of the management system, and at other
+            times as indicated by the value of
+            ifCounterDiscontinuityTime.
+        measResultType: integer
+        measResultRange: 0-4294967295
+        measResultUnits: number
+        measObjClass: EthernetPort
+        measCollectionMethod: CC
+        measLastChange: 1.0
+        measChangeType: added
+        measInfoId: "IP Management"
+        measFamily: IP
+        measAdditionalFields: {
+            "measurementStatus": "USED",
+            "initialValue": 0,
+            "acmeParameter1": 0,
+            "acmeParameter2": true,
+            "acmeParameter3": "acmeParameterValue3"}
+
+    -   measType: VS.ifInErrors
+        measDescription: Number of inbound packets that contained errors
+        measCondition: For packet-oriented interfaces, the number of inbound
+            packets that contained errors preventing them from being
+            deliverable to a higher-layer protocol.  For character-
+            oriented or fixed-length interfaces, the number of inbound
+            transmission units that contained errors preventing them
+            from being deliverable to a higher-layer protocol.
+        measResultType: integer
+        measResultRange: 0-4294967295
+        measResultUnits: number
+        measObjClass: EthernetPort
+        measCollectionMethod: Gauge
+        measLastChange: 1.0
+        measChangeType: added
+        measInfoId: "IP Management"
+        measFamily: IP
+        measAdditionalFields: {
+            "measurementStatus": "USED",
+            "initialValue": 0,
+            "acmeParameter1": 0,
+            "acmeParameter3": "acmeParameterValue3"}
+
+    -   measType: VS.ifInUnknownProtos
+        measDescription: Number of inbound packets received via an unknown or usupported protocol
+        measCondition: For packet-oriented interfaces, the number of packets
+            received via the interface which were discarded because of
+            an unknown or unsupported protocol.  For character-oriented
+            or fixed-length interfaces that support protocol
+            multiplexing the number of transmission units received via
+            the interface which were discarded because of an unknown or
+            unsupported protocol.  For any interface that does not
+            support protocol multiplexing, this counter will always be
+            0.
+        measResultType: integer
+        measResultRange: 0-4294967295
+        measResultUnits: number
+        measObjClass: EthernetPort
+        measCollectionMethod: CC
+        measLastChange: 1.0
+        measChangeType: added
+        measInfoId: "IP Management"
+        measFamily: IP
+        measAdditionalFields: {
+            "measurementStatus": "USED",
+            "initialValue": 0,
+            "acmeParameter1": 0,
+            "acmeParameter2": true}
+
+    -   measType: VS.ifHCInBroadcastPkts
+        measDescription: Number of the broadcasted inbound packets delivered to the higher (sub-)layer
+        measCondition: The number of packets, delivered by this sub-layer to a
+            higher (sub-)layer, which were addressed to a broadcast
+            address at this sub-layer. This object is a 64-bit version
+            of ifInBroadcastPkts.
+            Discontinuities in the value of this counter can occur at
+            re-initialization of the management system, and at other
+            times as indicated by the value of
+            ifCounterDiscontinuityTime.
+        measResultType: integer
+        measResultRange: 0-4294967295
+        measResultUnits: number
+        measObjClass: EthernetPort
+        measCollectionMethod: CC
+        measLastChange: 1.0
+        measChangeType: added
+        measInfoId: "IP Management"
+        measFamily: IP
+        measAdditionalFields: {
+            "measurementStatus": "USED",
+            "initialValue": 0,
+            "acmeParameter1": 0}
+
+    -   measType: VS.ifHCOutBroadcastPkts
+        measDescription: Number of the broadcasted outsbound packets delivered to the higher (sub-)layer
+        measCondition: The total number of packets that higher-level protocols
+            requested be transmitted, and which were addressed to a
+            broadcast address at this sub-layer, including those that
+            were discarded or not sent.  This object is a 64-bit version
+            of ifOutBroadcastPkts.
+            Discontinuities in the value of this counter can occur at
+            re-initialization of the management system, and at other
+            times as indicated by the value of
+            ifCounterDiscontinuityTime.
+        measResultType: integer
+        measResultRange: 0-4294967295
+        measResultUnits: number
+        measObjClass: EthernetPort
+        measCollectionMethod: CC
+        measLastChange: 1.0
+        measChangeType: added
+        measInfoId: "IP Management"
+        measFamily: IP
+        measAdditionalFields: {
+            "measurementStatus": "USED",
+            "initialValue": 0,
+            "acmeParameter1": 0,
+            "acmeParameter2": true,
+            "acmeParameter3": "acmeParameterValue3"}
