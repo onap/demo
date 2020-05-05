@@ -1,0 +1,8 @@
+description: "pnf software information"
+provider: "Ericsson"
+version: "1.0"
+pnf_software_information:
+  - description: "first software version of PNF"
+    pnf_software_version: "5gDUv18.05.201"
+  - description: "second software version of PNF"
+    pnf_software_version: "5gDUv18.06.205"

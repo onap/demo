@@ -1,0 +1,42 @@
+metadata:
+    pnfd_name: myPnf
+    pnfd_provider: Acme
+    pnfd_archive_version: 1.0
+    pnfd_release_date_time: 2019-03-11T11:25:00+00:00
+
+Source: pnf_main_descriptor.mf
+Source: Definitions/pnf_main_descriptor.yaml
+Algorithm: SHA-256
+Hash: 8a041578eefd22c10418600e4c3cb8c5d1ff5703ae2785ed53540263f4030703
+Source: Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml
+Algorithm: SHA-256
+Hash: 9c82363306531b5f087f11058a7b18021e4597a75ca7c5a72d0893893646bcb0
+Source: Definitions/etsi_nfv_sol001_vnfd_2_5_1_types.yaml
+Algorithm: SHA-256
+Hash: 5e60a7c698d04e9552b8f663bf2fe6495b1aac4ec5848e200fad1a956733d3fc
+Source: Files/ChangeLog.txt
+Algorithm: SHA-256
+Hash: 60a534f74ed6421f9bc34f7a3ddffbc2ec068c23c5f356483b3a23af3a2f0b16
+Source: Files/Events/MyPnf_Pnf_v1.yaml
+Algorithm: SHA-256
+Hash: 143615bb0c4ec41d037a0e157c9d595184da6e15b6b97138718ec5bd202f33d3
+Source: Files/Guides/user_guide.txt
+Algorithm: SHA-256
+Hash: 5d26176ad22097b305be8e6f48db447ac949024903bc75c28986463706a1c1b0
+Source: Files/Measurements/PM_Dictionary.yaml
+Algorithm: SHA-256
+Hash: 4fc479052bcc53166baa45d3b3054994e2e2a9ae9f5e0e0a4280adaa3e460e79
+Source: Files/Scripts/my_script.sh
+Algorithm: SHA-256
+Hash: 08fde8b02ad2e22a28134e49faa80e4f7eb53895b1477c8de8859c3d56317a0f
+Source: Files/Yang_module/mynetconf.yang
+Algorithm: SHA-256
+Hash: 91e34a1194a4f16ac857edf49802032e27f279e1d98b8f6dee9b20040b02a327
+Source: TOSCA-Metadata/TOSCA.meta
+Algorithm: SHA-256
+Hash: 84a5792bd58ada0de4b239dcdf4bbee94ee1aac7e8f8931e20d174536c46ebf6
+Source: Files/pnf-sw-information/pnf-sw-information.yaml
+Algorithm: SHA-256
+Hash: 1a79b56a4faed3468ef115de8826c4664475694e6a203c4d596237ab3f59b1c7
+
+
