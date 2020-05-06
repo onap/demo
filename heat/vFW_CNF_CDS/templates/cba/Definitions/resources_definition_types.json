@@ -192,7 +192,6 @@
                 "type": "source-db",
                 "properties": {
                     "type": "SQL",
-                    "endpoint-selector": "dynamic-db-source",
                     "query": "select sdnctl.IPAM_IP_POOL.prefix as prefix from sdnctl.IPAM_IP_POOL where description = \"private1\"",
                     "input-key-mapping": {},
                     "output-key-mapping": {
@@ -223,7 +222,6 @@
                 "type": "source-db",
                 "properties": {
                     "type": "SQL",
-                    "endpoint-selector": "dynamic-db-source",
                     "query": "select sdnctl.IPAM_IP_POOL.prefix as prefix from sdnctl.IPAM_IP_POOL where description = \"private2\"",
                     "output-key-mapping": {
                         "int_private2_net_cidr": "prefix"
@@ -372,7 +370,6 @@
                 "type": "source-db",
                 "properties": {
                     "type": "SQL",
-                    "endpoint-selector": "dynamic-db-source",
                     "query": "select sdnctl.IPAM_IP_POOL.prefix_id as prefix_id from sdnctl.IPAM_IP_POOL where description = \"management\"",
                     "input-key-mapping": {},
                     "output-key-mapping": {
@@ -403,7 +400,6 @@
                 "type": "source-db",
                 "properties": {
                     "type": "SQL",
-                    "endpoint-selector": "dynamic-db-source",
                     "query": "select sdnctl.IPAM_IP_POOL.prefix as prefix from sdnctl.IPAM_IP_POOL where description = \"management\"",
                     "input-key-mapping": {},
                     "output-key-mapping": {
@@ -474,7 +470,6 @@
                 "type": "source-db",
                 "properties": {
                     "type": "SQL",
-                    "endpoint-selector": "dynamic-db-source",
                     "query": "select sdnctl.IPAM_IP_POOL.prefix_id as prefix_id from sdnctl.IPAM_IP_POOL where description = \"private1\"",
                     "input-key-mapping": {},
                     "output-key-mapping": {
@@ -525,7 +520,6 @@
                 "type": "source-db",
                 "properties": {
                     "type": "SQL",
-                    "endpoint-selector": "dynamic-db-source",
                     "query": "select sdnctl.IPAM_IP_POOL.prefix_id as prefix_id from sdnctl.IPAM_IP_POOL where description = \"private2\"",
                     "input-key-mapping": {},
                     "output-key-mapping": {
@@ -704,8 +698,7 @@
                     },
                     "key-dependencies": [
                         "vf-module-model-customization-uuid"
-                    ],
-                    "endpoint-selector": "dynamic-db-source"
+                    ]
                 }
             }
         }
@@ -759,8 +752,7 @@
                     },
                     "key-dependencies": [
                         "vf-module-model-customization-uuid"
-                    ],
-                    "endpoint-selector": "dynamic-db-source"
+                    ]
                 }
             }
         }
@@ -795,8 +787,7 @@
                     },
                     "key-dependencies": [
                         "vf-module-model-customization-uuid"
-                    ],
-                    "endpoint-selector": "dynamic-db-source"
+                    ]
                 }
             }
         }

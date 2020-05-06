@@ -61,12 +61,6 @@
             "resolution-key": {
                 "get_input": "resolution-key"
             }
-        },
-        "dynamic-db-source": {
-            "type": "maria-db",
-            "url": "jdbc:mysql://mariadb-galera:3306/sdnctl",
-            "username": "root",
-            "password": "TepsMavaFota9+"
         }
     },
     "topology_template": {
