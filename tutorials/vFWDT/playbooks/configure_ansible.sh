@@ -74,8 +74,12 @@ echo "vPGN Playbooks uploaded"
 APPCDB=`kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' | grep appc-db-0`
 echo $APPCDB
 
-kubectl exec -n onap $APPCDB -- mysql -u sdnctl -pgamma sdnctl -e'SELECT * FROM DEVICE_AUTHENTICATION WHERE PROTOCOL LIKE "ANSIBLE";'
-kubectl exec -n onap $APPCDB -- mysql -u sdnctl -pgamma sdnctl -e'UPDATE DEVICE_AUTHENTICATION SET URL = "http://appc-ansible-server:8000/Dispatch" WHERE PROTOCOL LIKE "ANSIBLE" AND PASSWORD IS NULL;'
-kubectl exec -n onap $APPCDB -- mysql -u sdnctl -pgamma sdnctl -e'UPDATE DEVICE_AUTHENTICATION SET PASSWORD = "admin" WHERE PROTOCOL LIKE "ANSIBLE" AND PASSWORD IS NULL;'
-kubectl exec -n onap $APPCDB -- mysql -u sdnctl -pgamma sdnctl -e'SELECT * FROM DEVICE_AUTHENTICATION WHERE PROTOCOL LIKE "ANSIBLE";'
+APPC_SECRET=`kubectl get secrets | grep appc-db-root-pass`
+APPC_PWD=`./get_secret.sh $APPC_SECRET`
+echo "SECRET: $APPC_PWD"
+
+kubectl exec -n onap $APPCDB -- mysql -u root -p$APPC_PWD sdnctl -e'SELECT * FROM DEVICE_AUTHENTICATION WHERE PROTOCOL LIKE "ANSIBLE";'
+kubectl exec -n onap $APPCDB -- mysql -u root -p$APPC_PWD sdnctl -e'UPDATE DEVICE_AUTHENTICATION SET URL = "http://appc-ansible-server:8000/Dispatch" WHERE PROTOCOL LIKE "ANSIBLE" AND PASSWORD IS NULL;'
+kubectl exec -n onap $APPCDB -- mysql -u root -p$APPC_PWD sdnctl -e'UPDATE DEVICE_AUTHENTICATION SET PASSWORD = "admin" WHERE PROTOCOL LIKE "ANSIBLE" AND PASSWORD IS NULL;'
+kubectl exec -n onap $APPCDB -- mysql -u root -p$APPC_PWD sdnctl -e'SELECT * FROM DEVICE_AUTHENTICATION WHERE PROTOCOL LIKE "ANSIBLE";'
 echo "APPC database configured for LCM commands"

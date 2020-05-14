@@ -576,6 +576,9 @@ def _extract_osdf_appc_identifiers(has_result, demand, onap_ip):
     if demand.lower() not in ansible_inventory:
         ansible_inventory[demand.lower()] = {}
     ansible_inventory[demand.lower()][config['vserver-name']] = ansible_inventory_entry
+
+    _verify_vnfc_data(api, onap_ip, config['vserver-name'], config['ip'])
+
     return config
 
 
@@ -790,7 +793,7 @@ def _set_appc_lcm_timestamp(body, timestamp=None):
 
 @timing("Load OOF Data and Build APPC REQ")
 def build_appc_lcms_requests_body(rancher_ip, onap_ip, aai_data, use_oof_cache, if_close_loop_vfw, new_version=None):
-    if_has = True
+    if_has = False
 
     if if_has:
         migrate_from = _has_request(onap_ip, aai_data, False, use_oof_cache)
