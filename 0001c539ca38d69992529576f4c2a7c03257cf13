@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79d37a34_f67a4e5d",
+        "filename": "heat/vFW_CNF_CDS/templates/base/MANIFEST.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-05-19T06:48:39Z",
+      "side": 1,
+      "message": "why it\u0027s changed?",
+      "range": {
+        "startLine": 6,
+        "startChar": 21,
+        "endLine": 6,
+        "endChar": 24
+      },
+      "revId": "0001c539ca38d69992529576f4c2a7c03257cf13",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac8d019e_afa62ea4",
+        "filename": "heat/vFW_CNF_CDS/templates/base/base_template.env",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-05-19T06:48:39Z",
+      "side": 1,
+      "message": "according to use case?",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 23
+      },
+      "revId": "0001c539ca38d69992529576f4c2a7c03257cf13",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9f8a2e6_f8b4542d",
+        "filename": "heat/vFW_CNF_CDS/templates/base/vfw.env",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-05-19T06:48:39Z",
+      "side": 1,
+      "message": "according to use case?",
+      "range": {
+        "startLine": 3,
+        "startChar": 12,
+        "endLine": 3,
+        "endChar": 23
+      },
+      "revId": "0001c539ca38d69992529576f4c2a7c03257cf13",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8adf22c_6cd43e49",
+        "filename": "heat/vFW_CNF_CDS/templates/base/vpkg.env",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-05-19T06:48:39Z",
+      "side": 1,
+      "message": "according to use case?",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 23
+      },
+      "revId": "0001c539ca38d69992529576f4c2a7c03257cf13",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28df2588_b37382fc",
+        "filename": "heat/vFW_CNF_CDS/templates/base/vsn.env",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 3957
+      },
+      "writtenOn": "2020-05-19T06:48:39Z",
+      "side": 1,
+      "message": "dummy default value, right. But maybe according to use case?",
+      "range": {
+        "startLine": 4,
+        "startChar": 12,
+        "endLine": 4,
+        "endChar": 23
+      },
+      "revId": "0001c539ca38d69992529576f4c2a7c03257cf13",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
