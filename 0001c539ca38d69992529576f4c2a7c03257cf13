@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4867dd13_e40eb680",
+        "filename": "heat/vFW_CNF_CDS/templates/base/MANIFEST.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-05-19T06:55:30Z",
+      "side": 1,
+      "message": "Since https://jira.onap.org/browse/SDC-2776 and it\u0027s cherry-pick commit to frankfurt (https://gerrit.onap.org/r/c/oom/+/107348 - not merged yet) any file within CSAR with \"CBA\" in name will get auto-classified as \"Controller_blueprint_archive\" type so this change alignes to that feature in SDC.",
+      "parentUuid": "79d37a34_f67a4e5d",
+      "range": {
+        "startLine": 6,
+        "startChar": 21,
+        "endLine": 6,
+        "endChar": 24
+      },
+      "revId": "0001c539ca38d69992529576f4c2a7c03257cf13",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ac8d019e_afa62ea4",
         "filename": "heat/vFW_CNF_CDS/templates/base/base_template.env",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2020-05-19T06:48:39Z",
       "side": 1,
       "message": "according to use case?",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 23
+      },
+      "revId": "0001c539ca38d69992529576f4c2a7c03257cf13",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84ca137d_0ca08e9c",
+        "filename": "heat/vFW_CNF_CDS/templates/base/base_template.env",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-05-19T06:55:30Z",
+      "side": 1,
+      "message": "This is just a dummy value as it\u0027s not used anywhere, but I can update the name if you want",
+      "parentUuid": "ac8d019e_afa62ea4",
       "range": {
         "startLine": 2,
         "startChar": 12,
