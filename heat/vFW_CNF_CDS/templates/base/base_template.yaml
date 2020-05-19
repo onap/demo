@@ -3,6 +3,7 @@
 #==================LICENSE_START==========================================
 #
 #
+# Copyright © 2020 Samsung Electronics
 # Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,18 +34,6 @@ description: Dummy base heat template for vFW usecase
 ##############
 
 parameters:
-  int_private1_net_cidr:
-    type: string
-    label: Unprotected private network CIDR
-    description: The CIDR of the unprotected private network
-  int_private2_net_cidr:
-    type: string
-    label: Protected private network CIDR
-    description: The CIDR of the protected private network
-  pub_key:
-    type: string
-    label: Public key
-    description: Public key to be installed on the compute instance
   vnf_name:
     type: string
     description: VNF_NAME
@@ -67,12 +56,6 @@ resources:
   dummy:
     type: OS::Heat::None
     properties:
-      int_private1_net_cidr:
-        get_param: int_private1_net_cidr
-      int_private2_net_cidr:
-        get_param: int_private2_net_cidr
-      pub_key:
-        get_param: pub_key
       vnf_name:
         get_param: vnf_name
       vnf_id:

@@ -3,7 +3,7 @@
     "description": "",
     "data": [
         {
-            "file": "vFW_CDS_CNF.zip",
+            "file": "CBA.zip",
             "type": "CONTROLLER_BLUEPRINT_ARCHIVE"
         },
         {
@@ -19,7 +19,7 @@
         },
         {
             "file": "base_template_cloudtech_k8s_charts.tgz",
-            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
+            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
         },
         {
             "file": "vfw.yaml",
@@ -34,7 +34,7 @@
         },
         {
             "file": "vfw_cloudtech_k8s_charts.tgz",
-            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
+            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
         },
         {
             "file": "vpkg.yaml",
@@ -49,7 +49,7 @@
         },
         {
             "file": "vpkg_cloudtech_k8s_charts.tgz",
-            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
+            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
         },
         {
             "file": "vsn.yaml",
@@ -64,7 +64,7 @@
         },
         {
             "file": "vsn_cloudtech_k8s_charts.tgz",
-            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACTS"
+            "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
         }
     ]
 }

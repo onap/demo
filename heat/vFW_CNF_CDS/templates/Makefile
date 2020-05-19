@@ -1,13 +1,13 @@
 .PHONY: all clean helm base cba clean_all
 CSAR_NAME ?= vfw_k8s_demo
-CBA_NAME ?= vFW_CDS_CNF
+CBA_NAME ?= CBA
 
 clean_all:
 	$(MAKE) clean
 	$(MAKE) all
 
+#Can't use .csar extension or SDC will panic
 all: csar/ helm base cba
-	#Can't use .csar extension or SDC will panic
 	cd csar/ && zip -r $(CSAR_NAME).zip .
 	mv csar/$(CSAR_NAME).zip .
 
