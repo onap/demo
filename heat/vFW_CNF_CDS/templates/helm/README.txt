@@ -1,4 +1,4 @@
-Helm content of csar package
+Helm content of onboarding package
 
 To create necessary archives, please ensure you have [helm] and [make] installed first.
 
