@@ -1,0 +1,2 @@
+vpp-measurement-reporter-danos: init.d-script-not-included-in-package etc/init.d/vpp-measurement-reporter-danos
+vpp-measurement-reporter-danos: sharedobject-in-library-directory-missing-soname usr/lib/x86_64-linux-gnu/libevel.so
