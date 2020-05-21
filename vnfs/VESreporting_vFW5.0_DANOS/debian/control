@@ -4,9 +4,10 @@ Priority: optional
 Maintainer: Brian Freeman <bf1936@att.com>
 Build-depends:
  debhelper (>= 9),
+ dh-systemd,
  dh-exec,
  libvyatta-cfg-dev,
- libcurl4-dev,
+ libcurl4-openssl-dev | libcurl4-dev,
  libjansson-dev,
 Standards-Version: 3.9.8
 
@@ -14,7 +15,6 @@ Package: vpp-measurement-reporter-danos
 Architecture: any
 Depends: ${misc:Depends}, dh-exec, libvyatta-cfg1, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
-Multi-Arch: same
 Description: ONAP VES Event Library for vFW Closed Loop Demonstration 
  VES reporting library 
 
