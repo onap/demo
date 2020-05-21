@@ -37,7 +37,7 @@ all:	evel \
 clean:
 	rm -f vpp-measurement-reporter-danos
 
-vpp-measurement-reporter-danos:	evel vpp-measurement-reporter-danos.c
+vpp-measurement-reporter-danos:	${LIBS_DIR}/evel.so vpp-measurement-reporter-danos.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -o vpp-measurement-reporter-danos \
                                     -L $(LIBS_DIR) \
                                     -I $(INCLUDE_DIR) \
@@ -47,8 +47,8 @@ vpp-measurement-reporter-danos:	evel vpp-measurement-reporter-danos.c
                               -ljansson \
 			      -lvyatta-config \
                               -lcurl
-	ls -l /build/src/evel/evel-library/libs/x86_64/
+	ls -l ${CODE_ROOT}/evel/evel-library/libs/x86_64/
 
-evel:	${EVEL_CODE_PATH}/evel.c
+${LIBS_DIR}/evel.so:	${EVEL_CODE_PATH}/evel.c
 	${MAKE} -C ${EVEL_BUILD_PATH}  all
 
