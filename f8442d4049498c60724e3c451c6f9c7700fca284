@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "825630f7_696fda75",
+        "filename": "heat/vFW_CNF_CDS/templates/Makefile",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2020-05-22T12:12:18Z",
+      "side": 1,
+      "message": "if we want to be precise we should not use the name CSAR in this case as CSAR needs to conform some TOSCA rules which are not satisfied.  Instead, we have just onboarding package and this term should be used.",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 10
+      },
+      "revId": "f8442d4049498c60724e3c451c6f9c7700fca284",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
