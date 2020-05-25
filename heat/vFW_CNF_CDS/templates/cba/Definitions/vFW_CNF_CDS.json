@@ -5,7 +5,7 @@
         "author-email": "abdelmuhaimen.seaudi@orange.com",
         "user-groups": "ADMIN, OPERATION",
         "template_name": "vFW_CNF_CDS",
-        "template_version": "1.0.44",
+        "template_version": "1.0.45",
         "template_tags": "Samuli Silvius, vFW_CNF_CDS",
         "template_type": "DEFAULT"
     },
@@ -66,7 +66,7 @@
             "type": "maria-db",
             "url": "jdbc:mysql://mariadb-galera:3306/sdnctl",
             "username": "root",
-            "password": "secretpassword"
+            "password": "TepsMavaFota9+"
         }
     },
     "topology_template": {

@@ -7,24 +7,24 @@ clean_all:
 	$(MAKE) all
 
 #Can't use .csar extension or SDC will panic
-all: csar/ helm base cba
-	cd csar/ && zip -r $(ONBOARDING_PACKAGE_NAME).zip .
-	mv csar/$(ONBOARDING_PACKAGE_NAME).zip .
+all: package/ helm base cba
+	cd package/ && zip -r $(ONBOARDING_PACKAGE_NAME).zip .
+	mv package/$(ONBOARDING_PACKAGE_NAME).zip .
 
-helm: csar/
+helm: package/
 	make -C helm
-	mv helm/*.tgz csar/
+	mv helm/*.tgz package/
 
-base: csar/
-	cp base/* csar/
+base: package/
+	cp base/* package/
 
-cba: csar/
+cba: package/
 	cd cba/ && zip -r $(CBA_NAME).zip .
-	mv cba/$(CBA_NAME).zip csar/
+	mv cba/$(CBA_NAME).zip package/
 
-csar/:
-	mkdir csar/
+package/:
+	mkdir package/
 
 clean:
-	rm -rf csar/
+	rm -rf package/
 	rm -f $(ONBOARDING_PACKAGE_NAME).zip
