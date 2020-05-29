@@ -70,6 +70,30 @@
       "revId": "1389192a547b108a5492460e6e1bad672935f3bc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9edb432_981e5409",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2020-05-29T12:24:44Z",
+      "side": 1,
+      "message": "well, as I\u0027ve rebased your change on top of this one, this section is removed from CBA but it\u0027s not in this review. Both reviews were merged so what is on master is the CBA we\u0027ve been using locally",
+      "parentUuid": "8a6bcdf3_bab4fcff",
+      "range": {
+        "startLine": 65,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 9
+      },
+      "revId": "1389192a547b108a5492460e6e1bad672935f3bc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
