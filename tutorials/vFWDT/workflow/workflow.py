@@ -198,7 +198,9 @@ def _get_aai_rel_link_data(data, related_to, search_key=None, match_dict=None):
 class AAIApiResource(Resource):
     actions = {
         'generic_vnf': {'method': 'GET', 'url': 'network/generic-vnfs/generic-vnf/{}'},
+        'vf_module': {'method': 'GET', 'url': 'network/generic-vnfs/generic-vnf/{}/vf-modules/vf-module/{}'},
         'vnfc': {'method': 'GET', 'url': 'network/vnfcs/vnfc/{}'},
+        'vnfc_put': {'method': 'PUT', 'url': 'network/vnfcs/vnfc/{}'},
         'vnfc_patch': {'method': 'PATCH', 'url': 'network/vnfcs/vnfc/{}'},
         'link': {'method': 'GET', 'url': '{}'},
         'service_instance': {'method': 'GET',
@@ -526,18 +528,78 @@ def _extract_has_appc_identifiers(has_result, demand, onap_ip):
         ansible_inventory[demand.lower()] = {}
     ansible_inventory[demand.lower()][config['vserver-name']] = ansible_inventory_entry
 
-    _verify_vnfc_data(api, onap_ip, config['vserver-name'], config['ip'])
+    _verify_vnfc_data(api, onap_ip, config)
     return config
 
 
-def _verify_vnfc_data(aai_api, onap_ip, vnfc_name, oam_ip):
+def _verify_vnfc_data(aai_api, onap_ip, config):
+    vnfc_name = config['vserver-name']
+    oam_ip = config['ip']
     with _no_ssl_verification():
         response = aai_api.aai.vnfc(vnfc_name, body=None, params=None, headers={})
         #print(json.dumps(response.body))
         if "ipaddress-v4-oam-vip" not in response.body:
-            print("VNFC information update for {}".format(vnfc_name))
+            print("VNFC IP information update for {}".format(vnfc_name))
             api = _init_python_aai_api(onap_ip, 'application/merge-patch+json')
             response = api.aai.vnfc_patch(vnfc_name, body={"ipaddress-v4-oam-vip": oam_ip, "vnfc-name": vnfc_name}, params=None, headers={})
+        if "relationship-list" not in response.body:
+            print("VNFC REL information update for {}".format(vnfc_name))
+            vserver_info = {
+                "link": "",
+                "owner": "",
+                "region": "",
+                "tenant": "",
+                "id": ""
+            }
+            vf_module = aai_api.aai.vf_module(config['vnf-id'], config['vf-module-id'], body=None, params={'depth': 2}, headers={}).body
+            related_to = "vserver"
+            search_key = "cloud-region.cloud-owner"
+            rl_data_list = _get_aai_rel_link_data(data=vf_module, related_to=related_to, search_key=search_key)
+            vserver_info["owner"] = rl_data_list[0]['d_value']
+
+            search_key = "cloud-region.cloud-region-id"
+            rl_data_list = _get_aai_rel_link_data(data=vf_module, related_to=related_to, search_key=search_key)
+            vserver_info["region"] = rl_data_list[0]['d_value']
+
+            search_key = "tenant.tenant-id"
+            rl_data_list = _get_aai_rel_link_data(data=vf_module, related_to=related_to, search_key=search_key)
+            vserver_info["tenant"] = rl_data_list[0]['d_value']
+
+            search_key = "vserver.vserver-id"
+            rl_data_list = _get_aai_rel_link_data(data=vf_module, related_to=related_to, search_key=search_key)
+            for relation in rl_data_list:
+                if relation['d_value'] == config['vserver-id']:
+                    vserver_info["id"] = config['vserver-id']
+                    vserver_info["link"] = relation['link']
+                    break
+
+            rel_data = {
+                "related-to": "vserver",
+                "related-link": vserver_info["link"],
+                "relationship-data": [
+                    {
+                        "relationship-key": "cloud-region.cloud-owner",
+                        "relationship-value": vserver_info["owner"]
+                    },
+                    {
+                        "relationship-key": "cloud-region.cloud-region-id",
+                        "relationship-value": vserver_info["region"]
+                    },
+                    {
+                        "relationship-key": "tenant.tenant-id",
+                        "relationship-value": vserver_info["tenant"]
+                    },
+                    {
+                        "relationship-key": "vserver.vserver-id",
+                        "relationship-value": vserver_info["id"]
+                    }
+                ]
+            }
+            #print(json.dumps(rel_data, indent=4))
+            response = aai_api.aai.vnfc_put("{}/relationship-list/relationship".format(vnfc_name), body=rel_data, params=None, headers={})
+        response = aai_api.aai.vnfc(vnfc_name, body=None, params=None, headers={})
+        #print(json.dumps(response.body))
+
 
 
 def _extract_osdf_appc_identifiers(has_result, demand, onap_ip):
@@ -577,7 +639,7 @@ def _extract_osdf_appc_identifiers(has_result, demand, onap_ip):
         ansible_inventory[demand.lower()] = {}
     ansible_inventory[demand.lower()][config['vserver-name']] = ansible_inventory_entry
 
-    _verify_vnfc_data(api, onap_ip, config['vserver-name'], config['ip'])
+    _verify_vnfc_data(api, onap_ip, config)
 
     return config
 
