@@ -165,6 +165,9 @@ def _get_aai_rel_link_data(data, related_to, search_key=None, match_dict=None):
                     dval = None
                     matched = False
                     link = rel.get("related-link")
+                    property = ""
+                    if rel.get("related-to-property") is not None:
+                        property = rel.get("related-to-property")[0]['property-value']
                     r_data = rel.get(rdata, [])
                     if search_key:
                         for rd in r_data:
@@ -172,7 +175,7 @@ def _get_aai_rel_link_data(data, related_to, search_key=None, match_dict=None):
                                 dval = rd.get(rval)
                                 if not match_dict:  # return first match
                                     response.append(
-                                        {"link": link, "d_value": dval}
+                                        {"link": link, "property": property, "d_value": dval}
                                     )
                                     break  # go to next relation
                             if rd.get(rkey) == m_key \
@@ -180,17 +183,17 @@ def _get_aai_rel_link_data(data, related_to, search_key=None, match_dict=None):
                                 matched = True
                         if match_dict and matched:  # if matching required
                             response.append(
-                                {"link": link, "d_value": dval}
+                                {"link": link, "property": property, "d_value": dval}
                             )
                             # matched, return search value corresponding
                             # to the matched r_data group
                     else:  # no search key; just return the link
                         response.append(
-                            {"link": link, "d_value": dval}
+                            {"link": link, "property": property, "d_value": dval}
                         )
     if response:
         response.append(
-            {"link": None, "d_value": None}
+            {"link": None, "property": None, "d_value": None}
         )
     return response
 
@@ -198,7 +201,9 @@ def _get_aai_rel_link_data(data, related_to, search_key=None, match_dict=None):
 class AAIApiResource(Resource):
     actions = {
         'generic_vnf': {'method': 'GET', 'url': 'network/generic-vnfs/generic-vnf/{}'},
+        'vf_module': {'method': 'GET', 'url': 'network/generic-vnfs/generic-vnf/{}/vf-modules/vf-module/{}'},
         'vnfc': {'method': 'GET', 'url': 'network/vnfcs/vnfc/{}'},
+        'vnfc_put': {'method': 'PUT', 'url': 'network/vnfcs/vnfc/{}'},
         'vnfc_patch': {'method': 'PATCH', 'url': 'network/vnfcs/vnfc/{}'},
         'link': {'method': 'GET', 'url': '{}'},
         'service_instance': {'method': 'GET',
@@ -526,18 +531,86 @@ def _extract_has_appc_identifiers(has_result, demand, onap_ip):
         ansible_inventory[demand.lower()] = {}
     ansible_inventory[demand.lower()][config['vserver-name']] = ansible_inventory_entry
 
-    _verify_vnfc_data(api, onap_ip, config['vserver-name'], config['ip'])
+    _verify_vnfc_data(api, onap_ip, config)
     return config
 
 
-def _verify_vnfc_data(aai_api, onap_ip, vnfc_name, oam_ip):
+def _verify_vnfc_data(aai_api, onap_ip, config, root=None):
+    vnfc_name = config['vserver-name']
+    oam_ip = config['ip']
+    with _no_ssl_verification():
+        response = aai_api.aai.vnfc(vnfc_name, body=None, params=None, headers={})
+    #print(json.dumps(response.body))
+    if "ipaddress-v4-oam-vip" not in response.body and oam_ip != "":
+        print("VNFC IP information update for {}".format(vnfc_name))
+        api = _init_python_aai_api(onap_ip, 'application/merge-patch+json')
+        with _no_ssl_verification():
+            response = api.aai.vnfc_patch(vnfc_name, body={"ipaddress-v4-oam-vip": oam_ip, "vnfc-name": vnfc_name}, params=None, headers={})
+    if "relationship-list" not in response.body:
+        print("VNFC REL information update for {}".format(vnfc_name))
+        vserver_info = {
+            "link": "",
+            "owner": "",
+            "region": "",
+            "tenant": "",
+            "id": ""
+        }
+        with _no_ssl_verification():
+            vf_module = aai_api.aai.vf_module(config['vnf-id'], config['vf-module-id'], body=None, params={'depth': 2}, headers={}).body
+        related_to = "vserver"
+        search_key = "cloud-region.cloud-owner"
+        rl_data_list = _get_aai_rel_link_data(data=vf_module, related_to=related_to, search_key=search_key)
+        vserver_info["owner"] = rl_data_list[0]['d_value']
+
+        search_key = "cloud-region.cloud-region-id"
+        rl_data_list = _get_aai_rel_link_data(data=vf_module, related_to=related_to, search_key=search_key)
+        vserver_info["region"] = rl_data_list[0]['d_value']
+
+        search_key = "tenant.tenant-id"
+        rl_data_list = _get_aai_rel_link_data(data=vf_module, related_to=related_to, search_key=search_key)
+        vserver_info["tenant"] = rl_data_list[0]['d_value']
+
+        search_key = "vserver.vserver-id"
+        rl_data_list = _get_aai_rel_link_data(data=vf_module, related_to=related_to, search_key=search_key)
+        for relation in rl_data_list:
+            vserver_info["id"] = relation['d_value']
+            vserver_info["link"] = relation['link']
+
+            rel_data = {
+                "related-to": "vserver",
+                "related-link": vserver_info["link"],
+                "relationship-data": [
+                    {
+                        "relationship-key": "cloud-region.cloud-owner",
+                        "relationship-value": vserver_info["owner"]
+                    },
+                    {
+                        "relationship-key": "cloud-region.cloud-region-id",
+                        "relationship-value": vserver_info["region"]
+                    },
+                    {
+                        "relationship-key": "tenant.tenant-id",
+                        "relationship-value": vserver_info["tenant"]
+                    },
+                    {
+                        "relationship-key": "vserver.vserver-id",
+                        "relationship-value": vserver_info["id"]
+                    }
+                ]
+            }
+            #print(json.dumps(rel_data, indent=4))
+            if config['vserver-id'] == relation['d_value']:
+                with _no_ssl_verification():
+                    response = aai_api.aai.vnfc_put("{}/relationship-list/relationship".format(vnfc_name), body=rel_data, params=None, headers={})
+            elif root is None and relation['d_value'] is not None:
+                new_config = copy.deepcopy(config)
+                new_config['vserver-name'] = relation['property']
+                new_config['vserver-id'] = relation['d_value']
+                new_config['ip'] = ""
+                _verify_vnfc_data(aai_api, onap_ip, new_config, vnfc_name)
     with _no_ssl_verification():
         response = aai_api.aai.vnfc(vnfc_name, body=None, params=None, headers={})
         #print(json.dumps(response.body))
-        if "ipaddress-v4-oam-vip" not in response.body:
-            print("VNFC information update for {}".format(vnfc_name))
-            api = _init_python_aai_api(onap_ip, 'application/merge-patch+json')
-            response = api.aai.vnfc_patch(vnfc_name, body={"ipaddress-v4-oam-vip": oam_ip, "vnfc-name": vnfc_name}, params=None, headers={})
 
 
 def _extract_osdf_appc_identifiers(has_result, demand, onap_ip):
@@ -577,7 +650,7 @@ def _extract_osdf_appc_identifiers(has_result, demand, onap_ip):
         ansible_inventory[demand.lower()] = {}
     ansible_inventory[demand.lower()][config['vserver-name']] = ansible_inventory_entry
 
-    _verify_vnfc_data(api, onap_ip, config['vserver-name'], config['ip'])
+    _verify_vnfc_data(api, onap_ip, config)
 
     return config
 
