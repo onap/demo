@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "31d30845_964a4425",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4246797_00c0ed1d",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "be1f91da_55e7cde5",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f12ae00_26a03513",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be1f91da_55e7cde5",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "d1412851_69db3fe6",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91e0aecd_b081eeb1",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aba939fa_8398c41e",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "b6b5301c_45cda03d",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aba939fa_8398c41e",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ca468194_d5905029",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -84,6 +156,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8caeb355_0c9f81ce",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca468194_d5905029",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -121,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "0f61d1e6_511a5b11",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7a4e9b5_f00e55ca",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "490b17cd_fe0669fe",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -135,6 +243,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f56f743_0c5a6dfb",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "490b17cd_fe0669fe",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -155,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "29f33bdf_cf5513a6",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "965c2114_2f617245",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c60123d5_c1ae6541",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -169,6 +313,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d57c6528_740322ea",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c60123d5_c1ae6541",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -189,6 +351,24 @@
     },
     {
       "key": {
+        "uuid": "01e9af13_bbed52cd",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "127f02ac_a067862e",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a2ab0b9e_f7235324",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -203,6 +383,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "913db11a_0d0788a0",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2ab0b9e_f7235324",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -223,6 +421,24 @@
     },
     {
       "key": {
+        "uuid": "fa2e75ff_405a839e",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86de9d23_688a98f1",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23d743b8_a3a4efe3",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -237,6 +453,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d36f14a3_c776622c",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23d743b8_a3a4efe3",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -257,6 +491,24 @@
     },
     {
       "key": {
+        "uuid": "05a2a4d2_4646d01e",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b859df26_6677b3c9",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "afa27ad0_917b67e3",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -271,6 +523,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25d36ed5_dd1d52a5",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "afa27ad0_917b67e3",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -291,6 +561,24 @@
     },
     {
       "key": {
+        "uuid": "165150ad_74fcbbd8",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "212c6624_3baf8455",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "890d1a33_8e76a6c5",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -305,6 +593,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e2780f5_688b02d4",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "890d1a33_8e76a6c5",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -325,6 +631,24 @@
     },
     {
       "key": {
+        "uuid": "c7cbed4b_b8cbfabe",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "823926f0_eec7a29c",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5197cf53_33328548",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -339,6 +663,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9a96647_245ac248",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5197cf53_33328548",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -359,6 +701,24 @@
     },
     {
       "key": {
+        "uuid": "d84c725e_f0dde813",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5203bbe2_247b4092",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037b0fd0_7b341a52",
         "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
         "patchSetId": 1
@@ -373,6 +733,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4568ba5_ba26b445",
+        "filename": "tosca/vnfsdk/PNFD_missing/Definitions/etsi_nfv_sol001_pnfd_2_5_1_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037b0fd0_7b341a52",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -441,6 +819,24 @@
       "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88501abd_d2009f94",
+        "filename": "tosca/vnfsdk/non_mano_artifact_sets_is_mandatory/Files/Yang_module/mynetconf.yang",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 4481
+      },
+      "writtenOn": "2020-07-30T11:03:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95ee1f2a_120746dc",
+      "revId": "f44fabc56c0ef6a20751f61bef8e96270e4d77c0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
