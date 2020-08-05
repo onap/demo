@@ -1,5 +1,7 @@
 # UUID                                                               	Group Name
 #
+064124d12e40bface46e65200c5bbde423cd3970                             	saml/onap-gerrit-demo-committers
+9e96192240e5f61972fd2eda5622f43c313ea0b0                             	saml/onap-jenkins-labs
 daebbf523be390041a1a9c0e340a6d833aae5043                             	GitHub Replication
 ldap:cn=onap-gerrit-demo-committers,ou=Groups,dc=freestandards,dc=org	ldap/onap-gerrit-demo-committers
 ldap:cn=onap-jenkins-labs,ou=Groups,dc=freestandards,dc=org          	ldap/onap-jenkins-labs
