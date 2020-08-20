@@ -58,6 +58,11 @@ parameters:
     type: string
     label: VNF NAME
     description: The VNF NAME is provided by ONAP
+  vnf_software_version:
+    type: string
+    label: VNF software version
+    description: VNF software version
+    default: 1.0.0    
   vlb_0_int_pktgen_private_port_0_mac:
     type: string
     label: vLB MAC address
