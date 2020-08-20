@@ -48,6 +48,11 @@ parameters:
   vnf_name:
     type: string
     description: VNF_NAME
+  vnf_software_version:
+    type: string
+    label: VNF software version
+    description: VNF software version
+    default: 1.0.0
 
 #############
 #           #

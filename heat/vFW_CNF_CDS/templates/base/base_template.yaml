@@ -45,6 +45,11 @@ parameters:
     type: string
     label: VF Module ID
     description: The VF Module ID is provided by ONAP
+  vnf_software_version:
+    type: string
+    label: VNF software version
+    description: VNF software version
+    default: 1.0.0
 
 #############
 #           #
