@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.upfName }}-configmap
+  labels:
+    vnf-name: {{ .Values.vnf_name }}
+    vf-module-name: {{ .Values.config.upfName }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
+data:
+  upfName: {{ .Values.config.upfName }}
+  upfNameBackup: {{ .Values.config.upfNameBackup }},
+  upfRegionId: {{ .Values.config.upfRegionId }},
+  upfSetId: {{ .Values.config.upfSetId }},
+  relativeCapacity: {{ .Values.config.relativeCapacity}},
+  loggerLevel: {{ .Values.config.loggerLevel }},
+  network: |
+    { "ipv4": {{ .Values.config.network.ipv4 }},
+      "mask": {{ .Values.config.network.mask }},
+      "intf": {{ .Values.config.network.intf }}
+    }
+  sctp: |
+    { 
+     "port": {{ .Values.config.sctp.port }},
+      "sctpHeartBeatInterval": {{ .Values.config.sctp.sctpHeartBeatInterval }},
+      "sctpPathMaxRetransmit": {{ .Values.config.sctp.sctpPathMaxRetransmit }},
+      "sctpMaxInitRetransmition": {{ .Values.config.sctp.sctpMaxInitRetransmition }},
+      "sctpSackTimeout": {{ .Values.config.sctp.sctpSackTimeout }},
+      "sctpRtoInit": {{ .Values.config.sctp.sctpRtoInit }},
+      "sctpRtoMax":  {{ .Values.config.sctp.sctpRtoMax }},
+      "sctpRtoMin": {{ .Values.config.sctp.sctpRtoMin }},
+      "sctpCookieLife": {{ .Values.config.sctp.sctpCookieLife }},
+      "sctpMaxInStream": {{ .Values.config.sctp.sctpMaxInStream }},
+      "sctpMaxOutStream": {{ .Values.config.sctp.sctpMaxOutStream }},
+      "sctpHearBeatEnable": {{ .Values.config.sctp.sctpHearBeatEnable }}
+    }
+  supportedNssai: |
+    [{"sNssai":[
+            {
+               "s-nssai": {{ .Values.config.supportedNssai.sNssai.snssai }},
+               "status":  {{ .Values.config.supportedNssai.sNssai.status }} 
+            }
+         ]
+     }
+    ]

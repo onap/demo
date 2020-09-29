@@ -1,7 +1,6 @@
 {
-  "name": "core",
-  "description": "core package",
-  "version": "0.0",
+  "name": "5Gcore",
+  "description": "5Gcore package",
   "data": [
     {
       "isBase": true,
