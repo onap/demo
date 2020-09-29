@@ -1,0 +1,66 @@
+##########################################################################
+#
+#==================LICENSE_START==========================================
+#
+#
+# Copyright © 2020 Samsung Electronics
+# Copyright (c) 2018 AT&T Intellectual Property. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#==================LICENSE_END============================================
+#
+# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+#
+##########################################################################
+
+heat_template_version: 2013-05-23
+
+description: Dummy heat template for vFirewall
+
+##############
+#            #
+# PARAMETERS #
+#            #
+##############
+
+parameters:
+  vnf_id:
+    type: string
+    label: VNF ID
+    description: The VNF ID is provided by ONAP
+  vnf_name:
+    type: string
+    label: VNF ID
+    description: The VNF ID is provided by ONAP
+  vf_module_id:
+    type: string
+    label: VF Module ID
+    description: The VF Module ID is provided by ONAP
+
+
+#############
+#           #
+# RESOURCES #
+#           #
+#############
+
+resources:
+  dummy:
+    type: OS::Heat::None
+    properties:
+      vnf_id:
+        get_param: vnf_id
+      vnf_name:
+        get_param: vnf_name
+      vf_module_id:
+        get_param: vf_module_id

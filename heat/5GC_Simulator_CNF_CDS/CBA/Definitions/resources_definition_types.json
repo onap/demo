@@ -1,0 +1,968 @@
+{
+	"aic-cloud-region": {
+		"tags": "aic-cloud-region",
+		"name": "aic-cloud-region",
+		"property": {
+			"description": "aic-cloud-region",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Singal, Kapil <ks220y@att.com>",
+		"sources": {
+			"input": {
+				"type": "source-input",
+				"properties": {}
+			}
+		}
+	},
+	"amfName": {
+		"tags": "amfName",
+		"name": "amfName",
+		"property": {
+			"description": "amfName",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Malinconico, Aniello Paolo <aniellopaolo.malinconico@guest.telecomitalia.it>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/amfName",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"amfName": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"config.amfName": {
+		"tags": "config.amfName",
+		"name": "config.amfName",
+		"property": {
+			"description": "amfName",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Malinconico, Aniello Paolo <aniellopaolo.malinconico@guest.telecomitalia.it>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/config.amfName",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"config.amfName": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"config.smfName": {
+		"tags": "config.smfName",
+		"name": "config.smfName",
+		"property": {
+			"description": "smfName",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Malinconico, Aniello Paolo <aniellopaolo.malinconico@guest.telecomitalia.it>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/config.smfName",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"config.smfName": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"config.supportedNssai.sNssai.snssai": {
+		"tags": "config.supportedNssai.sNssai.snssai",
+		"name": "config.supportedNssai.sNssai.snssai",
+		"property": {
+			"description": " supportedNssai.sNssai.snssai params",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Malinconico, Aniello Paolo <aniellopaolo.malinconico@guest.telecomitalia.it>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/fiveg0_snssai",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"config.supportedNssai.sNssai.snssai": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"config.test": {
+		"tags": "config.test",
+		"name": "config.test",
+		"property": {
+			"description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/config.test",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"config.test": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"config.upfName": {
+		"tags": "config.upfName",
+		"name": "config.upfName",
+		"property": {
+			"description": "upfName",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Malinconico, Aniello Paolo <aniellopaolo.malinconico@guest.telecomitalia.it>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/config.upfName",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"config.upfName": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"fiveg0_snssai": {
+		"tags": "fiveg0_snssai",
+		"name": "fiveg0_snssai",
+		"property": {
+			"description": "supportedNssai params",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Thamlur Raju <TR00568434@TechMahindra.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/fiveg0_snssai",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"fiveg0_snssai": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"k8s-rb-profile-name": {
+		"tags": "k8s, cnf, profile, k8s-rb-profile-name",
+		"name": "k8s-rb-profile-name",
+		"property": {
+			"description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/k8s-rb-profile-name",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"k8s-rb-profile-name": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"k8s-rb-profile-namespace": {
+		"tags": "k8s, cnf, profile, namespace, k8s-rb-profile-namespace",
+		"name": "k8s-rb-profile-namespace",
+		"property": {
+			"description": "Profile name used in multicloud/k8s plugin",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/k8s-rb-profile-namespace",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"k8s-rb-profile-namespace": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"management-prefix-id": {
+		"tags": "management-prefix-id",
+		"name": "management-prefix-id",
+		"property": {
+			"description": "management-prefix-id",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/management-prefix-id",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"management-prefix-id": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			},
+			"processor-db": {
+				"type": "source-db",
+				"properties": {
+					"type": "SQL",
+					"query": "select sdnctl.IPAM_IP_POOL.prefix_id as prefix_id from sdnctl.IPAM_IP_POOL where description = \"management\"",
+					"input-key-mapping": {},
+					"output-key-mapping": {
+						"management-prefix-id": "prefix_id"
+					}
+				}
+			}
+		}
+	},
+	"service-instance-id": {
+		"tags": "service-instance-id, tosca.datatypes.Root, data_type",
+		"name": "service-instance-id",
+		"property": {
+			"description": "To be provided",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Singal, Kapil <ks220y@att.com>",
+		"sources": {
+			"input": {
+				"type": "source-input",
+				"properties": {}
+			},
+			"any-db": {
+				"type": "source-db",
+				"properties": {
+					"query": "SELECT artifact_name FROM BLUEPRINT_RUNTIME where artifact_version=\"1.0.0\"",
+					"input-key-mapping": {},
+					"output-key-mapping": {
+						"service-instance-id": "artifact_name"
+					}
+				}
+			},
+			"processor-db": {
+				"type": "source-db",
+				"properties": {
+					"query": "SELECT artifact_name FROM BLUEPRINT_RUNTIME where artifact_version=\"1.0.0\"",
+					"input-key-mapping": {},
+					"output-key-mapping": {
+						"service-instance-id": "artifact_name"
+					}
+				}
+			},
+			"capability": {
+				"type": "source-capability",
+				"properties": {
+					"script-type": "jython",
+					"script-class-reference": "SampleRAProcessor",
+					"instance-dependencies": []
+				}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id",
+					"path": "/service/0/service-instance-id",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance.service-instance-id"
+					},
+					"output-key-mapping": {
+						"service-instance-id": "service-instance-id"
+					},
+					"key-dependencies": [
+						"service-instance.service-instance-id"
+					]
+				}
+			}
+		}
+	},
+	"singletest": {
+		"tags": "singletest",
+		"name": "singletest",
+		"property": {
+			"description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/singletest",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"singletest": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"smfName": {
+		"tags": "smfName",
+		"name": "smfName",
+		"property": {
+			"description": "smfName",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Malinconico, Aniello Paolo <aniellopaolo.malinconico@guest.telecomitalia.it>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/smfName",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"smfName": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"snssai": {
+		"tags": "snssai",
+		"name": "snssai",
+		"property": {
+			"description": "snssai put params",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Thamlur Raju <TR00568434@TechMahindra.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/fiveg0_snssai",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"snssai": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"supportedNssai": {
+		"tags": "supportedNssai",
+		"name": "supportedNssai",
+		"property": {
+			"description": "supportedNssai params",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Thamlur Raju <TR00568434@TechMahindra.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/supportedNssai",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"supportedNssai": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"upfName": {
+		"tags": "upfName",
+		"name": "upfName",
+		"property": {
+			"description": "upfName",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Malinconico, Aniello Paolo <aniellopaolo.malinconico@guest.telecomitalia.it>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/upfName",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"upfName": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"vf-module-id": {
+		"tags": "vf-module-id",
+		"name": "vf-module-id",
+		"property": {
+			"description": "vf-module-id",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Singal, Kapil <ks220y@att.com>",
+		"sources": {
+			"input": {
+				"type": "source-input",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vf-modules/vf-module/$vf-module-id",
+					"path": "/vf-module/0/vf-module-id",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id",
+						"vf-module-id": "vf-module.vf-module-id"
+					},
+					"output-key-mapping": {
+						"vf-module-id": "vf-module-id"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id",
+						"vf-module.vf-module-id"
+					]
+				}
+			}
+		}
+	},
+	"vf-module-label": {
+		"tags": "vf-module-label",
+		"name": "vf-module-label",
+		"property": {
+			"description": "vf-module-label",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"processor-db": {
+				"type": "source-db",
+				"properties": {
+					"type": "SQL",
+					"query": "select sdnctl.VF_MODULE_MODEL.vf_module_label as vf_module_label from sdnctl.VF_MODULE_MODEL where sdnctl.VF_MODULE_MODEL.customization_uuid=:customizationid",
+					"input-key-mapping": {
+						"customizationid": "vf-module-model-customization-uuid"
+					},
+					"output-key-mapping": {
+						"vf-module-label": "vf_module_label"
+					},
+					"key-dependencies": [
+						"vf-module-model-customization-uuid"
+					]
+				}
+			}
+		}
+	},
+	"vf-module-model-customization-uuid": {
+		"tags": "vf-module-model-customization-uuid",
+		"name": "vf-module-model-customization-uuid",
+		"property": {
+			"description": "vf-module-model-customization-uuid",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			}
+		}
+	},
+	"vf-module-model-invariant-uuid": {
+		"tags": "vnf, vf-module",
+		"name": "vf-module-model-invariant-uuid",
+		"property": {
+			"description": "vf module model invariant uuid",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"processor-db": {
+				"type": "source-db",
+				"properties": {
+					"type": "SQL",
+					"query": "select sdnctl.VF_MODULE_MODEL.invariant_uuid as vf_module_model_invariant_uuid from sdnctl.VF_MODULE_MODEL where sdnctl.VF_MODULE_MODEL.customization_uuid=:customizationid",
+					"input-key-mapping": {
+						"customizationid": "vf-module-model-customization-uuid"
+					},
+					"output-key-mapping": {
+						"vf-module-model-invariant-uuid": "vf_module_model_invariant_uuid"
+					},
+					"key-dependencies": [
+						"vf-module-model-customization-uuid"
+					]
+				}
+			}
+		}
+	},
+	"vf-module-model-version": {
+		"tags": "vnf, vf-module",
+		"name": "vf-module-model-version",
+		"property": {
+			"description": "vf module model model version",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"processor-db": {
+				"type": "source-db",
+				"properties": {
+					"type": "SQL",
+					"query": "select sdnctl.VF_MODULE_MODEL.uuid as vf_module_model_version from sdnctl.VF_MODULE_MODEL where sdnctl.VF_MODULE_MODEL.customization_uuid=:customizationid",
+					"input-key-mapping": {
+						"customizationid": "vf-module-model-customization-uuid"
+					},
+					"output-key-mapping": {
+						"vf-module-model-version": "vf_module_model_version"
+					},
+					"key-dependencies": [
+						"vf-module-model-customization-uuid"
+					]
+				}
+			}
+		}
+	},
+	"vf-naming-policy": {
+		"tags": "vf-naming-policy",
+		"name": "vf-naming-policy",
+		"property": {
+			"description": "vf-naming-policy",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>",
+		"sources": {
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/vf-naming-policy",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"vf-naming-policy": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			},
+			"processor-db": {
+				"type": "source-db",
+				"properties": {
+					"type": "SQL",
+					"query": "select sdnctl.VF_MODEL.naming_policy as vf_naming_policy from sdnctl.VF_MODEL where sdnctl.VF_MODEL.customization_uuid=:vnf_model_customization_uuid",
+					"input-key-mapping": {
+						"vnf_model_customization_uuid": "vnf-model-customization-uuid"
+					},
+					"output-key-mapping": {
+						"vf-naming-policy": "vf_naming_policy"
+					},
+					"key-dependencies": [
+						"vnf-model-customization-uuid"
+					]
+				}
+			}
+		}
+	},
+	"vnf-id": {
+		"tags": "vnf-id",
+		"name": "vnf-id",
+		"property": {
+			"description": "vnf-id",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/vnf-id",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"vnf-id": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	},
+	"vnf_name": {
+		"tags": "vnf_name",
+		"name": "vnf_name",
+		"property": {
+			"description": "vnf_name",
+			"type": "string"
+		},
+		"group": "default",
+		"updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>",
+		"sources": {
+			"input": {
+				"type": "source-input"
+			},
+			"default": {
+				"type": "source-default",
+				"properties": {}
+			},
+			"sdnc": {
+				"type": "source-rest",
+				"properties": {
+					"verb": "GET",
+					"type": "JSON",
+					"url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/vnf_name",
+					"path": "/param/0/value",
+					"input-key-mapping": {
+						"service-instance-id": "service-instance-id",
+						"vnf-id": "vnf-id"
+					},
+					"output-key-mapping": {
+						"vnf_name": "value"
+					},
+					"key-dependencies": [
+						"service-instance-id",
+						"vnf-id"
+					]
+				}
+			}
+		}
+	}
+}

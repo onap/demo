@@ -1,0 +1,261 @@
+[
+    {
+        "name": "vf-module-model-invariant-uuid",
+        "property": {
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-model-invariant-uuid",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ]
+    },
+    {
+        "name": "vf-module-model-version",
+        "property": {
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-model-version",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ]
+    },
+    {
+        "name": "management-prefix-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "management-prefix-id",
+        "dictionary-source": "processor-db",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "service-instance-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "service-instance-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-module-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-module-label",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-label",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vf-module-model-customization-uuid",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-model-customization-uuid",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-naming-policy",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-naming-policy",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vnf-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vnf-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vnf_name",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vnf_name",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "k8s-rb-profile-namespace",
+        "property": {
+            "description": "K8s namespace to create helm chart for specified profile",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-namespace",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "k8s-rb-profile-name",
+        "property": {
+            "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-name",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "fiveg0_snssai",
+        "property": {
+            "description": "",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "fiveg0_snssai",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+	{
+        "name": "snssai",
+        "property": {
+            "description": "",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "snssai",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },	
+    {
+        "name": "config.test",
+        "property": {
+            "description": "",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "config.test",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "config.singletest",
+        "property": {
+            "description": "",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "singletest",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+	{
+        "name": "config.amfName",
+        "property": {
+            "description": "amf name",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "config.amfName",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+	{
+        "name": "amfName",
+        "property": {
+            "description": "amf name",
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "amfName",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+	{
+        "name": "config.supportedNssai.sNssai.snssai",
+        "property": {
+            "description": "supportedNssai.sNssai.snssai properties",
+            "type": "string"
+		},
+        "input-param": false,
+        "dictionary-name": "config.supportedNssai.sNssai.snssai",
+        "dictionary-source": "sdnc",
+        "dependencies": []
+    }
+]

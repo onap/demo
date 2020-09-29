@@ -1,0 +1,27 @@
+<service-logic
+  xmlns='http://www.onap.org/sdnc/svclogic'
+  xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+  xsi:schemaLocation='http://www.onap.org/sdnc/svclogic ./svclogic.xsd' module='CONFIG' version='1.0.0'>
+    <method rpc='ConfigDeploy' mode='sync'>
+        <block atomic="true">
+            <execute plugin="nf-account-collection-post" method="process">
+                <outcome value='failure'>
+                    <return status="failure">
+                    </return>
+                </outcome>
+                <outcome value='success'>
+                    <execute plugin="execute-post" method="process">
+                        <outcome value='failure'>
+                            <return status="failure">
+                            </return>
+                        </outcome>
+                        <outcome value='success'>
+                            <return status='success'>
+                            </return>
+                        </outcome>
+                    </execute>
+                </outcome>
+            </execute>
+        </block>
+    </method>
+</service-logic>

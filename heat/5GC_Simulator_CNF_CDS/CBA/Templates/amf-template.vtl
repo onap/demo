@@ -1,0 +1,136 @@
+{
+    "capability-data": [
+        {
+            "capability-name": "generate-name",
+            "key-mapping": [
+                {
+                    "output-key-mapping": [
+                        {
+                            "resource-name": "vf_module_name",
+                            "resource-value": "${vf-module-name}"
+                        }
+                    ],
+                    "payload": [
+                        {
+                            "param-name": "VF_MODULE_TYPE",
+                            "param-value": "vfmt"
+                        },
+                        {
+                            "param-name": "resource-name",
+                            "param-value": "vf_module_name"
+                        },
+                        {
+                            "param-name": "resource-value",
+                            "param-value": "${vf-module-name}"
+                        },
+                        {
+                            "param-name": "external-key",
+                            "param-value": "${vf-module-id}_vf-module-name"
+                        },
+                        {
+                            "param-name": "policy-instance-name",
+                            "param-value": "${vf-naming-policy}"
+                        },
+                        {
+                            "param-name": "naming-type",
+                            "param-value": "VF-MODULE"
+                        },
+                        {
+                            "param-name": "VNF_NAME",
+                            "param-value": "${vnf_name}"
+                        },
+                        {
+                            "param-name": "VF_MODULE_LABEL",
+                            "param-value": "${vf-module-label}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "capability-name": "aai-vf-module-put",
+            "key-mapping": [
+                {
+                    "output-key-mapping": [
+                        {
+                            "resource-name": "aai-vf-module-put",
+                            "resource-value": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "capability-name": "unresolved-composite-data",
+            "key-mapping": [
+                {
+                    "output-key-mapping": [
+                        {
+                            "resource-name": "config.amfName",
+                            "resource-value": "${vf_module_name}"
+                        }
+                    ]
+                }
+            ]
+        },
+		{
+            "capability-name": "unresolved-composite-data",
+            "key-mapping": [
+                {
+                    "output-key-mapping": [
+                        {
+                            "resource-name": "amfName",
+                            "resource-value": "${vf_module_name}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "resource-accumulator-resolved-data": [
+        {
+            "param-name": "vf-module-model-invariant-uuid",
+            "param-value": "${vf-module-model-invariant-uuid}"
+        },
+        {
+            "param-name": "vf-module-model-version",
+            "param-value": "${vf-module-model-version}"
+        },
+		{
+            "param-name": "vnf-id",
+            "param-value": "${vnf-id}"
+        },
+		{
+            "param-name": "config.test",
+            "param-value": "${config.test}"
+        },
+		{
+            "param-name": "vf-module-id",
+            "param-value": "${vf-module-id}"
+        },
+		{
+            "param-name": "k8s-rb-profile-name",
+            "param-value": "profile-${vf-module-id}"
+        },
+        {
+            "param-name": "k8s-rb-profile-namespace",
+            "param-value": "ns-${vf-module-id}"
+        },
+		{
+            "param-name": "fiveg0_snssai",
+            "param-value": "${fiveg0_snssai}"
+        },
+		{
+            "param-name": "snssai",
+            "param-value": "${fiveg0_snssai}"
+        },		
+		{
+            "param-name": "config.supportedNssai.sNssai.snssai",
+            "param-value": "${fiveg0_snssai}"
+        },
+		{
+            "param-name": "config.singletest",
+            "param-value": "${singletest}"
+        }
+    ]
+}

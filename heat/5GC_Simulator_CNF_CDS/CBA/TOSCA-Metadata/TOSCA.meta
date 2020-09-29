@@ -1,0 +1,8 @@
+TOSCA-Meta-File-Version: 1.0.0
+CSAR-Version: 1.0
+Created-By: Thamlur Raju <TR00568434@TechMahindra.com>
+Entry-Definitions: Definitions/5G_Core.json
+Template-Name: 5G_Core
+Template-Version: 1.0.37
+Template-Type: DEFAULT
+Template-Tags: Thamlur Raju, Malinconico Aniello Paolo, Vamshi Namilikonda, 5G_Core

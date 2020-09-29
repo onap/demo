@@ -1,0 +1,84 @@
+vnf_name: test-vnf
+amf_name_0: test-vnf-vfw
+
+# Default values for amf.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+
+####CUSTOM 5G key - values ####
+config:
+  amfName: "amf1"
+  amfNameBackup: "amf2"
+  amfRegionId: "5000"
+  amfSetId: "14"
+  relativeCapacity: "100"
+  loggerLevel: "debug"
+  network:
+    ipv4: "192.168.44.198"
+    mask: "24"
+    intf: "eth0"
+  sctp:
+    port: "38412"
+    sctpHeartBeatInterval: "30000"
+    sctpPathMaxRetransmit: "5"
+    sctpMaxInitRetransmition: "8"
+    sctpSackTimeout: "200"
+    sctpRtoInit: "3000"
+    sctpRtoMax: "60000"
+    sctpRtoMin: "1000"
+    sctpCookieLife: "60000"
+    sctpMaxInStream: "8"
+    sctpMaxOutStream: "2"
+    sctpHearBeatEnable: "1"
+  supportedNssai:
+    sNssai:
+      snssai: "001-100001"
+      status: "created"
+
+
+replicaCount: 1
+
+image:
+  repository: n3ll1x/services
+  tag: 5gdummy
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: NodePort
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths: []
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

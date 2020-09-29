@@ -1,0 +1,363 @@
+{
+  "node_types" : {
+    "component-resource-resolution" : {
+      "description" : "This is Resource Assignment Component API",
+      "version" : "1.0.0",
+      "attributes" : {
+        "assignment-params" : {
+          "description" : "Holds resolved template, resolution-summary or key-value",
+          "required" : true,
+          "type" : "string"
+        },
+        "assignment-map" : {
+          "description" : "Holds resolved values for each artifact prefix eg. { vdns: { vnf-id: 123 } }",
+          "required" : true,
+          "type" : "map"
+        }
+      },
+      "capabilities" : {
+        "component-node" : {
+          "type" : "tosca.capabilities.Node"
+        }
+      },
+      "interfaces" : {
+        "ResourceResolutionComponent" : {
+          "operations" : {
+            "process" : {
+              "inputs" : {
+                "resolution-key" : {
+                  "description" : "Key for service instance related correlation.",
+                  "required" : false,
+                  "type" : "string"
+                },
+                "occurrence" : {
+                  "description" : "Number of time to perform the resolution.",
+                  "required" : false,
+                  "type" : "integer",
+                  "default" : 1
+                },
+                "store-result" : {
+                  "description" : "Whether or not to store the output.",
+                  "required" : false,
+                  "type" : "boolean"
+                },
+                "resource-type" : {
+                  "description" : "Request type.",
+                  "required" : false,
+                  "type" : "string"
+                },
+                "resolution-summary" : {
+                  "description" : "Enable resolution-summary output",
+                  "required" : false,
+                  "type" : "boolean"
+                },
+                "artifact-prefix-names" : {
+                  "description" : "Template , Resource Assignment Artifact Prefix names",
+                  "required" : true,
+                  "type" : "list",
+                  "entry_schema" : {
+                    "type" : "string"
+                  }
+                },
+                "request-id" : {
+                  "description" : "Request Id, Unique Id for the request.",
+                  "required" : true,
+                  "type" : "string"
+                },
+                "resource-id" : {
+                  "description" : "Resource Id.",
+                  "required" : false,
+                  "type" : "string"
+                },
+                "action-name" : {
+                  "description" : "Action Name of the process",
+                  "required" : false,
+                  "type" : "string"
+                },
+                "dynamic-properties" : {
+                  "description" : "Dynamic Json Content or DSL Json reference.",
+                  "required" : false,
+                  "type" : "json"
+                }
+              },
+              "outputs" : {
+                "resource-assignment-params" : {
+                  "required" : true,
+                  "type" : "string"
+                },
+                "resource-assignment-map" : {
+                  "required" : true,
+                  "type" : "string"
+                },
+                "status" : {
+                  "required" : true,
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "derived_from" : "tosca.nodes.Component"
+    },
+    "component-script-executor" : {
+      "description" : "This is CLI Transaction Configuration Component API",
+      "version" : "1.0.0",
+      "attributes" : {
+        "response-data" : {
+          "required" : false,
+          "type" : "json"
+        }
+      },
+      "capabilities" : {
+        "component-node" : {
+          "type" : "tosca.capabilities.Node"
+        }
+      },
+      "interfaces" : {
+        "ComponentScriptExecutor" : {
+          "operations" : {
+            "process" : {
+              "inputs" : {
+                "script-type" : {
+                  "description" : "Script type, kotlin type is supported",
+                  "required" : true,
+                  "type" : "string",
+                  "constraints" : [ {
+                    "valid_values" : [ "kotlin", "jython", "internal" ]
+                  } ],
+                  "default" : "internal"
+                },
+                "script-class-reference" : {
+                  "description" : "Kotlin Script class name or jython script name.",
+                  "required" : true,
+                  "type" : "string"
+                },
+                "dynamic-properties" : {
+                  "description" : "Dynamic Json Content or DSL Json reference.",
+                  "required" : false,
+                  "type" : "json"
+                }
+              },
+              "outputs" : {
+                "response-data" : {
+                  "description" : "Execution Response Data.",
+                  "required" : false,
+                  "type" : "string"
+                },
+                "status" : {
+                  "description" : "Status of the Component Execution ( success or failure )",
+                  "required" : true,
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "derived_from" : "tosca.nodes.Component"
+    },
+	"dg-generic" : {
+		"description" : "This is Generic Directed Graph Type",
+		"version" : "1.0.0",
+		"properties" : {
+			"content" : {
+				"required" : true,
+				"type" : "string"
+			},
+			"dependency-node-templates" : {
+				"description" : "Dependent Step Components NodeTemplate name.",
+				"required" : true,
+				"type" : "list",
+				"entry_schema" : {
+					"type" : "string"
+				}
+			}
+		},
+		"derived_from" : "tosca.nodes.Workflow"
+	},		
+    "source-capability" : {
+      "description" : "This is Component Resource Source Node Type",
+      "version" : "1.0.0",
+      "properties" : {
+        "script-type" : {
+          "required" : true,
+          "type" : "string",
+          "constraints" : [ {
+            "valid_values" : [ "kotlin", "internal", "jython" ]
+          } ],
+          "default" : "kotlin"
+        },
+        "script-class-reference" : {
+          "description" : "Capability reference name for internal and kotlin, for jython script file path",
+          "required" : true,
+          "type" : "string"
+        },
+        "instance-dependencies" : {
+          "description" : "Instance dependency Names to Inject to Kotlin / Jython Script.",
+          "required" : false,
+          "type" : "list",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        },
+        "key-dependencies" : {
+          "description" : "Resource Resolution dependency dictionary names.",
+          "required" : true,
+          "type" : "list",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        }
+      },
+      "derived_from" : "tosca.nodes.ResourceSource"
+    },
+    "source-db" : {
+      "description" : "This is Database Resource Source Node Type",
+      "version" : "1.0.0",
+      "properties" : {
+        "type" : {
+          "required" : true,
+          "type" : "string",
+          "constraints" : [ {
+            "valid_values" : [ "SQL", "PLSQL" ]
+          } ],
+          "default" : "SQL"
+        },
+        "endpoint-selector" : {
+          "required" : false,
+          "type" : "string"
+        },
+        "query" : {
+          "required" : true,
+          "type" : "string"
+        },
+        "input-key-mapping" : {
+          "required" : false,
+          "type" : "map",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        },
+        "output-key-mapping" : {
+          "required" : false,
+          "type" : "map",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        },
+        "key-dependencies" : {
+          "required" : true,
+          "type" : "list",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        }
+      },
+      "derived_from" : "tosca.nodes.ResourceSource"
+    },
+    "source-default" : {
+      "description" : "This is Default Resource Source Node Type",
+      "version" : "1.0.0",
+      "properties" : { },
+      "derived_from" : "tosca.nodes.ResourceSource"
+    },
+    "source-input" : {
+      "description" : "This is Input Resource Source Node Type",
+      "version" : "1.0.0",
+      "properties" : { },
+      "derived_from" : "tosca.nodes.ResourceSource"
+    },
+    "source-rest" : {
+      "description" : "This is Rest Resource Source Node Type",
+      "version" : "1.0.0",
+      "properties" : {
+        "type" : {
+          "required" : true,
+          "type" : "string",
+          "constraints" : [ {
+            "valid_values" : [ "JSON" ]
+          } ],
+          "default" : "JSON"
+        },
+        "headers" : {
+          "required" : false,
+          "type" : "map",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        },
+        "verb" : {
+          "required" : true,
+          "type" : "string",
+          "constraints" : [ {
+            "valid_values" : [ "GET", "POST", "DELETE", "PUT" ]
+          } ],
+          "default" : "GET"
+        },
+        "payload" : {
+          "required" : false,
+          "type" : "string",
+          "default" : ""
+        },
+        "endpoint-selector" : {
+          "required" : false,
+          "type" : "string"
+        },
+        "url-path" : {
+          "required" : true,
+          "type" : "string"
+        },
+        "path" : {
+          "required" : true,
+          "type" : "string"
+        },
+        "expression-type" : {
+          "required" : false,
+          "type" : "string",
+          "constraints" : [ {
+            "valid_values" : [ "JSON_PATH", "JSON_POINTER" ]
+          } ],
+          "default" : "JSON_PATH"
+        },
+        "input-key-mapping" : {
+          "required" : false,
+          "type" : "map",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        },
+        "output-key-mapping" : {
+          "required" : false,
+          "type" : "map",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        },
+        "key-dependencies" : {
+          "required" : true,
+          "type" : "list",
+          "entry_schema" : {
+            "type" : "string"
+          }
+        }
+      },
+      "derived_from" : "tosca.nodes.ResourceSource"
+    },
+    "tosca.nodes.Component" : {
+      "description" : "This is default Component Node",
+      "version" : "1.0.0",
+      "derived_from" : "tosca.nodes.Root"
+    },
+    "tosca.nodes.ResourceSource" : {
+      "description" : "TOSCA base type for Resource Sources",
+      "version" : "1.0.0",
+      "derived_from" : "tosca.nodes.Root"
+        },
+	"tosca.nodes.Workflow" : {
+	  "description" : "This is Directed Graph Node Type",
+	  "version" : "1.0.0",
+	  "derived_from" : "tosca.nodes.Root"
+}
+  }
+}
