@@ -1,70 +1,70 @@
 {
-  "name": "5Gcore",
-  "description": "5Gcore package",
-  "data": [
-    {
-      "isBase": true,
-      "file": "base_template.yaml",
-      "type": "HEAT",
-      "data": [
-        {
-          "file": "base_template.env",
-          "type": "HEAT_ENV"
-        }
-      ]
-    },
-    {
-      "isBase": false,
-      "file": "amf.yaml",
-      "type": "HEAT",
-      "data": [
-        {
-          "file": "amf.env",
-          "type": "HEAT_ENV"
-        }
-      ]
-    },
-    {
-      "isBase": false,
-      "file": "smf.yaml",
-      "type": "HEAT",
-      "data": [
-        {
-          "file": "smf.env",
-          "type": "HEAT_ENV"
-        }
-      ]
-    },
-    {
-      "isBase": false,
-      "file": "upf.yaml",
-      "type": "HEAT",
-      "data": [
-        {
-          "file": "upf.env",
-          "type": "HEAT_ENV"
-        }
-      ]
-    },
-    {
-      "file": "base_template_cloudtech_k8s_charts.tgz",
-      "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
-    },
-    {
-      "file": "amf_cloudtech_k8s_charts.tgz",
-      "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
-    },
-    {
-      "file": "upf_cloudtech_k8s_charts.tgz",
-      "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
-    },
-    {
-      "file": "CBA.zip",
-      "type": "CONTROLLER_BLUEPRINT_ARCHIVE"
-    },
-    {
-      "file": "smf_cloudtech_k8s_charts.tgz",
-      "type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
-    }
-  ]
+	"data": [
+		{
+			"isBase": true,
+			"file": "base_template.yaml",
+			"type": "HEAT",
+			"data": [
+				{
+					"file": "base_template.env",
+					"type": "HEAT_ENV"
+				}
+			]
+		},
+		{
+			"isBase": false,
+			"file": "amf.yaml",
+			"type": "HEAT",
+			"data": [
+				{
+					"file": "amf.env",
+					"type": "HEAT_ENV"
+				}
+			]
+		},
+		{
+			"isBase": false,
+			"file": "smf.yaml",
+			"type": "HEAT",
+			"data": [
+				{
+					"file": "smf.env",
+					"type": "HEAT_ENV"
+				}
+			]
+		},
+		{
+			"isBase": false,
+			"file": "upf.yaml",
+			"type": "HEAT",
+			"data": [
+				{
+					"file": "upf.env",
+					"type": "HEAT_ENV"
+				}
+			]
+		},
+		{
+			"file": "base_template_cloudtech_k8s_charts.tgz",
+			"type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
+		},
+		{
+			"file": "amf_cloudtech_k8s_charts.tgz",
+			"type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
+		},
+		{
+			"file": "upf_cloudtech_k8s_charts.tgz",
+			"type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
+		},
+		{
+			"file": "CBA.zip",
+			"type": "CONTROLLER_BLUEPRINT_ARCHIVE"
+		},
+		{
+			"file": "smf_cloudtech_k8s_charts.tgz",
+			"type": "CLOUD_TECHNOLOGY_SPECIFIC_ARTIFACT"
+		}
+	],
+	"description": "5Gcore package",
+	"name": "5Gcore"
 }
