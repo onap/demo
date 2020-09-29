@@ -1,0 +1,56 @@
+[
+  {
+    "name": "service-instance-id",
+    "property": {
+      "description": "",
+      "required": false,
+      "type": "string",
+      "status": "",
+      "constraints": [
+        {}
+      ],
+      "entry_schema": {
+        "type": ""
+      }
+    },
+    "input-param": false,
+    "dictionary-name": "service-instance-id",
+    "dictionary-source": "input",
+    "dependencies": [],
+    "version": 0
+  },
+  {
+    "name": "vnf-id",
+    "property": {
+      "description": "",
+      "required": false,
+      "type": "string",
+      "status": "",
+      "constraints": [
+        {}
+      ],
+      "entry_schema": {
+        "type": ""
+      }
+    },
+    "input-param": false,
+    "dictionary-name": "vnf-id",
+    "dictionary-source": "input",
+    "dependencies": [],
+    "version": 0
+  },
+  {
+	"name": "supportedNssai",
+	"property": {
+		"description": "",
+		"required": false,
+		"type": "string",
+		"default": "hello"
+	},
+	"input-param": false,
+	"dictionary-name": "supportedNssai",
+	"dictionary-source": "input",
+	"dependencies": [],
+	"version": 0
+  }
+]
