@@ -2,11 +2,11 @@
     "tosca_definitions_version": "controller_blueprint_1_0_0",
     "metadata": {
         "template_author": "Samuli Silvius <s.silvius@partner.samsung.com>",
-        "author-email": "abdelmuhaimen.seaudi@orange.com",
+        "author-email": "lukasz.rajewski@orange.com",
         "user-groups": "ADMIN, OPERATION",
         "template_name": "vFW_CNF_CDS",
-        "template_version": "1.0.45",
-        "template_tags": "Samuli Silvius, vFW_CNF_CDS",
+        "template_version": "7.0.0",
+        "template_tags": "Samuli Silvius, Lukasz Rajewski, vFW_CNF_CDS",
         "template_type": "DEFAULT"
     },
     "imports": [
@@ -33,30 +33,6 @@
             "username": "admin",
             "password": "admin"
         },
-        "multicloud-k8s-api": {
-            "type": "basic-auth",
-            "username": "admin",
-            "password": "admin",
-            "url": "http://multicloud-k8s:9015"
-        },
-        "profile-upload-properties": {
-            "assignment-params": {
-                "get_attribute": [
-                    "resource-assignment",
-                    "assignment-params"
-                ]
-            },
-            "profile-modification-decision-data": {
-                "get_input": "vpg-management-port"
-            },
-            "profile-artifacts": {
-                "get_attribute": [
-                    "profile-modification",
-                    "assignment-params"
-                ]
-            },
-            "api-access": "*multicloud-k8s-api"
-        },
         "config-deploy-properties": {
             "resolution-key": {
                 "get_input": "resolution-key"
@@ -76,24 +52,12 @@
                             }
                         ],
                         "on_success": [
-                            "profile-modification"
-                        ]
-                    },
-                    "profile-modification": {
-                        "description": "Profile Modification Resources",
-                        "target": "profile-modification",
-                        "activities": [
-                            {
-                                "call_operation": "ResourceResolutionComponent.process"
-                            }
-                        ],
-                        "on_success": [
                             "profile-upload"
                         ]
                     },
                     "profile-upload": {
-                        "description": "Upload K8s Profile",
-                        "target": "profile-upload",
+                        "description": "Generate and upload K8s Profile",
+                        "target": "k8s-profile-upload",
                         "activities": [
                             {
                                 "call_operation": "ComponentScriptExecutor.process"
@@ -220,45 +184,39 @@
                     }
                 }
             },
-            "profile-modification": {
-                "type": "component-resource-resolution",
+            "k8s-profile-upload": {
+                "type": "component-k8s-profile-upload",
                 "interfaces": {
-                    "ResourceResolutionComponent": {
+                    "K8sProfileUploadComponent": {
                         "operations": {
                             "process": {
                                 "inputs": {
-                                    "artifact-prefix-names": [
-                                        "ssh-service"
-                                    ]
+                                    "artifact-prefix-names": {
+                                        "get_input": "template-prefix"
+                                    },
+                                    "resource-assignment-map": {
+                                        "get_attribute": [
+                                            "resource-assignment",
+                                            "assignment-map"
+                                        ]
+                                    }
                                 }
                             }
                         }
                     }
                 },
                 "artifacts": {
-                    "ssh-service-template": {
-                        "type": "artifact-template-velocity",
-                        "file": "Templates/k8s-profiles/ssh-service-template.vtl"
+                    "vfw-cnf-cds-base-profile": {
+                        "type": "artifact-k8sprofile-content",
+                        "file": "Templates/k8s-profiles/vfw-cnf-cds-base-profile.tar.gz"
                     },
-                    "ssh-service-mapping": {
+                    "vfw-cnf-cds-vpkg-profile": {
+                        "type": "artifact-k8sprofile-content",
+                        "file": "Templates/k8s-profiles/vfw-cnf-cds-vpkg-profile"
+                    },
+                    "vfw-cnf-cds-vpkg-profile-mapping": {
                         "type": "artifact-mapping-resource",
-                        "file": "Templates/k8s-profiles/ssh-service-mapping.json"
-                    }
-                }
-            },
-            "profile-upload": {
-                "type": "component-script-executor",
-                "interfaces": {
-                    "ComponentScriptExecutor": {
-                        "operations": {
-                            "process": {
-                                "inputs": {
-                                    "script-type": "kotlin",
-                                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sProfileUpload",
-                                    "dynamic-properties": "*profile-upload-properties"
-                                }
-                            }
-                        }
+                        "file": "Templates/k8s-profiles/vfw-cnf-cds-vpkg-profile/ssh-service-mapping.json"
                     }
                 }
             },

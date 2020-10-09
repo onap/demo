@@ -19,7 +19,7 @@ base: package/
 	cp base/* package/
 
 cba: package/
-	cd cba/ && zip -r $(CBA_NAME).zip .
+	cd cba/ && zip -r $(CBA_NAME).zip . -x pom.xml .idea/\* target/\*
 	mv cba/$(CBA_NAME).zip package/
 
 package/:
