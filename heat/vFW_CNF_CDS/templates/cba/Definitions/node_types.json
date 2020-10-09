@@ -5,8 +5,14 @@
             "version": "1.0.0",
             "attributes": {
                 "assignment-params": {
+                    "description": "Holds resolved template, resolution-summary or key-value",
                     "required": true,
                     "type": "string"
+                },
+                "assignment-map": {
+                    "description": "Holds resolved values for each artifact prefix eg. { vdns: { vnf-id: 123 } }",
+                    "required": true,
+                    "type": "map"
                 }
             },
             "capabilities": {
@@ -27,8 +33,8 @@
                                 "occurrence": {
                                     "description": "Number of time to perform the resolution.",
                                     "required": false,
-                                    "type": "integer",
-                                    "default": 1
+                                    "default": 1,
+                                    "type": "integer"
                                 },
                                 "store-result": {
                                     "description": "Whether or not to store the output.",
@@ -46,8 +52,8 @@
                                     "type": "boolean"
                                 },
                                 "artifact-prefix-names": {
-                                    "description": "Template , Resource Assignment Artifact Prefix names",
                                     "required": true,
+                                    "description": "Template , Resource Assignment Artifact Prefix names",
                                     "type": "list",
                                     "entry_schema": {
                                         "type": "string"
@@ -76,6 +82,10 @@
                             },
                             "outputs": {
                                 "resource-assignment-params": {
+                                    "required": true,
+                                    "type": "string"
+                                },
+                                "resource-assignment-map": {
                                     "required": true,
                                     "type": "string"
                                 },
@@ -143,6 +153,76 @@
                                 },
                                 "status": {
                                     "description": "Status of the Component Execution ( success or failure )",
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "derived_from": "tosca.nodes.Component"
+        },
+        "component-k8s-profile-upload": {
+            "description": "This component is rendering and sending the k8s profile to the multicloud plugin.",
+            "version": "1.0.0",
+            "attributes": {
+                "statuses": {
+                    "required": true,
+                    "type": "json"
+                }
+            },
+            "capabilities": {
+                "component-node": {
+                    "type": "tosca.capabilities.Node"
+                }
+            },
+            "interfaces": {
+                "K8sProfileUploadComponent": {
+                    "operations": {
+                        "process": {
+                            "inputs": {
+                                "k8s-rb-profile-name": {
+                                    "description": "K8s profile name",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-rb-definition-name": {
+                                    "description": "K8s definition name",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-rb-definition-version": {
+                                    "description": "Version of the definition",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-rb-profile-namespace": {
+                                    "description": "a K8s namespace for the profile",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-rb-profile-source": {
+                                    "description": "Source (tgz/folder) for the template in CBA",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "artifact-prefix-names": {
+                                    "description": "Resource Assignment Artifact Prefix names",
+                                    "required": false,
+                                    "type": "list",
+                                    "entry_schema": {
+                                        "type": "string"
+                                    }
+                                },
+                                "resource-assignment-map": {
+                                    "description": "Holds resolved values for each artifact prefix eg. { vdns: { vnf-id: 123 } }",
+                                    "required": false,
+                                    "type": "json"
+                                }
+                            },
+                            "outputs": {
+                                "statuses": {
                                     "required": true,
                                     "type": "string"
                                 }

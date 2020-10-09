@@ -72,16 +72,21 @@
             "version": "1.0.0",
             "properties": {
                 "vpg-management-port": {
-                    "description": "SSH external port of ssh. When 0 ssh service will not be exposed",
+                    "description": "SSH external port of optional ssh service for vPKG.",
                     "type": "string",
                     "default": "0"
                 },
                 "k8s-rb-profile-namespace": {
                     "description": "K8s namespace to create helm chart for specified profile",
-                    "type": "string"
+                    "type": "string",
+                    "default": "default"
                 },
                 "k8s-rb-profile-name": {
                     "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+                    "type": "string"
+                },
+                "k8s-rb-profile-source": {
+                    "description": "The source folder or file relative to 'Templates/k8s-profiles' folder",
                     "type": "string"
                 },
                 "private1-prefix-id": {

@@ -138,29 +138,73 @@
     {
         "name": "k8s-rb-profile-namespace",
         "property": {
-            "description": "K8s namespace to create helm chart for specified profile",
-            "type": "string"
+            "description": "K8s namespace to create helm chart for specified RB profile",
+            "type": "string",
+            "required": false,
+            "default": "default"
         },
         "input-param": false,
         "dictionary-name": "k8s-rb-profile-namespace",
         "dictionary-source": "sdnc",
-        "dependencies": [
-            "service-instance-id",
-            "vnf-id"
-        ]
+        "dependencies": []
     },
     {
         "name": "k8s-rb-profile-name",
         "property": {
-            "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
-            "type": "string"
+            "description": "RB Profile name used in k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+            "type": "string",
+            "required": false,
+            "default": "default"
         },
         "input-param": false,
         "dictionary-name": "k8s-rb-profile-name",
-        "dictionary-source": "sdnc",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-definition-name",
+        "property": {
+            "description": "RB Name identifier of Helm chart(s) in k8s plugin",
+            "type": "string",
+            "required": false,
+            "metadata": {
+                "transform-template": "${vf-module-model-invariant-uuid}"
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-definition-name",
+        "dictionary-source": "default",
         "dependencies": [
-            "service-instance-id",
-            "vnf-id"
+            "vf-module-model-invariant-uuid"
         ]
+    },
+    {
+        "name": "k8s-rb-definition-version",
+        "property": {
+            "description": "RB Version identifier of Helm chart(s) in k8s plugin",
+            "type": "string",
+            "required": false,
+            "metadata": {
+                "transform-template": "${vf-module-model-version}"
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-definition-version",
+        "dictionary-source": "default",
+        "dependencies": [
+            "vf-module-model-version"
+        ]
+    },
+    {
+        "name": "k8s-rb-profile-source",
+        "property": {
+            "description": "The source folder or file relative to 'Templates/k8s-profiles' folder",
+            "type": "string",
+            "required": true
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-source",
+        "dictionary-source": "default",
+        "dependencies": []
     }
 ]
