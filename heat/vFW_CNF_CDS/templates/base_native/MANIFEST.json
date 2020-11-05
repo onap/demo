@@ -1,0 +1,30 @@
+{
+    "name": "virtualFirewall",
+    "description": "",
+    "data": [
+        {
+            "file": "CBA.zip",
+            "type": "CONTROLLER_BLUEPRINT_ARCHIVE"
+        },
+        {
+            "file": "helm_base_template.tgz",
+            "type": "HELM",
+            "isBase": "true"
+        },
+        {
+            "file": "helm_vfw.tgz",
+            "type": "HELM",
+            "isBase": "false"
+        },
+        {
+            "file": "helm_vpkg.tgz",
+            "type": "HELM",
+            "isBase": "false"
+        },
+        {
+            "file": "helm_vsn.tgz",
+            "type": "HELM",
+            "isBase": "false"
+        }
+    ]
+}
