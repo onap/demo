@@ -142,27 +142,27 @@
                     }
                 },
                 "artifacts": {
-                    "base_template-template": {
+                    "helm_base_template-template": {
                         "type": "artifact-template-velocity",
                         "file": "Templates/base_template-template.vtl"
                     },
-                    "base_template-mapping": {
+                    "helm_base_template-mapping": {
                         "type": "artifact-mapping-resource",
                         "file": "Templates/base_template-mapping.json"
                     },
-                    "vpkg-template": {
+                    "helm_vpkg-template": {
                         "type": "artifact-template-velocity",
                         "file": "Templates/vpkg-template.vtl"
                     },
-                    "vpkg-mapping": {
+                    "helm_vpkg-mapping": {
                         "type": "artifact-mapping-resource",
                         "file": "Templates/vpkg-mapping.json"
                     },
-                    "vfw-template": {
+                    "helm_vfw-template": {
                         "type": "artifact-template-velocity",
                         "file": "Templates/vfw-template.vtl"
                     },
-                    "vfw-mapping": {
+                    "helm_vfw-mapping": {
                         "type": "artifact-mapping-resource",
                         "file": "Templates/vfw-mapping.json"
                     },
@@ -174,11 +174,11 @@
                         "type": "artifact-mapping-resource",
                         "file": "Templates/vnf-mapping.json"
                     },
-                    "vsn-template": {
+                    "helm_vsn-template": {
                         "type": "artifact-template-velocity",
                         "file": "Templates/vsn-template.vtl"
                     },
-                    "vsn-mapping": {
+                    "helm_vsn-mapping": {
                         "type": "artifact-mapping-resource",
                         "file": "Templates/vsn-mapping.json"
                     }
