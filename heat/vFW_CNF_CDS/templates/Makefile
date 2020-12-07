@@ -13,6 +13,8 @@ all: package/ helm base cba
 	cd package_native/ && zip -r $(NATIVE_ONBOARDING_PACKAGE_NAME).zip .
 	mv package_dummy/$(DUMMY_ONBOARDING_PACKAGE_NAME).zip .
 	mv package_native/$(NATIVE_ONBOARDING_PACKAGE_NAME).zip .
+	cp $(DUMMY_ONBOARDING_PACKAGE_NAME).zip ../automation/vsp/
+	cp $(NATIVE_ONBOARDING_PACKAGE_NAME).zip  ../automation/vsp/
 
 helm: package/
 	make -C helm
