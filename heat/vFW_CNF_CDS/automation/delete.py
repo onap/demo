@@ -16,8 +16,10 @@
 # ============LICENSE_END=========================================================
 
 import logging
+from time import sleep
 
 from onapsdk.aai.business import Customer
+from onapsdk.so.so_element import OrchestrationRequest
 
 from config import Config
 
@@ -59,3 +61,9 @@ if not service_instance:
 
 logger.info("******** Delete Service %s *******", service_instance.instance_name)
 service_deletion = service_instance.delete()
+status = None
+while not (status == OrchestrationRequest.StatusEnum.COMPLETED
+           or status == OrchestrationRequest.StatusEnum.FAILED):
+    sleep(10)
+    status = service_deletion.status
+    logger.info(f"Orchestration status is: {status.value}")
