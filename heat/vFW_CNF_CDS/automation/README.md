@@ -16,3 +16,4 @@
 6. Run script `python create_k8s_region.py` in order to create **k8s cloud region**
 7. Onboard **vFW** `python onboard.py`
 8. Instantiate **vFW** `python instantiate.py`
+9. Once test is done, **vFW** service instance can be deleted with `python delete.py` command
