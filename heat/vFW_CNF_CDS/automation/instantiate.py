@@ -18,6 +18,7 @@
 import logging
 import zipfile
 from io import BytesIO
+from time import sleep
 from uuid import uuid4
 
 import oyaml as yaml
@@ -37,6 +38,7 @@ from onapsdk.so.instantiation import (
     InstantiationParameter, VnfParameters, VfmoduleParameters)
 from onapsdk.sdc.service import Service
 from onapsdk.vid import LineOfBusiness, OwningEntity, Platform, Project
+from onapsdk.so.so_element import OrchestrationRequest
 
 logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
@@ -207,3 +209,9 @@ if not service_instance:
         service_instance_name=Config.SERVICE_INSTANCE_NAME,
         vnf_parameters=[vnf_params]
     )
+    status = None
+    while not (status == OrchestrationRequest.StatusEnum.COMPLETED
+               or status == OrchestrationRequest.StatusEnum.FAILED):
+        sleep(10)
+        status = service_instantiation.status
+        logger.info(f"Orchestration status is: {status.value}")
