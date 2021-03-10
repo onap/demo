@@ -1,33 +1,9 @@
 {
     "data_types": {
-        "dt-config-deploy-properties": {
-            "description": "Dynamic DataType definition for workflow(config-deploy).",
+        "dt-config-assign-properties": {
+            "description": "Dynamic DataType definition for workflow(config-assign).",
             "version": "1.0.0",
-            "properties": {
-                "vpg_onap_private_ip_0": {
-                    "description": "",
-                    "required": false,
-                    "type": "string",
-                    "status": "",
-                    "constraints": [
-                        {}
-                    ],
-                    "entry_schema": {
-                        "type": ""
-                    }
-                },
-                "vnf-id": {
-                    "description": "",
-                    "required": false,
-                    "type": "string",
-                    "status": "",
-                    "constraints": [
-                        {}
-                    ],
-                    "entry_schema": {
-                        "type": ""
-                    }
-                },
+            "properties":{
                 "service-instance-id": {
                     "description": "",
                     "required": false,
@@ -39,20 +15,15 @@
                     "entry_schema": {
                         "type": ""
                     }
-                },
-                "active-streams": {
-                    "description": "",
-                    "required": false,
-                    "type": "string",
-                    "status": "",
-                    "constraints": [
-                        {}
-                    ],
-                    "entry_schema": {
-                        "type": ""
-                    }
-                },
-                "put-active-streams": {
+                }
+            },
+            "derived_from": "tosca.datatypes.Dynamic"
+        },
+        "dt-config-deploy-properties": {
+            "description": "Dynamic DataType definition for workflow(config-deploy).",
+            "version": "1.0.0",
+            "properties": {
+                "service-instance-id": {
                     "description": "",
                     "required": false,
                     "type": "string",

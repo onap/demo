@@ -17,7 +17,6 @@
 
 class Config:
     #### REGION DETAILS ####
-    NATIVE = False
     COMPLEX_ID = "complex"
     CLOUD_OWNER = "k8sCloudOwner"
     CLOUD_REGION = "k8s-region-1"
@@ -31,39 +30,53 @@ class Config:
 #                                     "crds/crd2"]
 
     CLUSTER_KUBECONFIG_PATH = "artifacts/cluster_kubeconfig"
-    ONAP_KUBECONFIG_PATH = "artifacts/onap_kubeconfig"
 
     #### SERVICE DETAILS ####
+    NATIVE = True
     GLOBAL_CUSTOMER_ID = "customer_cnf"
     VSPFILE = "vsp/vfw_k8s_demo.zip"
     if NATIVE:
         VSPFILE = "vsp/native_vfw_k8s_demo.zip"
+
+    PROFILE_NAME = "vfw-cnf-cds-base-profile"
+    PROFILE_SOURCE = PROFILE_NAME
+
     VENDOR = "vendor_cnf"
     SERVICENAME = "vfw_k8s_demo_CNF"
     VSPNAME = "VSP_" + SERVICENAME
     VFNAME = "VF_" + SERVICENAME
     SERVICE_INSTANCE_NAME = "INSTANCE_" + SERVICENAME
     SDNC_ARTIFACT_NAME = "vnf"
+
+    # INSERT PARAMS FOR VNF HERE AS "name" : "value" PAIR
+    VNF_PARAM_LIST = {}
+
     VF_MODULE_PREFIX = ""
     if NATIVE:
         VF_MODULE_PREFIX = "helm_"
 
-    VF_MODULE_LIST = {VF_MODULE_PREFIX + "base_template":
-                          {"name": VF_MODULE_PREFIX + "base_template",
-                           "k8s-rb-profile-name": "vfw-cnf-cds-base-profile",
-                           "k8s-rb-profile-namespace": K8S_NAMESPACE},
-                      VF_MODULE_PREFIX + "vfw":
-                          {"name": VF_MODULE_PREFIX + "vfw",
-                           "k8s-rb-profile-name": "vfw-cnf-cds-base-profile",
-                           "k8s-rb-profile-namespace": K8S_NAMESPACE},
-                      VF_MODULE_PREFIX + "vpkg":
-                          {"name": VF_MODULE_PREFIX + "vpkg",
-                           "k8s-rb-profile-name": "vfw-cnf-cds-base-profile",
-                           "k8s-rb-profile-namespace": K8S_NAMESPACE},
-                      VF_MODULE_PREFIX + "vsn":
-                          {"name": VF_MODULE_PREFIX + "vsn",
-                           "k8s-rb-profile-name": "vfw-cnf-cds-base-profile",
-                           "k8s-rb-profile-namespace": K8S_NAMESPACE}}
+    VF_MODULE_PARAM_LIST = {
+        VF_MODULE_PREFIX + "base_template": {
+            "k8s-rb-profile-name": PROFILE_NAME,
+            "k8s-rb-profile-source": PROFILE_SOURCE,
+            "k8s-rb-profile-namespace": K8S_NAMESPACE
+        },
+        VF_MODULE_PREFIX + "vfw": {
+            "k8s-rb-profile-name": PROFILE_NAME,
+            "k8s-rb-profile-source": PROFILE_SOURCE,
+            "k8s-rb-profile-namespace": K8S_NAMESPACE
+        },
+        VF_MODULE_PREFIX + "vpkg": {
+            "k8s-rb-profile-name": PROFILE_NAME,
+            "k8s-rb-profile-source": PROFILE_SOURCE,
+            "k8s-rb-profile-namespace": K8S_NAMESPACE
+        },
+        VF_MODULE_PREFIX + "vsn": {
+            "k8s-rb-profile-name": PROFILE_NAME,
+            "k8s-rb-profile-source": PROFILE_SOURCE,
+            "k8s-rb-profile-namespace": K8S_NAMESPACE
+        }
+    }
 
     ######## DEFAULT VALUES ########
     OWNING_ENTITY = "OE-Demonstration"
