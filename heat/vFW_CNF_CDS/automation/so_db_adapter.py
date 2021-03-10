@@ -93,4 +93,3 @@ class SoDBUpdate(SoElement, ABC):
             exception=ValueError)
 
         return response
-

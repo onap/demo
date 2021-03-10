@@ -1,6 +1,6 @@
 """Global settings module."""  # pylint: disable=bad-whitespace
-
-from onapsdk.onap_service import OnapService
+# uncomment if socks is used
+#from onapsdk.onap_service import OnapService
 
 ######################
 #                    #
@@ -24,4 +24,4 @@ VES_URL = "http://ves.api.simpledemo.onap.org:30417"
 DMAAP_URL = "http://dmaap.api.simpledemo.onap.org:3904"
 
 # uncomment if socks is used
-# OnapService.set_proxy({'http': 'socks5h://127.0.0.1:8081', 'https': 'socks5h://127.0.0.1:8081'})
+#OnapService.set_proxy({'http': 'socks5h://127.0.0.1:8081', 'https': 'socks5h://127.0.0.1:8081'})
