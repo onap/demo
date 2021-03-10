@@ -25,6 +25,7 @@ import oyaml as yaml
 
 from config import Config
 from onapsdk.sdc.properties import Property
+import onapsdk.constants as const
 
 from onapsdk.sdc.vendor import Vendor
 from onapsdk.sdc.vsp import Vsp
@@ -67,18 +68,35 @@ vsp = Vsp(name=Config.VSPNAME, vendor=vendor, package=open(myvspfile, 'rb'))
 vsp.onboard()
 
 logger.info("******** Onboard VF *******")
-vf = Vf(name=Config.VFNAME, properties=[
-    Property(name="sdnc_model_name", property_type="string", value=SDNC_MODEL_NAME),
-    Property(name="sdnc_model_version", property_type="string", value=SDNC_MODEL_VERSION),
-    Property(name="sdnc_artifact_name", property_type="string", value=Config.SDNC_ARTIFACT_NAME)
-]
-        )
+vf = Vf(name=Config.VFNAME)
 vf.vsp = vsp
+vf.create()
 vf.onboard()
 
 logger.info("******** Onboard Service *******")
-svc = Service(name=Config.SERVICENAME, resources=[vf], instantiation_type=ServiceInstantiationType.MACRO)
-svc.onboard()
+svc = Service(name=Config.SERVICENAME,
+              instantiation_type=ServiceInstantiationType.MACRO)
+svc.create()
+
+if svc.status == const.DRAFT:
+    svc.add_resource(vf)
+
+    logger.info("******** Set SDNC properties for VF ********")
+    component = svc.get_component(vf)
+    prop = component.get_property("sdnc_model_version")
+    prop.value = SDNC_MODEL_VERSION
+    prop = component.get_property("sdnc_artifact_name")
+    prop.value = Config.SDNC_ARTIFACT_NAME
+    prop = component.get_property("sdnc_model_name")
+    prop.value = SDNC_MODEL_NAME
+    prop = component.get_property("controller_actor")
+    prop.value = "CDS"
+    prop = component.get_property("skip_post_instantiation_configuration")
+    prop.value = False
+
+    logger.info("******** Onboard Service *******")
+    svc.checkin()
+    svc.onboard()
 
 logger.info("******** Check Service Distribution *******")
 distribution_completed = False
