@@ -143,10 +143,10 @@ for vnf in service.vnfs:
         vf_module_label = vf_module.properties["vf_module_label"]
         if vf_module_label == "base_template_dummy_ignore":
             continue
-        profile_name = Config.VF_MODULE_LIST[vf_module_label]["k8s-rb-profile-name"]
+        profile_name = Config.VF_MODULE_PARAM_LIST[vf_module_label]["k8s-rb-profile-name"]
         try:
             profile = definition.get_profile_by_name(profile_name)
-            if profile.namespace != Config.VF_MODULE_LIST[vf_module_label]["k8s-rb-profile-namespace"]:
+            if profile.namespace != Config.VF_MODULE_PARAM_LIST[vf_module_label]["k8s-rb-profile-namespace"]:
                 profile.delete()
                 logger.info("Profile: " + profile_name + " for " + vf_module.name + " deleted")
             else:
@@ -154,6 +154,7 @@ for vnf in service.vnfs:
                             " for " + vf_module.name + ". Namespace is fine")
         except ValueError:
             logger.info("Profile: " + profile_name + " for " + vf_module.name + " not found")
+
 
 # Read SDNC MODEL NAME and VERSION from CBA.zip
 logger.info("*******************************")
@@ -177,23 +178,32 @@ for se in service_subscription.service_instances:
 if not service_instance:
     logger.info("******** Service Instance not existing: Instantiate *******")
     # Instantiate service
-    vfmodules_list = Config.VF_MODULE_LIST
+    vfmodules_list = Config.VF_MODULE_PARAM_LIST
+    vnf_param_list = Config.VNF_PARAM_LIST
 
     vnf_param = [
         InstantiationParameter(name="sdnc_model_name", value=SDNC_MODEL_NAME),
         InstantiationParameter(name="sdnc_model_version", value=SDNC_MODEL_VERSION),
         InstantiationParameter(name="sdnc_artifact_name", value=Config.SDNC_ARTIFACT_NAME)]
 
+    for vnf_param_name, vnf_param_value in vnf_param_list.items():
+        vnf_param.append(
+            InstantiationParameter(name=vnf_param_name, value=vnf_param_value)
+        )
+
     vfmodules_param = []
     for vfmodule in vfmodules_list:
         params = [
-            InstantiationParameter(name="k8s-rb-profile-name", value=vfmodules_list[vfmodule]["k8s-rb-profile-name"]),
-            InstantiationParameter(name="k8s-rb-profile-namespace", value=vfmodules_list[vfmodule]["k8s-rb-profile-namespace"]),
             InstantiationParameter(name="sdnc_model_name", value=SDNC_MODEL_NAME),
             InstantiationParameter(name="sdnc_model_version", value=SDNC_MODEL_VERSION),
-            InstantiationParameter(name="vf_module_label", value=vfmodules_list[vfmodule]["name"])]
+            InstantiationParameter(name="vf_module_label", value=vfmodule)]
 
-        vfmodules_param.append(VfmoduleParameters(vfmodules_list[vfmodule]["name"], params))
+        for vfmodule_param_name, vfmodule_param_value in vfmodules_list[vfmodule].items():
+            params.append(
+                InstantiationParameter(name=vfmodule_param_name, value=vfmodule_param_value)
+            )
+
+        vfmodules_param.append(VfmoduleParameters(vfmodule, params))
 
     vnf_params = VnfParameters(name=Config.VFNAME, vnf_parameters=vnf_param, vfmodule_parameters=vfmodules_param)
 
