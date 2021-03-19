@@ -37,6 +37,20 @@
             "resolution-key": {
                 "get_input": "resolution-key"
             }
+        },
+        "simple-status-properties": {
+            "resolution-key": {
+                "get_input": "resolution-key"
+            },
+            "config-deploy-setup": {
+                "get_attribute": [
+                    "config-setup-process",
+                    "",
+                    "assignment-map",
+                    "config-deploy",
+                    "config-deploy-setup"
+                ]
+            }
         }
     },
     "topology_template": {
@@ -100,12 +114,24 @@
             },
             "config-assign": {
                 "steps": {
-                    "config-assign": {
-                        "description": "Create a message",
-                        "target": "config-assign-process",
+                    "config-setup": {
+                        "description": "Gather necessary input for config template upload",
+                        "target": "config-setup-process",
                         "activities": [
                             {
-                                "call_operation": ""
+                                "call_operation": "ResourceResolutionComponent.process"
+                            }
+                        ],
+                        "on_success": [
+                            "config-template"
+                        ]
+                    },
+                    "config-template": {
+                        "description": "Generate and upload K8s config template",
+                        "target": "k8s-config-template",
+                        "activities": [
+                            {
+                                "call_operation": "K8sConfigTemplateComponent.process"
                             }
                         ]
                     }
@@ -128,9 +154,38 @@
             },
             "config-deploy": {
                 "steps": {
-                    "config-deploy": {
-                        "description": "Run kotlin script",
-                        "target": "config-deploy-process"
+                    "config-setup": {
+                        "description": "Gather necessary input for config init and status verification",
+                        "target": "config-setup-process",
+                        "activities": [
+                            {
+                                "call_operation": "ResourceResolutionComponent.process"
+                            }
+                        ],
+                        "on_success": [
+                            "config-apply"
+                        ]
+                    },
+                    "config-apply": {
+                        "description": "Activate K8s config template",
+                        "target": "k8s-config-apply",
+                        "activities": [
+                            {
+                                "call_operation": "K8sConfigTemplateComponent.process"
+                            }
+                        ],
+                        "on_success": [
+                            "status-verification-script"
+                        ]
+                    },
+                    "status-verification-script": {
+                        "description": "Simple status verification script",
+                        "target": "simple-status-check",
+                        "activities": [
+                            {
+                                "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ]
                     }
                 },
                 "inputs": {
@@ -241,7 +296,90 @@
                     }
                 }
             },
-            "config-assign-process": {
+            "k8s-config-template": {
+                "type": "component-k8s-config-template",
+                "interfaces": {
+                    "K8sConfigTemplateComponent": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "artifact-prefix-names": [
+                                        "helm_vpkg"
+                                    ],
+                                    "resource-assignment-map": {
+                                        "get_attribute": [
+                                            "config-setup-process",
+                                            "",
+                                            "assignment-map",
+                                            "config-deploy",
+                                            "config-deploy-setup"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "artifacts": {
+                    "ssh-service-config": {
+                        "type": "artifact-k8sprofile-content",
+                        "file": "Templates/k8s-configs/ssh-service.tar.gz"
+                    },
+                    "ssh-service-config-customizable": {
+                        "type": "artifact-k8sprofile-content",
+                        "file": "Templates/k8s-configs/ssh-service-config"
+                    },
+                    "ssh-service-config-customizable-mapping": {
+                        "type": "artifact-mapping-resource",
+                        "file": "Templates/k8s-configs/ssh-service-config/ssh-service-mapping.json"
+                    }
+                }
+            },
+            "k8s-config-apply": {
+                "type": "component-k8s-config-value",
+                "interfaces": {
+                    "K8sConfigValueComponent": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "artifact-prefix-names": [
+                                        "helm_vpkg"
+                                    ],
+                                    "resource-assignment-map": {
+                                        "get_attribute": [
+                                            "config-setup-process",
+                                            "",
+                                            "assignment-map",
+                                            "config-deploy",
+                                            "config-deploy-setup"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "simple-status-check": {
+                "type": "component-script-executor",
+                "interfaces": {
+                    "ComponentScriptExecutor": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "script-type": "kotlin",
+                                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.SimpleStatusCheck",
+                                    "instance-dependencies": [
+                                        "blueprintPropertiesService"
+                                    ],
+                                    "dynamic-properties": "*simple-status-properties"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "config-setup-process": {
                 "type": "component-resource-resolution",
                 "interfaces": {
                     "ResourceResolutionComponent": {
@@ -251,9 +389,9 @@
                                     "resolution-key": {
                                         "get_input": "resolution-key"
                                     },
-                                    "store-result": true,
+                                    "store-result": false,
                                     "artifact-prefix-names": [
-                                        "cnf"
+                                        "config-deploy"
                                     ]
                                 },
                                 "outputs": {
@@ -270,13 +408,13 @@
                     }
                 },
                 "artifacts": {
-                    "cnf-template": {
+                    "config-deploy-template": {
                         "type": "artifact-template-velocity",
-                        "file": "Templates/cnf-template.vtl"
+                        "file": "Templates/config-setup-template.vtl"
                     },
-                    "cnf-mapping": {
+                    "config-deploy-mapping": {
                         "type": "artifact-mapping-resource",
-                        "file": "Templates/cnf-mapping.json"
+                        "file": "Templates/config-setup-mapping.json"
                     }
                 }
             },

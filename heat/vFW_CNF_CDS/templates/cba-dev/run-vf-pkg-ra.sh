@@ -19,7 +19,7 @@
 
 REQ_ID=`shuf -i 1-1000000 -n 1`
 SUB_REQ_ID=$REQ_ID"-"`shuf -i 1-1000 -n 1`
-TEMPLATE_NAME="vpkg"
+TEMPLATE_NAME="helm_vpkg"
 
 curl --location --request POST 'http://localhost:8081/api/v1/execution-service/process' \
 --header 'Authorization: Basic Y2NzZGthcHBzOmNjc2RrYXBwcw==' \
@@ -53,13 +53,15 @@ curl --location --request POST 'http://localhost:8081/api/v1/execution-service/p
                 "vf-module-label": "'$TEMPLATE_NAME'",
                 "vf-module-type": "vf-module-type",
                 "vf-module-model-customization-uuid": "d3ae2df9-95d4-48cc-a466-9f12dee80458",
-                "vf-module-model-invariant-uuid": "564e55dc-3b90-4c9c-9e97-42f2c97d8f11",
-                "vf-module-model-version": "3d55e2a6-7634-4ceb-98e9-2852d621a544",
+                "vf-module-model-invariant-uuid": "95e56eee-eeef-4a18-a032-8dbd757544b5",
+                "vf-module-model-version": "de66174a-d401-4b31-9331-3a44ad3ba01b",
                 "vf-module-id": "3e6a0375-4b92-4bf5-9910-b0b893448a9c",
                 "vf-naming-policy" : "SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP",
-                "k8s-rb-profile-name": "vpkg-modified",
-                "k8s-rb-profile-source": "vfw-cnf-cds-vpkg-profile",
-                "k8s-rb-profile-namespace": "test",
+                "k8s-rb-profile-name": "vfw-cnf-cds-base-profile",
+                "k8s-rb-profile-source": "vfw-cnf-cds-base-profile",
+                "k8s-rb-profile-namespace": "vfirewall",
+                "k8s-rb-config-template-name": "ssh-service-config",
+                "k8s-rb-config-template-source": "ssh-service-config",
                 "management-prefix-id" : 3
             }
         }

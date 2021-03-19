@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # ============LICENSE_START=======================================================
-# Copyright (C) 2020 Orange
+# Copyright (C) 2021 Orange
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 
 REQ_ID=`shuf -i 1-1000000 -n 1`
 SUB_REQ_ID=$REQ_ID"-"`shuf -i 1-1000 -n 1`
+ACTION=$1
 
 curl --location --request POST 'http://localhost:8081/api/v1/execution-service/process' \
 --header 'Authorization: Basic Y2NzZGthcHBzOmNjc2RrYXBwcw==' \
@@ -32,30 +33,20 @@ curl --location --request POST 'http://localhost:8081/api/v1/execution-service/p
     "actionIdentifiers": {
         "blueprintName": "vFW_CNF_CDS",
         "blueprintVersion": "7.0.0",
-        "actionName": "resource-assignment",
+        "actionName": "'config-$ACTION'",
         "mode": "sync"
     },
     "payload": {
-        "resource-assignment-request": {
-            "template-prefix": [
-                "vnf"
-            ],
-            "resolution-key": "ra-test-resolution",
-            "resource-assignment-properties": {
-                "vpg-management-port": 100,
-                "aic-cloud-region": "RegionOne",
-                "vnf-model-customization-uuid": "d73864db-1f6e-4e54-a533-a96773c926a4",
-                "service-instance-id": "2afee7c4-8b16-4f2f-a567-48fb7948abcf",
-                "vnf-id": "51274ece-55ca-4cbc-b7c4-0da0dcc65d38",
-                "vnf_name": "sample-vnf-name",
-                "k8s-rb-profile-namespace": "vfw-namespace",
-                "int_private1_net_cidr" : "192.168.10.0/24",
-                "int_private2_net_cidr" : "192.168.20.0/24",
-                "onap_private_net_cidr" : "10.0.0.0/16",
-                "private1-prefix-id" : 2,
-                "private2-prefix-id" : 1
-            }
+       "'config-$ACTION-request'": {
+           "resolution-key": "VF_vfw_k8s_demo_CNF_KUD-6",
+           "'config-$ACTION-properties'": {
+               "service-instance-id": "889670f7-ed49-41b0-a251-b43e9a035811",
+               "service-model-uuid": "bea61c93-1a90-426b-9fbe-6024bde48419",
+               "vnf-id": "317f28f3-37b4-40c8-8062-e93fda15db99",
+               "vnf-name": "VF_vfw_k8s_demo_CNF_KUD",
+               "vnf-customization-uuid": "2793ba6f-332d-4694-8f8e-0b1f2ec3a732"
+           }
         }
     }
-}' | jq '.payload | .["resource-assignment-response"] | .["meshed-template"] | .vnf | fromjson | .["resource-accumulator-resolved-data"] '
+}' | jq '.payload | .["'config-$ACTION-response'"]'
 

@@ -1,0 +1,77 @@
+[
+    {
+        "name": "service-instance-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "service-instance-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vnf-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vnf-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-modules-list-sdnc",
+        "property": {
+            "description": "list of modules associated with vnf from MDSAL",
+            "type": "json"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-modules-list",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "vf-modules-list-aai",
+        "property": {
+            "description": "list of modules associated with vnf from AAI",
+            "type": "json"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-modules-list",
+        "dictionary-source": "aai-data",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "config-deploy-setup",
+        "property": {
+            "description": "configuration for config value setup",
+            "type": "json"
+        },
+        "input-param": false,
+        "dictionary-name": "config-deploy-setup",
+        "dictionary-source": "capability",
+        "dependencies": [
+            "vf-modules-list-aai",
+            "vf-modules-list-sdnc"
+        ]
+    }
+]
