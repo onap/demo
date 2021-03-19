@@ -200,10 +200,34 @@
         "property": {
             "description": "The source folder or file relative to 'Templates/k8s-profiles' folder",
             "type": "string",
-            "required": true
+            "required": false
         },
         "input-param": false,
         "dictionary-name": "k8s-rb-profile-source",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-config-template-name",
+        "property": {
+            "description": "The source of configuration template for config-assign operation",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-config-template-name",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-config-template-source",
+        "property": {
+            "description": "The source of configuration template for config-assign operation",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-config-template-source",
         "dictionary-source": "default",
         "dependencies": []
     }

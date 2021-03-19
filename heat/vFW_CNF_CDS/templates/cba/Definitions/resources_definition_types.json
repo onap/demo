@@ -328,6 +328,44 @@
             }
         }
     },
+    "k8s-rb-config-template-name": {
+        "tags": "k8s, cnf, config, k8s-rb-config-template-name",
+        "name": "k8s-rb-config-template-name",
+        "property": {
+            "description": "The name of configuration template for config-assign operation",
+            "type": "string"
+        },
+        "group": "default",
+        "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>",
+        "sources": {
+            "input": {
+                "type": "source-input"
+            },
+            "default": {
+                "type": "source-default",
+                "properties": {}
+            }
+        }
+    },
+    "k8s-rb-config-template-source": {
+        "tags": "k8s, cnf, config, k8s-rb-config-template-source",
+        "name": "k8s-rb-config-template-source",
+        "property": {
+            "description": "The source of configuration template for config-assign operation",
+            "type": "string"
+        },
+        "group": "default",
+        "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>",
+        "sources": {
+            "input": {
+                "type": "source-input"
+            },
+            "default": {
+                "type": "source-default",
+                "properties": {}
+            }
+        }
+    },
     "management-prefix-id": {
         "tags": "management-prefix-id",
         "name": "management-prefix-id",
@@ -975,6 +1013,83 @@
                         "service-instance-id",
                         "vnf-id"
                     ]
+                }
+            }
+        }
+    },
+    "vf-modules-list": {
+        "tags": "vf-modules-list",
+        "name": "vf-modules-list",
+        "property": {
+            "description": "List of vf-modules associated with vnf",
+            "type": "json"
+        },
+        "group": "default",
+        "updated-by": "Lukasz Rajewski <lukasz.rajewski@orange.com>",
+        "sources": {
+            "input": {
+                "type": "source-input"
+            },
+            "default": {
+                "type": "source-default",
+                "properties": {}
+            },
+            "aai-data": {
+                "type": "source-rest",
+                "properties": {
+                    "verb": "GET",
+                    "type": "JSON",
+                    "url-path": "/aai/v19/network/generic-vnfs/generic-vnf/${vnf-id}?depth=1",
+                    "path": "/vf-modules",
+                    "input-key-mapping": {
+                        "vnf-id": "vnf-id"
+                    },
+                    "output-key-mapping": {
+                        "vf-modules": "vf-module"
+                    },
+                    "key-dependencies": [
+                        "vnf-id"
+                    ]
+                }
+            },
+            "sdnc": {
+                "type": "source-rest",
+                "properties": {
+                    "verb": "GET",
+                    "type": "JSON",
+                    "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vf-modules",
+                    "path": "/vf-modules",
+                    "input-key-mapping": {
+                        "service-instance-id": "service-instance-id",
+                        "vnf-id": "vnf-id"
+                    },
+                    "output-key-mapping": {
+                        "vf-modules": "vf-module"
+                    },
+                    "key-dependencies": [
+                        "service-instance-id",
+                        "vnf-id"
+                    ]
+                }
+            }
+        }
+    },
+    "config-deploy-setup": {
+        "tags": "config-deploy-setup",
+        "name": "config-deploy-setup",
+        "property": {
+            "description": "Configuration Input setup for config-deploy operation",
+            "type": "json"
+        },
+        "group": "default",
+        "updated-by": "Lukasz Rajewski <lukasz.rajewski@orange.com>",
+        "sources": {
+            "capability": {
+                "type": "source-capability",
+                "properties": {
+                    "script-type": "kotlin",
+                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.ConfigDeploySetup",
+                    "instance-dependencies": []
                 }
             }
         }

@@ -1,0 +1,14 @@
+[
+    {
+        "name": "vpg-management-port",
+        "property": {
+            "description": "The number of node port for ssh service of vpg",
+            "type": "integer",
+            "default": "0"
+        },
+        "input-param": false,
+        "dictionary-name": "vpg-management-port",
+        "dictionary-source": "default",
+        "dependencies": []
+    }
+]

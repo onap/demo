@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.vpg_name_0 }}-ssh
+  labels:
+    vnf-name: {{ .Values.vnf_name }}
+    vf-module-name: {{ .Values.vpg_name_0 }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
+spec:
+  type: NodePort
+  ports:
+    - port: 22
+      nodePort: ${vpg-management-port}
+  selector:
+    vf-module-name: {{ .Values.vpg_name_0 }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
