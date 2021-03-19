@@ -7,14 +7,18 @@
                 "service-instance-id": {
                     "description": "",
                     "required": false,
-                    "type": "string",
-                    "status": "",
-                    "constraints": [
-                        {}
-                    ],
-                    "entry_schema": {
-                        "type": ""
-                    }
+                    "type": "string"
+                },
+                "vnf-id": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "vf-modules-list": {
+                    "type": "json"
+                },
+                "config-deploy-setup": {
+                    "type": "json"
                 }
             },
             "derived_from": "tosca.datatypes.Dynamic"
@@ -26,14 +30,18 @@
                 "service-instance-id": {
                     "description": "",
                     "required": false,
-                    "type": "string",
-                    "status": "",
-                    "constraints": [
-                        {}
-                    ],
-                    "entry_schema": {
-                        "type": ""
-                    }
+                    "type": "string"
+                },
+                "vnf-id": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "vf-modules-list": {
+                    "type": "json"
+                },
+                "config-deploy-setup": {
+                    "type": "json"
                 }
             },
             "derived_from": "tosca.datatypes.Dynamic"
@@ -58,6 +66,14 @@
                 },
                 "k8s-rb-profile-source": {
                     "description": "The source folder or file relative to 'Templates/k8s-profiles' folder",
+                    "type": "string"
+                },
+                "k8s-rb-config-template-name": {
+                    "description": "The name of configuration template for config-assign operation",
+                    "type": "string"
+                },
+                "k8s-rb-config-template-source": {
+                    "description": "The source of configuration template for config-assign operation",
                     "type": "string"
                 },
                 "private1-prefix-id": {

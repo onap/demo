@@ -1,0 +1,41 @@
+[
+  {
+    "name": "vnf-id",
+    "property": {
+      "description": "",
+      "required": false,
+      "type": "string"
+    },
+    "input-param": false,
+    "dictionary-name": "vnf-id",
+    "dictionary-source": "input",
+    "dependencies": [],
+    "version": 0
+  },
+  {
+    "name": "vf-modules-list",
+    "property": {
+      "description": "list of modules associated with vnf",
+      "type": "json"
+    },
+    "input-param": false,
+    "dictionary-name": "vf-modules-list",
+    "dictionary-source": "aai-data",
+    "dependencies": [
+      "vnf-id"
+    ]
+  },
+  {
+    "name": "config-value-setup",
+    "property": {
+      "description": "configuration for config value setup",
+      "type": "json"
+    },
+    "input-param": false,
+    "dictionary-name": "config-value-setup",
+    "dictionary-source": "capability",
+    "dependencies": [
+      "vf-modules-list"
+    ]
+  }
+]

@@ -139,6 +139,14 @@
                                     "required": true,
                                     "type": "string"
                                 },
+                                "instance-dependencies" : {
+                                    "description" : "Instance names to inject to Jython or Kotlin Script.",
+                                    "required" : true,
+                                    "type" : "list",
+                                    "entry_schema" : {
+                                        "type" : "string"
+                                    }
+                                },
                                 "dynamic-properties": {
                                     "description": "Dynamic Json Content or DSL Json reference.",
                                     "required": false,
@@ -206,6 +214,144 @@
                                     "description": "Source (tgz/folder) for the template in CBA",
                                     "required": false,
                                     "type": "string"
+                                },
+                                "artifact-prefix-names": {
+                                    "description": "Resource Assignment Artifact Prefix names",
+                                    "required": false,
+                                    "type": "list",
+                                    "entry_schema": {
+                                        "type": "string"
+                                    }
+                                },
+                                "resource-assignment-map": {
+                                    "description": "Holds resolved values for each artifact prefix eg. { vdns: { vnf-id: 123 } }",
+                                    "required": false,
+                                    "type": "json"
+                                }
+                            },
+                            "outputs": {
+                                "statuses": {
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "derived_from": "tosca.nodes.Component"
+        },
+        "component-k8s-config-template": {
+            "description": "This component is rendering and sending the k8s template to the multicloud plugin.",
+            "version": "1.0.0",
+            "attributes": {
+                "statuses": {
+                    "required": true,
+                    "type": "json"
+                }
+            },
+            "capabilities": {
+                "component-node": {
+                    "type": "tosca.capabilities.Node"
+                }
+            },
+            "interfaces": {
+                "K8sConfigTemplateComponent": {
+                    "operations": {
+                        "process": {
+                            "inputs": {
+                                "k8s-rb-config-template-name": {
+                                    "description": "K8s template name",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-rb-definition-name": {
+                                    "description": "K8s definition name",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-rb-definition-version": {
+                                    "description": "Version of the definition",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-rb-config-template-source": {
+                                    "description": "Source (tgz/folder) for the template in CBA",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "artifact-prefix-names": {
+                                    "description": "Resource Assignment Artifact Prefix names",
+                                    "required": false,
+                                    "type": "list",
+                                    "entry_schema": {
+                                        "type": "string"
+                                    }
+                                },
+                                "resource-assignment-map": {
+                                    "description": "Holds resolved values for each artifact prefix eg. { vdns: { vnf-id: 123 } }",
+                                    "required": false,
+                                    "type": "json"
+                                }
+                            },
+                            "outputs": {
+                                "statuses": {
+                                    "required": true,
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "derived_from": "tosca.nodes.Component"
+        },
+        "component-k8s-config-value": {
+            "description": "This component is sending the k8s config value to the multicloud plugin.",
+            "version": "1.0.0",
+            "attributes": {
+                "statuses": {
+                    "required": true,
+                    "type": "json"
+                }
+            },
+            "capabilities": {
+                "component-node": {
+                    "type": "tosca.capabilities.Node"
+                }
+            },
+            "interfaces": {
+                "K8sConfigValueComponent": {
+                    "operations": {
+                        "process": {
+                            "inputs": {
+                                "k8s-template-name": {
+                                    "description": "K8s template name",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-config-name": {
+                                    "description": "K8s config name",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-instance-id": {
+                                    "description": "K8s instance id",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-rb-template-value-source": {
+                                    "description": "Location of value source in CBA",
+                                    "required": false,
+                                    "type": "string"
+                                },
+                                "k8s-operation-type" : {
+                                    "required" : false,
+                                    "type" : "string",
+                                    "constraints" : [{
+                                        "valid_values" : [ "create", "update", "rollback" ]
+                                    }],
+                                    "default" : "create"
                                 },
                                 "artifact-prefix-names": {
                                     "description": "Resource Assignment Artifact Prefix names",
@@ -437,6 +583,83 @@
             "description": "TOSCA base type for Resource Sources",
             "version": "1.0.0",
             "derived_from": "tosca.nodes.Root"
+        },
+        "tosca.nodes.Vnf" : {
+            "description" : "This is VNF Node Type",
+            "version" : "1.0.0",
+            "derived_from" : "tosca.nodes.Root"
+        },
+        "tosca.nodes.Workflow" : {
+            "description" : "This is Directed Graph Node Type",
+            "version" : "1.0.0",
+            "derived_from" : "tosca.nodes.Root"
+        },
+        "vnf-netconf-device" : {
+            "description" : "This is VNF Device with Netconf  Capability",
+            "version" : "1.0.0",
+            "capabilities" : {
+                "netconf" : {
+                    "type" : "tosca.capabilities.Netconf",
+                    "properties" : {
+                        "login-key" : {
+                            "required" : true,
+                            "type" : "string",
+                            "default" : "sdnc"
+                        },
+                        "login-account" : {
+                            "required" : true,
+                            "type" : "string",
+                            "default" : "sdnc-tacacs"
+                        },
+                        "source" : {
+                            "required" : false,
+                            "type" : "string",
+                            "default" : "npm"
+                        },
+                        "target-ip-address" : {
+                            "required" : true,
+                            "type" : "string"
+                        },
+                        "port-number" : {
+                            "required" : true,
+                            "type" : "integer",
+                            "default" : 830
+                        },
+                        "connection-time-out" : {
+                            "required" : false,
+                            "type" : "integer",
+                            "default" : 30
+                        }
+                    }
+                },
+                "restconf" : {
+                    "type" : "tosca.capabilities.Restconf",
+                    "properties" : {
+                        "login-key" : {
+                            "required" : true,
+                            "type" : "string"
+                        },
+                        "login-account" : {
+                            "required" : true,
+                            "type" : "string"
+                        },
+                        "target-ip-address" : {
+                            "required" : true,
+                            "type" : "string"
+                        },
+                        "port-number" : {
+                            "required" : true,
+                            "type" : "integer"
+                        },
+                        "connection-time-out" : {
+                            "required" : false,
+                            "type" : "integer",
+                            "default" : 30
+                        }
+                    }
+                }
+            },
+            "derived_from" : "tosca.nodes.Vnf"
         }
     }
 }

@@ -19,7 +19,7 @@
 
 REQ_ID=`shuf -i 1-1000000 -n 1`
 SUB_REQ_ID=$REQ_ID"-"`shuf -i 1-1000 -n 1`
-TEMPLATE_NAME="base_template"
+TEMPLATE_NAME="helm_base_template"
 
 curl --location --request POST 'http://localhost:8081/api/v1/execution-service/process' \
 --header 'Authorization: Basic Y2NzZGthcHBzOmNjc2RrYXBwcw==' \
