@@ -41,6 +41,7 @@ class Config:
 
     PROFILE_NAME = "vfw-cnf-cds-base-profile"
     PROFILE_SOURCE = PROFILE_NAME
+    RELEASE_NAME = "honolulu"
 
     VENDOR = "vendor_cnf"
     SERVICENAME = "vfw_k8s_demo_CNF"
@@ -50,7 +51,9 @@ class Config:
     SDNC_ARTIFACT_NAME = "vnf"
 
     # INSERT PARAMS FOR VNF HERE AS "name" : "value" PAIR
-    VNF_PARAM_LIST = {}
+    VNF_PARAM_LIST = {
+        "k8s-rb-profile-namespace": K8S_NAMESPACE
+    }
 
     VF_MODULE_PREFIX = ""
     if NATIVE:
@@ -60,22 +63,22 @@ class Config:
         VF_MODULE_PREFIX + "base_template": {
             "k8s-rb-profile-name": PROFILE_NAME,
             "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-profile-namespace": K8S_NAMESPACE
+            "k8s-rb-instance-release-name": RELEASE_NAME + "-fw-base"
         },
         VF_MODULE_PREFIX + "vfw": {
             "k8s-rb-profile-name": PROFILE_NAME,
             "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-profile-namespace": K8S_NAMESPACE
+            "k8s-rb-instance-release-name": RELEASE_NAME + "-fw-vfw"
         },
         VF_MODULE_PREFIX + "vpkg": {
             "k8s-rb-profile-name": PROFILE_NAME,
             "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-profile-namespace": K8S_NAMESPACE
+            "k8s-rb-instance-release-name": RELEASE_NAME + "-fw-vpkg"
         },
         VF_MODULE_PREFIX + "vsn": {
             "k8s-rb-profile-name": PROFILE_NAME,
             "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-profile-namespace": K8S_NAMESPACE
+            "k8s-rb-instance-release-name": RELEASE_NAME + "-fw-vsn"
         }
     }
 

@@ -31,7 +31,7 @@ curl --location --request POST 'http://localhost:8081/api/v1/execution-service/p
     },
     "actionIdentifiers": {
         "blueprintName": "vFW_CNF_CDS",
-        "blueprintVersion": "7.0.0",
+        "blueprintVersion": "8.0.0",
         "actionName": "resource-assignment",
         "mode": "sync"
     },
@@ -49,6 +49,7 @@ curl --location --request POST 'http://localhost:8081/api/v1/execution-service/p
                 "vnf-id": "51274ece-55ca-4cbc-b7c4-0da0dcc65d38",
                 "vnf_name": "sample-vnf-name",
                 "k8s-rb-profile-namespace": "vfw-namespace",
+                "k8s-rb-profile-k8s-version": "1.18.9",
                 "int_private1_net_cidr" : "192.168.10.0/24",
                 "int_private2_net_cidr" : "192.168.20.0/24",
                 "onap_private_net_cidr" : "10.0.0.0/16",

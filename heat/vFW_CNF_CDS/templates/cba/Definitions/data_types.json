@@ -64,8 +64,16 @@
                     "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
                     "type": "string"
                 },
+                "k8s-rb-instance-release-name": {
+                    "description": "Name of the release for the helm package instance in k8s",
+                    "type": "string"
+                },
                 "k8s-rb-profile-source": {
                     "description": "The source folder or file relative to 'Templates/k8s-profiles' folder",
+                    "type": "string"
+                },
+                "k8s-rb-profile-k8s-version": {
+                    "description": "Profile k8s version used in multicloud/k8s plugin",
                     "type": "string"
                 },
                 "k8s-rb-config-template-name": {
@@ -74,6 +82,14 @@
                 },
                 "k8s-rb-config-template-source": {
                     "description": "The source of configuration template for config-assign operation",
+                    "type": "string"
+                },
+                "k8s-rb-config-name": {
+                    "description": "The source of configuration values for config-deploy operation",
+                    "type": "string"
+                },
+                "k8s-rb-config-value-source": {
+                    "description": "The source of configuration values for config-deploy operation",
                     "type": "string"
                 },
                 "private1-prefix-id": {
