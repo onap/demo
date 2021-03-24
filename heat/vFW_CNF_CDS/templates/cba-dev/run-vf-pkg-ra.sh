@@ -60,6 +60,7 @@ curl --location --request POST 'http://localhost:8081/api/v1/execution-service/p
                 "k8s-rb-profile-name": "vfw-cnf-cds-base-profile",
                 "k8s-rb-profile-source": "vfw-cnf-cds-base-profile",
                 "k8s-rb-profile-namespace": "vfirewall",
+                "k8s-rb-profile-k8s-version": "1.18.9",
                 "k8s-rb-config-template-name": "ssh-service-config",
                 "k8s-rb-config-template-source": "ssh-service-config",
                 "management-prefix-id" : 3
