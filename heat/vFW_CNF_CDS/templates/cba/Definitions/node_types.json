@@ -210,6 +210,11 @@
                                     "required": false,
                                     "type": "string"
                                 },
+                                "k8s-rb-profile-k8s-version": {
+                                    "description": "a K8s cluster version for the profile",
+                                    "required": false,
+                                    "type": "string"
+                                },
                                 "k8s-rb-profile-source": {
                                     "description": "Source (tgz/folder) for the template in CBA",
                                     "required": false,
@@ -325,12 +330,12 @@
                     "operations": {
                         "process": {
                             "inputs": {
-                                "k8s-template-name": {
+                                "k8s-rb-config-template-name": {
                                     "description": "K8s template name",
                                     "required": false,
                                     "type": "string"
                                 },
-                                "k8s-config-name": {
+                                "k8s-rb-config-name": {
                                     "description": "K8s config name",
                                     "required": false,
                                     "type": "string"
@@ -340,12 +345,12 @@
                                     "required": false,
                                     "type": "string"
                                 },
-                                "k8s-rb-template-value-source": {
+                                "k8s-rb-config-value-source": {
                                     "description": "Location of value source in CBA",
                                     "required": false,
                                     "type": "string"
                                 },
-                                "k8s-operation-type": {
+                                "k8s-config-operation-type": {
                                     "required": false,
                                     "type": "string",
                                     "constraints": [
@@ -353,7 +358,7 @@
                                             "valid_values": [
                                                 "create",
                                                 "update",
-                                                "rollback"
+                                                "delete"
                                             ]
                                         }
                                     ],
