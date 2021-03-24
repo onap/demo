@@ -17,28 +17,21 @@
 package org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts
 
 import org.onap.ccsdk.cds.blueprintsprocessor.core.api.data.ExecutionServiceInput
-import org.onap.ccsdk.cds.blueprintsprocessor.functions.resource.resolution.storedContentFromResolvedArtifactNB
 import org.onap.ccsdk.cds.blueprintsprocessor.services.execution.AbstractScriptComponentFunction
 import org.slf4j.LoggerFactory
 
-open class ConfigDeploy : AbstractScriptComponentFunction() {
+open class SimpleErrorCheck : AbstractScriptComponentFunction() {
 
-    private val log = LoggerFactory.getLogger(ConfigDeploy::class.java)!!
+    private val log = LoggerFactory.getLogger(SimpleErrorCheck::class.java)!!
 
     override fun getName(): String {
-        return "ConfigDeploy"
+        return "SimpleErrorCheck"
     }
 
     override suspend fun processNB(executionRequest: ExecutionServiceInput) {
-        val resolutionKey = getDynamicProperties("resolution-key").asText()
-        log.info("Got the resolution_key: $resolutionKey from config-deploy going to retrieve the data from DB")
-        val prefix = "config-deploy" // used in the config-assign resolution
+        log.info("SIMPLE ERROR CHECK - START")
 
-        val payload = storedContentFromResolvedArtifactNB(resolutionKey, prefix)
-        log.info("cnf configuration data from DB : \n$payload\n")
-
-        println("Run config-deploy")
-        println("$payload")
+        log.info("SIMPLE ERROR CHECK - END")
     }
 
     override suspend fun recoverNB(runtimeException: RuntimeException, executionRequest: ExecutionServiceInput) {

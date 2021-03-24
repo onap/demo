@@ -98,7 +98,7 @@
                     "output-key-mapping": [
                         {
                             "resource-name": "vpg_name_0",
-                            "resource-value": "${vf_module_name}"
+                            "resource-value": "${k8s-rb-instance-release-name}"
                         }
                     ]
                 }
@@ -106,6 +106,10 @@
         }
     ],
     "resource-accumulator-resolved-data": [
+        {
+            "param-name": "vnf_name",
+            "param-value": "${vnf_name}"
+        },
 ##RB name
         {
             "param-name": "vf-module-model-invariant-uuid",
@@ -116,9 +120,31 @@
             "param-name": "vf-module-model-version",
             "param-value": "${vf-module-model-version}"
         },
+##Release name
+        {
+            "param-name": "k8s-rb-instance-release-name",
+            "param-value": "${k8s-rb-instance-release-name}"
+        },
+##Profile name
         {
             "param-name": "k8s-rb-profile-name",
             "param-value": "${k8s-rb-profile-name}"
+        },
+        {
+            "param-name": "k8s-rb-config-template-name",
+            "param-value": "${k8s-rb-config-template-name}"
+        },
+        {
+            "param-name": "k8s-rb-config-template-source",
+            "param-value": "${k8s-rb-config-template-source}"
+        },
+        {
+            "param-name": "k8s-rb-config-name",
+            "param-value": "${k8s-rb-config-name}"
+        },
+        {
+            "param-name": "k8s-rb-config-value-source",
+            "param-value": "${k8s-rb-config-value-source}"
         }
     ]
 }

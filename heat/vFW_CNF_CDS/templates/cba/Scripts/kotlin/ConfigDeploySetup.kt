@@ -19,6 +19,8 @@ package org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.definition.template.K8sConfigTemplateComponent
+import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.definition.template.K8sConfigValueComponent
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.resource.resolution.processor.ResourceAssignmentProcessor
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.resource.resolution.utils.ResourceAssignmentUtils
 import org.onap.ccsdk.cds.controllerblueprints.core.BlueprintProcessorException
@@ -33,12 +35,12 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
         return "ConfigDeploySetup"
     }
 
-    override suspend fun processNB(resourceAssignment: ResourceAssignment) {
+    override suspend fun processNB(executionRequest: ResourceAssignment) {
 
         var retValue: ObjectNode? = null
 
         try {
-            if (resourceAssignment.name == "config-deploy-setup") {
+            if (executionRequest.name == "config-deploy-setup") {
                 val modulesSdnc = raRuntimeService.getResolutionStore("vf-modules-list-sdnc")["vf-modules"]
                 val modulesAai = raRuntimeService.getResolutionStore("vf-modules-list-aai")["vf-modules"]
                 val objectMapper = jacksonObjectMapper()
@@ -46,22 +48,30 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
                 for (module in modulesSdnc) {
                     val modelTopology = module.at("/vf-module-data/vf-module-topology")
                     val moduleParameters = modelTopology.at("/vf-module-parameters/param")
-                    val label: String? = getParamValueByName(moduleParameters,"vf_module_label")
+                    val label: String? = getParamValueByName(moduleParameters, "vf_module_label")
                     if (label != null) {
                         val modelInfo = modelTopology["onap-model-information"]
                         val moduleData: ObjectNode = objectMapper.createObjectNode()
                         result.put(label, moduleData)
-                        moduleData.put("k8s-rb-definition-name", modelInfo["model-invariant-uuid"].asText())
-                        moduleData.put("k8s-rb-definition-version", modelInfo["model-uuid"].asText())
-                        val templateName: String? = getParamValueByName(moduleParameters,"k8s-rb-config-template-name")
-                        val templateSource: String? = getParamValueByName(moduleParameters,"k8s-rb-config-template-source")
+                        moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_DEFINITION_NAME, modelInfo["model-invariant-uuid"].asText())
+                        moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_DEFINITION_VERSION, modelInfo["model-uuid"].asText())
+                        val templateName: String? = getParamValueByName(moduleParameters, K8sConfigTemplateComponent.INPUT_K8S_TEMPLATE_NAME)
+                        val templateSource: String? = getParamValueByName(moduleParameters, K8sConfigTemplateComponent.INPUT_K8S_TEMPLATE_SOURCE)
+                        val configValueSource: String? = getParamValueByName(moduleParameters, K8sConfigValueComponent.INPUT_K8S_CONFIG_VALUE_SOURCE)
+                        val configName: String? = getParamValueByName(moduleParameters, K8sConfigValueComponent.INPUT_K8S_RB_CONFIG_NAME)
+
                         if (templateName != null)
-                            moduleData.put("k8s-rb-config-template-name", templateName)
+                            moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_TEMPLATE_NAME, templateName)
                         if (templateSource != null)
-                            moduleData.put("k8s-rb-config-template-source", templateSource)
+                            moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_TEMPLATE_SOURCE, templateSource)
+                        if (configValueSource != null)
+                            moduleData.put(K8sConfigValueComponent.INPUT_K8S_CONFIG_VALUE_SOURCE, configValueSource)
+                        if (configName != null)
+                            moduleData.put(K8sConfigValueComponent.INPUT_K8S_RB_CONFIG_NAME, configName)
+
                         for (aaiModule in modulesAai) {
                             if (aaiModule["vf-module-id"].asText() == module["vf-module-id"].asText()) {
-                                moduleData.put("k8s-instance-id", aaiModule["heat-stack-id"].asText())
+                                moduleData.put(K8sConfigValueComponent.INPUT_K8S_INSTANCE_ID, aaiModule["heat-stack-id"].asText())
                                 break
                             }
                         }
@@ -69,12 +79,12 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
                 }
                 retValue = result
             }
-            ResourceAssignmentUtils.setResourceDataValue(resourceAssignment, raRuntimeService, retValue)
+            ResourceAssignmentUtils.setResourceDataValue(executionRequest, raRuntimeService, retValue)
         } catch (e: Exception) {
             log.error(e.message, e)
-            ResourceAssignmentUtils.setResourceDataValue(resourceAssignment, raRuntimeService, "ERROR")
+            ResourceAssignmentUtils.setResourceDataValue(executionRequest, raRuntimeService, "ERROR")
 
-            throw BlueprintProcessorException("Failed in template key ($resourceAssignment) assignments, cause: ${e.message}", e)
+            throw BlueprintProcessorException("Failed in template key ($executionRequest) assignments, cause: ${e.message}", e)
         }
     }
 
@@ -87,7 +97,7 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
         return null
     }
 
-    override suspend fun recoverNB(runtimeException: RuntimeException, resourceAssignment: ResourceAssignment) {
+    override suspend fun recoverNB(runtimeException: RuntimeException, executionRequest: ResourceAssignment) {
         this.addError("${runtimeException.message}")
     }
 }
