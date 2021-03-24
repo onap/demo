@@ -76,6 +76,14 @@
                     "description": "The source of configuration template for config-assign operation",
                     "type": "string"
                 },
+                "k8s-rb-config-name": {
+                    "description": "The source of configuration values for config-deploy operation",
+                    "type": "string"
+                },
+                "k8s-rb-config-value-source": {
+                    "description": "The source of configuration values for config-deploy operation",
+                    "type": "string"
+                },
                 "private1-prefix-id": {
                     "description": "",
                     "required": false,
