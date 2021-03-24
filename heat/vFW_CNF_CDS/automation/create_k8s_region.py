@@ -21,7 +21,7 @@ from uuid import uuid4
 
 from config import Config
 from k8s_client import K8sClient
-from so_db_adapter import SoDBAdapter
+from so_db_adapter import SoDBUpdate
 from onapsdk.aai.business import Customer
 from onapsdk.aai.cloud_infrastructure import Complex, CloudRegion
 from onapsdk.msb.k8s import ConnectivityInfo
@@ -118,10 +118,9 @@ except:
 
 #### Add region to SO db ####
 logger.info("******** SO Database *******")
-so_db_adapter = SoDBAdapter(cloud_region_id=Config.CLOUD_REGION,
-                            complex_id=Config.COMPLEX_ID,
-                            onap_kubeconfig_path=Config.ONAP_KUBECONFIG_PATH)
-is_region_in_so = so_db_adapter.check_region_in_db()
-
-if not is_region_in_so:
-    so_db_adapter.add_region_to_so_db()
+result = SoDBUpdate.add_region_to_so_db(cloud_region_id=Config.CLOUD_REGION,
+                                        complex_id=Config.COMPLEX_ID)
+if result.status_code == 201:
+    logger.info("Region in SO db created successfully")
+else:
+    logger.error("Creating region in SO db failed")

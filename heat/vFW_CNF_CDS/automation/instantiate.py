@@ -146,7 +146,12 @@ for vnf in service.vnfs:
         profile_name = Config.VF_MODULE_PARAM_LIST[vf_module_label]["k8s-rb-profile-name"]
         try:
             profile = definition.get_profile_by_name(profile_name)
-            if profile.namespace != Config.VF_MODULE_PARAM_LIST[vf_module_label]["k8s-rb-profile-namespace"]:
+            namespace = None
+            if "k8s-rb-profile-namespace" in Config.VNF_PARAM_LIST:
+                namespace = Config.VNF_PARAM_LIST["k8s-rb-profile-namespace"]
+            if "k8s-rb-profile-namespace" in Config.VF_MODULE_PARAM_LIST[vf_module_label]:
+                namespace = Config.VF_MODULE_PARAM_LIST[vf_module_label]["k8s-rb-profile-namespace"]
+            if namespace != None and profile.namespace != namespace:
                 profile.delete()
                 logger.info("Profile: " + profile_name + " for " + vf_module.name + " deleted")
             else:

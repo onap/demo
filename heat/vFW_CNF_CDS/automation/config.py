@@ -19,10 +19,10 @@ class Config:
     #### REGION DETAILS ####
     COMPLEX_ID = "complex"
     CLOUD_OWNER = "k8sCloudOwner"
-    CLOUD_REGION = "k8s-region-1"
+    CLOUD_REGION = "kud-1"
     AVAILABILITY_ZONE_NAME = "k8s-availability-zone"
     HYPERVISOR_TYPE = "k8s"
-    TENANT_NAME = "k8s-tenant-1"
+    TENANT_NAME = "kud-1"
     K8S_NAMESPACE = "vfirewall"
     CUSTOMER_RESOURCE_DEFINITIONS = []
 # Uncomment, if you want to run on non KUD k8s cluster
@@ -41,6 +41,7 @@ class Config:
 
     PROFILE_NAME = "vfw-cnf-cds-base-profile"
     PROFILE_SOURCE = PROFILE_NAME
+    RELEASE_NAME = "vfw-1"
 
     VENDOR = "vendor_cnf"
     SERVICENAME = "vfw_k8s_demo_CNF"
@@ -50,7 +51,9 @@ class Config:
     SDNC_ARTIFACT_NAME = "vnf"
 
     # INSERT PARAMS FOR VNF HERE AS "name" : "value" PAIR
-    VNF_PARAM_LIST = {}
+    VNF_PARAM_LIST = {
+        "k8s-rb-profile-namespace": K8S_NAMESPACE
+    }
 
     VF_MODULE_PREFIX = ""
     if NATIVE:
@@ -60,22 +63,22 @@ class Config:
         VF_MODULE_PREFIX + "base_template": {
             "k8s-rb-profile-name": PROFILE_NAME,
             "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-profile-namespace": K8S_NAMESPACE
+            "k8s-rb-instance-release-name": RELEASE_NAME + "-base"
         },
         VF_MODULE_PREFIX + "vfw": {
             "k8s-rb-profile-name": PROFILE_NAME,
             "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-profile-namespace": K8S_NAMESPACE
+            "k8s-rb-instance-release-name": RELEASE_NAME + "-vfw"
         },
         VF_MODULE_PREFIX + "vpkg": {
             "k8s-rb-profile-name": PROFILE_NAME,
             "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-profile-namespace": K8S_NAMESPACE
+            "k8s-rb-instance-release-name": RELEASE_NAME + "-vpkg"
         },
         VF_MODULE_PREFIX + "vsn": {
             "k8s-rb-profile-name": PROFILE_NAME,
             "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-profile-namespace": K8S_NAMESPACE
+            "k8s-rb-instance-release-name": RELEASE_NAME + "-vsn"
         }
     }
 

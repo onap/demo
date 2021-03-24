@@ -146,7 +146,26 @@
         "input-param": false,
         "dictionary-name": "k8s-rb-profile-namespace",
         "dictionary-source": "sdnc",
-        "dependencies": []
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "k8s-rb-profile-k8s-version",
+        "property": {
+            "description": "K8s cluster version to create helm chart for specified RB profile",
+            "type": "string",
+            "required": false,
+            "default": "1.18.9"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-k8s-version",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
     },
     {
         "name": "k8s-rb-profile-name",
@@ -158,6 +177,19 @@
         },
         "input-param": false,
         "dictionary-name": "k8s-rb-profile-name",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-instance-release-name",
+        "property": {
+            "description": "Name of the release for the helm package instance in k8s",
+            "type": "string",
+            "required": false,
+            "default": "vsn"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-instance-release-name",
         "dictionary-source": "default",
         "dependencies": []
     },
@@ -228,6 +260,30 @@
         },
         "input-param": false,
         "dictionary-name": "k8s-rb-config-template-source",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-config-name",
+        "property": {
+            "description": "The source of configuration values for config-deploy operation",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-config-name",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-config-value-source",
+        "property": {
+            "description": "The source of configuration values for config-deploy operation",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-config-value-source",
         "dictionary-source": "default",
         "dependencies": []
     }
