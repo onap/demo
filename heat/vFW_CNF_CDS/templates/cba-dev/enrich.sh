@@ -19,4 +19,5 @@
 
 curl --location --request POST 'http://127.0.0.1:8081/api/v1/blueprint-model/enrich' \
 --header 'Authorization: Basic Y2NzZGthcHBzOmNjc2RrYXBwcw==' \
+-o 'cba.zip' \
 --form 'file=@../package_native/CBA.zip' | jq

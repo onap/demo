@@ -20,6 +20,11 @@
             "description": "K8s Profile Folder Artifact",
             "version": "1.0.0",
             "derived_from": "tosca.artifacts.Implementation"
+        },
+        "artifact-k8sconfig-content": {
+            "description": "K8s Config Folder Artifact",
+            "version": "1.0.0",
+            "derived_from": "tosca.artifacts.Implementation"
         }
     }
 }
