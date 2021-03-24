@@ -170,5 +170,18 @@
         "dictionary-name": "k8s-rb-profile-namespace",
         "dictionary-source": "default",
         "dependencies": []
+    },
+    {
+        "name": "k8s-rb-profile-k8s-version",
+        "property": {
+            "description": "K8s cluster version to create helm chart for specified RB profile",
+            "type": "string",
+            "required": false,
+            "default": "1.18.9"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-k8s-version",
+        "dictionary-source": "default",
+        "dependencies": []
     }
 ]
