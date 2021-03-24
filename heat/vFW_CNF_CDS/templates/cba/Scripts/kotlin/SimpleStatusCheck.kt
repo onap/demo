@@ -44,16 +44,16 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
 
         val k8sConfiguration = K8sConnectionPluginConfiguration(bluePrintPropertiesService)
 
-        var instanceApi = K8sPluginInstanceApi(k8sConfiguration)
+        val instanceApi = K8sPluginInstanceApi(k8sConfiguration)
 
         var checkCount: Int = 30 // in the future to be read in from the input
-        while(checkCount > 0) {
+        while (checkCount > 0) {
             var continueCheck = false
             configValueSetup.fields().forEach { it ->
                 val vfModuleName = it.key
                 val instanceName = it.value.get("k8s-instance-id").asText()
 
-                var instanceStatus: K8sRbInstanceStatus? = instanceApi.getInstanceStatus(instanceName)
+                val instanceStatus: K8sRbInstanceStatus? = instanceApi.getInstanceStatus(instanceName)
                 instanceStatus?.resourcesStatus?.forEach {
                     if (it.gvk?.kind == "Pod") {
                         var version = it.gvk?.version!!
@@ -61,11 +61,11 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
                             version = "${it.gvk?.group}/$version"
                         // val podStatus = instanceApi.queryInstanceStatus(instanceName, it.gvk?.kind!!, version, it.name, null)
                         // log.info(podStatus.toString())
-                        var podState = it.status?.get("status") as Map<String, Object>
+                        val podState = it.status?.get("status") as Map<String, Object>
 
-                        if ((podState?.get("phase") as String) != "Running") {
+                        if ((podState["phase"] as String) != "Running") {
                             continueCheck = true
-                            log.info("Pod ${it?.name} [$vfModuleName] has invalid state ${(podState?.get("phase"))}")
+                            log.info("Pod ${it.name} [$vfModuleName] has invalid state ${(podState["phase"])}")
                         }
                     }
                 }

@@ -164,6 +164,9 @@
                         ],
                         "on_success": [
                             "config-apply"
+                        ],
+                        "on_failure": [
+                            "handle_error"
                         ]
                     },
                     "config-apply": {
@@ -185,7 +188,29 @@
                             {
                                 "call_operation": "ComponentScriptExecutor.process"
                             }
+                        ],
+                        "on_success": [
+                            "collect-results"
+                        ],
+                        "on_failure": [
+                            "handle_error"
                         ]
+                    },
+                    "handle_error": {
+                        "description": "Simple error verification script",
+                        "target": "simple-error-check",
+                        "activities": [
+                            {
+                                "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ],
+                        "on_success": [
+                            "collect-results"
+                        ]
+                    },
+                    "collect-results": {
+                        "description": "Final collection of results",
+                        "target": "collect-results"
                     }
                 },
                 "inputs": {
@@ -322,11 +347,11 @@
                 },
                 "artifacts": {
                     "ssh-service-config": {
-                        "type": "artifact-k8sprofile-content",
+                        "type": "artifact-k8sconfig-content",
                         "file": "Templates/k8s-configs/ssh-service.tar.gz"
                     },
                     "ssh-service-config-customizable": {
-                        "type": "artifact-k8sprofile-content",
+                        "type": "artifact-k8sconfig-content",
                         "file": "Templates/k8s-configs/ssh-service-config"
                     },
                     "ssh-service-config-customizable-mapping": {
@@ -345,6 +370,7 @@
                                     "artifact-prefix-names": [
                                         "helm_vpkg"
                                     ],
+                                    "k8s-config-operation-type": "create",
                                     "resource-assignment-map": {
                                         "get_attribute": [
                                             "config-setup-process",
@@ -358,6 +384,20 @@
                             }
                         }
                     }
+                },
+                "artifacts": {
+                    "ssh-service-default": {
+                        "type": "artifact-k8sconfig-content",
+                        "file": "Templates/k8s-configs/ssh-service-config/values.yaml"
+                    },
+                    "ssh-service-config": {
+                        "type": "artifact-k8sconfig-content",
+                        "file": "Templates/k8s-configs/ssh-service-values/values.yaml.vtl"
+                    },
+                    "ssh-service-config-mapping": {
+                        "type": "artifact-mapping-resource",
+                        "file": "Templates/k8s-configs/ssh-service-values/ssh-service-mapping.json"
+                    }
                 }
             },
             "simple-status-check": {
@@ -369,6 +409,25 @@
                                 "inputs": {
                                     "script-type": "kotlin",
                                     "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.SimpleStatusCheck",
+                                    "instance-dependencies": [
+                                        "blueprintPropertiesService"
+                                    ],
+                                    "dynamic-properties": "*simple-status-properties"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "simple-error-check": {
+                "type": "component-script-executor",
+                "interfaces": {
+                    "ComponentScriptExecutor": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "script-type": "kotlin",
+                                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.SimpleErrorCheck",
                                     "instance-dependencies": [
                                         "blueprintPropertiesService"
                                     ],
@@ -429,6 +488,27 @@
                                     "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.ConfigDeploy",
                                     "dynamic-properties": "*config-deploy-properties"
                                 }
+                            }
+                        }
+                    }
+                }
+            },
+            "collect-results" : {
+                "type" : "component-script-executor",
+                "interfaces" : {
+                    "ComponentScriptExecutor" : {
+                        "operations" : {
+                            "process" : {
+                                "implementation" : {
+                                    "primary" : "component-script",
+                                    "timeout" : 180,
+                                    "operation_host" : "SELF"
+                                },
+                                "inputs" : {
+                                    "script-type" : "kotlin",
+                                    "script-class-reference" : "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.CollectorScript"
+                                },
+                                "outputs" : { }
                             }
                         }
                     }
