@@ -9,7 +9,8 @@ bears = JSONFormatBear
 json_sort = False
 indent_size = 4
 ignore =
-  .tox/**
+  .tox/**,
+  heat/vFW_CNF_CDS/templates/cba/Definitions/*_types.json
 
 [py]
 bears = PyLintBear
