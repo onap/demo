@@ -183,5 +183,31 @@
         "dictionary-name": "k8s-rb-profile-k8s-version",
         "dictionary-source": "default",
         "dependencies": []
+    },
+    {
+        "name": "vf-modules-list",
+        "property": {
+            "description": "list of modules associated with vnf",
+            "type": "json"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-modules-list",
+        "dictionary-source": "aai-data",
+        "dependencies": [
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "health-check-setup",
+        "property": {
+            "description": "configuration for config value setup",
+            "type": "json"
+        },
+        "input-param": false,
+        "dictionary-name": "health-check-setup",
+        "dictionary-source": "capability",
+        "dependencies": [
+            "vf-modules-list"
+        ]
     }
 ]
