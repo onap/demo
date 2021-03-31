@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f026b639_53711b48",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-03-31T11:56:46Z",
+      "side": 1,
+      "message": "if you don\u0027t have such var defined within same workflow, I think it\u0027s impossible to reach it",
+      "range": {
+        "startLine": 57,
+        "startChar": 35,
+        "endLine": 57,
+        "endChar": 59
+      },
+      "revId": "7e957a8ffacae49aa5f515feda864e6ad76c322f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "444599c1_654cad0d",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-03-31T11:56:46Z",
+      "side": 1,
+      "message": "we should add `health-check-properties`, right?",
+      "range": {
+        "startLine": 251,
+        "startChar": 16,
+        "endLine": 251,
+        "endChar": 17
+      },
+      "revId": "7e957a8ffacae49aa5f515feda864e6ad76c322f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aba7348d_da33be64",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-03-31T11:56:46Z",
+      "side": 1,
+      "message": "probably you want to add content of this file to vnf-mapping.json and reference also in vnf-template.vtl to have these vars available in SDNC",
+      "range": {
+        "startLine": 329,
+        "startChar": 21,
+        "endLine": 329,
+        "endChar": 41
+      },
+      "revId": "7e957a8ffacae49aa5f515feda864e6ad76c322f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ad983a1_e4b5a21f",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-03-31T11:56:46Z",
+      "side": 1,
+      "message": "Don\u0027t we need template file as well?",
+      "range": {
+        "startLine": 332,
+        "startChar": 20,
+        "endLine": 332,
+        "endChar": 21
+      },
+      "revId": "7e957a8ffacae49aa5f515feda864e6ad76c322f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dbd482e_f521c1c6",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/K8sHealthCheck.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-03-31T11:56:46Z",
+      "side": 1,
+      "message": "We should filter results, so that we test only resources that we know how to interpret. in this example we should check if the resource is a Pod",
+      "revId": "7e957a8ffacae49aa5f515feda864e6ad76c322f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19dcd314_1034ae03",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/K8sHealthCheck.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-03-31T11:56:46Z",
+      "side": 1,
+      "message": "We should check (for pods) if phase is either Running or Completed",
+      "range": {
+        "startLine": 89,
+        "startChar": 86,
+        "endLine": 89,
+        "endChar": 93
+      },
+      "revId": "7e957a8ffacae49aa5f515feda864e6ad76c322f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
