@@ -224,6 +224,94 @@
                         "type": "dt-config-deploy-properties"
                     }
                 }
+            },
+            "health-check": {
+                "steps": {
+                    "config-setup": {
+                        "description": "Gather necessary input for config init and status verification",
+                        "target": "config-setup-process",
+                        "activities": [
+                            {
+                                "call_operation": "ResourceResolutionComponent.process"
+                            }
+                        ],
+                        "on_success": [
+                            "config-apply"
+                        ],
+                        "on_failure": [
+                            "handle_error"
+                        ]
+                    },
+                    "config-apply": {
+                        "description": "Activate K8s config template",
+                        "target": "k8s-config-apply",
+                        "activities": [
+                            {
+                                "call_operation": "K8sConfigTemplateComponent.process"
+                            }
+                        ],
+                        "on_success": [
+                            "status-verification-script"
+                        ]
+                    },
+                    "status-verification-script": {
+                        "description": "Simple status verification script",
+                        "target": "simple-status-check",
+                        "activities": [
+                            {
+                                "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ],
+                        "on_success": [
+                            "health-check-process"
+                        ],
+                        "on_failure": [
+                            "handle_error"
+                        ]
+                    },
+                    "health-check-process": {
+                        "description": "Start health check script",
+                        "target": "health-check-script",
+                        "activities": [
+                            {
+                                "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ],
+                        "on_success": [
+                            "collect-results"
+                        ],
+                        "on_failure": [
+                            "handle_error"
+                        ]
+                    },
+                    "handle_error": {
+                        "description": "Simple error verification script",
+                        "target": "simple-error-check",
+                        "activities": [
+                            {
+                                "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ],
+                        "on_success": [
+                            "collect-results"
+                        ]
+                    },
+                    "collect-results": {
+                        "description": "Final collection of results",
+                        "target": "collect-results"
+                    }
+                },
+                "inputs": {
+                    "resolution-key": {
+                        "required": true,
+                        "type": "string"
+                    },
+                    "config-deploy-properties": {
+                        "description": "Dynamic PropertyDefinition for workflow(config-deploy).",
+                        "required": true,
+                        "type": "dt-config-deploy-properties"
+                    }
+                }
             }
         },
         "node_templates": {
@@ -438,6 +526,25 @@
                     }
                 }
             },
+            "health-check-script": {
+                "type": "component-script-executor",
+                "interfaces": {
+                    "ComponentScriptExecutor": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "script-type": "kotlin",
+                                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sHealthCheck",
+                                    "instance-dependencies": [
+                                        "blueprintPropertiesService"
+                                    ],
+                                    "dynamic-properties": "*simple-status-properties"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "config-setup-process": {
                 "type": "component-resource-resolution",
                 "interfaces": {
@@ -517,3 +624,4 @@
         }
     }
 }
+
