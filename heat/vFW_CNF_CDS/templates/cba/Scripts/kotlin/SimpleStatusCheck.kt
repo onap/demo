@@ -40,7 +40,7 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
         val configValueSetup: ObjectNode = getDynamicProperties("config-deploy-setup") as ObjectNode
 
         val bluePrintPropertiesService: BlueprintPropertiesService =
-                this.functionDependencyInstanceAsType("blueprintPropertiesService")
+            this.functionDependencyInstanceAsType("blueprintPropertiesService")
 
         val k8sConfiguration = K8sConnectionPluginConfiguration(bluePrintPropertiesService)
 

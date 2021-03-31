@@ -30,18 +30,19 @@ open class CollectorScript : AbstractScriptComponentFunction() {
 
     override suspend fun processNB(executionRequest: ExecutionServiceInput) {
         bluePrintRuntimeService.bluePrintContext()
-                .serviceTemplate.topologyTemplate!!.nodeTemplates!!
-                .keys.filter { it.startsWith("execute-script") }
-                .associateWith { responseData(it) }
-                .let { it.asJsonNode() }
-                .also { log.info("Collected results: $it") }
-                .let { setAttribute(ComponentScriptExecutor.ATTRIBUTE_RESPONSE_DATA, it) }
+            .serviceTemplate.topologyTemplate!!.nodeTemplates!!
+            .keys.filter { it.startsWith("execute-script") }
+            .associateWith { responseData(it) }
+            .let { it.asJsonNode() }
+            .also { log.info("Collected results: $it") }
+            .let { setAttribute(ComponentScriptExecutor.ATTRIBUTE_RESPONSE_DATA, it) }
     }
 
     private fun responseData(nodeTemplateName: String): JsonNode? {
         return try {
-            bluePrintRuntimeService.getNodeTemplateAttributeValue(nodeTemplateName,
-                    ComponentScriptExecutor.ATTRIBUTE_RESPONSE_DATA)
+            bluePrintRuntimeService.getNodeTemplateAttributeValue(
+                nodeTemplateName, ComponentScriptExecutor.ATTRIBUTE_RESPONSE_DATA
+            )
         } catch (exception: BlueprintProcessorException) { null }
     }
 
