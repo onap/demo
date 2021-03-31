@@ -40,7 +40,7 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
         val configValueSetup: ObjectNode = getDynamicProperties("config-deploy-setup") as ObjectNode
 
         val bluePrintPropertiesService: BlueprintPropertiesService =
-                this.functionDependencyInstanceAsType("blueprintPropertiesService")
+            this.functionDependencyInstanceAsType("blueprintPropertiesService")
 
         val k8sConfiguration = K8sConnectionPluginConfiguration(bluePrintPropertiesService)
 
@@ -54,7 +54,10 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
                 val instanceName = it.value.get("k8s-instance-id").asText()
 
                 val instanceStatus: K8sRbInstanceStatus? = instanceApi.getInstanceStatus(instanceName)
+                log.debug("Get status for $instanceName")
+                var status = ""
                 instanceStatus?.resourcesStatus?.forEach {
+                    log.debug("Resource: name=$it.name kind=$it.gvk.kind group=$it.gvk.group version=$it.gvk.version")
                     if (it.gvk?.kind == "Pod") {
                         var version = it.gvk?.version!!
                         if (it.gvk?.group!! != "")
@@ -62,13 +65,14 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
                         // val podStatus = instanceApi.queryInstanceStatus(instanceName, it.gvk?.kind!!, version, it.name, null)
                         // log.info(podStatus.toString())
                         val podState = it.status?.get("status") as Map<String, Object>
-
-                        if ((podState["phase"] as String) != "Running") {
+                        status = podState["phase"] as String
+                        if (status != "Running") {
                             continueCheck = true
                             log.info("Pod ${it.name} [$vfModuleName] has invalid state ${(podState["phase"])}")
                         }
                     }
                 }
+                log.info("InstanceName=$instanceName Status=$status")
             }
             if (continueCheck) {
                 checkCount--
@@ -79,7 +83,7 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
                 checkCount = 0
         }
 
-        log.info("SIMPLE STATUS CHECK - END")
+        log.info("SIMPLE STATUS CHECK - END SUCCESS")
     }
 
     override suspend fun recoverNB(runtimeException: RuntimeException, executionRequest: ExecutionServiceInput) {
