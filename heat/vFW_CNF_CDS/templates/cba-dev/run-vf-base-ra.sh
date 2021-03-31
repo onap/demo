@@ -32,7 +32,7 @@ curl --location --request POST 'http://localhost:8081/api/v1/execution-service/p
     },
     "actionIdentifiers": {
         "blueprintName": "vFW_CNF_CDS",
-        "blueprintVersion": "8.0.0",
+        "blueprintVersion": "8.1.0",
         "actionName": "resource-assignment",
         "mode": "sync"
     },
