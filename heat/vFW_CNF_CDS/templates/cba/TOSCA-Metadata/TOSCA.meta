@@ -3,6 +3,6 @@ CSAR-Version: 1.0
 Created-By: Samuli Silvius <s.silvius@partner.samsung.com>
 Entry-Definitions: Definitions/vFW_CNF_CDS.json
 Template-Name: vFW_CNF_CDS
-Template-Version: 8.0.0
+Template-Version: 8.1.16
 Template-Type: DEFAULT
 Template-Tags: Samuli Silvius, Lukasz Rajewski, vFW_CNF_CDS
