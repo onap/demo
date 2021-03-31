@@ -224,6 +224,56 @@
                         "type": "dt-config-deploy-properties"
                     }
                 }
+            },
+            "health-check": {
+                "steps": {
+                    "config-setup": {
+                        "description": "Gather necessary input for config init and status verification",
+                        "target": "config-setup-process",
+                        "activities": [
+                            {
+                                "call_operation": "ResourceResolutionComponent.process"
+                            }
+                        ],
+                        "on_success": [
+                            "health-check"
+                        ],
+                        "on_failure": [
+                            "handle_error"
+                        ]
+                    },
+                    "health-check": {
+                        "description": "Performing health check",
+                        "target": "health-check"
+                    },
+                    "handle_error": {
+                        "description": "Simple error verification script",
+                        "target": "simple-error-check",
+                        "activities": [
+                            {
+                                "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ],
+                        "on_success": [
+                            "collect-results"
+                        ]
+                    },
+                    "collect-results": {
+                        "description": "Final collection of results",
+                        "target": "collect-results"
+                    }
+                },
+                "inputs": {
+                    "resolution-key": {
+                        "required": true,
+                        "type": "string"
+                    },
+                    "health-check-properties": {
+                        "description": "Dynamic PropertyDefinition for workflow(health-check).",
+                        "required": true,
+                        "type": "dt-health-check-properties"
+                    }
+                }
             }
         },
         "node_templates": {
@@ -282,6 +332,32 @@
                     "helm_vsn-mapping": {
                         "type": "artifact-mapping-resource",
                         "file": "Templates/vsn-mapping.json"
+                    }
+                }
+            },
+            "health-check-preparation": {
+                "type": "component-resource-resolution",
+                "interfaces": {
+                    "ResourceResolutionComponent": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "artifact-prefix-names": [
+                                        "health-check"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "artifacts": {
+                    "health-check-mapping": {
+                        "type": "artifact-mapping-resource",
+                        "file": "Templates/vnf-mapping.json"
+                    },
+                    "health-check-template": {
+                        "type": "artifact-template-velocity",
+                        "file": "Templates/vsn-template.vtl"
                     }
                 }
             },
@@ -509,6 +585,25 @@
                                     "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.CollectorScript"
                                 },
                                 "outputs": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "health-check": {
+                "type": "component-script-executor",
+                "interfaces": {
+                    "ComponentScriptExecutor": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "script-type": "kotlin",
+                                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sHealthCheck",
+                                    "instance-dependencies": [
+                                        "blueprintPropertiesService"
+                                    ],
+                                    "dynamic-properties": "*simple-status-properties"
+                                }
                             }
                         }
                     }
