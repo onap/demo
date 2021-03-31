@@ -1,4 +1,4 @@
-{
+
     "data_types": {
         "dt-config-assign-properties": {
             "description": "Dynamic DataType definition for workflow(config-assign).",
@@ -189,4 +189,3 @@
             "derived_from": "tosca.datatypes.Dynamic"
         }
     }
-}
