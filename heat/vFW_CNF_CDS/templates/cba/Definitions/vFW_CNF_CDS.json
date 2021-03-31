@@ -5,7 +5,7 @@
         "author-email": "lukasz.rajewski@orange.com",
         "user-groups": "ADMIN, OPERATION",
         "template_name": "vFW_CNF_CDS",
-        "template_version": "8.0.0",
+        "template_version": "8.1.3",
         "template_tags": "Samuli Silvius, Lukasz Rajewski, vFW_CNF_CDS",
         "template_type": "DEFAULT"
     },
@@ -220,6 +220,56 @@
                     },
                     "config-deploy-properties": {
                         "description": "Dynamic PropertyDefinition for workflow(config-deploy).",
+                        "required": true,
+                        "type": "dt-config-deploy-properties"
+                    }
+                }
+            },
+            "health-check": {
+                "steps": {
+                    "config-setup": {
+                        "description": "Gather necessary input for config init and status verification",
+                        "target": "config-setup-process",
+                        "activities": [
+                            {
+                                "call_operation": "ResourceResolutionComponent.process"
+                            }
+                        ],
+                        "on_success": [
+                            "health-check"
+                        ],
+                        "on_failure": [
+                            "handle_error"
+                        ]
+                    },
+                    "health-check": {
+                        "description": "Performing health check",
+                        "target": "health-check"
+                    },
+                    "handle_error": {
+                        "description": "Simple error verification script",
+                        "target": "simple-error-check",
+                        "activities": [
+                            {
+                                "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ],
+                        "on_success": [
+                            "collect-results"
+                        ]
+                    },
+                    "collect-results": {
+                        "description": "Final collection of results",
+                        "target": "collect-results"
+                    }
+                },
+                "inputs": {
+                    "resolution-key": {
+                        "required": true,
+                        "type": "string"
+                    },
+                    "config-deploy-properties": {
+                        "description": "Dynamic PropertyDefinition for workflow(health-check).",
                         "required": true,
                         "type": "dt-config-deploy-properties"
                     }
@@ -509,6 +559,25 @@
                                     "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.CollectorScript"
                                 },
                                 "outputs": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "health-check": {
+                "type": "component-script-executor",
+                "interfaces": {
+                    "ComponentScriptExecutor": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "script-type": "kotlin",
+                                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sHealthCheck",
+                                    "instance-dependencies": [
+                                        "blueprintPropertiesService"
+                                    ],
+                                    "dynamic-properties": "*simple-status-properties"
+                                }
                             }
                         }
                     }
