@@ -5,14 +5,30 @@
             "description": "Dynamic DataType definition for workflow(config-assign).",
             "properties": {
                 "config-deploy-setup": {
+                    "description": "configuration for config value setup",
                     "type": "json"
                 },
                 "service-instance-id": {
+                    "constraints": [
+                        {}
+                    ],
                     "description": "",
+                    "entry_schema": {
+                        "type": ""
+                    },
                     "required": false,
+                    "status": "",
                     "type": "string"
                 },
                 "vf-modules-list": {
+                    "type": "json"
+                },
+                "vf-modules-list-aai": {
+                    "description": "list of modules associated with vnf from AAI",
+                    "type": "json"
+                },
+                "vf-modules-list-sdnc": {
+                    "description": "list of modules associated with vnf from MDSAL",
                     "type": "json"
                 },
                 "vnf-id": {
@@ -28,14 +44,61 @@
             "description": "Dynamic DataType definition for workflow(config-deploy).",
             "properties": {
                 "config-deploy-setup": {
+                    "description": "configuration for config value setup",
                     "type": "json"
                 },
                 "service-instance-id": {
+                    "constraints": [
+                        {}
+                    ],
+                    "description": "",
+                    "entry_schema": {
+                        "type": ""
+                    },
+                    "required": false,
+                    "status": "",
+                    "type": "string"
+                },
+                "vf-modules-list-aai": {
+                    "description": "list of modules associated with vnf from AAI",
+                    "type": "json"
+                },
+                "vf-modules-list-sdnc": {
+                    "description": "list of modules associated with vnf from MDSAL",
+                    "type": "json"
+                },
+                "vnf-id": {
                     "description": "",
                     "required": false,
                     "type": "string"
+                }
+            }
+        },
+        "dt-health-check-properties": {
+            "description": "Dynamic DataType definition for workflow(health-check).",
+            "properties": {
+                "config-deploy-setup": {
+                    "description": "configuration for config value setup",
+                    "type": "json"
                 },
-                "vf-modules-list": {
+                "service-instance-id": {
+                    "constraints": [
+                        {}
+                    ],
+                    "description": "",
+                    "entry_schema": {
+                        "type": ""
+                    },
+                    "required": false,
+                    "status": "",
+                    "type": "string"
+                },
+                "vf-modules-list-aai": {
+                    "description": "list of modules associated with vnf from AAI",
+                    "type": "json"
+                },
+                "vf-modules-list-sdnc": {
+                    "description": "list of modules associated with vnf from MDSAL",
                     "type": "json"
                 },
                 "vnf-id": {
