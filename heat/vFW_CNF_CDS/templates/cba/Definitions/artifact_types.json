@@ -1,5 +1,15 @@
 {
     "artifact_types": {
+        "artifact-k8sconfig-content": {
+            "description": "K8s Config Folder Artifact",
+            "version": "1.0.0",
+            "derived_from": "tosca.artifacts.Implementation"
+        },
+        "artifact-k8sprofile-content": {
+            "description": "K8s Profile Folder Artifact",
+            "version": "1.0.0",
+            "derived_from": "tosca.artifacts.Implementation"
+        },
         "artifact-mapping-resource": {
             "description": "Resource Mapping File used along with Configuration template",
             "version": "1.0.0",
@@ -15,16 +25,6 @@
             "file_ext": [
                 "vtl"
             ]
-        },
-        "artifact-k8sprofile-content": {
-            "description": "K8s Profile Folder Artifact",
-            "version": "1.0.0",
-            "derived_from": "tosca.artifacts.Implementation"
-        },
-        "artifact-k8sconfig-content": {
-            "description": "K8s Config Folder Artifact",
-            "version": "1.0.0",
-            "derived_from": "tosca.artifacts.Implementation"
         }
     }
 }
