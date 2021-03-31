@@ -260,7 +260,7 @@
                                 "dynamic-properties": {
                                     "description": "Dynamic Json Content or DSL Json reference.",
                                     "required": false,
-                                    "type": "json"
+                                    "type": "boolean"
                                 },
                                 "occurrence": {
                                     "default": 1,
@@ -593,83 +593,6 @@
         "tosca.nodes.ResourceSource": {
             "derived_from": "tosca.nodes.Root",
             "description": "TOSCA base type for Resource Sources",
-            "version": "1.0.0"
-        },
-        "tosca.nodes.Vnf": {
-            "derived_from": "tosca.nodes.Root",
-            "description": "This is VNF Node Type",
-            "version": "1.0.0"
-        },
-        "tosca.nodes.Workflow": {
-            "derived_from": "tosca.nodes.Root",
-            "description": "This is Directed Graph Node Type",
-            "version": "1.0.0"
-        },
-        "vnf-netconf-device": {
-            "capabilities": {
-                "netconf": {
-                    "properties": {
-                        "connection-time-out": {
-                            "default": 30,
-                            "required": false,
-                            "type": "integer"
-                        },
-                        "login-account": {
-                            "default": "sdnc-tacacs",
-                            "required": true,
-                            "type": "string"
-                        },
-                        "login-key": {
-                            "default": "sdnc",
-                            "required": true,
-                            "type": "string"
-                        },
-                        "port-number": {
-                            "default": 830,
-                            "required": true,
-                            "type": "integer"
-                        },
-                        "source": {
-                            "default": "npm",
-                            "required": false,
-                            "type": "string"
-                        },
-                        "target-ip-address": {
-                            "required": true,
-                            "type": "string"
-                        }
-                    },
-                    "type": "tosca.capabilities.Netconf"
-                },
-                "restconf": {
-                    "properties": {
-                        "connection-time-out": {
-                            "default": 30,
-                            "required": false,
-                            "type": "integer"
-                        },
-                        "login-account": {
-                            "required": true,
-                            "type": "string"
-                        },
-                        "login-key": {
-                            "required": true,
-                            "type": "string"
-                        },
-                        "port-number": {
-                            "required": true,
-                            "type": "integer"
-                        },
-                        "target-ip-address": {
-                            "required": true,
-                            "type": "string"
-                        }
-                    },
-                    "type": "tosca.capabilities.Restconf"
-                }
-            },
-            "derived_from": "tosca.nodes.Vnf",
-            "description": "This is VNF Device with Netconf  Capability",
             "version": "1.0.0"
         }
     }

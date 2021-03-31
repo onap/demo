@@ -1,23 +1,4 @@
 {
-    "active-streams": {
-        "group": "default",
-        "name": "active-streams",
-        "property": {
-            "description": "active-streams",
-            "type": "string"
-        },
-        "sources": {
-            "default": {
-                "properties": {},
-                "type": "source-default"
-            },
-            "input": {
-                "type": "source-input"
-            }
-        },
-        "tags": "active-streams",
-        "updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>"
-    },
     "aic-cloud-region": {
         "group": "default",
         "name": "aic-cloud-region",
@@ -26,19 +7,23 @@
             "type": "string"
         },
         "sources": {
+            "default": {
+                "properties": {},
+                "type": "source-default"
+            },
             "input": {
                 "properties": {},
                 "type": "source-input"
             }
         },
-        "tags": "aic-cloud-region",
-        "updated-by": "Singal, Kapil <ks220y@att.com>"
+        "tags": "active-streams",
+        "updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>"
     },
     "config-deploy-setup": {
         "group": "default",
         "name": "config-deploy-setup",
         "property": {
-            "description": "Configuration Input setup for config-deploy operation",
+            "description": "Configuration for CNF config deployment",
             "type": "json"
         },
         "sources": {
@@ -206,16 +191,8 @@
                     "key-dependencies": [
                         "service-instance-id",
                         "vnf-id"
-                    ],
-                    "output-key-mapping": {
-                        "int_private1_net_cidr": "value"
-                    },
-                    "path": "/param/0/value",
-                    "type": "JSON",
-                    "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/int_private1_net_cidr",
-                    "verb": "GET"
-                },
-                "type": "source-rest"
+                    ]
+                }
             }
         },
         "tags": "int_private1_net_cidr",
@@ -291,7 +268,6 @@
         "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>"
     },
     "k8s-rb-config-template-name": {
-        "group": "default",
         "name": "k8s-rb-config-template-name",
         "property": {
             "description": "The name of configuration template for config-assign operation",
@@ -329,7 +305,6 @@
         "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>"
     },
     "k8s-rb-config-value-source": {
-        "group": "default",
         "name": "k8s-rb-config-value-source",
         "property": {
             "description": "The source of configuration values for config-deploy operation",
@@ -344,14 +319,13 @@
                 "type": "source-input"
             }
         },
-        "tags": "k8s, cnf, config, k8s-rb-config-value-source",
-        "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>"
+        "tags": "k8s, cnf, config, k8s-rb-config-value-source"
     },
-    "k8s-rb-instance-release-name": {
+    "k8s-rb-definition-name": {
         "group": "default",
-        "name": "k8s-rb-instance-release-name",
+        "name": "k8s-rb-definition-name",
         "property": {
-            "description": "Name of the release for the helm package instance in k8s",
+            "description": "K8s RB definition name. Associated with vf-module-model-invariant-uuid",
             "type": "string"
         },
         "sources": {
@@ -363,11 +337,38 @@
                 "type": "source-input"
             }
         },
-        "tags": "k8s, cnf, profile, k8s-rb-instance-release-name",
+        "tags": "k8s, cnf, k8s-rb-definition-name",
+        "updated-by": "Lukasz Rajewski <lukasz.rajewski@orange.com>"
+    },
+    "k8s-rb-definition-version": {
+        "group": "default",
+        "name": "k8s-rb-definition-version",
+        "property": {
+            "description": "K8s RB definition version. Associated with vf-module-model-version",
+            "type": "string"
+        },
+        "sources": {
+            "default": {
+                "properties": {},
+                "type": "source-default"
+            },
+            "input": {
+                "type": "source-input"
+            }
+        },
+        "tags": "k8s, cnf, k8s-rb-definition-version",
+        "updated-by": "Lukasz Rajewski <lukasz.rajewski@orange.com>"
+    },
+    "k8s-rb-instance-release-name": {
+        "name": "k8s-rb-instance-release-name",
+        "property": {
+            "description": "Name of the release for the helm package instance in k8s",
+            "type": "string"
+        },
+        "tags": "k8s, cnf, profile, k8s version, k8s-rb-profile-k8s-version",
         "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>"
     },
     "k8s-rb-profile-k8s-version": {
-        "group": "default",
         "name": "k8s-rb-profile-k8s-version",
         "property": {
             "description": "Profile k8s version used in multicloud/k8s plugin",
@@ -402,8 +403,8 @@
                 "type": "source-rest"
             }
         },
-        "tags": "k8s, cnf, profile, k8s version, k8s-rb-profile-k8s-version",
-        "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>"
+        "tags": "k8s, cnf, profile, k8s-rb-profile-name",
+        "updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>"
     },
     "k8s-rb-profile-name": {
         "group": "default",
@@ -419,9 +420,29 @@
             },
             "input": {
                 "type": "source-input"
+            },
+            "sdnc": {
+                "properties": {
+                    "input-key-mapping": {
+                        "service-instance-id": "service-instance-id",
+                        "vnf-id": "vnf-id"
+                    },
+                    "key-dependencies": [
+                        "service-instance-id",
+                        "vnf-id"
+                    ],
+                    "output-key-mapping": {
+                        "k8s-rb-profile-namespace": "value"
+                    },
+                    "path": "/param/0/value",
+                    "type": "JSON",
+                    "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/k8s-rb-profile-namespace",
+                    "verb": "GET"
+                },
+                "type": "source-rest"
             }
         },
-        "tags": "k8s, cnf, profile, k8s-rb-profile-name",
+        "tags": "k8s, cnf, profile, namespace, k8s-rb-profile-namespace",
         "updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>"
     },
     "k8s-rb-profile-namespace": {
@@ -460,8 +481,8 @@
                 "type": "source-rest"
             }
         },
-        "tags": "k8s, cnf, profile, namespace, k8s-rb-profile-namespace",
-        "updated-by": "Samuli, Silvius <s.silvius@partner.samsung.com>"
+        "tags": "k8s, cnf, k8s-rb-profile-namespace",
+        "updated-by": "Lukasz Rajewski <lukasz.rajewski@orange.com>"
     },
     "k8s-rb-profile-source": {
         "group": "default",
@@ -682,45 +703,6 @@
         "tags": "private2-prefix-id",
         "updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>"
     },
-    "put-active-streams": {
-        "group": "default",
-        "name": "put-active-streams",
-        "property": {
-            "description": "put-active-streams",
-            "type": "string"
-        },
-        "sources": {
-            "default": {
-                "properties": {},
-                "type": "source-default"
-            },
-            "input": {
-                "type": "source-input"
-            },
-            "sdnc": {
-                "properties": {
-                    "endpoint-selector": "vpkg-rest-api",
-                    "input-key-mapping": {
-                        "active-streams": "active-streams",
-                        "vpg_onap_private_ip_0": "vpg_onap_private_ip_0"
-                    },
-                    "key-dependencies": [
-                        "vpg_onap_private_ip_0",
-                        "active-streams"
-                    ],
-                    "output-key-mapping": {},
-                    "path": "/param/0/value",
-                    "payload": "{\"streams\": {\"active-streams\": $active-streams}}",
-                    "type": "JSON",
-                    "url-path": "$vpg_onap_private_ip_0:8183/restconf/config/stream-count:stream-count/streams",
-                    "verb": "PUT"
-                },
-                "type": "source-rest"
-            }
-        },
-        "tags": "put-active-streams",
-        "updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>"
-    },
     "service-instance-id": {
         "group": "default",
         "name": "service-instance-id",
@@ -794,28 +776,6 @@
             "input": {
                 "properties": {},
                 "type": "source-input"
-            },
-            "sdnc": {
-                "properties": {
-                    "input-key-mapping": {
-                        "service-instance-id": "service-instance-id",
-                        "vf-module-id": "vf-module.vf-module-id",
-                        "vnf-id": "vnf-id"
-                    },
-                    "key-dependencies": [
-                        "service-instance-id",
-                        "vnf-id",
-                        "vf-module.vf-module-id"
-                    ],
-                    "output-key-mapping": {
-                        "vf-module-id": "vf-module-id"
-                    },
-                    "path": "/vf-module/0/vf-module-id",
-                    "type": "JSON",
-                    "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vf-modules/vf-module/$vf-module-id",
-                    "verb": "GET"
-                },
-                "type": "source-rest"
             }
         },
         "tags": "vf-module-id",
@@ -879,7 +839,7 @@
         "group": "default",
         "name": "vf-module-model-invariant-uuid",
         "property": {
-            "description": "vf module model invariant uuid",
+            "description": "vf-module-model-invariant-uuid",
             "type": "string"
         },
         "sources": {
@@ -914,7 +874,7 @@
         "group": "default",
         "name": "vf-module-model-version",
         "property": {
-            "description": "vf module model model version",
+            "description": "vf-module-model-version",
             "type": "string"
         },
         "sources": {
@@ -1073,21 +1033,20 @@
                 "properties": {
                     "input-key-mapping": {
                         "service-instance-id": "service-instance-id",
-                        "vnf-id": "generic-vnf.vnf-id"
+                        "vnf-id": "vnf-id"
                     },
                     "key-dependencies": [
                         "service-instance-id",
-                        "generic-vnf.vnf-id"
+                        "vnf-id"
                     ],
                     "output-key-mapping": {
-                        "vnf-id": "vnf-id"
+                        "vnf-id": "value"
                     },
-                    "path": "/vnf/0/vnf-id",
+                    "path": "/param/0/value",
                     "type": "JSON",
-                    "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/",
+                    "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/vnf-id",
                     "verb": "GET"
-                },
-                "type": "source-rest"
+                }
             }
         },
         "tags": "vnf-id",
@@ -1108,8 +1067,40 @@
             "input": {
                 "type": "source-input"
             },
+            "rest": {
+                "properties": {
+                    "endpoint-selector": "naming-resolution",
+                    "headers": {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    "input-key-mapping": {
+                        "aic-cloud-region": "aic-cloud-region",
+                        "vf-naming-policy": "vf-naming-policy",
+                        "vnf-id": "vnf-id"
+                    },
+                    "key-dependencies": [
+                        "vnf-id",
+                        "aic-cloud-region",
+                        "vf-naming-policy"
+                    ],
+                    "output-key-mapping": {
+                        "vnf_name": "resource-value"
+                    },
+                    "path": "/elements/0/resource-value",
+                    "payload": "{\r\n    \"elements\": [\r\n        {\r\n            \"resource-name\": \"vnf_name\",\r\n            \"resource-value\": \"${vnf_name}\",\r\n            \"external-key\": \"${vnf-id}\",\r\n            \"policy-instance-name\": \"${vf-naming-policy}\",\r\n          \"naming-type\": \"VNF\",\r\n          \"AIC_CLOUD_REGION\": \"${aic-cloud-region}\"\r\n        }\r\n  ]\r\n}",
+                    "type": "JSON",
+                    "url-path": "/v1/genNetworkElementName",
+                    "verb": "POST"
+                },
+                "type": "source-rest"
+            },
             "sdnc": {
                 "properties": {
+                    "headers": {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
                     "input-key-mapping": {
                         "service-instance-id": "service-instance-id",
                         "vnf-id": "vnf-id"
@@ -1118,44 +1109,19 @@
                         "service-instance-id",
                         "vnf-id"
                     ],
-                    "output-key-mapping": {
-                        "vnf_name": "value"
-                    },
                     "path": "/param/0/value",
                     "type": "JSON",
                     "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/vnf_name",
                     "verb": "GET"
-                },
-                "type": "source-rest"
+                }
             }
-        },
-        "tags": "vnf_name",
-        "updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>"
+        }
     },
     "vpg-management-port": {
         "group": "default",
         "name": "vpg-management-port",
         "property": {
-            "description": "vpg-management-port",
-            "type": "integer"
-        },
-        "sources": {
-            "default": {
-                "properties": {},
-                "type": "source-default"
-            },
-            "input": {
-                "type": "source-input"
-            }
-        },
-        "tags": "vpg-management-port",
-        "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>"
-    },
-    "vpg_onap_private_ip_0": {
-        "group": "default",
-        "name": "vpg_onap_private_ip_0",
-        "property": {
-            "description": "vpg_onap_private_ip_0",
+            "description": "Ssh port number in k8s nodeport to associate with vpg",
             "type": "string"
         },
         "sources": {
@@ -1165,29 +1131,9 @@
             },
             "input": {
                 "type": "source-input"
-            },
-            "sdnc": {
-                "properties": {
-                    "input-key-mapping": {
-                        "service-instance-id": "service-instance-id",
-                        "vnf-id": "vnf-id"
-                    },
-                    "key-dependencies": [
-                        "service-instance-id",
-                        "vnf-id"
-                    ],
-                    "output-key-mapping": {
-                        "vpg_onap_private_ip_0": "value"
-                    },
-                    "path": "/param/0/value",
-                    "type": "JSON",
-                    "url-path": "/restconf/config/GENERIC-RESOURCE-API:services/service/$service-instance-id/service-data/vnfs/vnf/$vnf-id/vnf-data/vnf-topology/vnf-parameters-data/param/vpg_onap_private_ip_0",
-                    "verb": "GET"
-                },
-                "type": "source-rest"
             }
         },
-        "tags": "vpg_onap_private_ip_0",
-        "updated-by": "Singal, Kapil <ks220y@att.com>"
+        "tags": "k8s, cnf, vpg-management-port",
+        "updated-by": "Lukasz Rajewski <lukasz.rajewski@orange.com>"
     }
 }
