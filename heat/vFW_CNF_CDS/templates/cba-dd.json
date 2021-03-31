@@ -355,6 +355,33 @@
         }
     },
     {
+        "name": "k8s-rb-instance-release-name",
+        "tags": "k8s, cnf, profile, k8s-rb-instance-release-name",
+        "data_type": "string",
+        "description": "Name of the release for the helm package instance in k8s",
+        "entry_schema": "string",
+        "updatedBy": "Rajewski, Lukasz <lukasz.rajewski@orange.com>",
+        "definition": {
+            "tags": "k8s, cnf, profile, k8s-rb-instance-release-name",
+            "name": "k8s-rb-instance-release-name",
+            "property": {
+                "description": "Name of the release for the helm package instance in k8s",
+                "type": "string"
+            },
+            "group": "default",
+            "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>",
+            "sources": {
+                "input": {
+                    "type": "source-input"
+                },
+                "default": {
+                    "type": "source-default",
+                    "properties": {}
+                }
+            }
+        }
+    },
+    {
         "name": "k8s-rb-profile-namespace",
         "tags": "k8s, cnf, profile, namespace, k8s-rb-profile-namespace",
         "data_type": "string",
