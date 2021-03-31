@@ -355,6 +355,33 @@
         }
     },
     {
+        "name": "k8s-rb-instance-release-name",
+        "tags": "k8s, cnf, profile, k8s-rb-instance-release-name",
+        "data_type": "string",
+        "description": "Name of the release for the helm package instance in k8s",
+        "entry_schema": "string",
+        "updatedBy": "Rajewski, Lukasz <lukasz.rajewski@orange.com>",
+        "definition": {
+            "tags": "k8s, cnf, profile, k8s-rb-instance-release-name",
+            "name": "k8s-rb-instance-release-name",
+            "property": {
+                "description": "Name of the release for the helm package instance in k8s",
+                "type": "string"
+            },
+            "group": "default",
+            "updated-by": "Rajewski, Lukasz <lukasz.rajewski@orange.com>",
+            "sources": {
+                "input": {
+                    "type": "source-input"
+                },
+                "default": {
+                    "type": "source-default",
+                    "properties": {}
+                }
+            }
+        }
+    },
+    {
         "name": "k8s-rb-profile-namespace",
         "tags": "k8s, cnf, profile, namespace, k8s-rb-profile-namespace",
         "data_type": "string",
@@ -477,7 +504,7 @@
             "updated-by": "MALAKOV, YURIY <yuriy.malakov@att.com>",
             "sources": {
                 "input": {
-                    "type": "source-input"
+                    "type": "source-zinput"
                 },
                 "default": {
                     "type": "source-default",
@@ -1175,6 +1202,34 @@
                             "service-instance-id",
                             "vnf-id"
                         ]
+                    }
+                }
+            }
+        }
+    },
+    {
+        "name": "health-check-setup",
+        "tags": "health-check-setup",
+        "data_type": "json",
+        "description": "health-check-setup",
+        "entry_schema": "json",
+        "updatedBy": "Joachim Blixt <j.blixt@partner.samsung.com>",
+        "definition": {
+            "tags": "health-check-setup",
+            "name": "health-check-setup",
+            "property": {
+                "description": "health-check-setup",
+                "type": "json"
+            },
+            "group": "default",
+            "updated-by": "Joachim Blixt <j.blixt@partner.samsung.com>",
+            "sources": {
+                "capability": {
+                    "type": "source-capability",
+                    "properties": {
+                        "script-type": "kotlin",
+                        "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.HealthCheckSetup",
+                        "instance-dependencies": []
                     }
                 }
             }
