@@ -23,8 +23,7 @@
             "description": " Velocity Template used for Configuration",
             "file_ext": [
                 "vtl"
-            ],
-            "version": "1.0.0"
+            ]
         }
     }
 }

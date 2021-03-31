@@ -5,14 +5,30 @@
             "description": "Dynamic DataType definition for workflow(config-assign).",
             "properties": {
                 "config-deploy-setup": {
+                    "description": "configuration for config value setup",
                     "type": "json"
                 },
                 "service-instance-id": {
+                    "constraints": [
+                        {}
+                    ],
                     "description": "",
+                    "entry_schema": {
+                        "type": ""
+                    },
                     "required": false,
+                    "status": "",
                     "type": "string"
                 },
                 "vf-modules-list": {
+                    "type": "json"
+                },
+                "vf-modules-list-aai": {
+                    "description": "list of modules associated with vnf from AAI",
+                    "type": "json"
+                },
+                "vf-modules-list-sdnc": {
+                    "description": "list of modules associated with vnf from MDSAL",
                     "type": "json"
                 },
                 "vnf-id": {
@@ -28,14 +44,61 @@
             "description": "Dynamic DataType definition for workflow(config-deploy).",
             "properties": {
                 "config-deploy-setup": {
+                    "description": "configuration for config value setup",
                     "type": "json"
                 },
                 "service-instance-id": {
+                    "constraints": [
+                        {}
+                    ],
+                    "description": "",
+                    "entry_schema": {
+                        "type": ""
+                    },
+                    "required": false,
+                    "status": "",
+                    "type": "string"
+                },
+                "vf-modules-list-aai": {
+                    "description": "list of modules associated with vnf from AAI",
+                    "type": "json"
+                },
+                "vf-modules-list-sdnc": {
+                    "description": "list of modules associated with vnf from MDSAL",
+                    "type": "json"
+                },
+                "vnf-id": {
                     "description": "",
                     "required": false,
                     "type": "string"
+                }
+            }
+        },
+        "dt-health-check-properties": {
+            "description": "Dynamic DataType definition for workflow(health-check).",
+            "properties": {
+                "config-deploy-setup": {
+                    "description": "configuration for config value setup",
+                    "type": "json"
                 },
-                "vf-modules-list": {
+                "service-instance-id": {
+                    "constraints": [
+                        {}
+                    ],
+                    "description": "",
+                    "entry_schema": {
+                        "type": ""
+                    },
+                    "required": false,
+                    "status": "",
+                    "type": "string"
+                },
+                "vf-modules-list-aai": {
+                    "description": "list of modules associated with vnf from AAI",
+                    "type": "json"
+                },
+                "vf-modules-list-sdnc": {
+                    "description": "list of modules associated with vnf from MDSAL",
                     "type": "json"
                 },
                 "vnf-id": {
@@ -85,38 +148,67 @@
                 },
                 "k8s-rb-config-name": {
                     "description": "The source of configuration values for config-deploy operation",
+                    "required": false,
                     "type": "string"
                 },
                 "k8s-rb-config-template-name": {
-                    "description": "The name of configuration template for config-assign operation",
+                    "description": "The source of configuration template for config-assign operation",
+                    "required": false,
                     "type": "string"
                 },
                 "k8s-rb-config-template-source": {
                     "description": "The source of configuration template for config-assign operation",
+                    "required": false,
                     "type": "string"
                 },
                 "k8s-rb-config-value-source": {
                     "description": "The source of configuration values for config-deploy operation",
+                    "required": false,
+                    "type": "string"
+                },
+                "k8s-rb-definition-name": {
+                    "description": "RB Name identifier of Helm chart(s) in k8s plugin",
+                    "metadata": {
+                        "transform-template": "${vf-module-model-invariant-uuid}"
+                    },
+                    "required": false,
+                    "type": "string"
+                },
+                "k8s-rb-definition-version": {
+                    "description": "RB Version identifier of Helm chart(s) in k8s plugin",
+                    "metadata": {
+                        "transform-template": "${vf-module-model-version}"
+                    },
+                    "required": false,
                     "type": "string"
                 },
                 "k8s-rb-instance-release-name": {
+                    "default": "vsn",
                     "description": "Name of the release for the helm package instance in k8s",
+                    "required": false,
                     "type": "string"
                 },
                 "k8s-rb-profile-k8s-version": {
-                    "description": "Profile k8s version used in multicloud/k8s plugin",
+                    "default": "1.18.9",
+                    "description": "K8s cluster version to create helm chart for specified RB profile",
+                    "required": false,
                     "type": "string"
                 },
                 "k8s-rb-profile-name": {
-                    "description": "Profile name used in multicloud/k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+                    "default": "default",
+                    "description": "RB Profile name used in k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+                    "required": false,
                     "type": "string"
                 },
                 "k8s-rb-profile-namespace": {
-                    "description": "K8s namespace to create helm chart for specified profile",
+                    "default": "default",
+                    "description": "K8s namespace to create helm chart for specified RB profile",
+                    "required": false,
                     "type": "string"
                 },
                 "k8s-rb-profile-source": {
                     "description": "The source folder or file relative to 'Templates/k8s-profiles' folder",
+                    "required": true,
                     "type": "string"
                 },
                 "management-prefix-id": {
