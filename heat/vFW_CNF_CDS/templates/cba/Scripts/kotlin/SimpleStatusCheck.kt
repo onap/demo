@@ -40,7 +40,7 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
         val configValueSetup: ObjectNode = getDynamicProperties("config-deploy-setup") as ObjectNode
 
         val bluePrintPropertiesService: BlueprintPropertiesService =
-                this.functionDependencyInstanceAsType("blueprintPropertiesService")
+            this.functionDependencyInstanceAsType("blueprintPropertiesService")
 
         val k8sConfiguration = K8sConnectionPluginConfiguration(bluePrintPropertiesService)
 
@@ -54,6 +54,8 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
                 val instanceName = it.value.get("k8s-instance-id").asText()
 
                 val instanceStatus: K8sRbInstanceStatus? = instanceApi.getInstanceStatus(instanceName)
+                log.info("Get status for $instanceName")
+                var status = ""
                 instanceStatus?.resourcesStatus?.forEach {
                     if (it.gvk?.kind == "Pod") {
                         var version = it.gvk?.version!!
@@ -62,13 +64,14 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
                         // val podStatus = instanceApi.queryInstanceStatus(instanceName, it.gvk?.kind!!, version, it.name, null)
                         // log.info(podStatus.toString())
                         val podState = it.status?.get("status") as Map<String, Object>
-
-                        if ((podState["phase"] as String) != "Running") {
+                        status = podState["phase"] as String
+                        if (status != "Running") {
                             continueCheck = true
                             log.info("Pod ${it.name} [$vfModuleName] has invalid state ${(podState["phase"])}")
                         }
                     }
                 }
+                log.info("InstanceName=$instanceName Status=$status")
             }
             if (continueCheck) {
                 checkCount--
