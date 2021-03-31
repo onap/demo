@@ -51,6 +51,14 @@
                     "config-deploy-setup"
                 ]
             }
+        },
+        "health-check-properties": {
+            "health-check-setup": {
+                "get_attribute": [
+                    "health-check-preparation",
+                    "helm_instances"
+                ]
+            }
         }
     },
     "topology_template": {
@@ -75,6 +83,18 @@
                         "activities": [
                             {
                                 "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ],
+                        "on_success": [
+                            "health-check-preparation"
+                        ]
+                    },
+                    "health-check-preparation": {
+                        "description": "Prepare data for health check flow",
+                        "target": "health-check-preparation",
+                        "activities": [
+                            {
+                                "call_operation": "ResourceResolutionComponent.process"
                             }
                         ]
                     }
@@ -224,6 +244,14 @@
                         "type": "dt-config-deploy-properties"
                     }
                 }
+            },
+            "health-check": {
+                "steps": {
+                    "health-check": {
+                        "description": "Performing health check",
+                        "target": "health-check"
+                    }
+                }
             }
         },
         "node_templates": {
@@ -282,6 +310,28 @@
                     "helm_vsn-mapping": {
                         "type": "artifact-mapping-resource",
                         "file": "Templates/vsn-mapping.json"
+                    }
+                }
+            },
+            "health-check-preparation": {
+                "type": "component-resource-resolution",
+                "interfaces": {
+                    "ResourceResolutionComponent": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "artifact-prefix-names": [
+                                        "health-check"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "artifacts": {
+                    "health-check-mapping": {
+                        "type": "artifact-mapping-resource",
+                        "file": "Templates/health-check-mapping.json"
                     }
                 }
             },
@@ -509,6 +559,25 @@
                                     "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.CollectorScript"
                                 },
                                 "outputs": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "health-check": {
+                "type": "component-script-executor",
+                "interfaces": {
+                    "ComponentScriptExecutor": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "script-type": "kotlin",
+                                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sHealthCheck",
+                                    "instance-dependencies": [
+                                        "blueprintPropertiesService"
+                                    ],
+                                    "dynamic-properties": "*health-check-properties"
+                                }
                             }
                         }
                     }
