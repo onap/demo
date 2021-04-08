@@ -25,3 +25,6 @@ DMAAP_URL = "http://dmaap.api.simpledemo.onap.org:3904"
 
 # uncomment if socks is used
 #OnapService.set_proxy({'http': 'socks5h://127.0.0.1:8081', 'https': 'socks5h://127.0.0.1:8081'})
+
+# execute in the shell to apply these settings
+# export ONAP_PYTHON_SDK_SETTINGS="onap_settings"
