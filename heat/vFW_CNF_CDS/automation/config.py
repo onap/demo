@@ -16,6 +16,12 @@
 # ============LICENSE_END=========================================================
 
 class Config:
+    SCENARIO = 1
+    # 1 - default configuration values like set below
+    # 2 - extra ssh service that comes from the profile
+    # 3 - extra ssh service that comes from config + verification of the CNF status
+    # change requires new onboarding
+
     #### REGION DETAILS ####
     COMPLEX_ID = "complex"
     CLOUD_OWNER = "k8sCloudOwner"
@@ -24,6 +30,7 @@ class Config:
     HYPERVISOR_TYPE = "k8s"
     TENANT_NAME = "kud-1"
     K8S_NAMESPACE = "vfirewall"
+    K8S_VERSION = "1.18.9"
     CUSTOMER_RESOURCE_DEFINITIONS = []
 # Uncomment, if you want to run on non KUD k8s cluster
 #    CUSTOMER_RESOURCE_DEFINITIONS = ["crds/crd1",
@@ -44,15 +51,16 @@ class Config:
     RELEASE_NAME = "vfw-1"
 
     VENDOR = "vendor_cnf"
-    SERVICENAME = "vfw_k8s_demo_CNF"
+    SERVICENAME = "vfw_k8s_demo_CNF_KUD" + "_" + str(SCENARIO)
     VSPNAME = "VSP_" + SERVICENAME
     VFNAME = "VF_" + SERVICENAME
-    SERVICE_INSTANCE_NAME = "INSTANCE_" + SERVICENAME
+    SERVICE_INSTANCE_NAME = "INSTANCE_" + SERVICENAME + "_1"
     SDNC_ARTIFACT_NAME = "vnf"
 
     # INSERT PARAMS FOR VNF HERE AS "name" : "value" PAIR
     VNF_PARAM_LIST = {
-        "k8s-rb-profile-namespace": K8S_NAMESPACE
+        "k8s-rb-profile-namespace": K8S_NAMESPACE,
+        "k8s-rb-profile-k8s-version": K8S_VERSION
     }
 
     VF_MODULE_PREFIX = ""
@@ -87,3 +95,26 @@ class Config:
     PROJECT = "Project-Demonstration"
     PLATFORM = "test"
     LINE_OF_BUSINESS = "LOB-Demonstration"
+
+    ######## SCENARIOS #############
+
+    ########     1    #############
+    if SCENARIO == 1:
+        SKIP_POST_INSTANTIATION = True
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-name"] = PROFILE_NAME
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-source"] = PROFILE_SOURCE
+    ########     2    #############
+    elif SCENARIO == 2:
+        SKIP_POST_INSTANTIATION = True
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-name"] = "vfw-cnf-cds-vpkg-profile"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-source"] = "vfw-cnf-cds-vpkg-profile"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["vpg-management-port"] = "31922"
+    ########     3    #############
+    elif SCENARIO == 3:
+        SKIP_POST_INSTANTIATION = False
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-name"] = PROFILE_NAME
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-source"] = PROFILE_SOURCE
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-config-template-name"] = "ssh-service-config"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-config-name"] = "ssh-service-config"
+    else:
+        raise Exception("Not Implemented Scenario")

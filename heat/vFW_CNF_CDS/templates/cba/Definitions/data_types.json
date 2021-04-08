@@ -52,8 +52,8 @@
             "properties": {
                 "vpg-management-port": {
                     "description": "SSH external port of optional ssh service for vPKG.",
-                    "type": "string",
-                    "default": "0"
+                    "type": "integer",
+                    "default": 0
                 },
                 "k8s-rb-profile-namespace": {
                     "description": "K8s namespace to create helm chart for specified profile",
