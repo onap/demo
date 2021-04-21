@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4629b757_2b30f9d0",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/K8sHealthCheck.kt",
+        "patchSetId": 11
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-04-21T15:58:37Z",
+      "side": 1,
+      "message": "for simpel status verification we need tro realy on something different. Take a look into SimpleHealtCheck step in the Definition. We make split healtcheck into two phases: first is already oimplemented - we can reasu SimpleHealthCheck and the second one should be healtcheck job based.",
+      "range": {
+        "startLine": 82,
+        "startChar": 5,
+        "endLine": 93,
+        "endChar": 9
+      },
+      "revId": "7c5374fc3ff402389a52ebcc0b971b895a00a5a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7803ada2_cc6ebd9c",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/vnf-mapping.json",
+        "patchSetId": 11
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-04-21T15:58:37Z",
+      "side": 1,
+      "message": "why do we need it in the vnf level RA template?",
+      "range": {
+        "startLine": 186,
+        "startChar": 0,
+        "endLine": 212,
+        "endChar": 5
+      },
+      "revId": "7c5374fc3ff402389a52ebcc0b971b895a00a5a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a106f83d_d8811566",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Templates/vnf-template.vtl",
+        "patchSetId": 11
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-04-21T15:58:37Z",
+      "side": 1,
+      "message": "why do we need it here?",
+      "range": {
+        "startLine": 265,
+        "startChar": 9,
+        "endLine": 273,
+        "endChar": 10
+      },
+      "revId": "7c5374fc3ff402389a52ebcc0b971b895a00a5a6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
