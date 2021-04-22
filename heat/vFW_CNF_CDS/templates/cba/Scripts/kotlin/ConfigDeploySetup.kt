@@ -70,7 +70,7 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
                             moduleData.put(K8sConfigValueComponent.INPUT_K8S_RB_CONFIG_NAME, configName)
 
                         for (aaiModule in modulesAai) {
-                            if (aaiModule["vf-module-id"].asText() == module["vf-module-id"].asText()) {
+                            if (aaiModule["vf-module-id"].asText() == module["vf-module-id"].asText() && aaiModule["heat-stack-id"] != null) {
                                 moduleData.put(K8sConfigValueComponent.INPUT_K8S_INSTANCE_ID, aaiModule["heat-stack-id"].asText())
                                 break
                             }
@@ -90,7 +90,7 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
 
     private fun getParamValueByName(params: JsonNode, paramName: String): String? {
         for (param in params) {
-            if (param["name"].asText() == paramName) {
+            if (param["name"].asText() == paramName && param["value"].asText() != "null") {
                 return param["value"].asText()
             }
         }
