@@ -24,3 +24,8 @@ vsn_onap_private_ip_0: 10.10.100.4
 # Env Variables
 int_private2_gw_ip: 192.168.20.1
 int_private1_net_cidr: 192.168.10.0/24
+
+# Tests
+Tests:
+  enabled: "yes"
+  ping_count: 4

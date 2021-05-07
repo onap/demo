@@ -3,6 +3,8 @@ bears = YAMLLintBear
 yamllint_config = .yamllint
 ignore =
   .tox/**
+  #vFW_CNF_CDS tests use go template conditionals that fail yamllint
+  heat/vFW_CNF_CDS/templates/helm/*/templates/tests/*
 
 [json]
 bears = JSONFormatBear
