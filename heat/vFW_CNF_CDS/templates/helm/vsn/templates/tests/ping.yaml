@@ -1,0 +1,44 @@
+---
+# Copyright © 2021 Samsung Electronics
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Apache License, Version 2.0
+# which accompanies this distribution, and is available at
+# http://www.apache.org/licenses/LICENSE-2.0
+{{- if eq .Values.Tests.enabled "yes" }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Values.vsn_name_0 }}-test"
+  labels:
+    vnf-name: {{ .Values.vnf_name }}
+    vf-module-name: {{ .Values.vsn_name_0 }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  completions: 1
+  template:
+    metadata:
+      annotations:
+        k8s.v1.cni.cncf.io/networks: "{{ .Values.net_attachment_definition }}"
+        k8s.plugin.opnfv.org/nfn-network: |
+            { "type": "ovn4nfv",
+              "interface": [
+                {
+                  "name": {{ .Values.int_private2_net_id | quote }},
+                  "interface": "eth1" ,
+                  "defaultGateway": "false"
+                }
+              ]
+            }
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: "ping-test-eth1"
+          image: busybox
+          command:
+            - /bin/sh
+            - -exc
+            - "ping -c {{ .Values.Tests.ping_count }} -I eth1 {{ .Values.vsn_int_private2_ip_0 }}"
+{{- end -}}

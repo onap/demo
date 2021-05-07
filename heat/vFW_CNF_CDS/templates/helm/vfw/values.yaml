@@ -25,3 +25,8 @@ vsn_int_private2_ip_0: 192.168.20.3
 dcae_collector_port: 8080
 dcae_collector_ip: 10.0.4.1 #Placeholder
 demo_artifacts_version: 1.5.0
+
+# Tests
+Tests:
+  enabled: "yes"
+  ping_count: 4
