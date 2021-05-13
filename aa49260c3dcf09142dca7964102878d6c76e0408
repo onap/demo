@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bab1890_1e1d2521",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 22
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-13T08:26:31Z",
+      "side": 1,
+      "message": "we don\u0027t need resolution-key at all for health-check, we should remove it",
+      "range": {
+        "startLine": 278,
+        "startChar": 21,
+        "endLine": 278,
+        "endChar": 35
+      },
+      "revId": "aa49260c3dcf09142dca7964102878d6c76e0408",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2681fa2d_29f630fa",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 22
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-13T08:26:31Z",
+      "side": 1,
+      "message": "I quite don\u0027t like this approach, I suggest we use \"health-check-properties\". It would also further impact all references to this input in dsl_definitions and so on, of course.",
+      "range": {
+        "startLine": 282,
+        "startChar": 0,
+        "endLine": 282,
+        "endChar": 21
+      },
+      "revId": "aa49260c3dcf09142dca7964102878d6c76e0408",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ab1523f_f8ffa766",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/K8sHealthcheck.kt",
+        "patchSetId": 22
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-13T08:26:31Z",
+      "side": 1,
+      "message": "This or the other file should be removed. I\u0027m not sure which script to review and both use the same class as defined for entrypoint in CBA/Definition file",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 2
+      },
+      "revId": "aa49260c3dcf09142dca7964102878d6c76e0408",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
