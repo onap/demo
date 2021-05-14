@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "93959b31_6212cddd",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/K8sHealthCheck.kt",
+        "patchSetId": 24
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-14T05:52:26Z",
+      "side": 1,
+      "message": "I think it\u0027s worth to log here/near what resource is currently analyzed by function. You could log status subfields: metadata.name and kind to log something like: \"Parsing $kind/${metadata.name} resource status\"",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 7
+      },
+      "revId": "92b7584117b6c11712fcfebd887d83e950018624",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77cad1be_83087191",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/K8sHealthCheck.kt",
+        "patchSetId": 24
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-14T05:52:26Z",
+      "side": 1,
+      "message": "I\u0027d split this if to two levels - first determines if resource is Pod, second checks \"phase\" field -\u003e after what it logs that \"Pod was analyzed, phase was \"...\", so user can check in log why it was treated as unhealthy (he can see what status was Pod in).",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 7
+      },
+      "revId": "92b7584117b6c11712fcfebd887d83e950018624",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c15c93b_f27e4c7f",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/K8sHealthCheck.kt",
+        "patchSetId": 24
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-14T05:52:26Z",
+      "side": 1,
+      "message": "As said during first review, \"phase\" checking should be only applied for \"Pod\" (kind) resources, for all the others let\u0027s say we have no checks so they should be treated as always \"ok\" (this is already implemented as far as I see)",
+      "range": {
+        "startLine": 87,
+        "startChar": 20,
+        "endLine": 87,
+        "endChar": 51
+      },
+      "revId": "92b7584117b6c11712fcfebd887d83e950018624",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
