@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "82b2829c_ba7a83a7",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 24
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-05-14T18:58:44Z",
+      "side": 1,
+      "message": "I would avoid this change, to not update the documentation also",
+      "range": {
+        "startLine": 8,
+        "startChar": 27,
+        "endLine": 8,
+        "endChar": 36
+      },
+      "revId": "92b7584117b6c11712fcfebd887d83e950018624",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "93959b31_6212cddd",
         "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/K8sHealthCheck.kt",
         "patchSetId": 24

@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7ae8a91_dab683ff",
+        "filename": ".coafile",
+        "patchSetId": 25
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-05-14T18:58:44Z",
+      "side": 1,
+      "message": "why do we ignore it? these jsons should be lintable.",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 31
+      },
+      "revId": "93cda66d4437a24870686d66df5d0b34a83dc79d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d6c0609_bd36e03e",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 25
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-05-14T18:58:44Z",
+      "side": 1,
+      "message": "I would avoid this change, to not update doc afterwards",
+      "range": {
+        "startLine": 8,
+        "startChar": 28,
+        "endLine": 8,
+        "endChar": 37
+      },
+      "revId": "93cda66d4437a24870686d66df5d0b34a83dc79d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9296ff39_11ffedcb",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 25
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-05-14T18:58:44Z",
+      "side": 1,
+      "message": "we don\u0027t need this step in this workflow",
+      "range": {
+        "startLine": 245,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 22
+      },
+      "revId": "93cda66d4437a24870686d66df5d0b34a83dc79d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
