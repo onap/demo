@@ -224,6 +224,8 @@ if not service_instance:
         service_instance_name=Config.SERVICE_INSTANCE_NAME,
         vnf_parameters=[vnf_params]
     )
+    logger.info("Instantiation request ID: %s", service_instantiation.request_id)
+    logger.info("Service Instance ID: %s", service_instantiation.instance_id)
     status = None
     while not (status == OrchestrationRequest.StatusEnum.COMPLETED
                or status == OrchestrationRequest.StatusEnum.FAILED):
