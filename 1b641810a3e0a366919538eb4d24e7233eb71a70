@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0fbce730_83a9182d",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 23
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 6863
+      },
+      "writtenOn": "2021-05-18T08:35:23Z",
+      "side": 1,
+      "message": "delete this whitespace",
+      "range": {
+        "startLine": 239,
+        "startChar": 50,
+        "endLine": 239,
+        "endChar": 51
+      },
+      "revId": "1b641810a3e0a366919538eb4d24e7233eb71a70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
