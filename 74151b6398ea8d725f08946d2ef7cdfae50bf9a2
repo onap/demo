@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89e3e339_2f6ee4c2",
+        "filename": ".coafile",
+        "patchSetId": 28
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-05-18T10:45:18Z",
+      "side": 1,
+      "message": "the jsons are standard and we should align their format",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 31
+      },
+      "revId": "74151b6398ea8d725f08946d2ef7cdfae50bf9a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76e78194_f3d05e9c",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/node_types.json",
+        "patchSetId": 28
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-05-18T10:45:18Z",
+      "side": 1,
+      "message": "lets keep the same order of types in the file to avoid false changes",
+      "range": {
+        "startLine": 3,
+        "startChar": 5,
+        "endLine": 3,
+        "endChar": 34
+      },
+      "revId": "74151b6398ea8d725f08946d2ef7cdfae50bf9a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1861daaa_6b4df809",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Definitions/vFW_CNF_CDS.json",
+        "patchSetId": 28
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 2701
+      },
+      "writtenOn": "2021-05-18T10:45:18Z",
+      "side": 1,
+      "message": "i would not change the version because it requires updates in the documentation as well what is references in multiple places.",
+      "range": {
+        "startLine": 8,
+        "startChar": 28,
+        "endLine": 8,
+        "endChar": 35
+      },
+      "revId": "74151b6398ea8d725f08946d2ef7cdfae50bf9a2",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
