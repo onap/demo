@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5c93eac_fb6137a3",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/SimpleStatusCheck.kt",
+        "patchSetId": 32
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-19T13:27:16Z",
+      "side": 1,
+      "message": "please log either to debug or not at all, Status API response is very massive and will clutter the log",
+      "range": {
+        "startLine": 57,
+        "startChar": 16,
+        "endLine": 57,
+        "endChar": 24
+      },
+      "revId": "c45efb5b2f15169a2c3cdf66edd97f1776bdbebd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eec8a27c_a6696507",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/SimpleStatusCheck.kt",
+        "patchSetId": 32
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-19T13:27:16Z",
+      "side": 1,
+      "message": "Please log for each iterated resource what resource is now proceeded (it.name (?), it.gvk.kind, it.gvk.group, it.gvk.version)",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 1
+      },
+      "revId": "c45efb5b2f15169a2c3cdf66edd97f1776bdbebd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f4a8b64_63cf1650",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/SimpleStatusCheck.kt",
+        "patchSetId": 32
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-19T13:27:16Z",
+      "side": 1,
+      "message": "This should be moved after line 82 (after else) because here we still don\u0027t know if overall status is successful or not)",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 3
+      },
+      "revId": "c45efb5b2f15169a2c3cdf66edd97f1776bdbebd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
