@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50d6283d_ce594e52",
+        "filename": "heat/vFW_CNF_CDS/templates/cba/Scripts/kotlin/SimpleStatusCheck.kt",
+        "patchSetId": 34
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 5550
+      },
+      "writtenOn": "2021-05-19T14:24:33Z",
+      "side": 1,
+      "message": "I would keep this info at \"info\" level, so it\u0027s for sure visible",
+      "range": {
+        "startLine": 60,
+        "startChar": 24,
+        "endLine": 60,
+        "endChar": 29
+      },
+      "revId": "affd8125d6630c3db71c20a597a6afb046f2429a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
