@@ -1,30 +1,30 @@
 {
     "artifact_types": {
-        "artifact-mapping-resource": {
-            "description": "Resource Mapping File used along with Configuration template",
-            "version": "1.0.0",
+        "artifact-k8sconfig-content": {
             "derived_from": "tosca.artifacts.Implementation",
-            "file_ext": [
-                "json"
-            ]
-        },
-        "artifact-template-velocity": {
-            "description": " Velocity Template used for Configuration",
-            "version": "1.0.0",
-            "derived_from": "tosca.artifacts.Implementation",
-            "file_ext": [
-                "vtl"
-            ]
+            "description": "K8s Config Folder Artifact",
+            "version": "1.0.0"
         },
         "artifact-k8sprofile-content": {
+            "derived_from": "tosca.artifacts.Implementation",
             "description": "K8s Profile Folder Artifact",
-            "version": "1.0.0",
-            "derived_from": "tosca.artifacts.Implementation"
+            "version": "1.0.0"
         },
-        "artifact-k8sconfig-content": {
-            "description": "K8s Config Folder Artifact",
-            "version": "1.0.0",
-            "derived_from": "tosca.artifacts.Implementation"
+        "artifact-mapping-resource": {
+            "derived_from": "tosca.artifacts.Implementation",
+            "description": "Resource Mapping File used along with Configuration template",
+            "file_ext": [
+                "json"
+            ],
+            "version": "1.0.0"
+        },
+        "artifact-template-velocity": {
+            "derived_from": "tosca.artifacts.Implementation",
+            "description": " Velocity Template used for Configuration",
+            "file_ext": [
+                "vtl"
+            ],
+            "version": "1.0.0"
         }
     }
 }
