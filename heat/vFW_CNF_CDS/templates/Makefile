@@ -1,7 +1,8 @@
-.PHONY: all clean helm base cba clean_all package
+.PHONY: all clean helm base clean_all package cba jsonlint_cba
 DUMMY_ONBOARDING_PACKAGE_NAME ?= vfw_k8s_demo
 NATIVE_ONBOARDING_PACKAGE_NAME ?= native_vfw_k8s_demo
 CBA_NAME ?= CBA
+_type_files = $(wildcard cba/Definitions/*_types.json)
 
 clean_all:
 	$(MAKE) clean
@@ -17,7 +18,7 @@ all: package helm base cba
 	cp $(NATIVE_ONBOARDING_PACKAGE_NAME).zip  ../automation/vsp/
 
 helm: package
-	make -C helm
+	$(MAKE) -C helm
 	mv helm/helm_*.tgz package_native/
 	mv helm/*.tgz package_dummy/
 
@@ -43,3 +44,12 @@ clean:
 	rm -rf cba_dummy
 	rm -f $(DUMMY_ONBOARDING_PACKAGE_NAME).zip
 	rm -f $(NATIVE_ONBOARDING_PACKAGE_NAME).zip
+
+jsonlint_cba: $(_type_files)
+	@:
+
+#This shouldn't be PHONY, but it's easier now to define this way
+.PHONY: $(_type_files)
+$(_type_files):
+	@which jq expand unexpand sponge >/dev/null
+	jq -S . <$@ | unexpand -t 2 | expand -t 4 | sponge $@
