@@ -95,8 +95,20 @@ open class K8sHealthCheck : AbstractScriptComponentFunction() {
             }
             jobs.joinAll()
         }
-        log.info("Get statuses finished:")
-        log.info("$statuses")
+        var success = true
+        statuses?.forEach { it ->
+            if (it.value != "Succeeded") {
+                success = false
+            }
+        }
+        log.info("\n\n---")
+        if (success) {
+            log.info("Get statuses finished successfully")
+        } else {
+            log.info("Get statuses finished with failure")
+        }
+        log.info("Detailed results: $statuses")
+        log.info("---\n\n")
         return statuses
     }
 
