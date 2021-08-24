@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 # ============LICENSE_END=========================================================
+from uuid import uuid4
+
 
 class Config:
     SCENARIO = 1
@@ -22,25 +24,14 @@ class Config:
     # 3 - extra ssh service that comes from config + verification of the CNF status
     # change requires new onboarding
 
-    #### REGION DETAILS ####
-    COMPLEX_ID = "complex"
-    CLOUD_OWNER = "k8sCloudOwner"
-    CLOUD_REGION = "kud-1"
-    AVAILABILITY_ZONE_NAME = "k8s-availability-zone"
-    HYPERVISOR_TYPE = "k8s"
-    TENANT_NAME = "kud-1"
     K8S_NAMESPACE = "vfirewall"
     K8S_VERSION = "1.18.9"
-    CUSTOMER_RESOURCE_DEFINITIONS = []
-# Uncomment, if you want to run on non KUD k8s cluster
-#    CUSTOMER_RESOURCE_DEFINITIONS = ["crds/crd1",
-#                                     "crds/crd2"]
-
-    CLUSTER_KUBECONFIG_PATH = "artifacts/cluster_kubeconfig"
+    K8S_REGION = "kud"
 
     #### SERVICE DETAILS ####
-    NATIVE = True
+    NATIVE = True # False for old dummy-heat based orchestration path
     SKIP_POST_INSTANTIATION = True
+    MACRO_INSTANTIATION = True  # A-la-carte instantiation if False
     GLOBAL_CUSTOMER_ID = "customer_cnf"
     VSPFILE = "vsp/vfw_k8s_demo.zip"
     if NATIVE:
@@ -51,10 +42,10 @@ class Config:
     RELEASE_NAME = "vfw-1"
 
     VENDOR = "vendor_cnf"
-    SERVICENAME = "vfw_k8s_demo_CNF_KUD" + "_" + str(SCENARIO)
+    SERVICENAME = "vfw_k8s_demo_CNF" + "_" + str(SCENARIO)
     VSPNAME = "VSP_" + SERVICENAME
     VFNAME = "VF_" + SERVICENAME
-    SERVICE_INSTANCE_NAME = "INSTANCE_" + SERVICENAME + "_1"
+    SERVICE_INSTANCE_NAME = "INSTANCE_" + SERVICENAME
     SDNC_ARTIFACT_NAME = "vnf"
 
     # INSERT PARAMS FOR VNF HERE AS "name" : "value" PAIR
@@ -69,26 +60,48 @@ class Config:
 
     VF_MODULE_PARAM_LIST = {
         VF_MODULE_PREFIX + "base_template": {
-            "k8s-rb-profile-name": PROFILE_NAME,
-            "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-instance-release-name": RELEASE_NAME + "-base"
+            "instantiation_parameters": {
+                "k8s-rb-profile-name": PROFILE_NAME,
+                "k8s-rb-profile-source": PROFILE_SOURCE,
+                "k8s-rb-instance-release-name": RELEASE_NAME + "-base",
+                "k8s-rb-profile-namespace": K8S_NAMESPACE
+            },
+            "cloud_configuration": K8S_REGION
         },
         VF_MODULE_PREFIX + "vfw": {
-            "k8s-rb-profile-name": PROFILE_NAME,
-            "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-instance-release-name": RELEASE_NAME + "-vfw"
+            "instantiation_parameters": {
+                "k8s-rb-profile-name": PROFILE_NAME,
+                "k8s-rb-profile-source": PROFILE_SOURCE,
+                "k8s-rb-instance-release-name": RELEASE_NAME + "-vfw",
+                "k8s-rb-profile-namespace": K8S_NAMESPACE
+            },
+            "cloud_configuration": K8S_REGION
         },
         VF_MODULE_PREFIX + "vpkg": {
-            "k8s-rb-profile-name": PROFILE_NAME,
-            "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-instance-release-name": RELEASE_NAME + "-vpkg"
+            "instantiation_parameters": {
+                "k8s-rb-profile-name": PROFILE_NAME,
+                "k8s-rb-profile-source": PROFILE_SOURCE,
+                "k8s-rb-instance-release-name": RELEASE_NAME + "-vpkg",
+                "k8s-rb-profile-namespace": K8S_NAMESPACE
+            },
+            "cloud_configuration": K8S_REGION
         },
         VF_MODULE_PREFIX + "vsn": {
-            "k8s-rb-profile-name": PROFILE_NAME,
-            "k8s-rb-profile-source": PROFILE_SOURCE,
-            "k8s-rb-instance-release-name": RELEASE_NAME + "-vsn"
+            "instantiation_parameters": {
+                "k8s-rb-profile-name": PROFILE_NAME,
+                "k8s-rb-profile-source": PROFILE_SOURCE,
+                "k8s-rb-instance-release-name": RELEASE_NAME + "-vsn",
+                "k8s-rb-profile-namespace": K8S_NAMESPACE
+            },
+            "cloud_configuration": K8S_REGION
         }
     }
+    ######## PNF DETAILS ########
+    ADD_PNF = False
+    if ADD_PNF:
+        PNF_VSP_FILE = "vsp/pnf_package.csar"
+        PNF_NAME = "PNF_example"
+        PNF_VSP_NAME = "VSP_" + PNF_NAME
 
     ######## DEFAULT VALUES ########
     OWNING_ENTITY = "OE-Demonstration"
@@ -96,27 +109,60 @@ class Config:
     PLATFORM = "test"
     LINE_OF_BUSINESS = "LOB-Demonstration"
 
+    #### REGION DETAILS ####
+    CLOUD_REGIONS = {
+        K8S_REGION: {
+            "complex_id": "k8s-complex1",
+            "cloud_owner": "K8sCloudOwner",
+            "cloud_type": "k8s",
+            "availability_zone": "k8s-availability-zone",
+            "tenant": {
+                "id": str(uuid4()),
+                "name": K8S_REGION + "-tenant"
+            },
+            "customer_resource_definitions": [
+                # Uncomment lines below, if you want to run on non KUD k8s cluster
+                # "crds/crd1",
+                # "crds/crd2"
+            ],
+            "cluster_kubeconfig_file": "artifacts/kud_kubeconfig"
+        # },
+        # "openstack-region-test-1": {
+        #     "complex_id": "complex1",
+        #     "cloud_owner": "CloudOwner",
+        #     "cloud_type": "openstack",
+        #     "availability_zone": "Main",
+        #     "identity_url": "http://test:5000/v4",
+        #     "mso_id": "test_use",
+        #     "mso_pass": "test_password",
+        #     "identity_server_type": "KEYSTONE_V3",
+        #     "tenant": {
+        #         "id": "5117085204e84027a8d1a0cf34abb0ba",
+        #         "name": "onap-dev"
+        #     }
+        }
+    }
     ######## SCENARIOS #############
 
     ########     1    #############
     if SCENARIO == 1:
         SKIP_POST_INSTANTIATION = True
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-name"] = PROFILE_NAME
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-source"] = PROFILE_SOURCE
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-profile-name"] = PROFILE_NAME
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-profile-source"] = PROFILE_SOURCE
     ########     2    #############
     elif SCENARIO == 2:
         SKIP_POST_INSTANTIATION = True
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-name"] = "vfw-cnf-cds-vpkg-profile"
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-source"] = "vfw-cnf-cds-vpkg-profile"
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["vpg-management-port"] = "31922"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-profile-name"] = "vfw-cnf-cds-vpkg-profile"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-profile-source"] = "vfw-cnf-cds-vpkg-profile"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["vpg-management-port"] = "31922"
     ########     3    #############
     elif SCENARIO == 3:
         SKIP_POST_INSTANTIATION = False
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-name"] = PROFILE_NAME
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-profile-source"] = PROFILE_SOURCE
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-config-template-name"] = "ssh-service-config"
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-config-template-source"] = "ssh-service-config"
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-config-name"] = "ssh-service-config"
-        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["k8s-rb-config-value-source"] = "ssh-service-config"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-profile-name"] = PROFILE_NAME
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-profile-source"] = PROFILE_SOURCE
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-config-template-name"] = "ssh-service-config"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-config-template-source"] = "ssh-service-config"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-config-name"] = "ssh-service-config"
+        VF_MODULE_PARAM_LIST[VF_MODULE_PREFIX + "vpkg"]["instantiation_parameters"]["k8s-rb-config-value-source"] = "ssh-service-config"
     else:
         raise Exception("Not Implemented Scenario")

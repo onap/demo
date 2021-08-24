@@ -17,9 +17,12 @@
 
 import logging
 import os
+import zipfile
+from io import BytesIO
+
+from onapsdk.cds import Blueprint
 
 from config import Config
-from onapsdk.msb.k8s import ConnectivityInfo
 
 logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
@@ -28,22 +31,24 @@ fh_formatter = logging.Formatter('%(asctime)s %(levelname)s %(lineno)d:%(filenam
 fh.setFormatter(fh_formatter)
 logger.addHandler(fh)
 
-MYPATH = os.path.dirname(os.path.realpath(__file__))
 
-logger.info("******** Connectivity Info *******")
-with open(os.path.join(MYPATH, Config.CLUSTER_KUBECONFIG_PATH), 'rb') as kubeconfig_file:
-    kubeconfig = kubeconfig_file.read()
-try:
-    connectivity_info = ConnectivityInfo.get_connectivity_info_by_region_id(cloud_region_id=Config.CLOUD_REGION)
-    logger.info("Connectivity Info exists ")
-    logger.info("Delete Connectivity Info exists ")
-    connectivity_info.delete()
-    connectivity_info = ConnectivityInfo.create(cloud_region_id=Config.CLOUD_REGION,
-                                                cloud_owner=Config.CLOUD_OWNER,
-                                                kubeconfig=kubeconfig)
-except:
-    logger.info("Connectivity Info does not exists ")
-    connectivity_info = ConnectivityInfo.create(cloud_region_id=Config.CLOUD_REGION,
-                                                cloud_owner=Config.CLOUD_OWNER,
-                                                kubeconfig=kubeconfig)
-    logger.info("Connectivity Info created ")
+def update_cba(file):
+    mypath = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(mypath, file)
+    try:
+        with zipfile.ZipFile(file_path, 'r') as package:
+            cba_io = BytesIO(package.read("CBA.zip"))
+
+        blueprint = Blueprint(cba_io)
+        blueprint.publish()
+    except FileNotFoundError:
+        logger.error("Error - File Not Found")
+        exit(1)
+
+
+def main():
+    update_cba(Config.VSPFILE)
+
+
+if __name__ == "__main__":
+    main()

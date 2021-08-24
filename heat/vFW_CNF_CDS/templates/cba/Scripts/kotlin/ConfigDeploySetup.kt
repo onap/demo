@@ -54,7 +54,7 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
                         val moduleData: ObjectNode = objectMapper.createObjectNode()
                         result.put(label, moduleData)
                         moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_DEFINITION_NAME, modelInfo["model-invariant-uuid"].asText())
-                        moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_DEFINITION_VERSION, modelInfo["model-uuid"].asText())
+                        moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_DEFINITION_VERSION, modelInfo["model-customization-uuid"].asText())
                         val templateName: String? = getParamValueByName(moduleParameters, K8sConfigTemplateComponent.INPUT_K8S_TEMPLATE_NAME)
                         val templateSource: String? = getParamValueByName(moduleParameters, K8sConfigTemplateComponent.INPUT_K8S_TEMPLATE_SOURCE)
                         val configValueSource: String? = getParamValueByName(moduleParameters, K8sConfigValueComponent.INPUT_K8S_CONFIG_VALUE_SOURCE)

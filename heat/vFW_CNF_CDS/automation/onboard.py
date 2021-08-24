@@ -18,17 +18,15 @@
 import logging
 
 import time
-import zipfile
-from io import BytesIO
 
-import oyaml as yaml
-
+from instantiate import read_sdnc_model_details
 from config import Config
 import onapsdk.constants as const
 
 from onapsdk.sdc.vendor import Vendor
 from onapsdk.sdc.vsp import Vsp
 from onapsdk.sdc.vf import Vf
+from onapsdk.sdc.pnf import Pnf
 from onapsdk.sdc.service import Service, ServiceInstantiationType
 
 import os
@@ -40,76 +38,125 @@ fh_formatter = logging.Formatter('%(asctime)s %(levelname)s %(lineno)d:%(filenam
 fh.setFormatter(fh_formatter)
 logger.addHandler(fh)
 
-# Read SDNC MODEL NAME and VERSION from CBA.zip
-logger.info("*******************************")
-logger.info("Retrieving SDNC MODEL NAME and VERSION")
-logger.info("*******************************")
-with zipfile.ZipFile(Config.VSPFILE, 'r') as package:
-    cba_io = BytesIO(package.read("CBA.zip"))
-    with zipfile.ZipFile(cba_io) as cba:
-        with cba.open('TOSCA-Metadata/TOSCA.meta') as meta_file:
-            tosca_meta = yaml.load(meta_file, Loader=yaml.FullLoader)
-            SDNC_MODEL_NAME = tosca_meta.get("Template-Name")
-            SDNC_MODEL_VERSION = tosca_meta.get("Template-Version")
 
-logger.info("*******************************")
-logger.info("******** SERVICE DESIGN *******")
-logger.info("*******************************")
+def retrieve_service(service_name: str):
+    logger.info("Retrieve service from SDC before onboarding")
+    services = Service.get_all()
 
-logger.info("******** Onboard Vendor *******")
-vendor = Vendor(name=Config.VENDOR)
-vendor.onboard()
+    for found_service in services:
+        if found_service.name == service_name:
+            logging.info(f"Service {found_service.name} found in SDC, onboarding will not be executed")
+            exit(0)
+    return
 
-logger.info("******** Onboard VSP *******")
-mypath = os.path.dirname(os.path.realpath(__file__))
-myvspfile = os.path.join(mypath, Config.VSPFILE)
-vsp = Vsp(name=Config.VSPNAME, vendor=vendor, package=open(myvspfile, 'rb'))
-vsp.onboard()
 
-logger.info("******** Onboard VF *******")
-vf = Vf(name=Config.VFNAME)
-vf.vsp = vsp
-vf.create()
-vf.onboard()
+def onboard_vendor(vendor_name: str = "demo_vendor"):
+    logger.info("******** Onboard Vendor *******")
+    vendor = Vendor(vendor_name)
+    vendor.onboard()
+    return vendor
 
-logger.info("******** Onboard Service *******")
-svc = Service(name=Config.SERVICENAME,
-              instantiation_type=ServiceInstantiationType.MACRO)
-svc.create()
 
-if svc.status == const.DRAFT:
-    svc.add_resource(vf)
+def onboard_vsp(vsp_name, vsp_file, vendor):
+    logger.info(f"******** Onboard VSP - {vsp_name} *******")
+    mypath = os.path.dirname(os.path.realpath(__file__))
+    vsp_path = os.path.join(mypath, vsp_file)
+    vsp = None
+    try:
+        vsp = Vsp(name=vsp_name, vendor=vendor, package=open(vsp_path, 'rb'))
+    except FileNotFoundError:
+        logger.error(f"No vsp file was found for {vsp_name}!")
+        exit(1)
+    vsp.onboard()
+    return vsp
 
-    logger.info("******** Set SDNC properties for VF ********")
-    component = svc.get_component(vf)
-    prop = component.get_property("sdnc_model_version")
-    prop.value = SDNC_MODEL_VERSION
-    prop = component.get_property("sdnc_artifact_name")
-    prop.value = Config.SDNC_ARTIFACT_NAME
-    prop = component.get_property("sdnc_model_name")
-    prop.value = SDNC_MODEL_NAME
-    prop = component.get_property("controller_actor")
-    prop.value = "CDS"
-    prop = component.get_property("skip_post_instantiation_configuration")
-    prop.value = Config.SKIP_POST_INSTANTIATION
 
-    logger.info("******** Onboard Service *******")
-    svc.checkin()
-    svc.onboard()
+def onboard_pnf(pnf_name, vsp_name, vsp_file, vendor):
+    logger.info(f"******** Onboard PNF - {pnf_name} *******")
+    pnf_vsp = onboard_vsp(vsp_name=vsp_name, vsp_file=vsp_file, vendor=vendor)
+    pnf = Pnf(name=pnf_name, vsp=pnf_vsp)
+    pnf.onboard()
+    return pnf
 
-logger.info("******** Check Service Distribution *******")
-distribution_completed = False
-nb_try = 0
-nb_try_max = 10
-while distribution_completed is False and nb_try < nb_try_max:
-    distribution_completed = svc.distributed
-    if distribution_completed is True:
-        logger.info("Service Distribution for %s is successfully finished", svc.name)
-        break
-    logger.info("Service Distribution for %s ongoing, Wait for 60 s", svc.name)
-    time.sleep(60)
-    nb_try += 1
 
-if distribution_completed is False:
-    logger.error("Service Distribution for %s failed !!", svc.name)
-    exit(1)
+def onboard_vnf(vnf_name, vsp_name, vsp_file, vendor):
+    logger.info(f"******** Onboard VNF - {vnf_name} *******")
+    vnf_vsp = onboard_vsp(vsp_name=vsp_name, vsp_file=vsp_file, vendor=vendor)
+    vnf = Vf(name=vnf_name, vsp=vnf_vsp)
+    vnf.create()
+    vnf.onboard()
+    return vnf
+
+
+def create_service(service_name, is_macro: bool = True):
+    logger.info("******** Create Service *******")
+    if is_macro:
+        svc = Service(name=service_name,
+                      instantiation_type=ServiceInstantiationType.MACRO)
+    else:
+        svc = Service(name=service_name,
+                      instantiation_type=ServiceInstantiationType.A_LA_CARTE)
+    svc.create()
+    return svc
+
+
+def set_properties(service, xnf):
+    sdnc_model_name, sdnc_model_version = read_sdnc_model_details(Config.VSPFILE)
+    if service.status == const.DRAFT:
+        logger.info("******** Set SDNC properties for VF ********")
+        component = service.get_component(xnf)
+        prop = component.get_property("sdnc_model_version")
+        prop.value = sdnc_model_version
+        prop = component.get_property("sdnc_artifact_name")
+        prop.value = Config.SDNC_ARTIFACT_NAME
+        prop = component.get_property("sdnc_model_name")
+        prop.value = sdnc_model_name
+        prop = component.get_property("controller_actor")
+        prop.value = "CDS"
+        prop = component.get_property("skip_post_instantiation_configuration")
+        prop.value = Config.SKIP_POST_INSTANTIATION
+
+
+def check_distribution_status(service):
+    logger.info("******** Check Service Distribution *******")
+    distribution_completed = False
+    nb_try = 0
+    nb_try_max = 10
+    while distribution_completed is False and nb_try < nb_try_max:
+        distribution_completed = service.distributed
+        if distribution_completed is True:
+            logger.info(f"Service Distribution for {service.name} is successfully finished")
+            break
+        logger.info(f"Service Distribution for {service.name} ongoing, Wait for 60 s")
+        time.sleep(60)
+        nb_try += 1
+
+    if distribution_completed is False:
+        logger.error(f"Service Distribution for {service.name} failed !!", )
+        exit(1)
+
+
+def main():
+    retrieve_service(service_name=Config.SERVICENAME)
+    logger.info("******** SERVICE DESIGN *******")
+    vendor = onboard_vendor(vendor_name=Config.VENDOR)
+    service = create_service(Config.SERVICENAME, Config.MACRO_INSTANTIATION)
+    if Config.ADD_PNF:
+        pnf = onboard_pnf(pnf_name=Config.PNF_NAME,
+                          vsp_name=Config.PNF_VSP_NAME,
+                          vsp_file=Config.PNF_VSP_FILE,
+                          vendor=vendor)
+        service.add_resource(pnf)
+    vnf = onboard_vnf(vnf_name=Config.VFNAME,
+                      vsp_name=Config.VSPNAME,
+                      vsp_file=Config.VSPFILE,
+                      vendor=vendor)
+    service.add_resource(vnf)
+    set_properties(service, vnf)
+    service.checkin()
+    service.onboard()
+    check_distribution_status(service)
+
+
+if __name__ == "__main__":
+    main()

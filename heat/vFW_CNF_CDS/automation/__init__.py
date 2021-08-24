@@ -1,5 +1,5 @@
 # ============LICENSE_START=======================================================
-# Copyright (C) 2020 Orange
+# Copyright (C) 2021 Orange
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,5 +16,4 @@
 # ============LICENSE_END=========================================================
 
 from .config import Config
-from .so_db_adapter import SoDBAdapter
 from .k8s_client import K8sClient
