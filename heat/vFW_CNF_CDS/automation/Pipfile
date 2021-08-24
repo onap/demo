@@ -6,8 +6,8 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-onapsdk = "<=7.3.0"
-kubernetes = "<=12.0.1"
+onapsdk = "8.1.2"
+kubernetes = "*"
 
 [requires]
 python_version = "3.8"

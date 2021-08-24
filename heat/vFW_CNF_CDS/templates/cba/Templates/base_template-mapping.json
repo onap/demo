@@ -217,14 +217,14 @@
             "type": "string",
             "required": false,
             "metadata": {
-                "transform-template": "${vf-module-model-version}"
+                "transform-template": "${vf-module-model-customization-uuid}"
             }
         },
         "input-param": false,
         "dictionary-name": "k8s-rb-definition-version",
         "dictionary-source": "default",
         "dependencies": [
-            "vf-module-model-version"
+            "vf-module-model-customization-uuid"
         ]
     },
     {
