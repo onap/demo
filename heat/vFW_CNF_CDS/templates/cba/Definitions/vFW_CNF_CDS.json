@@ -498,7 +498,7 @@
                                     "script-type": "kotlin",
                                     "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.SimpleStatusCheck",
                                     "instance-dependencies": [
-                                        "blueprintPropertiesService"
+                                        "bluePrintPropertiesService"
                                     ],
                                     "dynamic-properties": "*simple-status-properties"
                                 }
@@ -517,7 +517,7 @@
                                     "script-type": "kotlin",
                                     "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.SimpleErrorCheck",
                                     "instance-dependencies": [
-                                        "blueprintPropertiesService"
+                                        "bluePrintPropertiesService"
                                     ],
                                     "dynamic-properties": "*simple-status-properties"
                                 }
@@ -536,7 +536,7 @@
                                     "script-type": "kotlin",
                                     "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.K8sHealthCheck",
                                     "instance-dependencies": [
-                                        "blueprintPropertiesService"
+                                        "bluePrintPropertiesService"
                                     ],
                                     "dynamic-properties": "*simple-status-properties"
                                 }

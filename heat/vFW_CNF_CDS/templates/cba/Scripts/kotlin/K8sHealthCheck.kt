@@ -19,7 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import org.onap.ccsdk.cds.blueprintsprocessor.core.BlueprintPropertiesService
+import org.onap.ccsdk.cds.blueprintsprocessor.core.BluePrintPropertiesService
 import org.onap.ccsdk.cds.blueprintsprocessor.core.api.data.ExecutionServiceInput
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.K8sConnectionPluginConfiguration
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.instance.K8sPluginInstanceApi
@@ -37,7 +37,7 @@ open class K8sHealthCheck : AbstractScriptComponentFunction() {
     }
 
     private fun initPluginApi(): K8sPluginInstanceApi {
-        val bluePrintPropertiesService: BlueprintPropertiesService = this.functionDependencyInstanceAsType("blueprintPropertiesService")!!
+        val bluePrintPropertiesService: BluePrintPropertiesService = this.functionDependencyInstanceAsType("bluePrintPropertiesService")!!
         val k8sConfiguration = K8sConnectionPluginConfiguration(bluePrintPropertiesService)
 
         return K8sPluginInstanceApi(k8sConfiguration)
@@ -120,6 +120,6 @@ open class K8sHealthCheck : AbstractScriptComponentFunction() {
 
     override suspend fun recoverNB(runtimeException: RuntimeException, executionRequest: ExecutionServiceInput) {
         log.info("Executing Recovery")
-        bluePrintRuntimeService.getBlueprintError().addError("${runtimeException.message}", getName())
+        bluePrintRuntimeService.getBluePrintError().addError("${runtimeException.message}", getName())
     }
 }
