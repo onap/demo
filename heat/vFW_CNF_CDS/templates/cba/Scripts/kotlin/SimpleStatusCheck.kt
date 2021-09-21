@@ -17,13 +17,13 @@
 package org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts
 
 import com.fasterxml.jackson.databind.node.ObjectNode
-import org.onap.ccsdk.cds.blueprintsprocessor.core.BlueprintPropertiesService
+import org.onap.ccsdk.cds.blueprintsprocessor.core.BluePrintPropertiesService
 import org.onap.ccsdk.cds.blueprintsprocessor.core.api.data.ExecutionServiceInput
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.K8sConnectionPluginConfiguration
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.instance.K8sPluginInstanceApi
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.instance.K8sRbInstanceStatus
 import org.onap.ccsdk.cds.blueprintsprocessor.services.execution.AbstractScriptComponentFunction
-import org.onap.ccsdk.cds.controllerblueprints.core.BlueprintException
+import org.onap.ccsdk.cds.controllerblueprints.core.BluePrintException
 import org.slf4j.LoggerFactory
 
 open class SimpleStatusCheck : AbstractScriptComponentFunction() {
@@ -39,8 +39,8 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
 
         val configValueSetup: ObjectNode = getDynamicProperties("config-deploy-setup") as ObjectNode
 
-        val bluePrintPropertiesService: BlueprintPropertiesService =
-            this.functionDependencyInstanceAsType("blueprintPropertiesService")
+        val bluePrintPropertiesService: BluePrintPropertiesService =
+            this.functionDependencyInstanceAsType("bluePrintPropertiesService")
 
         val k8sConfiguration = K8sConnectionPluginConfiguration(bluePrintPropertiesService)
 
@@ -78,7 +78,7 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
             if (continueCheck) {
                 checkCount--
                 if (checkCount == 0)
-                    throw BlueprintException("Pods State verification failed")
+                    throw BluePrintException("Pods State verification failed")
                 Thread.sleep(10000L)
             } else
                 checkCount = 0

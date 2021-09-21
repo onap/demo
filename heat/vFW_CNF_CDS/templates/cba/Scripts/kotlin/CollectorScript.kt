@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import org.onap.ccsdk.cds.blueprintsprocessor.core.api.data.ExecutionServiceInput
 import org.onap.ccsdk.cds.blueprintsprocessor.services.execution.AbstractScriptComponentFunction
 import org.onap.ccsdk.cds.blueprintsprocessor.services.execution.ComponentScriptExecutor
-import org.onap.ccsdk.cds.controllerblueprints.core.BlueprintProcessorException
+import org.onap.ccsdk.cds.controllerblueprints.core.BluePrintProcessorException
 import org.onap.ccsdk.cds.controllerblueprints.core.asJsonNode
 import org.onap.ccsdk.cds.controllerblueprints.core.logger
 
@@ -42,7 +42,7 @@ open class CollectorScript : AbstractScriptComponentFunction() {
         return try {
             bluePrintRuntimeService.getNodeTemplateAttributeValue(nodeTemplateName,
                     ComponentScriptExecutor.ATTRIBUTE_RESPONSE_DATA)
-        } catch (exception: BlueprintProcessorException) { null }
+        } catch (exception: BluePrintProcessorException) { null }
     }
 
     override suspend fun recoverNB(runtimeException: RuntimeException, executionRequest: ExecutionServiceInput) {

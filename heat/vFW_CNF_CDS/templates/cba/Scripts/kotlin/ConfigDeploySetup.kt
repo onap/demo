@@ -23,7 +23,7 @@ import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.definition.template.
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.definition.template.K8sConfigValueComponent
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.resource.resolution.processor.ResourceAssignmentProcessor
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.resource.resolution.utils.ResourceAssignmentUtils
-import org.onap.ccsdk.cds.controllerblueprints.core.BlueprintProcessorException
+import org.onap.ccsdk.cds.controllerblueprints.core.BluePrintProcessorException
 import org.onap.ccsdk.cds.controllerblueprints.resource.dict.ResourceAssignment
 import org.slf4j.LoggerFactory
 
@@ -84,7 +84,7 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
             log.error(e.message, e)
             ResourceAssignmentUtils.setResourceDataValue(executionRequest, raRuntimeService, "ERROR")
 
-            throw BlueprintProcessorException("Failed in template key ($executionRequest) assignments, cause: ${e.message}", e)
+            throw BluePrintProcessorException("Failed in template key ($executionRequest) assignments, cause: ${e.message}", e)
         }
     }
 
