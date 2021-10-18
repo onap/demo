@@ -94,6 +94,30 @@
         "version": 0
     },
     {
+        "name": "vnf_name",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vnf_name",
+        "dictionary-source": "rest",
+        "dependencies": [
+            "aic-cloud-region",
+            "vf-naming-policy",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
         "name": "vf-naming-policy",
         "property": {
             "description": "",

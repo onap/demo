@@ -27,6 +27,12 @@
         }
     ],
     "dsl_definitions": {
+        "naming-resolution": {
+            "type": "basic-auth",
+            "url": "http://neng-serv:8080/web/service",
+            "username": "ccsdkapps",
+            "password": "ccsdkapps"
+        },
         "vpkg-rest-api": {
             "type": "basic-auth",
             "url": "http://",

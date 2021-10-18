@@ -32,53 +32,6 @@
             ]
         },
         {
-            "capability-name": "generate-name",
-            "key-mapping": [
-                {
-                    "output-key-mapping": [
-                        {
-                            "resource-name": "vf_module_name",
-                            "resource-value": "${vf-module-name}"
-                        }
-                    ],
-                    "payload": [
-                        {
-                            "param-name": "VF_MODULE_TYPE",
-                            "param-value": "vfmt"
-                        },
-                        {
-                            "param-name": "resource-name",
-                            "param-value": "vf_module_name"
-                        },
-                        {
-                            "param-name": "resource-value",
-                            "param-value": "${vf-module-name}"
-                        },
-                        {
-                            "param-name": "external-key",
-                            "param-value": "${vf-module-id}_vf-module-name"
-                        },
-                        {
-                            "param-name": "policy-instance-name",
-                            "param-value": "${vf-naming-policy}"
-                        },
-                        {
-                            "param-name": "naming-type",
-                            "param-value": "VF-MODULE"
-                        },
-                        {
-                            "param-name": "VNF_NAME",
-                            "param-value": "${vnf_name}"
-                        },
-                        {
-                            "param-name": "VF_MODULE_LABEL",
-                            "param-value": "${vf-module-label}"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "capability-name": "aai-vf-module-put",
             "key-mapping": [
                 {
@@ -109,6 +62,10 @@
         {
             "param-name": "vnf_name",
             "param-value": "${vnf_name}"
+        },
+        {
+            "param-name": "vf-module-name",
+            "param-value": "${vf-module-name}"
         },
 ##RB name
         {

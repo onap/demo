@@ -1,45 +1,6 @@
 {
     "capability-data": [
         {
-            "capability-name": "generate-name",
-            "key-mapping": [
-                {
-                    "output-key-mapping": [
-                        {
-                            "resource-name": "vnf_name",
-                            "resource-value": "${vnf_name}"
-                        }
-                    ],
-                    "payload": [
-                        {
-                            "param-name": "resource-name",
-                            "param-value": "vnf_name"
-                        },
-                        {
-                            "param-name": "resource-value",
-                            "param-value": "${vnf_name}"
-                        },
-                        {
-                            "param-name": "external-key",
-                            "param-value": "${vnf-id}_vnf_name"
-                        },
-                        {
-                            "param-name": "policy-instance-name",
-                            "param-value": "${vf-naming-policy}"
-                        },
-                        {
-                            "param-name": "naming-type",
-                            "param-value": "VNF"
-                        },
-                        {
-                            "param-name": "AIC_CLOUD_REGION",
-                            "param-value": "${aic-cloud-region}"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
             "capability-name": "netbox-ip-assign",
             "key-mapping": [
                 {
@@ -227,6 +188,10 @@
         }
     ],
     "resource-accumulator-resolved-data": [
+        {
+            "param-name": "vnf_name",
+            "param-value": "${vnf_name}"
+        },
         {
             "param-name": "vf-naming-policy",
             "param-value": "${vf-naming-policy}"
