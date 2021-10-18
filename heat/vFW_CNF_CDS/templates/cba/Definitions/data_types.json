@@ -212,6 +212,11 @@
                     "required": false,
                     "type": "string"
                 },
+                "vf-module-name": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
                 "vf-module-label": {
                     "description": "",
                     "required": false,

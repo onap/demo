@@ -24,6 +24,24 @@
         ]
     },
     {
+        "name": "vf-module-name",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [{}],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-name",
+        "dictionary-source": "rest",
+        "dependencies": ["vnf_name", "vf-module-label", "vf-naming-policy", "vf-module-id"],
+        "version": 0
+    },
+    {
         "name": "vnf_name",
         "property": {
             "description": "",
