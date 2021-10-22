@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 # ============LICENSE_END=========================================================
-from uuid import uuid4
-
 
 class Config:
     SCENARIO = 1
@@ -117,7 +115,6 @@ class Config:
             "cloud_type": "k8s",
             "availability_zone": "k8s-availability-zone",
             "tenant": {
-                "id": str(uuid4()),
                 "name": K8S_REGION + "-tenant"
             },
             "customer_resource_definitions": [
