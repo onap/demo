@@ -17,6 +17,7 @@
 
 import logging
 import os
+from uuid import uuid4
 
 from onapsdk.so.so_db_adapter import SoDbAdapter, IdentityService
 
@@ -109,17 +110,29 @@ def add_availability_zone(cloud_region):
 def add_tenant(cloud_region):
     logger.info("******** Tenant *******")
     region_id = cloud_region.cloud_region_id
-    tenant_id = Config.CLOUD_REGIONS[region_id]["tenant"]["id"]
+    is_k8s = is_k8s_region(region_id)
     tenant_name = Config.CLOUD_REGIONS[region_id]["tenant"]["name"]
 
-    try:
-        cloud_region.get_tenant(tenant_id)
-        logger.info("Tenant exists")
-    except ResourceNotFound:
-        logger.info("Tenant does not exist")
-        cloud_region.add_tenant(tenant_id=tenant_id,
-                                tenant_name=tenant_name)
-        logger.info("Tenant added to region")
+    if is_k8s:
+        try:
+            next(_tenant for _tenant in cloud_region.tenants if _tenant.name == tenant_name)
+            logger.info("Tenant exists")
+        except (StopIteration, ResourceNotFound):
+            tenant_id = str(uuid4())
+            logger.info("Tenant does not exist")
+            cloud_region.add_tenant(tenant_id=tenant_id,
+                                    tenant_name=tenant_name)
+            logger.info(f"Tenant {tenant_name} added to region")
+    else:
+        tenant_id = Config.CLOUD_REGIONS[region_id]["tenant"]["id"]
+        try:
+            cloud_region.get_tenant(tenant_id)
+            logger.info("Tenant exists")
+        except ResourceNotFound:
+            logger.info("Tenant does not exist")
+            cloud_region.add_tenant(tenant_id=tenant_id,
+                                    tenant_name=tenant_name)
+            logger.info(f"Tenant {tenant_name} added to region")
 
 
 def create_customer():
