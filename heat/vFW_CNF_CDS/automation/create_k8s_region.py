@@ -25,6 +25,7 @@ from so_db_adapter import SoDBUpdate
 from onapsdk.aai.business import Customer
 from onapsdk.aai.cloud_infrastructure import Complex, CloudRegion
 from onapsdk.msb.k8s import ConnectivityInfo
+from onapsdk.exceptions import ResourceNotFound
 
 logger = logging.getLogger("")
 logger.setLevel(logging.DEBUG)
@@ -40,7 +41,7 @@ logger.info("******** Complex *******")
 try:
     complex = list(Complex.get_all(physical_location_id=Config.COMPLEX_ID))[0]
     logger.info("Complex exists")
-except IndexError:
+except (IndexError, ResourceNotFound):
     logger.info("Complex does not exists")
     complex = Complex.create(physical_location_id=Config.COMPLEX_ID,
                              name=Config.COMPLEX_ID,
@@ -57,7 +58,7 @@ logger.info("******** Cloud Region *******")
 try:
     cloud_region = list(CloudRegion.get_all(cloud_owner=Config.CLOUD_OWNER, cloud_region_id=Config.CLOUD_REGION))[0]
     logger.info("Cloud region exists")
-except IndexError:
+except (IndexError, ResourceNotFound):
     logger.info("Cloud region does not exists")
     cloud_region = CloudRegion.create(cloud_owner=Config.CLOUD_OWNER,
                                       cloud_region_id=Config.CLOUD_REGION,
@@ -75,11 +76,25 @@ logger.info("******** Cloud regiongion <-> Complex *******")
 cloud_region.link_to_complex(complex)
 
 logger.info("******** Availability zone *******")
-cloud_region.add_availability_zone(availability_zone_name=Config.AVAILABILITY_ZONE_NAME,
-                                   availability_zone_hypervisor_type=Config.HYPERVISOR_TYPE)
+try:
+    az = cloud_region.get_availability_zone_by_name(Config.AVAILABILITY_ZONE_NAME)
+    logger.info("Availability zone exists")
+except ResourceNotFound:
+    logger.info("Availability zone does not exist")
+    cloud_region.add_availability_zone(availability_zone_name=Config.AVAILABILITY_ZONE_NAME,
+                                       availability_zone_hypervisor_type=Config.HYPERVISOR_TYPE)
+    logger.info("Availability zone added to region")
 
 logger.info("******** Tenant *******")
-cloud_region.add_tenant(str(uuid4()), Config.TENANT_NAME)
+try:
+    next(_tenant for _tenant in cloud_region.tenants if _tenant.name == Config.TENANT_NAME)
+    logger.info("Tenant exists")
+except (StopIteration, ResourceNotFound):
+    tenant_id = str(uuid4())
+    logger.info("Tenant does not exist")
+    cloud_region.add_tenant(tenant_id=tenant_id,
+                            tenant_name=Config.TENANT_NAME)
+    logger.info(f"Tenant {Config.TENANT_NAME} added to region")
 
 #### Update or create connectivity info ####
 logger.info("******** Connectivity Info *******")
