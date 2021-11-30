@@ -1,0 +1,8 @@
+TOSCA-Meta-File-Version: 1.0.0
+CSAR-Version: 1.0
+Created-By: Samuli Silvius <s.silvius@partner.samsung.com>
+Entry-Definitions: Definitions/free5GC.json
+Template-Name: free5GC
+Template-Version: 1.1.1
+Template-Type: DEFAULT
+Template-Tags: Samuli Silvius, Lukasz Rajewski, Michal Chabiera, free5GC

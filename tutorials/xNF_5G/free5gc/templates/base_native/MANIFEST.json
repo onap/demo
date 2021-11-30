@@ -1,0 +1,15 @@
+{
+    "name": "free5gc",
+    "description": "",
+    "data": [
+        {
+            "file": "CBA.zip",
+            "type": "CONTROLLER_BLUEPRINT_ARCHIVE"
+        },
+        {
+            "file": "helm_free5gc.tgz",
+            "type": "HELM",
+            "isBase": "true"
+        }
+    ]
+}

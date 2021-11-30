@@ -1,0 +1,57 @@
+user_params:
+  k8s_namespace: free5gc
+  profile_name: ueransim-cnf-cds-base-profile
+  profile_source: ueransim-cnf-cds-base-profile
+  release_name: rel-1
+  name_suffix: instance_1
+
+cloud_regions:
+  - name: orange_k8s_free5gc
+    cloud_owner: K8sCloudOwner
+    cloud_type: k8s
+    complex_id: complex1
+    tenants:
+      - name: &tenant1 orange-free5gc-tenant
+        k8s_version: 1.21.1
+    kubeconfig_file: artifacts/cluster_kubeconfig
+
+service_model:
+  macro_orchestration: True
+  model_name: &service_model_name ueransim_demo
+  vnfs:
+    - model_name: &vnf_1_model_name ueransim
+      vsp:
+        vsp_file: vsp/native_ueransim_k8s_demo.zip
+        vendor: orange
+        sdnc_artifact_name: vnf
+        skip_post_instantiation_configuration: False
+  pnfs:
+
+service_instance:
+  model_name: *service_model_name
+  instance_name: "{{ service_model.model_name }}_{{ user_params.name_suffix }}"
+  customer_id: orange
+  cloud_region: "{{ cloud_regions[0].name }}"
+  tenant_name: *tenant1 #"{{ cloud_regions[0].tenants[0].name }}"
+  service_type: ueransim
+  vnfs:
+    - model_name: *vnf_1_model_name
+      #vnf_name_suffix: "001" #optional parameter
+      parameters:
+        k8s-rb-profile-namespace: "{{ user_params.k8s_namespace }}"
+        k8s-rb-profile-k8s-version: "{{ cloud_regions[0].tenants[0].k8s_version }}"
+      processing_priority: 1
+      vf_modules:
+        - model_name: helm_ueransim
+          vf_module_name_suffix: "001"
+          processing_priority: 1
+          parameters:
+            k8s-rb-profile-name: "{{ user_params.profile_name }}"
+            k8s-rb-profile-source: "{{ user_params.profile_source }}"
+            k8s-rb-instance-release-name: "{{ user_params.release_name }}-ueransim"
+            core-instance-name: free5GC_demo__1
+            k8s-rb-config-template-name: ue-reconfiguration-template #trzeba zmieniac
+            k8s-rb-config-template-source: ue-reconfiguration-template
+            k8s-rb-config-name: ue-reconfiguration-template
+            k8s-rb-config-value-source: ue-reconfiguration-template
+  pnfs:
