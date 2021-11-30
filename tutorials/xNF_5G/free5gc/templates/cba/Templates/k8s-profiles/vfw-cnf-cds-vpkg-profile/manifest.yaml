@@ -1,0 +1,7 @@
+---
+version: v1
+type:
+  values: "override_values.yaml"
+  configresource:
+    - filepath: ssh-service-template.yaml
+      chartpath: vpkg/templates/ssh-service-template.yaml

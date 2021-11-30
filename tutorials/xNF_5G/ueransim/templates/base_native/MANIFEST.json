@@ -1,0 +1,15 @@
+{
+    "name": "fueransim",
+    "description": "",
+    "data": [
+        {
+            "file": "CBA.zip",
+            "type": "CONTROLLER_BLUEPRINT_ARCHIVE"
+        },
+        {
+            "file": "helm_ueransim.tgz",
+            "type": "HELM",
+            "isBase": "true"
+        }
+    ]
+}

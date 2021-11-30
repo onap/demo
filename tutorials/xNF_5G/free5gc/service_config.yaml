@@ -1,0 +1,59 @@
+user_params:
+  k8s_namespace: free5gc
+  profile_name: free5gc-cnf-cds-base-profile
+  profile_source: free5gc-cnf-cds-base-profile
+  release_name: rel-1
+  name_suffix: _1
+
+cloud_regions:
+  - name: orange_k8s_free5gc
+    cloud_owner: K8sCloudOwner
+    cloud_type: k8s
+    complex_id: complex1
+    tenants:
+      - name: &tenant1 orange-free5gc-tenant
+        k8s_version: 1.21.1
+    kubeconfig_file: artifacts/cluster_kubeconfig
+
+service_model:
+  macro_orchestration: True
+  model_name: &service_model_name free5GC_demo
+  vnfs:
+    - model_name: &vnf_1_model_name free5gc
+      vsp:
+        vsp_file: vsp/native_free5gc_k8s_demo.zip
+        vendor: orange
+        sdnc_artifact_name: vnf
+        skip_post_instantiation_configuration: False
+  pnfs:
+    - model_name: ueransim
+      vsp:
+        vsp_file: vsp/pnf_package.csar
+        vendor: orange
+        skip_post_instantiation_configuration: True
+
+
+service_instance:
+  model_name: *service_model_name
+  instance_name: "{{ service_model.model_name }}_{{ user_params.name_suffix }}"
+  customer_id: orange
+  cloud_region: "{{ cloud_regions[0].name }}"
+  tenant_name: *tenant1 #"{{ cloud_regions[0].tenants[0].name }}"
+  service_type: free5gc
+  vnfs:
+    - model_name: *vnf_1_model_name
+      vnf_name_suffix: "001" #optional parameter
+      parameters:
+        k8s-rb-profile-namespace: "{{ user_params.k8s_namespace }}"
+        k8s-rb-profile-k8s-version: "{{ cloud_regions[0].tenants[0].k8s_version }}"
+      processing_priority: 1
+      vf_modules:
+        - model_name: helm_free5gc
+          vf_module_name_suffix: "001"
+          processing_priority: 1
+          parameters:
+            k8s-rb-profile-name: "{{ user_params.profile_name }}"
+            k8s-rb-profile-source: "{{ user_params.profile_source }}"
+            k8s-rb-instance-release-name: "{{ user_params.release_name }}-free5gc"
+  pnfs:
+    - model_name: ueransim

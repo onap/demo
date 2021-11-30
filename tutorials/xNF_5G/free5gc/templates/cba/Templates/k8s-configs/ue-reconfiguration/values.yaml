@@ -1,0 +1,3 @@
+gnb:
+  image:
+    pullPolicy: Always
