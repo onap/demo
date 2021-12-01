@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e4419d9_6276120a",
+        "filename": "tutorials/xNF_5G/free5gc/automation/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5097
+      },
+      "writtenOn": "2021-12-01T11:46:54Z",
+      "side": 1,
+      "message": "Some trailing spaces",
+      "revId": "1defa2b3d9fa1e3fb4738ed1550a99e7a9ef9541",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "612c0c14_753b8815",
+        "filename": "tutorials/xNF_5G/free5gc/automation/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 5097
+      },
+      "writtenOn": "2021-12-01T11:46:54Z",
+      "side": 1,
+      "message": "as",
+      "range": {
+        "startLine": 3,
+        "startChar": 45,
+        "endLine": 3,
+        "endChar": 48
+      },
+      "revId": "1defa2b3d9fa1e3fb4738ed1550a99e7a9ef9541",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0612856d_398b03b2",
+        "filename": "tutorials/xNF_5G/free5gc/templates/helm/free5gc/charts/free5gc-upf/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 5097
+      },
+      "writtenOn": "2021-12-01T11:46:54Z",
+      "side": 1,
+      "message": "(typo)  (...) on a Kubernetes cluster (...)",
+      "range": {
+        "startLine": 5,
+        "startChar": 151,
+        "endLine": 5,
+        "endChar": 166
+      },
+      "revId": "1defa2b3d9fa1e3fb4738ed1550a99e7a9ef9541",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15584e2e_ffddbae5",
+        "filename": "tutorials/xNF_5G/free5gc/templates/helm/free5gc/charts/free5gc-upf/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 5097
+      },
+      "writtenOn": "2021-12-01T11:46:54Z",
+      "side": 1,
+      "message": "(...) at the same network where other Free5GC NFs are deployed (...)?",
+      "range": {
+        "startLine": 5,
+        "startChar": 195,
+        "endLine": 5,
+        "endChar": 244
+      },
+      "revId": "1defa2b3d9fa1e3fb4738ed1550a99e7a9ef9541",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7198089b_25d1fadb",
+        "filename": "tutorials/xNF_5G/free5gc/templates/helm/free5gc/charts/free5gc-upf/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 5097
+      },
+      "writtenOn": "2021-12-01T11:46:54Z",
+      "side": 1,
+      "message": "Is it a hard requirement or just the minimal version of supported kernel?",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 32
+      },
+      "revId": "1defa2b3d9fa1e3fb4738ed1550a99e7a9ef9541",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
