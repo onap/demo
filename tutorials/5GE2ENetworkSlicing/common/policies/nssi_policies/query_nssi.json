@@ -1,0 +1,39 @@
+{
+    "queryPolicy_{{ service_name }}": {
+        "type": "onap.policies.optimization.service.QueryPolicy",
+        "version": "1.0.0",
+        "type_version": "1.0.0",
+        "metadata": {
+            "policy-id": "queryPolicy_{{ service_name }}",
+            "policy-version": 1
+        },
+        "properties": {
+            "scope": [
+                "OSDF_GUILIN"
+            ],
+            "services": [
+                "{{ service_name }}"
+            ],
+            "geography": [],
+            "identity": "queryPolicy_{{ service_name }}",
+            "queryProperties": [
+                {
+                    "attribute": "latency",
+                    "attribute_location": "latency"
+                },
+                {
+                    "attribute": "reliability",
+                    "attribute_location": "reliability"
+                },
+                {
+                    "attribute": "model_invariant_id",
+                    "attribute_location": "invariantUUID"
+                },
+                {
+                    "attribute": "model_version_id",
+                    "attribute_location": "UUID"
+                }
+            ]
+        }
+    }
+}

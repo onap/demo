@@ -1,0 +1,178 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "topology_template": {
+        "policies": [
+            {
+                "vnfPolicy_EmbbNst_O2_not_shared": {
+                    "metadata": {
+                        "policy-id": "vnfPolicy_EmbbNst_O2_not_shared",
+                        "policy-version": 1
+                    },
+                    "properties": {
+                        "identity": "vnf_EmbbNst_O2",
+                        "resources": [
+                            "EmbbNst_O2"
+                        ],
+                        "scope": [
+                            "non-shared"
+                        ],
+                        "services": [
+                            "EmbbNst_O2"
+                        ],
+                        "geography": [],
+                        "vnfProperties": [
+                            {
+                                "attributes": {
+                                    "service_profile": {
+                                        "latency": {
+                                            "value": {
+                                                "get_param": "latency"
+                                            },
+                                            "operator": "lte"
+                                        },
+                                        "max_throughput": {
+                                            "value": {
+                                                "get_param": "max_throughput"
+                                            },
+                                            "operator": "gte"
+                                        },
+                                        "max_number_of_ues": {
+                                            "value": {
+                                                "get_param": "max_number_of_ues"
+                                            },
+                                            "operator": "gte"
+                                        },
+                                        "terminal_density": {
+                                            "value": {
+                                                "get_param": "terminal_density"
+                                            },
+                                            "operator": "gte"
+                                        },
+                                        "plmn_id_list": {
+                                            "value": {
+                                                "get_param": "plmn_id_list"
+                                            },
+                                            "operator": "eq"
+                                        }
+                                    },
+                                    "subnets": {
+                                        "AN_NF": {
+                                            "latency": {
+                                                "max": {
+                                                    "get_param": "latency"
+                                                },
+                                                "steps": 1
+                                            },
+                                            "max_throughput": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "AN_NF_max_throughput"
+                                                    }
+                                                ]
+                                            },
+                                            "max_number_of_ues": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "AN_NF_max_number_of_ues"
+                                                    }
+                                                ]
+                                            },
+                                            "terminal_density": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "AN_NF_terminal_density"
+                                                    }
+                                                ]
+                                            },
+                                            "s_nssai_list": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "s_nssai_list"
+                                                    }
+                                                ]
+                                            },
+                                            "plmn_id_list": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "plmn_id_list"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "TN_FH": {
+                                            "latency": {
+                                                "max": {
+                                                    "get_param": "latency"
+                                                },
+                                                "steps": 1
+                                            },
+                                            "max_throughput": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "TN_FH_max_throughput"
+                                                    }
+                                                ]
+                                            },
+                                            "s_nssai_list": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "s_nssai_list"
+                                                    }
+                                                ]
+                                            },
+                                            "plmn_id_list": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "plmn_id_list"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "TN_MH": {
+                                            "latency": {
+                                                "max": {
+                                                    "get_param": "latency"
+                                                },
+                                                "steps": 1
+                                            },
+                                            "max_throughput": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "TN_MH_max_throughput"
+                                                    }
+                                                ]
+                                            },
+                                            "s_nssai_list": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "s_nssai_list"
+                                                    }
+                                                ]
+                                            },
+                                            "plmn_id_list": {
+                                                "values": [
+                                                    {
+                                                        "get_param": "plmn_id_list"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                "inventoryProvider": "generator",
+                                "inventoryType": "slice_profiles",
+                                "unique": "true",
+                                "defaultAttributes": {
+                                    "creation_cost": 0.9
+                                }
+                            }
+                        ]
+                    },
+                    "type": "onap.policies.optimization.resource.VnfPolicy",
+                    "type_version": "1.0.0",
+                    "version": "1.0.0"
+                }
+            }
+        ]
+    }
+}
