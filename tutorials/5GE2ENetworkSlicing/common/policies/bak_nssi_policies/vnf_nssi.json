@@ -1,0 +1,41 @@
+{
+    "vnfPolicy_{{ service_name }}": {
+        "metadata": {
+            "policy-id": "vnfPolicy_{{ service_name }}",
+            "policy-version": 1
+        },
+        "properties": {
+            "identity": "vnf_{{ service_name }}",
+            "resources": [
+                "{{ service_name }}"
+            ],
+            "scope": [
+                "OSDF_GUILIN"
+            ],
+            "services": [
+                "{{ service_name }}"
+            ],
+            "geography": [],
+            "vnfProperties": [
+                {
+                    "attributes": {
+                        "modelInvariantId": {
+                            "get_param": "model_invariant_id"
+                        },
+                        "modelVersionId": {
+                            "get_param": "model_version_id"
+                        },
+                        "service-function": "shared",
+                        "service-role": "nssi"
+                    },
+                    "inventoryProvider": "aai",
+                    "inventoryType": "nssi",
+                    "unique": "true"
+                }
+            ]
+        },
+        "type": "onap.policies.optimization.resource.VnfPolicy",
+        "type_version": "1.0.0",
+        "version": "1.0.0"
+    }
+}
