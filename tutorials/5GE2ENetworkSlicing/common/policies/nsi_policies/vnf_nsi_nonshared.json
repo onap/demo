@@ -1,0 +1,243 @@
+{
+    "vnfPolicy_{{ service_name }}_non_shared": {
+        "metadata": {
+            "policy-id": "vnfPolicy_{{ service_name }}_non_shared",
+            "policy-version": 1
+        },
+        "properties": {
+            "identity": "vnf_{{ service_name }}",
+            "resources": [
+                "{{ service_name }}"
+            ],
+            "scope": [
+                "non-shared"
+            ],
+            "services": [
+                "{{ service_name }}"
+            ],
+            "geography": [],
+            "vnfProperties": [
+                {
+                    "attributes": {
+                        "service_profile": {
+                            "latency": {
+                                "value": {
+                                    "get_param": "latency"
+                                },
+                                "operator": "lte"
+                            },
+                            "s_nssai": {
+                                "value": {
+                                    "get_param": "s_nssai"
+                                },
+                                "operator": "eq"
+                            },
+                            "resource_sharing_level": {
+                                "value": {
+                                    "get_param": "resource_sharing_level"
+                                },
+                                "operator": "eq"
+                            },
+                            "ue_mobility_level": {
+                                "value": {
+                                    "get_param": "ue_mobility_level"
+                                },
+                                "operator": "eq"
+                            },
+                            "sst": {
+                                "value": {
+                                    "get_param": "sst"
+                                },
+                                "operator": "eq"
+                            },
+                            "activity_factor": {
+                                "value": {
+                                    "get_param": "activity_factor"
+                                },
+                                "operator": "eq"
+                            },
+                            "max_number_of_ues": {
+                                "value": {
+                                    "get_param": "max_number_of_ues"
+                                },
+                                "operator": "eq"
+                            }
+                        },
+                        "subnets": {
+                            "CN": {
+                                "latency": {
+                                    "max": {
+                                        "get_param": "latency"
+                                    },
+                                    "min": {
+                                        "get_param": "CN_latency"
+                                    },
+                                    "steps": 1
+                                },
+                                "s_nssai": {
+                                    "values": [
+                                        {
+                                            "get_param": "s_nssai"
+                                        }
+                                    ]
+                                },
+                                "max_number_of_ues": {
+                                    "values": [
+                                        {
+                                            "get_param": "max_number_of_ues"
+                                        }
+                                    ]
+                                },
+                                "sst": {
+                                    "values": [
+                                        {
+                                            "get_param": "sst"
+                                        }
+                                    ]
+                                },
+                                "activity_factor": {
+                                    "values": [
+                                        {
+                                            "get_param": "activity_factor"
+                                        }
+                                    ]
+                                },
+                                "resource_sharing_level": {
+                                    "values": [
+                                        {
+                                            "get_param": "resource_sharing_level"
+                                        }
+                                    ]
+                                },
+                                "plmn_id_list": {
+                                    "values": [
+                                        "39-00"
+                                    ]
+                                },
+                                "survival_time": {
+                                    "values": [
+                                        "10"
+                                    ]
+                                },
+                                "ue_mobility_level": {
+                                    "values": [
+                                        {
+                                            "get_param": "ue_mobility_level"
+                                        }
+                                    ]
+                                }
+                            },
+                            "AN": {
+                                "latency": {
+                                    "max": {
+                                        "get_param": "latency"
+                                    },
+                                    "min": {
+                                        "get_param": "AN_latency"
+                                    },
+                                    "steps": 1
+                                },
+                                "s_nssai": {
+                                    "values": [
+                                        {
+                                            "get_param": "s_nssai"
+                                        }
+                                    ]
+                                },
+                                "max_number_of_ues": {
+                                    "values": [
+                                        {
+                                            "get_param": "max_number_of_ues"
+                                        }
+                                    ]
+                                },
+                                "sst": {
+                                    "values": [
+                                        {
+                                            "get_param": "sst"
+                                        }
+                                    ]
+                                },
+                                "activity_factor": {
+                                    "values": [
+                                        {
+                                            "get_param": "activity_factor"
+                                        }
+                                    ]
+                                },
+                                "plmn_id_list": {
+                                    "values": [
+                                        "39-00"
+                                    ]
+                                },
+                                "survival_time": {
+                                    "values": [
+                                        "10"
+                                    ]
+                                },
+                                "resource_sharing_level": {
+                                    "values": [
+                                        {
+                                            "get_param": "resource_sharing_level"
+                                        }
+                                    ]
+                                },
+                                "ue_mobility_level": {
+                                    "values": [
+                                        {
+                                            "get_param": "ue_mobility_level"
+                                        }
+                                    ]
+                                }
+                            },
+                            "TN-BH": {
+                                "latency": {
+                                    "max": {
+                                        "get_param": "latency"
+                                    },
+                                    "min": {
+                                        "get_param": "TN_BH_latency"
+                                    },
+                                    "steps": 1
+                                },
+                                "s_nssai": {
+                                    "values": [
+                                        {
+                                            "get_param": "s_nssai"
+                                        }
+                                    ]
+                                },
+                                "plmn_id_list": {
+                                    "values": [
+                                        "39-00"
+                                    ]
+                                },
+                                "max_bandwidth": {
+                                    "values": [
+                                        1000
+                                    ]
+                                },
+                                "sst": {
+                                    "values": [
+                                        {
+                                            "get_param": "sst"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "inventoryProvider": "generator",
+                    "inventoryType": "slice_profiles",
+                    "unique": "true",
+                    "defaultAttributes": {
+                        "creation_cost": 0.9
+                    }
+                }
+            ]
+        },
+        "type": "onap.policies.optimization.resource.VnfPolicy",
+        "type_version": "1.0.0",
+        "version": "1.0.0"
+    }
+}

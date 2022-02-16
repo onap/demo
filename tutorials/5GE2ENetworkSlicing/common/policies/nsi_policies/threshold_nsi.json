@@ -1,0 +1,36 @@
+{
+    "Threshold_{{ service_name }}": {
+        "metadata": {
+            "policy-id": "Threshold_{{ service_name }}",
+            "policy-version": 1
+        },
+        "properties": {
+            "geography": [],
+            "identity": "Threshold_{{ service_name }}",
+            "resources": [
+                "{{ service_name }}"
+            ],
+            "scope": [
+                "shared,reuse",
+                "shared,create_new",
+                "non-shared"
+            ],
+            "services": [
+                "{{ service_name }}"
+            ],
+            "thresholdProperties": [
+                {
+                    "attribute": "latency",
+                    "operator": "lte",
+                    "threshold": {
+                        "get_param": "latency"
+                    },
+                    "unit": "ms"
+                }
+            ]
+        },
+        "type": "onap.policies.optimization.resource.ThresholdPolicy",
+        "type_version": "1.0.0",
+        "version": "1.0.0"
+    }
+}
