@@ -1,0 +1,80 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "topology_template": {
+        "policies": [
+            {
+                "queryPolicy_EmbbNst_O2": {
+                    "type": "onap.policies.optimization.service.QueryPolicy",
+                    "version": "1.0.0",
+                    "type_version": "1.0.0",
+                    "metadata": {
+                        "policy-id": "queryPolicy_EmbbNst_O2",
+                        "policy-version": 1
+                    },
+                    "properties": {
+                        "scope": [
+                            "shared,reuse",
+                            "shared,create_new",
+                            "non-shared"
+                        ],
+                        "services": [
+                            "EmbbNst_O2"
+                        ],
+                        "geography": [],
+                        "identity": "queryPolicy_EmbbNst_O2",
+                        "queryProperties": [
+                            {
+                                "attribute": "latency",
+                                "attribute_location": "latency"
+                            },
+                            {
+                                "attribute": "max_number_of_ues",
+                                "attribute_location": "max_number_of_ues"
+                            },
+                            {
+                                "attribute": "s_nssai",
+                                "attribute_location": "s_nssai"
+                            },
+                            {
+                                "attribute": "activity_factor",
+                                "attribute_location": "activity_factor"
+                            },
+                            {
+                                "attribute": "resource_sharing_level",
+                                "attribute_location": "resource_sharing_level"
+                            },
+                            {
+                                "attribute": "ue_mobility_level",
+                                "attribute_location": "ue_mobility_level"
+                            },
+                            {
+                                "attribute": "sst",
+                                "attribute_location": "sst"
+                            },
+                            {
+                                "attribute": "AN_latency",
+                                "attribute_location": "AN_latency"
+                            },
+                            {
+                                "attribute": "CN_latency",
+                                "attribute_location": "CN_latency"
+                            },
+                            {
+                                "attribute": "TN_BH_latency",
+                                "attribute_location": "TN_BH_latency"
+                            },
+                            {
+                                "attribute": "model_invariant_id",
+                                "attribute_location": "invariantUUID"
+                            },
+                            {
+                                "attribute": "model_version_id",
+                                "attribute_location": "UUID"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
