@@ -1,0 +1,37 @@
+{
+    "maximizeCost_{{ service_name }}": {
+        "metadata": {
+            "policy-id": "maximizeCost_{{ service_name }}",
+            "policy-version": 1
+        },
+        "properties": {
+            "geography": [],
+            "identity": "optimization",
+            "goal": "maximize",
+            "operation_function": {
+                "operator": "sum",
+                "operands": [
+                    {
+                        "function": "attribute",
+                        "params": {
+                            "attribute": "creation_cost",
+                            "demand": "{{ service_name }}"
+                        }
+                    }
+                ]
+            },
+            "resources": [
+                "{{ service_name }}"
+            ],
+            "scope": [
+                "shared,create_new"
+            ],
+            "services": [
+                "{{ service_name }}"
+            ]
+        },
+        "type": "onap.policies.optimization.resource.OptimizationPolicy",
+        "type_version": "2.0.0",
+        "version": "1.0.0"
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "topology_template": {
+        "policies": [
+            {
+                "Threshold_EmbbNst_O2": {
+                    "metadata": {
+                        "policy-id": "Threshold_EmbbNst_O2",
+                        "policy-version": 1
+                    },
+                    "properties": {
+                        "geography": [],
+                        "identity": "Threshold_EmbbNst_O2",
+                        "resources": [
+                            "EmbbNst_O2"
+                        ],
+                        "scope": [
+                            "shared,reuse",
+                            "shared,create_new",
+                            "non-shared"
+                        ],
+                        "services": [
+                            "EmbbNst_O2"
+                        ],
+                        "thresholdProperties": [
+                            {
+                                "attribute": "latency",
+                                "operator": "lte",
+                                "threshold": {
+                                    "get_param": "latency"
+                                },
+                                "unit": "ms"
+                            }
+                        ]
+                    },
+                    "type": "onap.policies.optimization.resource.ThresholdPolicy",
+                    "type_version": "1.0.0",
+                    "version": "1.0.0"
+                }
+            }
+        ]
+    }
+}

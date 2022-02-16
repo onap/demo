@@ -1,0 +1,48 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "topology_template": {
+        "policies": [
+            {
+                "vnfPolicy_EmbbCn_External": {
+                    "metadata": {
+                        "policy-id": "vnfPolicy_EmbbCn_External",
+                        "policy-version": 1
+                    },
+                    "properties": {
+                        "identity": "vnf_EmbbCn_External",
+                        "resources": [
+                            "EmbbCn_External"
+                        ],
+                        "scope": [
+                            "OSDF_GUILIN"
+                        ],
+                        "services": [
+                            "EmbbCn_External"
+                        ],
+                        "geography": [],
+                        "vnfProperties": [
+                            {
+                                "attributes": {
+                                    "modelInvariantId": {
+                                        "get_param": "model_invariant_id"
+                                    },
+                                    "modelVersionId": {
+                                        "get_param": "model_version_id"
+                                    },
+                                    "service-function": "shared",
+                                    "service-role": "nssi"
+                                },
+                                "inventoryProvider": "aai",
+                                "inventoryType": "nssi",
+                                "unique": "true"
+                            }
+                        ]
+                    },
+                    "type": "onap.policies.optimization.resource.VnfPolicy",
+                    "type_version": "1.0.0",
+                    "version": "1.0.0"
+                }
+            }
+        ]
+    }
+}
