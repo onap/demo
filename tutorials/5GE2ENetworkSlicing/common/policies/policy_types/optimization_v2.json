@@ -1,0 +1,61 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "policy_types": {
+        "onap.policies.optimization.resource.OptimizationPolicy": {
+            "derived_from": "onap.policies.optimization.Resource",
+            "version": "2.0.0",
+            "name": "onap.policies.optimization.resource.OptimizationPolicy",
+            "properties": {
+                "goal": {
+                    "type": "list",
+                    "required": true,
+                    "entry_schema": {
+                        "type": "string",
+                        "constraints": [
+                            {
+                                "valid_values": [
+                                    "minimize",
+                                    "maximize"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "operation_function": {
+                    "type": "policy.data.operation_function_properties",
+                    "required": true
+                }
+            }
+        }
+    },
+    "data_types": {
+        "policy.data.operation_function_properties": {
+            "derived_from": "tosca.nodes.Root",
+            "properties": {
+                "operands": {
+                    "type": "list",
+                    "required": true,
+                    "entry_schema": {
+                        "type": "map"
+                    }
+                },
+                "operator": {
+                    "type": "string",
+                    "required": true,
+                    "entry_schema": {
+                        "type": "string",
+                        "constraints": [
+                            {
+                                "valid_values": [
+                                    "sum",
+                                    "min",
+                                    "max"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
