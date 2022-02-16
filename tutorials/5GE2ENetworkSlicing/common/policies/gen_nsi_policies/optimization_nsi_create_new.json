@@ -1,0 +1,44 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "topology_template": {
+        "policies": [
+            {
+                "maximizeCost_EmbbNst_O2": {
+                    "metadata": {
+                        "policy-id": "maximizeCost_EmbbNst_O2",
+                        "policy-version": 1
+                    },
+                    "properties": {
+                        "geography": [],
+                        "identity": "optimization",
+                        "goal": "maximize",
+                        "operation_function": {
+                            "operator": "sum",
+                            "operands": [
+                                {
+                                    "function": "attribute",
+                                    "params": {
+                                        "attribute": "creation_cost",
+                                        "demand": "EmbbNst_O2"
+                                    }
+                                }
+                            ]
+                        },
+                        "resources": [
+                            "EmbbNst_O2"
+                        ],
+                        "scope": [
+                            "shared,create_new"
+                        ],
+                        "services": [
+                            "EmbbNst_O2"
+                        ]
+                    },
+                    "type": "onap.policies.optimization.resource.OptimizationPolicy",
+                    "type_version": "2.0.0",
+                    "version": "1.0.0"
+                }
+            }
+        ]
+    }
+}

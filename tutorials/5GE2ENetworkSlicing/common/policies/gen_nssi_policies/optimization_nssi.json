@@ -1,0 +1,44 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "topology_template": {
+        "policies": [
+            {
+                "minimize_latency_EmbbCn_External": {
+                    "metadata": {
+                        "policy-id": "minimize_latency_EmbbCn_External",
+                        "policy-version": 1
+                    },
+                    "properties": {
+                        "geography": [],
+                        "identity": "optimization",
+                        "goal": "minimize",
+                        "operation_function": {
+                            "operator": "sum",
+                            "operands": [
+                                {
+                                    "function": "attribute",
+                                    "params": {
+                                        "attribute": "latency",
+                                        "demand": "EmbbCn_External"
+                                    }
+                                }
+                            ]
+                        },
+                        "resources": [
+                            "EmbbCn_External"
+                        ],
+                        "scope": [
+                            "OSDF_GUILIN"
+                        ],
+                        "services": [
+                            "EmbbCn_External"
+                        ]
+                    },
+                    "type": "onap.policies.optimization.resource.OptimizationPolicy",
+                    "type_version": "2.0.0",
+                    "version": "1.0.0"
+                }
+            }
+        ]
+    }
+}

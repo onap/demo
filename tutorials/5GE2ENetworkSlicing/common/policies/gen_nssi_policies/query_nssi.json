@@ -1,0 +1,46 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "topology_template": {
+        "policies": [
+            {
+                "queryPolicy_EmbbCn_External": {
+                    "type": "onap.policies.optimization.service.QueryPolicy",
+                    "version": "1.0.0",
+                    "type_version": "1.0.0",
+                    "metadata": {
+                        "policy-id": "queryPolicy_EmbbCn_External",
+                        "policy-version": 1
+                    },
+                    "properties": {
+                        "scope": [
+                            "OSDF_GUILIN"
+                        ],
+                        "services": [
+                            "EmbbCn_External"
+                        ],
+                        "geography": [],
+                        "identity": "queryPolicy_EmbbCn_External",
+                        "queryProperties": [
+                            {
+                                "attribute": "latency",
+                                "attribute_location": "latency"
+                            },
+                            {
+                                "attribute": "reliability",
+                                "attribute_location": "reliability"
+                            },
+                            {
+                                "attribute": "model_invariant_id",
+                                "attribute_location": "invariantUUID"
+                            },
+                            {
+                                "attribute": "model_version_id",
+                                "attribute_location": "UUID"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

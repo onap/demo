@@ -1,0 +1,56 @@
+{
+    "tosca_definitions_version": "tosca_simple_yaml_1_1_0",
+    "policy_types": {
+        "onap.policies.optimization.resource.ThresholdPolicy": {
+            "derived_from": "onap.policies.optimization.Resource",
+            "version": "1.0.0",
+            "properties": {
+                "applicableResources": {
+                    "type": "list",
+                    "required": true,
+                    "entry_schema": {
+                        "type": "string",
+                        "constraints": [
+                            {
+                                "valid_values": [
+                                    "any",
+                                    "all"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "thresholdProperties": {
+                    "type": "list",
+                    "required": true,
+                    "entry_schema": {
+                        "type": "policy.data.thresholdProperties_properties"
+                    }
+                }
+            }
+        }
+    },
+    "data_types": {
+        "policy.data.thresholdProperties_properties": {
+            "derived_from": "tosca.nodes.Root",
+            "properties": {
+                "attribute": {
+                    "type": "string",
+                    "required": true
+                },
+                "operator": {
+                    "type": "string",
+                    "required": true
+                },
+                "threshold": {
+                    "type": "float",
+                    "required": true
+                },
+                "unit": {
+                    "type": "string",
+                    "required": false
+                }
+            }
+        }
+    }
+}
