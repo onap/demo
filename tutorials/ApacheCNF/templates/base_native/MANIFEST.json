@@ -1,0 +1,15 @@
+{
+    "name": "simpleCNF",
+    "description": "",
+    "data": [
+        {
+            "file": "CBA.zip",
+            "type": "CONTROLLER_BLUEPRINT_ARCHIVE"
+        },
+        {
+            "file": "helm_apache.tgz",
+            "type": "HELM",
+            "isBase": "true"
+        }
+    ]
+}

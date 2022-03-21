@@ -1,0 +1,8 @@
+TOSCA-Meta-File-Version: 1.0.0
+CSAR-Version: 1.0
+Created-By: Lukasz Rajewski <lukasz.rajewski@orange.com>
+Entry-Definitions: Definitions/CNF.json
+Template-Name: APACHE
+Template-Version: 1.0.0
+Template-Type: DEFAULT
+Template-Tags: Lukasz Rajewski, CNF
