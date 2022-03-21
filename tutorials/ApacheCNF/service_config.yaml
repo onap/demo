@@ -1,0 +1,94 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2022 Orange
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# ============LICENSE_END=========================================================
+user_params:
+  cnf_name: &cnf_name apache
+  k8s_namespace: test-cnf
+  k8s_version: 1.18.9
+  k8s_region: &region cnf-region
+  release_name: rel-1
+#  profile_source: cnf-cds-base-profile
+  profile_source: node-port-profile
+  skip_day_2: &skip_day_2 True
+
+cloud_regions:
+  - name: *region
+    cloud_owner: K8sCloudOwner
+    cloud_type: k8s
+    complex_id: k8s-complex1
+    tenants:
+      - name: &tenant  "{{ user_params.k8s_region }}-tenant"
+        k8s_version: "{{ user_params.k8s_version }}"
+    kubeconfig_file: artifacts/kubeconfig
+# - name: openstack-region-test
+#   cloud_owner: CloudOwner
+#   cloud_type: openstack
+#   complex_id: complex1
+#   tenants:
+#     - name: &my_tenant1 onap-dev
+#       id: 5117085204e84027a8d1a0cf34abb0ba
+#   identity_url: http://test:5000/v4
+#   mso_id: test_user
+#   mso_pass: test_encrypted_password
+#   identity_server_type: KEYSTONE_V3
+
+service_model:
+  macro_orchestration: True
+  model_name: &service_model_name "{{ user_params.cnf_name }}_{{ user_params.skip_day_2 }}_k8s_cnf_demo"
+  vnfs:
+    - model_name: &vnf_1_model_name "{{ user_params.cnf_name }}"
+      vsp:
+        vsp_file: vsp/native_cnf_k8s_demo.zip
+        vendor: cnf_vendor
+        sdnc_artifact_name: vnf
+        skip_post_instantiation_configuration: *skip_day_2
+#  pnfs:
+#    - model_name: pnf_example
+#      vsp:
+#        vsp_file: vsp/pnf_package.csar
+#        vendor: pnf_vendor
+#        skip_post_instantiation_configuration: False
+
+
+service_instance:
+  model_name: *service_model_name
+  instance_name: I_{{ service_model.model_name }}_{{ user_params.release_name }}
+  customer_id: orange
+  cloud_region: *region # "{{ cloud_regions[0].name }}"
+  tenant_name: *tenant  # "{{ cloud_regions[0].tenants[0].name }}"
+  service_type: *cnf_name
+  vnfs:
+    - model_name: *vnf_1_model_name
+      #vnf_name_suffix: "001" #needed when more than one vnf instance
+      parameters:
+        k8s-rb-profile-namespace: "{{ user_params.k8s_namespace }}"
+        k8s-rb-profile-k8s-version: "{{ user_params.k8s_version }}"
+      processing_priority: 1 # may be used to order vnf deployment
+      vf_modules:
+        - model_name: helm_apache
+          vf_module_name_suffix: "001"
+          processing_priority: 1 # may be used to order vf-module deployment
+          parameters:
+            k8s-rb-profile-name: "{{ user_params.profile_source }}-{{ user_params.k8s_namespace }}"
+            k8s-rb-profile-source: "{{ user_params.profile_source }}"
+            k8s-rb-instance-release-name: "{{ user_params.release_name }}"
+            k8s-rb-profile-namespace: "{{ user_params.k8s_namespace }}"
+            k8s-rb-config-template-name: replica-count-template
+            k8s-rb-config-template-source: deployment-config
+            k8s-rb-config-name: replica-count-change
+            k8s-rb-config-value-source: custom-values
+#  pnfs:
+#    - model_name: pnf_example

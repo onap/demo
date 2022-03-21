@@ -1,0 +1,3 @@
+## Number of Apache replicas to deploy
+##
+replicaCount: 2
