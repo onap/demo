@@ -1,0 +1,18 @@
+#!/bin/false
+
+NAMESPACE="onap"
+
+TAILS=(
+  "/app/logs/apih/debug.log so"
+  "/app/logs/apih/error.log so"
+  "/app/logs/bpmn/debug.log so-bpmn-infra"
+  "/app/logs/openstack/error.log so-openstack-adapter"
+  "/app/logs/openstack/debug.log so-openstack-adapter"
+  "/var/log/onap/sdnc/karaf.log sdnc"
+  "POD_LOG network-name-gen"
+  "POD_LOG cds-blueprints-processor"
+  "POD_LOG multicloud multicloud"
+  "POD_LOG multicloud-k8s multicloud-k8s"
+  "POD_LOG multicloud-k8s framework-artifactbroker"
+  "POD_LOG msb-iag msb-iag"
+)

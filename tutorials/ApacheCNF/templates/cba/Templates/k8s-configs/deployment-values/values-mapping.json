@@ -1,0 +1,14 @@
+[
+    {
+        "name": "replica-count",
+        "property": {
+            "description": "Number of replicas for scaling",
+            "type": "integer",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "replica-count",
+        "dictionary-source": "capability",
+        "dependencies": []
+    }
+]

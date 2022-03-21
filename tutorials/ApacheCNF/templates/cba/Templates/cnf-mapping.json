@@ -1,0 +1,314 @@
+[
+    {
+        "name": "vf-module-model-invariant-uuid",
+        "property": {
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-model-invariant-uuid",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ]
+    },
+    {
+        "name": "vf-module-model-version",
+        "property": {
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-model-version",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ]
+    },
+    {
+        "name": "vf-module-name",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string",
+            "status": "",
+            "constraints": [
+                {}
+            ],
+            "entry_schema": {
+                "type": ""
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-name",
+        "dictionary-source": "rest",
+        "dependencies": [
+            "vnf_name",
+            "vf-module-label",
+            "vf-naming-policy",
+            "vf-module-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vnf_name",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vnf_name",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "service-instance-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "service-instance-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-module-label",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-label",
+        "dictionary-source": "processor-db",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vf-naming-policy",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-naming-policy",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ],
+        "version": 0
+    },
+    {
+        "name": "vf-module-model-customization-uuid",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-model-customization-uuid",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vnf-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vnf-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "vf-module-id",
+        "property": {
+            "description": "",
+            "required": false,
+            "type": "string"
+        },
+        "input-param": false,
+        "dictionary-name": "vf-module-id",
+        "dictionary-source": "input",
+        "dependencies": [],
+        "version": 0
+    },
+    {
+        "name": "k8s-rb-profile-namespace",
+        "property": {
+            "description": "K8s namespace to create helm chart for specified RB profile",
+            "type": "string",
+            "required": false,
+            "default": "default"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-namespace",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "k8s-rb-profile-k8s-version",
+        "property": {
+            "description": "K8s cluster version to create helm chart for specified RB profile",
+            "type": "string",
+            "required": false,
+            "default": "1.18.9"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-k8s-version",
+        "dictionary-source": "sdnc",
+        "dependencies": [
+            "service-instance-id",
+            "vnf-id"
+        ]
+    },
+    {
+        "name": "k8s-rb-profile-name",
+        "property": {
+            "description": "RB Profile name used in k8s plugin to identify Helm chart(s) where this mapping is providing override values.",
+            "type": "string",
+            "required": false,
+            "default": "default"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-name",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-instance-release-name",
+        "property": {
+            "description": "Name of the release for the helm package instance in k8s",
+            "type": "string",
+            "required": false,
+            "default": "base"
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-instance-release-name",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-definition-name",
+        "property": {
+            "description": "RB Name identifier of Helm chart(s) in k8s plugin",
+            "type": "string",
+            "required": false,
+            "metadata": {
+                "transform-template": "${vf-module-model-invariant-uuid}"
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-definition-name",
+        "dictionary-source": "default",
+        "dependencies": [
+            "vf-module-model-invariant-uuid"
+        ]
+    },
+    {
+        "name": "k8s-rb-definition-version",
+        "property": {
+            "description": "RB Version identifier of Helm chart(s) in k8s plugin",
+            "type": "string",
+            "required": false,
+            "metadata": {
+                "transform-template": "${vf-module-model-customization-uuid}"
+            }
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-definition-version",
+        "dictionary-source": "default",
+        "dependencies": [
+            "vf-module-model-customization-uuid"
+        ]
+    },
+    {
+        "name": "k8s-rb-profile-source",
+        "property": {
+            "description": "The source folder or file relative to 'Templates/k8s-profiles' folder",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-profile-source",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-config-template-name",
+        "property": {
+            "description": "The source of configuration template for ue-reconfiuration operation",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-config-template-name",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-config-template-source",
+        "property": {
+            "description": "The source of configuration template for ue-reconfiuration operation",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-config-template-source",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-config-name",
+        "property": {
+            "description": "The source of configuration values for ue-reconfiguration operation",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-config-name",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "k8s-rb-config-value-source",
+        "property": {
+            "description": "The source of configuration values for ue-reconfiguration operation",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "k8s-rb-config-value-source",
+        "dictionary-source": "default",
+        "dependencies": []
+    },
+    {
+        "name": "core-instance-name",
+        "property": {
+            "description": "Name of 5g core instance that requires PNF registration",
+            "type": "string",
+            "required": false
+        },
+        "input-param": false,
+        "dictionary-name": "core-instance-name",
+        "dictionary-source": "default",
+        "dependencies": []
+    }
+]
