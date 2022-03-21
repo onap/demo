@@ -1,10 +1,11 @@
 [yaml]
 bears = YAMLLintBear
 yamllint_config = .yamllint
-#[vFW_CNF_CDS] Helm tests use go template conditionals that are not yaml-compliant
+# [vFW_CNF_CDS][APACHE] Helm uses go template conditionals that are not yaml-compliant
 ignore =
   .tox/**,
   heat/vFW_CNF_CDS/templates/helm/**/templates/tests/*
+  tutorials/ApacheCNF/templates/cba/Templates/k8s-configs/deployment-config/templates/*
 
 [json]
 bears = JSONFormatBear
