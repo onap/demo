@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa548541_bf0670aa",
+        "filename": "tutorials/5GE2ENetworkSlicing/common/setup_onap_for_ns.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2022-04-06T06:11:48Z",
+      "side": 1,
+      "message": "why the first two calls you don\u0027t use `aai_curl`? there is also different aai API version used",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 131
+      },
+      "revId": "43429c58ed37250d25b09df3ca13184646ef4eac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ea33d04_415295f4",
+        "filename": "tutorials/5GE2ENetworkSlicing/common/setup_onap_for_ns.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2022-04-06T06:11:48Z",
+      "side": 1,
+      "message": "Could that be configurable?",
+      "range": {
+        "startLine": 77,
+        "startChar": 15,
+        "endLine": 77,
+        "endChar": 37
+      },
+      "revId": "43429c58ed37250d25b09df3ca13184646ef4eac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19729de6_a9ed4da8",
+        "filename": "tutorials/5GE2ENetworkSlicing/common/setup_onap_for_ns.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2022-04-06T06:11:48Z",
+      "side": 1,
+      "message": "same as above",
+      "range": {
+        "startLine": 79,
+        "startChar": 20,
+        "endLine": 80,
+        "endChar": 35
+      },
+      "revId": "43429c58ed37250d25b09df3ca13184646ef4eac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
