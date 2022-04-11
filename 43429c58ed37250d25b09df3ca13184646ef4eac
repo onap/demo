@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f2cc0d56_eeb27cfb",
+        "filename": "tutorials/5GE2ENetworkSlicing/common/setup_onap_for_ns.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 7897
+      },
+      "writtenOn": "2022-04-11T07:31:32Z",
+      "side": 1,
+      "message": "Right, I Updated script in next patchset, now all requests use aai_curl and also the same API version",
+      "parentUuid": "fa548541_bf0670aa",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 131
+      },
+      "revId": "43429c58ed37250d25b09df3ca13184646ef4eac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9ea33d04_415295f4",
         "filename": "tutorials/5GE2ENetworkSlicing/common/setup_onap_for_ns.sh",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "80050c5e_95a87d9e",
+        "filename": "tutorials/5GE2ENetworkSlicing/common/setup_onap_for_ns.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 7897
+      },
+      "writtenOn": "2022-04-11T07:31:32Z",
+      "side": 1,
+      "message": "As far as I know unfortunately no, it cannot be configurable",
+      "parentUuid": "9ea33d04_415295f4",
+      "range": {
+        "startLine": 77,
+        "startChar": 15,
+        "endLine": 77,
+        "endChar": 37
+      },
+      "revId": "43429c58ed37250d25b09df3ca13184646ef4eac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "19729de6_a9ed4da8",
         "filename": "tutorials/5GE2ENetworkSlicing/common/setup_onap_for_ns.sh",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2022-04-06T06:11:48Z",
       "side": 1,
       "message": "same as above",
+      "range": {
+        "startLine": 79,
+        "startChar": 20,
+        "endLine": 80,
+        "endChar": 35
+      },
+      "revId": "43429c58ed37250d25b09df3ca13184646ef4eac",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ec771af_832aa196",
+        "filename": "tutorials/5GE2ENetworkSlicing/common/setup_onap_for_ns.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 7897
+      },
+      "writtenOn": "2022-04-11T07:31:32Z",
+      "side": 1,
+      "message": "those values could be configurable, but right now those are default in NBI, so user would have to also make sure to update NBI deployment and we would have to add extra parameters to the script",
+      "parentUuid": "19729de6_a9ed4da8",
       "range": {
         "startLine": 79,
         "startChar": 20,
