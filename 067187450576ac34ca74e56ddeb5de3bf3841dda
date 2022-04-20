@@ -22,6 +22,30 @@
       "revId": "067187450576ac34ca74e56ddeb5de3bf3841dda",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "982fe2b4_061dd4b2",
+        "filename": "tutorials/5GE2ENetworkSlicing/common/setup_onap_for_ns.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7897
+      },
+      "writtenOn": "2022-04-20T12:10:38Z",
+      "side": 1,
+      "message": "Adjusted in next patchset",
+      "parentUuid": "67b72217_f7a652c2",
+      "range": {
+        "startLine": 36,
+        "startChar": 23,
+        "endLine": 36,
+        "endChar": 75
+      },
+      "revId": "067187450576ac34ca74e56ddeb5de3bf3841dda",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
