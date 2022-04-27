@@ -195,7 +195,7 @@ def get_component_property(component, name):
     prop = None
     try:
         prop = list(filter(lambda x: x.name == name, component.properties))
-        if len(prop) > 0:
+        if prop:
             prop = prop[0]
         else:
             raise ParameterError('no property found')
