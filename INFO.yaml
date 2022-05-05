@@ -81,6 +81,11 @@ committers:
       company: 'Samsung'
       id: 'mkrasowski'
       timezone: 'Europe/Warsaw'
+    - name: 'Fiachra Corcoran'
+      email: 'fiachra.corcoran@est.tech'
+      company: 'Ericsson'
+      id: 'efiacor'
+      timezone: 'Europe/Dublin'
 tsc:
     # yamllint disable rule:line-length
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
@@ -136,3 +141,6 @@ tsc:
         - type: 'Addition'
           name: 'Maciej Lisowski, Marcin Sebastian Krasowski'
           link: 'https://lists.onap.org/g/onap-tsc/message/8449'
+        - type: 'Addition'
+          name: 'Fiachra Corcoran'
+          link: 'https://lists.onap.org/g/onap-tsc/message/8634'
