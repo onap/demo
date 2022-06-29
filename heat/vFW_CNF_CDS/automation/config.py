@@ -1,5 +1,6 @@
 # ============LICENSE_START=======================================================
 # Copyright (C) 2021 Orange
+# Copyright (C) 2022 Deutsche Telekom AG
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -40,7 +41,7 @@ class Config:
     RELEASE_NAME = "vfw-1"
 
     VENDOR = "vendor_cnf"
-    SERVICENAME = "vfw_k8s_demo_CNF" + "_" + str(SCENARIO)
+    SERVICENAME = "vfw_k8s_demo_CNF" + "_1_" + str(SCENARIO)
     VSPNAME = "VSP_" + SERVICENAME
     VFNAME = "VF_" + SERVICENAME
     SERVICE_INSTANCE_NAME = "INSTANCE_" + SERVICENAME
