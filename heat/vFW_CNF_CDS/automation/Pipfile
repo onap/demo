@@ -6,7 +6,8 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-onapsdk = "8.1.2"
+onapsdk = "==9.5.1"
+markupsafe = "==2.0.1"
 kubernetes = "*"
 
 [requires]
