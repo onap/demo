@@ -1,5 +1,6 @@
 # ============LICENSE_START=======================================================
 # Copyright (C) 2021 Orange
+# Copyright (C) 2022 Deutsche Telekom AG
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,7 +39,6 @@ from onapsdk.so.instantiation import (
     ServiceInstantiation,
     InstantiationParameter, VnfParameters, VfmoduleParameters)
 from onapsdk.sdc.service import Service
-from onapsdk.vid import LineOfBusiness, OwningEntity, Platform, Project
 from onapsdk.so.so_element import OrchestrationRequest
 from onapsdk.aai.service_design_and_creation import Service as AaiService
 
@@ -73,9 +73,9 @@ def get_service_model(service_type):
 
 def check_service_customer_subscription(customer, service):
     try:
-        next(subscription for subscription in customer.service_subscriptions
-             if subscription.service_type == service.name)
-    except StopIteration:
+        customer.get_service_subscription_by_service_type(
+            service_type=service.name)
+    except ResourceNotFound:
         return False
 
     logger.info(f"Customer {customer.subscriber_name} subscribed for {service.name}")
@@ -85,7 +85,7 @@ def check_service_customer_subscription(customer, service):
 def subscribe_service_customer(customer, service):
     if not check_service_customer_subscription(customer, service):
         logger.info("******** Subscribe Service *******")
-        customer.subscribe_service(service)
+        customer.subscribe_service(service.name)
 
 
 def get_cloud_region(cloud_owner, cloud_region):
@@ -102,39 +102,34 @@ def get_tenant(cloud_region, tenant_name):
         exit(1)
 
 
-def add_business_objects(owning_entity, project, platform, line_of_business):
-    vid_owning_entity = OwningEntity.create(Config.OWNING_ENTITY)
-    vid_project = Project.create(project)
-    vid_platform = Platform.create(platform)
-    vid_line_of_business = LineOfBusiness.create(line_of_business)
-    logger.info("******** Business  objects added to VID *******")
-
+def add_owning_entity(owning_entity):
     logger.info("******** Add Owning Entity to AAI *******")
     try:
         aai_owning_entity = AaiOwningEntity.get_by_owning_entity_name(owning_entity)
     except ResourceNotFound:
         logger.info("******** Owning Entity not existing: create *******")
-        aai_owning_entity = AaiOwningEntity.create(vid_owning_entity.name)
+        aai_owning_entity = AaiOwningEntity.create(owning_entity)
 
-    return vid_project, vid_platform, vid_line_of_business, aai_owning_entity
+    return aai_owning_entity
 
 
 def delete_old_profiles(service):
     for vnf in service.vnfs:
         for vf_module in vnf.vf_modules:
-            vf_module_label = vf_module.properties["vf_module_label"]
+            vf_module_label = next(vfm_prop.value for vfm_prop in vf_module.properties if
+                                   vfm_prop.name == "vf_module_label")
             if vf_module_label == "base_template_dummy_ignore":
                 continue
             if "k8s-rb-profile-name" not in Config.VF_MODULE_PARAM_LIST[vf_module_label]["instantiation_parameters"]:
                 continue
             try:
                 definition = Definition.get_definition_by_name_version(
-                    rb_name=vf_module.metadata["vfModuleModelInvariantUUID"],
-                    rb_version=vf_module.metadata["vfModuleModelCustomizationUUID"])
+                    rb_name=vf_module.model_invariant_uuid,
+                    rb_version=vf_module.model_customization_id)
             except APIError:
                 definition = Definition.get_definition_by_name_version(
-                    rb_name=vf_module.metadata["vfModuleModelInvariantUUID"],
-                    rb_version=vf_module.metadata["vfModuleModelUUID"])
+                    rb_name=vf_module.model_invariant_uuid,
+                    rb_version=vf_module.model_version_id)
             profile_name = Config.VF_MODULE_PARAM_LIST[vf_module_label]["instantiation_parameters"][
                 "k8s-rb-profile-name"]
             try:
@@ -234,7 +229,7 @@ def get_aai_service(service_type):
 def instantiate_service_macro(service_instance_name,
                               sdnc_model_name, sdnc_model_version, sdnc_artifact_name, vf_name, vnf_param_list,
                               vf_module_list, service, cloud_region, tenant, customer, owning_entity,
-                              vid_project, vid_line_of_business, vid_platform):
+                              vid_project, vid_line_of_business, vid_platform, service_subscription):
     # TODO: support for multiple vnf should be added BEGINING of the loop
     vnf_parameters = get_vnf_parameters(sdnc_model_name, sdnc_model_version, sdnc_artifact_name, vnf_param_list)
 
@@ -260,7 +255,8 @@ def instantiate_service_macro(service_instance_name,
         platform=vid_platform,
         service_instance_name=service_instance_name,
         vnf_parameters=[vnf_instantiation_parameters],
-        aai_service=aai_service
+        aai_service=aai_service,
+        service_subscription=service_subscription
     )
     check_orchestration_status(service_instantiation)
 
@@ -409,11 +405,11 @@ def main():
     service_subscription.link_to_cloud_region_and_tenant(cloud_region, tenant)
     ####
 
-    logger.info("******** Add Business Objects (OE, P, Pl, LoB) *******")
-    vid_project, vid_platform, vid_line_of_business, owning_entity = add_business_objects(Config.OWNING_ENTITY,
-                                                                                          Config.PROJECT,
-                                                                                          Config.PLATFORM,
-                                                                                          Config.LINE_OF_BUSINESS)
+    logger.info("******** Business Objects (OE, P, Pl, LoB) *******")
+    project = Config.PROJECT
+    platform = Config.PLATFORM
+    line_of_business = Config.LINE_OF_BUSINESS
+    owning_entity = add_owning_entity(Config.OWNING_ENTITY)
 
     logger.info("******** Delete old profiles ********")
     delete_old_profiles(service)
@@ -432,14 +428,14 @@ def main():
                                       sdnc_model_version, Config.SDNC_ARTIFACT_NAME, Config.VFNAME,
                                       Config.VNF_PARAM_LIST,
                                       Config.VF_MODULE_PARAM_LIST,
-                                      service, cloud_region, tenant, customer, owning_entity, vid_project,
-                                      vid_line_of_business, vid_platform)
+                                      service, cloud_region, tenant, customer, owning_entity, project,
+                                      line_of_business, platform, service_subscription)
         else:
             instantiate_service_alacarte(service_subscription, Config.SERVICE_INSTANCE_NAME, sdnc_model_name,
                                          sdnc_model_version, Config.SDNC_ARTIFACT_NAME, Config.VNF_PARAM_LIST,
                                          Config.VF_MODULE_PARAM_LIST,
-                                         service, cloud_region, tenant, customer, owning_entity, vid_project,
-                                         vid_line_of_business, vid_platform)
+                                         service, cloud_region, tenant, customer, owning_entity, project,
+                                         line_of_business, platform)
 
 
 if __name__ == "__main__":
