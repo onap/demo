@@ -101,5 +101,19 @@
         "dependencies": [
             "service-instance-id"
         ]
+    },
+    {
+        "name": "status-check-max-count",
+        "property": {
+            "description": "max status check count for pods",
+            "required": false,
+            "type": "integer",
+            "default": 30
+        },
+        "input-param": false,
+        "dictionary-name": "status-check-max-count",
+        "dictionary-source": "default",
+        "dependencies": [],
+        "version": 0
     }
 ]

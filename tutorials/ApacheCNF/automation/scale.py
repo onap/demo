@@ -1,6 +1,5 @@
 # ============LICENSE_START=======================================================
-# Copyright (C) 2021 Samsung
-# Modification Copyright (C) 2022 Deutsche Telekom AG
+# Copyright (C) 2022 Deutsche Telekom AG
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,7 +33,7 @@ fh.setFormatter(fh_formatter)
 logger.addHandler(fh)
 
 
-def resolve_hc_inputs(config: Config):
+def resolve_inputs(config: Config):
     logger.info("******** Check Customer *******")
     customer_id = config.service_instance["customer_id"]
     customer = Customer.get_by_global_customer_id(customer_id)
@@ -63,7 +62,7 @@ def resolve_hc_inputs(config: Config):
     vnf_id = vnfs[0].vnf_id
     return service_id, vnf_id
 
-def main(status_count):
+def main(replica_count):
     mypath = os.path.dirname(os.path.realpath(__file__))
     config = Config(env_dict=VariablesDict.env_variable)
     for vnf in config.service_model["vnfs"]:
@@ -74,27 +73,28 @@ def main(status_count):
             cba_io.seek(0)
             blueprint = Blueprint(cba_io.read())
 
-            healthcheck: Workflow = blueprint.get_workflow_by_name('health-check')
-            serv_id, vnf_id = resolve_hc_inputs(config)
-            cds_input = {"health-check-properties":
+            healthcheck: Workflow = blueprint.get_workflow_by_name('scale')
+            serv_id, vnf_id = resolve_inputs(config)
+            cds_input = {"scale-properties":
                 {
                     "service-instance-id": serv_id,
                     "vnf-id": vnf_id,
-                    "status-check-max-count": int(status_count)
+                    "status-check-max-count": 20,
+                    "replica-count": int(replica_count)
                 }
             }
 
-            logger.info("Requesting Healthcheck for CBA %s:%s with inputs:\n%s",
+            logger.info("Requesting Scale for CBA %s:%s with inputs:\n%s",
                     blueprint.metadata.template_name,
                     blueprint.metadata.template_version,
                     cds_input)
             result = healthcheck.execute(cds_input)
-            logger.info("Healthcheck process completed with result: %s", result)
+            logger.info("Scale process completed with result: %s", result)
             logger.info("Please check cds-blueprints-processor logs to see exact status")
 
 if __name__ == "__main__":
-    status_count = 1
+    replica_count = 1
     if len(sys.argv) > 1:
-        status_count = sys.argv[1]
-    print(f"Status Check Max Count: %s" % status_count)
-    main(status_count)
+        replica_count = sys.argv[1]
+    print(f"Replica Count: %s" % replica_count)
+    main(replica_count)

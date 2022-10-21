@@ -30,6 +30,17 @@
                     "description": "",
                     "required": false,
                     "type": "string"
+                },
+                "replica-count": {
+                    "description": "replica count for apache pods",
+                    "type": "integer",
+                    "required": false
+                },
+                "status-check-max-count": {
+                    "description": "max status check count for pods",
+                    "type": "integer",
+                    "required": false,
+                    "default": 30
                 }
             },
             "derived_from": "tosca.datatypes.Dynamic"
@@ -57,6 +68,12 @@
                     "description": "",
                     "required": false,
                     "type": "string"
+                },
+                "status-check-max-count": {
+                    "description": "max status check count for pods",
+                    "type": "integer",
+                    "required": false,
+                    "default": 30
                 }
             },
             "derived_from": "tosca.datatypes.Dynamic"
@@ -89,6 +106,12 @@
                     "description": "replica count for apache pods",
                     "type": "integer",
                     "default": 2
+                },
+                "status-check-max-count": {
+                    "description": "max status check count for pods",
+                    "type": "integer",
+                    "required": false,
+                    "default": 30
                 }
             },
             "derived_from": "tosca.datatypes.Dynamic"
@@ -121,6 +144,12 @@
                     "description": "replica count for apache pods",
                     "type": "integer",
                     "default": 1
+                },
+                "status-check-max-count": {
+                    "description": "max status check count for pods",
+                    "type": "integer",
+                    "required": false,
+                    "default": 30
                 }
             },
             "derived_from": "tosca.datatypes.Dynamic"
@@ -158,6 +187,12 @@
                     "description": "the data content of the policy request parameters",
                     "required": false,
                     "type": "json"
+                },
+                "status-check-max-count": {
+                    "description": "max status check count for pods",
+                    "type": "integer",
+                    "required": false,
+                    "default": 30
                 }
             },
             "derived_from": "tosca.datatypes.Dynamic"

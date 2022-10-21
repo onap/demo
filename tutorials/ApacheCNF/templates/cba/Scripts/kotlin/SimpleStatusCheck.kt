@@ -38,6 +38,7 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
         log.info("SIMPLE STATUS CHECK - START")
 
         val configValueSetup: ObjectNode = getDynamicProperties("config-deploy-setup") as ObjectNode
+        var checkCount: Int = getDynamicProperties("status-check-max-count").asInt()
 
         val bluePrintPropertiesService: BluePrintPropertiesService =
             this.functionDependencyInstanceAsType("bluePrintPropertiesService")
@@ -46,7 +47,6 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
 
         val instanceApi = K8sPluginInstanceApi(k8sConfiguration)
 
-        var checkCount: Int = 30 // in the future to be read in from the input
         while (checkCount > 0) {
             var continueCheck = false
             configValueSetup.fields().forEach { it ->
@@ -75,7 +75,6 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
     }
 
     override suspend fun recoverNB(runtimeException: RuntimeException, executionRequest: ExecutionServiceInput) {
-        log.info("Executing Recovery")
         this.addError("${runtimeException.message}")
     }
 }

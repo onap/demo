@@ -1439,6 +1439,25 @@
             }
         }
     },
+    "status-check-max-count": {
+        "tags": "max status check count for pods",
+        "name": "status-check-max-count",
+        "property": {
+            "description": "max status check count for pods",
+            "type": "integer"
+        },
+        "group": "default",
+        "updated-by": "Lukasz Rajewski <lukasz.rajewski@t-mobile.pl>",
+        "sources": {
+            "input": {
+                "type": "source-input"
+            },
+            "default": {
+                "type": "source-default",
+                "properties": {}
+            }
+        }
+    },
     "service-instance-name": {
         "tags": "service-instance-name",
         "name": "service-instance-name",

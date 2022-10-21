@@ -70,17 +70,22 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
                     }
                 }
             } else if (executionRequest.name == "replica-count") {
-                var value = raRuntimeService.getInputValue(executionRequest.name)
                 retValue = "1"
-                if (!value.isNullOrMissing()) {
-                    retValue = value.asText()
-                } else {
-                    value = raRuntimeService.getInputValue("data")
+                try {
+                    var value = raRuntimeService.getInputValue(executionRequest.name)
                     if (!value.isNullOrMissing()) {
-                        if (value["replicaCount"] != null) {
-                            retValue = value["replicaCount"].asText()
+                        retValue = value.asText()
+                    } else {
+                        value = raRuntimeService.getInputValue("data")
+                        if (!value.isNullOrMissing()) {
+                            if (value["replicaCount"] != null) {
+                                retValue = value["replicaCount"].asText()
+                            }
                         }
                     }
+                } catch (e: Exception) {
+                    log.error(e.message, e)
+                    log.info("Setting default replica count: 1")
                 }
             } else if (executionRequest.name == "config-deploy-setup") {
                 val modulesSdnc = raRuntimeService.getResolutionStore("vf-modules-list-sdnc")["vf-modules"]

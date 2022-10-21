@@ -90,6 +90,6 @@ service_instance:
             k8s-rb-profile-namespace: "{{ user_params.k8s_namespace }}"
             k8s-rb-config-template-name: replica-count-template
             k8s-rb-config-name: replica-count-change
-            k8s-rb-config-value-source: custom-values
+            k8s-rb-config-value-source: default-values
 #  pnfs:
 #    - model_name: pnf_example
