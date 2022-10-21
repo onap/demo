@@ -28,5 +28,8 @@
 8. Run script `python create_cloud_regions.py` in order to create **k8s or openstack cloud region**
 9. Onboard CNF `python onboard.py`
 10. Instantiate CNF `python instantiate.py`
-11. Once test is done, CNF service instance can be deleted with `python delete.py` command
-
+11. To run healtcheck operation execute `python healthcheck.py <status_check_max_count>` where <status_check_max_count> [int] (default 1)
+    indicates iteration number to run status check in case of failure
+12. To run scale operation execute `python scale.py <replica_count>` where <replica_count> [int] (default 1)
+    indicates the number of desired replicas of Apache pods
+13. Once test is done, CNF service instance can be deleted with `python delete.py` command

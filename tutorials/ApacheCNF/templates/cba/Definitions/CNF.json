@@ -56,6 +56,15 @@
                     "config-deploy",
                     "config-deploy-setup"
                 ]
+            },
+            "status-check-max-count": {
+                "get_attribute": [
+                    "config-setup-process",
+                    "",
+                    "assignment-map",
+                    "config-deploy",
+                    "status-check-max-count"
+                ]
             }
         }
     },
@@ -453,9 +462,6 @@
                         ],
                         "on_success": [
                             "health-check-process"
-                        ],
-                        "on_failure": [
-                            "handle_error"
                         ]
                     },
                     "health-check-process": {
@@ -468,9 +474,6 @@
                         ],
                         "on_success": [
                             "collect-results"
-                        ],
-                        "on_failure": [
-                            "handle_error"
                         ]
                     },
                     "handle_error": {

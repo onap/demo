@@ -119,7 +119,6 @@ open class K8sHealthCheck : AbstractScriptComponentFunction() {
     }
 
     override suspend fun recoverNB(runtimeException: RuntimeException, executionRequest: ExecutionServiceInput) {
-        log.info("Executing Recovery")
-        bluePrintRuntimeService.getBluePrintError().addError("${runtimeException.message}", getName())
+        this.addError("${runtimeException.message}")
     }
 }
