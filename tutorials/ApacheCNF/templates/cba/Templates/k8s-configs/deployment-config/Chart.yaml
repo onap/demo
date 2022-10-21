@@ -1,6 +1,0 @@
-apiVersion: v1
-appVersion: 2.4.46
-description: A Helm chart to modify Apache deployment
-engine: gotpl
-name: apache
-version: 7.6.0
