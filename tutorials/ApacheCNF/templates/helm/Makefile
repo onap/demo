@@ -10,7 +10,7 @@ $(vf-modules:=-package): %-package: %-build
 
 $(vf-modules:=-build): %-build: %-clean
 	helm repo add bitnami https://charts.bitnami.com/bitnami
-	helm pull bitnami/apache --version 7.6.0
+	helm pull bitnami/apache --version 8.12.0
 
 $(vf-modules:=-clean):
 	rm -f $(@:-clean=)-*.tgz
