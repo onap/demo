@@ -24,6 +24,7 @@
 # ONAP SERVICES URLS #
 #                    #
 ######################
+
 import logging.config
 
 LOG_CONFIG = {
@@ -56,20 +57,19 @@ LOG_CONFIG = {
 }
 
 logging.config.dictConfig(LOG_CONFIG)
-
-
-AAI_URL         = "https://aai.api.sparky.simpledemo.onap.org:30233"
+TNAP_ENV        = "onap.local:81"
+AAI_URL         = f"http://{TNAP_ENV}/aai-api"
 AAI_API_VERSION = "v23"
 AAI_AUTH        = "Basic QUFJOkFBSQ=="
 CDS_URL         = "http://portal.api.simpledemo.onap.org:30449"
 CDS_AUTH        = ("ccsdkapps", "ccsdkapps")
-MSB_URL         = "https://msb.api.simpledemo.onap.org:30283"
-SDC_BE_URL      = "https://sdc.api.be.simpledemo.onap.org:30204"
-SDC_FE_URL      = "https://sdc.api.fe.simpledemo.onap.org:30207"
+MSB_URL         = f"http://{TNAP_ENV}/msb"
+SDC_BE_URL      = f"http://{TNAP_ENV}/sdc-be"
+SDC_FE_URL      = f"http://{TNAP_ENV}/sdc-fe"
 SDC_AUTH        = "Basic YWFpOktwOGJKNFNYc3pNMFdYbGhhazNlSGxjc2UyZ0F3ODR2YW9HR21KdlV5MlU="
 SDNC_URL        = "https://sdnc.api.simpledemo.onap.org:30267"
 SDNC_AUTH       = "Basic YWRtaW46S3A4Yko0U1hzek0wV1hsaGFrM2VIbGNzZTJnQXc4NHZhb0dHbUp2VXkyVQ=="
-SO_URL          = "http://so.api.simpledemo.onap.org:30277"
+SO_URL          = f"http://{TNAP_ENV}/so"
 SO_API_VERSION  = "v7"
 SO_AUTH         = "Basic SW5mcmFQb3J0YWxDbGllbnQ6cGFzc3dvcmQxJA=="
 SO_CAT_DB_AUTH  = "Basic YnBlbDpwYXNzd29yZDEk"

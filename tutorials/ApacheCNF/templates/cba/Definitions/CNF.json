@@ -593,12 +593,6 @@
                             }
                         }
                     }
-                },
-                "artifacts": {
-                    "deployment-config": {
-                        "type": "artifact-k8sconfig-content",
-                        "file": "Templates/k8s-configs/deployment-config.tar.gz"
-                    }
                 }
             },
             "k8s-config-apply": {

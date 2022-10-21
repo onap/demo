@@ -14,14 +14,14 @@
 # limitations under the License.
 #
 # ============LICENSE_END=========================================================
-#todo update when onapsdk > 9.3.0
 import logging
+import os
 import zipfile
+from io import BytesIO
 
 from onapsdk.aai.business import Customer
 from onapsdk.cds.blueprint import Workflow, Blueprint
-
-from config import Config
+from config import Config, VariablesDict
 
 #FIXME remove from global scope
 logger = logging.getLogger("")
@@ -32,29 +32,24 @@ fh.setFormatter(fh_formatter)
 logger.addHandler(fh)
 
 
-def resolve_hc_inputs():
+def resolve_hc_inputs(config: Config):
     logger.info("******** Check Customer *******")
-    customer = None
-    for found_customer in list(Customer.get_all()):
-        logger.debug("Customer %s found", found_customer.subscriber_name)
-        if found_customer.subscriber_name == Config.GLOBAL_CUSTOMER_ID:
-            logger.info("Customer %s found", found_customer.subscriber_name)
-            customer = found_customer
-            break
+    customer_id = config.service_instance["customer_id"]
+    customer = Customer.get_by_global_customer_id(customer_id)
     if customer is None:
-        raise Exception("Customer %s wasn't found in ONAP" % Config.GLOBAL_CUSTOMER_ID)
+        raise Exception("Customer %s wasn't found in ONAP" % customer_id)
     logger.info("******** Check Service Subscription *******")
     service_subscription = None
     for service_sub in customer.service_subscriptions:
         logger.debug("Service subscription %s is found", service_sub.service_type)
-        if service_sub.service_type == Config.SERVICENAME:
-            logger.info("Service %s subscribed", Config.SERVICENAME)
+        if service_sub.service_type == config.service_model["model_name"]:
+            logger.info("Service %s subscribed", config.service_model["model_name"])
             service_subscription = service_sub
             break
     logger.info("******** Retrieve Service Metadata *******")
     service_instance = None
     for single_service in service_subscription.service_instances:
-        if single_service.instance_name == Config.SERVICE_INSTANCE_NAME:
+        if single_service.instance_name == config.service_instance["instance_name"]:
             service_instance = single_service
             break
     service_id = service_instance.instance_id
@@ -67,26 +62,32 @@ def resolve_hc_inputs():
     return service_id, vnf_id
 
 def main():
-    blueprint = None
-    with zipfile.ZipFile(Config.VSPFILE, 'r') as package:
-        with package.open("CBA.zip", 'r') as cba:
-            blueprint = Blueprint(cba.read())
+    mypath = os.path.dirname(os.path.realpath(__file__))
+    config = Config(env_dict=VariablesDict.env_variable)
+    for vnf in config.service_model["vnfs"]:
+        file = vnf["vsp"]["vsp_file"]
+        file_path = os.path.join(mypath, file)
+        with zipfile.ZipFile(file_path, 'r') as package:
+            cba_io = BytesIO(package.read("CBA.zip"))
+            cba_io.seek(0)
+            blueprint = Blueprint(cba_io.read())
 
-    healthcheck = Workflow('health-check', None, blueprint)
-    serv_id, vnf_id = resolve_hc_inputs()
-    cds_input = {"health-check-properties":
-        {
-            "service-instance-id": serv_id,
-            "vnf-id": vnf_id
-        }
-    }
-    logger.info("Requesting Healthcheck for CBA %s:%s with inputs:\n%s",
-            blueprint.metadata.template_name,
-            blueprint.metadata.template_version,
-            cds_input)
-    result = healthcheck.execute(cds_input)
-    logger.info("Healthcheck process completed with result: %s", result)
-    logger.info("Please check cds-blueprints-processor logs to see exact status")
+            healthcheck: Workflow = blueprint.get_workflow_by_name('health-check')
+            serv_id, vnf_id = resolve_hc_inputs(config)
+            cds_input = {"health-check-properties":
+                {
+                    "service-instance-id": serv_id,
+                    "vnf-id": vnf_id
+                }
+            }
+
+            logger.info("Requesting Healthcheck for CBA %s:%s with inputs:\n%s",
+                    blueprint.metadata.template_name,
+                    blueprint.metadata.template_version,
+                    cds_input)
+            result = healthcheck.execute(cds_input)
+            logger.info("Healthcheck process completed with result: %s", result)
+            logger.info("Please check cds-blueprints-processor logs to see exact status")
 
 if __name__ == "__main__":
     main()

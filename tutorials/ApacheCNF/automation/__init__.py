@@ -16,4 +16,3 @@
 # ============LICENSE_END=========================================================
 
 from .config import Config
-from .k8s_client import K8sClient

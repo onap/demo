@@ -1,5 +1,6 @@
 # ============LICENSE_START=======================================================
 # Copyright (C) 2021 Orange
+# Modification Copyright (C) 2022 Deutsche Telekom AG
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +33,6 @@ from onapsdk.so.instantiation import (
     ServiceInstantiation,
     InstantiationParameter, SoService, SoServiceVnf)
 from onapsdk.sdc.service import Service
-# from onapsdk.vid import LineOfBusiness, OwningEntity, Platform, Project
 from onapsdk.so.so_element import OrchestrationRequest
 from onapsdk.aai.service_design_and_creation import Service as AaiService
 
@@ -203,7 +203,7 @@ def get_aai_service(service_type):
 
 
 def instantiate_service_macro(config, service, cloud_region, tenant, customer, owning_entity,
-                              vid_project, vid_line_of_business, vid_platform):
+                              project, line_of_business, platform):
     service_instance_name = config.service_instance["instance_name"]
     so_input = config.so_input
     for vnf in so_input["vnfs"]:
@@ -232,9 +232,9 @@ def instantiate_service_macro(config, service, cloud_region, tenant, customer, o
         tenant=tenant,
         customer=customer,
         owning_entity=owning_entity,
-        project=vid_project,
-        line_of_business=vid_line_of_business,
-        platform=vid_platform,
+        project=project,
+        line_of_business=line_of_business,
+        platform=platform,
         service_instance_name=service_instance_name,
         aai_service=aai_service,
         so_service=so_service
@@ -347,7 +347,7 @@ def get_properties(vnf):
 
 def instantiate_service_alacarte(config, service_subscription, service_model, cloud_region, tenant, customer,
                                  owning_entity,
-                                 vid_project, vid_line_of_business, vid_platform):
+                                 project, line_of_business, platform):
     raise NotImplementedError("Not supported since 2022")
 
     service_instance_name = config.service_instance["instance_name"]
@@ -358,7 +358,7 @@ def instantiate_service_alacarte(config, service_subscription, service_model, cl
         tenant=tenant,
         customer=customer,
         owning_entity=owning_entity,
-        project=vid_project,
+        project=project,
         service_instance_name=service_instance_name
     )
     check_orchestration_status(service_instantiation)
@@ -375,8 +375,8 @@ def instantiate_service_alacarte(config, service_subscription, service_model, cl
         #  TODO: instance name
         vnf_instantiation = service_instance.add_vnf(
             vnf=vnf,
-            line_of_business=vid_line_of_business,
-            platform=vid_platform,
+            line_of_business=line_of_business,
+            platform=platform,
             vnf_parameters=vnf_parameters
         )
         check_orchestration_status(vnf_instantiation)
@@ -443,8 +443,8 @@ def main():
     logger.info("******** Business Objects (OE, P, Pl, LoB) *******")
     project = "Project-Demonstration"
     platform = "Platform-test"
-    line_of_business = "Orange-LOB"
-    owning_entity = add_owning_entity("Orange")
+    line_of_business = config.user_params["company_name"] + "-LOB"
+    owning_entity = add_owning_entity(config.user_params["company_name"])
 
     logger.info("******** Delete old profiles ********")
     delete_old_profiles(service, config.service_instance)
