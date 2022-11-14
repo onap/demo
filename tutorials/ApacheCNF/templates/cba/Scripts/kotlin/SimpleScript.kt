@@ -20,18 +20,18 @@ import org.onap.ccsdk.cds.blueprintsprocessor.core.api.data.ExecutionServiceInpu
 import org.onap.ccsdk.cds.blueprintsprocessor.services.execution.AbstractScriptComponentFunction
 import org.slf4j.LoggerFactory
 
-open class SimpleErrorCheck : AbstractScriptComponentFunction() {
+open class SimpleScript : AbstractScriptComponentFunction() {
 
-    private val log = LoggerFactory.getLogger(SimpleErrorCheck::class.java)!!
+    private val log = LoggerFactory.getLogger(SimpleScript::class.java)!!
 
     override fun getName(): String {
-        return "SimpleErrorCheck"
+        return "SimpleScript"
     }
 
     override suspend fun processNB(executionRequest: ExecutionServiceInput) {
-        log.info("SIMPLE ERROR CHECK - START")
+        log.info("STEP ${executionRequest.stepData?.name} - START")
 
-        log.info("SIMPLE ERROR CHECK - END")
+        log.info("STEP ${executionRequest.stepData?.name} - STOP")
     }
 
     override suspend fun recoverNB(runtimeException: RuntimeException, executionRequest: ExecutionServiceInput) {

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.definition.template.K8sConfigTemplateComponent
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.definition.template.K8sConfigValueComponent
+import org.onap.ccsdk.cds.blueprintsprocessor.functions.k8s.definition.profile.K8sProfileUploadComponent
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.resource.resolution.processor.ResourceAssignmentProcessor
 import org.onap.ccsdk.cds.blueprintsprocessor.functions.resource.resolution.utils.ResourceAssignmentUtils
 import org.onap.ccsdk.cds.controllerblueprints.core.BluePrintProcessorException
@@ -100,13 +101,23 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
                         val modelInfo = modelTopology["onap-model-information"]
                         val moduleData: ObjectNode = objectMapper.createObjectNode()
                         result.put(label, moduleData)
-                        moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_DEFINITION_NAME, modelInfo["model-invariant-uuid"].asText())
-                        moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_DEFINITION_VERSION, modelInfo["model-customization-uuid"].asText())
+                        val profileName: String? = getParamValueByName(moduleParameters, K8sProfileUploadComponent.INPUT_K8S_PROFILE_NAME)
+                        val profileSource: String? = getParamValueByName(moduleParameters, K8sProfileUploadComponent.INPUT_K8S_PROFILE_SOURCE)
+                        val profileNamespace: String? = getParamValueByName(moduleParameters, K8sProfileUploadComponent.INPUT_K8S_PROFILE_NAMESPACE)
+                        val profileK8sVersion: String? = getParamValueByName(moduleParameters, K8sProfileUploadComponent.INPUT_K8S_PROFILE_K8S_VERSION)
                         val templateName: String? = getParamValueByName(moduleParameters, K8sConfigTemplateComponent.INPUT_K8S_TEMPLATE_NAME)
                         val templateSource: String? = getParamValueByName(moduleParameters, K8sConfigTemplateComponent.INPUT_K8S_TEMPLATE_SOURCE)
                         val configValueSource: String? = getParamValueByName(moduleParameters, K8sConfigValueComponent.INPUT_K8S_CONFIG_VALUE_SOURCE)
                         val configName: String? = getParamValueByName(moduleParameters, K8sConfigValueComponent.INPUT_K8S_RB_CONFIG_NAME)
 
+                        if (profileName != null)
+                            moduleData.put(K8sProfileUploadComponent.INPUT_K8S_PROFILE_NAME, profileName)
+                        if (profileSource != null)
+                            moduleData.put(K8sProfileUploadComponent.INPUT_K8S_PROFILE_SOURCE, profileSource)
+                        if (profileNamespace != null)
+                            moduleData.put(K8sProfileUploadComponent.INPUT_K8S_PROFILE_NAMESPACE, profileNamespace)
+                        if (profileK8sVersion != null)
+                            moduleData.put(K8sProfileUploadComponent.INPUT_K8S_PROFILE_K8S_VERSION, profileK8sVersion)
                         if (templateName != null)
                             moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_TEMPLATE_NAME, templateName)
                         if (templateSource != null)
@@ -119,6 +130,8 @@ open class ConfigDeploySetup() : ResourceAssignmentProcessor() {
                         for (aaiModule in modulesAai) {
                             if (aaiModule["vf-module-id"].asText() == module["vf-module-id"].asText() && aaiModule["heat-stack-id"] != null) {
                                 moduleData.put(K8sConfigValueComponent.INPUT_K8S_INSTANCE_ID, aaiModule["heat-stack-id"].asText())
+                                moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_DEFINITION_NAME, aaiModule["model-invariant-id"].asText())
+                                moduleData.put(K8sConfigTemplateComponent.INPUT_K8S_DEFINITION_VERSION, aaiModule["model-customization-id"].asText())
                                 break
                             }
                         }

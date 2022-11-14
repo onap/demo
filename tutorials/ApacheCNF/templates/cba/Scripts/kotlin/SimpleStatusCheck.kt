@@ -35,7 +35,7 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
     }
 
     override suspend fun processNB(executionRequest: ExecutionServiceInput) {
-        log.info("SIMPLE STATUS CHECK - START")
+        log.info("STEP ${executionRequest.stepData?.name} - START")
 
         val configValueSetup: ObjectNode = getDynamicProperties("config-deploy-setup") as ObjectNode
         var checkCount: Int = getDynamicProperties("status-check-max-count").asInt()
@@ -71,7 +71,7 @@ open class SimpleStatusCheck : AbstractScriptComponentFunction() {
                 checkCount = 0
         }
 
-        log.info("SIMPLE STATUS CHECK - END")
+        log.info("STEP ${executionRequest.stepData?.name} - STOP")
     }
 
     override suspend fun recoverNB(runtimeException: RuntimeException, executionRequest: ExecutionServiceInput) {
