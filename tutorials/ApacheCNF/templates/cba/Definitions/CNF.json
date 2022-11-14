@@ -167,6 +167,46 @@
                     }
                 }
             },
+            "config-upgrade-assign": {
+                "steps": {
+                    "config-setup": {
+                        "description": "Gather necessary input for profile upload",
+                        "target": "config-setup-process",
+                        "activities": [
+                            {
+                                "call_operation": "ResourceResolutionComponent.process"
+                            }
+                        ],
+                        "on_success": [
+                            "profile-upload"
+                        ]
+                    },
+                    "profile-upload": {
+                        "description": "Generate and upload K8s Profile before upgrade",
+                        "target": "k8s-profile-upgrade-upload",
+                        "activities": [
+                            {
+                                "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ]
+                    }
+                },
+                "inputs": {
+                    "resolution-key": {
+                        "required": true,
+                        "type": "string"
+                    },
+                    "store-result": {
+                        "required": true,
+                        "type": "boolean"
+                    },
+                    "config-upgrade-assign-properties": {
+                        "description": "Dynamic PropertyDefinition for workflow(config-upgrade-assign).",
+                        "required": true,
+                        "type": "dt-config-upgrade-assign-properties"
+                    }
+                }
+            },
             "config-deploy": {
                 "steps": {
                     "config-setup": {
@@ -231,6 +271,46 @@
                         "description": "Dynamic PropertyDefinition for workflow(config-deploy).",
                         "required": true,
                         "type": "dt-config-deploy-properties"
+                    }
+                }
+            },
+            "config-upgrade-deploy": {
+                "steps": {
+                    "config-setup": {
+                        "description": "Gather necessary input for profile upload",
+                        "target": "config-setup-process",
+                        "activities": [
+                            {
+                                "call_operation": "ResourceResolutionComponent.process"
+                            }
+                        ],
+                        "on_success": [
+                            "status-verification-script"
+                        ]
+                    },
+                    "status-verification-script": {
+                        "description": "Simple status verification script",
+                        "target": "simple-status-check",
+                        "activities": [
+                            {
+                                "call_operation": "ComponentScriptExecutor.process"
+                            }
+                        ]
+                    }
+                },
+                "inputs": {
+                    "resolution-key": {
+                        "required": true,
+                        "type": "string"
+                    },
+                    "store-result": {
+                        "required": true,
+                        "type": "boolean"
+                    },
+                    "config-upgrade-deploy-properties": {
+                        "description": "Dynamic PropertyDefinition for workflow(config-upgrade-deploy).",
+                        "required": true,
+                        "type": "dt-config-upgrade-deploy-properties"
                     }
                 }
             },
@@ -449,7 +529,7 @@
                             "status-verification-script"
                         ],
                         "on_failure": [
-                            "handle_error"
+                            "handle-error"
                         ]
                     },
                     "status-verification-script": {
@@ -476,9 +556,9 @@
                             "collect-results"
                         ]
                     },
-                    "handle_error": {
+                    "handle-error": {
                         "description": "Simple error verification script",
-                        "target": "simple-error-check",
+                        "target": "simple-script",
                         "activities": [
                             {
                                 "call_operation": "ComponentScriptExecutor.process"
@@ -555,6 +635,41 @@
                                         "get_attribute": [
                                             "resource-assignment",
                                             "assignment-map"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "artifacts": {
+                    "cnf-cds-base-profile": {
+                        "type": "artifact-k8sprofile-content",
+                        "file": "Templates/k8s-profiles/cnf-cds-base-profile.tar.gz"
+                    },
+                    "node-port-profile": {
+                        "type": "artifact-k8sprofile-content",
+                        "file": "Templates/k8s-profiles/node-port-profile.tar.gz"
+                    }
+                }
+            },
+            "k8s-profile-upgrade-upload": {
+                "type": "component-k8s-profile-upload",
+                "interfaces": {
+                    "K8sProfileUploadComponent": {
+                        "operations": {
+                            "process": {
+                                "inputs": {
+                                    "artifact-prefix-names": [
+                                        "helm_apache"
+                                    ],
+                                    "resource-assignment-map": {
+                                        "get_attribute": [
+                                            "config-setup-process",
+                                            "",
+                                            "assignment-map",
+                                            "config-deploy",
+                                            "config-deploy-setup"
                                         ]
                                     }
                                 }
@@ -731,7 +846,7 @@
                     }
                 }
             },
-            "simple-error-check": {
+            "simple-script": {
                 "type": "component-script-executor",
                 "interfaces": {
                     "ComponentScriptExecutor": {
@@ -739,10 +854,7 @@
                             "process": {
                                 "inputs": {
                                     "script-type": "kotlin",
-                                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.SimpleErrorCheck",
-                                    "instance-dependencies": [
-                                        "bluePrintPropertiesService"
-                                    ],
+                                    "script-class-reference": "org.onap.ccsdk.cds.blueprintsprocessor.services.execution.scripts.SimpleScript",
                                     "dynamic-properties": "*simple-status-properties"
                                 }
                             }

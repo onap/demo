@@ -17,6 +17,38 @@
             },
             "derived_from": "tosca.datatypes.Dynamic"
         },
+        "dt-config-upgrade-assign-properties": {
+            "description": "Dynamic DataType definition for workflow(config-upgrade-assign).",
+            "version": "1.0.0",
+            "properties": {
+                "service-instance-id": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "service-model-uuid": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "vnf-id": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "vnf-name": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "vnf-customization-uuid": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                }
+            },
+            "derived_from": "tosca.datatypes.Dynamic"
+        },
         "dt-config-deploy-properties": {
             "description": "Dynamic DataType definition for workflow(config-deploy).",
             "version": "1.0.0",
@@ -41,6 +73,38 @@
                     "type": "integer",
                     "required": false,
                     "default": 30
+                }
+            },
+            "derived_from": "tosca.datatypes.Dynamic"
+        },
+        "dt-config-upgrade-deploy-properties": {
+            "description": "Dynamic DataType definition for workflow(config-upgrade-deploy).",
+            "version": "1.0.0",
+            "properties": {
+                "service-instance-id": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "service-model-uuid": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "vnf-id": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "vnf-name": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
+                },
+                "vnf-customization-uuid": {
+                    "description": "",
+                    "required": false,
+                    "type": "string"
                 }
             },
             "derived_from": "tosca.datatypes.Dynamic"
