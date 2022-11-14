@@ -40,11 +40,12 @@ ifconfig eth1 down
 ifconfig eth1 hw ether $FAKE_HWADDR1
 ip addr flush dev eth1
 ifconfig eth1 up
-vppctl tap connect tap111 hwaddr $HWADDR1
-vppctl set int ip address tap-0 $IPADDR1"/"$IPADDR1_CIDR
-vppctl set int state tap-0 up
+vppctl create tap hw-addr $HWADDR1
+vppctl set int ip address tap0 $IPADDR1"/"$IPADDR1_CIDR
+vppctl set int state tap0 up
+vppctl loop create
 brctl addbr br0
-brctl addif br0 tap111
+brctl addif br0 tap0
 brctl addif br0 eth1
 ifconfig br0 up
 vppctl ip route add $PROTECTED_NET_CIDR via $FW_IPADDR
@@ -73,12 +74,16 @@ vppctl exec /opt/pg_streams/stream_fw_udp9
 vppctl exec /opt/pg_streams/stream_fw_udp10
 sleep 1
 
+vppctl packet-generator enable
+vppctl set int unnumbered pg0 use tap0
+vppctl set int state pg0 up
+
 # Start HoneyComb
 VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 mkdir -p /var/lib/honeycomb/persist/{config,context}/
 echo "" > /var/lib/honeycomb/persist/context/data.json
 echo "" > /var/lib/honeycomb/persist/config/data.json
-/opt/honeycomb/sample-distribution-$VERSION/honeycomb &>/dev/null &disown
+/opt/honeycomb/honeycomb &>/dev/null &disown
 sleep 20
 
 # Enable traffic flows
