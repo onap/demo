@@ -17,8 +17,10 @@
 # ============LICENSE_END=========================================================
 
 import logging
+import os
+import requests
+import json
 from time import sleep
-
 from config import Config, VariablesDict
 from onapsdk.aai.cloud_infrastructure import (
     CloudRegion
@@ -200,6 +202,68 @@ def get_aai_service(service_type):
         aai_service = next(service for service in AaiService.get_all() if service.service_id == service_type)
 
     return aai_service
+
+
+def upgrade_service(config, service, cloud_region, tenant, customer, owning_entity,
+                              project, line_of_business, platform):
+    service_instance = config.service_instance["instance_name"]
+    logger.info("serviceinstid")
+    service_instance_id = service_instance.id
+    logger.info(f"serviceinstid: {service_instance_id}")
+    model_name= config.service_instance.get("model_name")
+    vnf = config.service_instance.get("vnfs")
+    cloud_region = vnf.get("cloud_region") 
+    tenant_id= vnf.get("tenant_id")
+    model_version_id = service_instance.get("model_version_id")
+    logger.info(f"servicemodel_version_id: {model_version_id}")
+    #service = Service(model_name=service_model_name, model_version=2)
+    model_invariant_id2 =service.unique_uuid
+    logger.info(f"servicemodel_version_id2: {model_invariant_id2}")
+    ##model_name=service.name
+    ##model_version="2"
+    
+    url = f'http://10.32.243.37:30277/onap/so/infra/serviceInstantiation/v7/serviceInstances/{service_instance_id}/upgrade'
+    headers = {'Authorization': 'Basic SW5mcmFQb3J0YWxDbGllbnQ6cGFzc3dvcmQxJA==' , 'Accept': 'application/json' , 'Content-Type': 'application/json' , 'X-Fromappid': 'SO'}
+    body = {
+	    'requestDetails': {
+		    'subscriberInfo': {
+			    'globalSubscriberId': 'DT'
+		    },
+		    'requestInfo': {
+			    'suppressRollback': 'false',
+			    'productFamilyId': 'apache_1_False_k8s_cnf_demo',
+			    'requestorId': 'demo',
+			    'instanceName': 'I_apache_1_False_k8s_cnf_demo_rel-3',
+			    'source': 'VID'
+		    },
+		    'cloudConfiguration': {
+			    'tenantId': 'ff20c08f-2d92-4bf6-a093-e29dda294df4',
+			    'cloudOwner': 'K8sCloudOwner',
+			    'lcpCloudRegionId': f'{cloud_region}'
+		    },
+		    'requestParameters': {
+			    'subscriptionServiceType': 'apache_1_False_k8s_cnf_demo',
+			    'userParams': [],
+			    'aLaCarte': 'false'
+		    },
+		    'project': {
+			    'projectName': 'Project-Demonstration'
+		    },
+		    'owningEntity': {
+			    'owningEntityId': 'e2177e45-22ae-4183-9e05-e82a5aeb35aa',
+			    'owningEntityName': 'DT'
+		    },
+		    'modelInfo': {
+			    'modelVersion': '2.0',
+			    'modelVersionId': f'{model_invariant_id}',
+			    'modelInvariantId': f'{model_invariant_id}',
+			    'modelName': f'{model_name}',
+			    'modelType': 'service'
+		    }
+	    }
+    }
+    response = requests.post(url,headers=headers,data=json.dumps(body))
+    print(response.text)
 
 
 def instantiate_service_macro(config, service, cloud_region, tenant, customer, owning_entity,
@@ -446,15 +510,21 @@ def main():
     line_of_business = config.user_params["company_name"] + "-LOB"
     owning_entity = add_owning_entity(config.user_params["company_name"])
 
-    logger.info("******** Delete old profiles ********")
-    delete_old_profiles(service, config.service_instance)
-
     logger.info("******** Instantiate Service *******")
     service_instance = check_service_instance_exists(service_subscription, config.service_instance["instance_name"])
+    os.system('clear')
+    choice = int(input("Select your options for Service : \n\n 1 Service Instantiate. \n 2 Service Upgrade. \n*************\n\n"))
     if service_instance:
-        logger.info("******** Service Instance exists, do not instantiate *******")
+        if choice == 2:
+            logger.info("******** Service Instance exists, do not instantiate, Upgrade *******")
+            if config.service_model["macro_orchestration"]:
+                upgrade_service(config, service, cloud_region, tenant, customer, owning_entity,
+                                      project, line_of_business, platform)
+                       
     else:
         logger.info("******** Service Instance not existing: Instantiate *******")
+        logger.info("******** Delete old profiles ********")
+        delete_old_profiles(service, config.service_instance)
         if config.service_model["macro_orchestration"]:
             instantiate_service_macro(config, service, cloud_region, tenant, customer, owning_entity,
                                       project, line_of_business, platform)
@@ -472,3 +542,4 @@ if __name__ == "__main__":
     logger.addHandler(sh)
 
     main()
+
