@@ -67,6 +67,7 @@ service_model:
 
 service_instance:
   model_name: *service_model_name
+  model_version: "1.0"
   instance_name: I_{{ service_model.model_name }}_{{ user_params.release_name }}
   customer_id: *company
   cloud_region: *region # "{{ cloud_regions[0].name }}"
