@@ -37,12 +37,12 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 
-def retrieve_service(service_name: str):
+def retrieve_service(choice,service_name: str):
     logger.info("Retrieve service from SDC before onboarding")
     services = Service.get_all()
 
     for found_service in services:
-        if found_service.name == service_name:
+        if (found_service.name == service_name and choice == 1):
             logging.info(f"Service {found_service.name} found in SDC, onboarding will not be executed")
             exit(0)
     return
@@ -84,7 +84,6 @@ def onboard_pnf(pnf_name, vsp_name, vsp_file, vendor_name):
         pnf.onboard()
     return pnf
 
-
 def onboard_vnf(vnf_name, vsp_name, vsp_file, vendor_name):
     logger.info(f"******** Onboard VNF - {vnf_name} *******")
     vendor = onboard_vendor(vendor_name=vendor_name)
@@ -101,6 +100,35 @@ def onboard_vnf(vnf_name, vsp_name, vsp_file, vendor_name):
         vnf.onboard()
     return vnf
 
+def upgrade_vsp_onboard_vnf(config,vnf_name, vsp_name, vsp_file, vendor):
+    vnfs = config.service_model.get("vnfs")
+    if vnfs:
+        for vnf in vnfs:
+            vnf_name=vnf["model_name"]
+            vsp_name="VSP_"+vnf_name
+            logger.info(f"******** Onboard VSP - {vsp_name} *******")
+            mypath = os.path.dirname(os.path.realpath(__file__))
+            vsp_path = os.path.join(mypath, vsp_file)
+            try:
+             vsp = Vsp(name=vsp_name, vendor=vendor, package=open(vsp_path, 'rb'))
+            except FileNotFoundError:
+               logger.error(f"No vsp file was found for {vsp_name}!")
+            logger.info("******** Upgrade vsp - {vsp_name} *******",vsp_name)
+            ##create a new version of VSP & onboard
+            vsp.create_new_version()
+            vsp.update_package(open(vsp_path, 'rb'))
+            vsp.onboard()
+            ##add new version to vf else it will update same vnf
+            new_ver_vsp= vsp
+            vf = Vf(vnf_name)
+            vf.checkout()
+            logger.info("*****update VF with latest vsp version********")
+            vf.update_vsp(vsp = new_ver_vsp)
+            logger.info("*****updated vsp for VF********")
+            vf.onboard()
+            logger.info("***** ONBOARDED VF******")
+    return vf
+
 
 def create_service(service_name, is_macro: bool = True):
     logger.info("******** Create Service *******")
@@ -112,7 +140,6 @@ def create_service(service_name, is_macro: bool = True):
                           instantiation_type=ServiceInstantiationType.A_LA_CARTE)
     service.create()
     return service
-
 
 def read_sdnc_model_details(file):
     mypath = os.path.dirname(os.path.realpath(__file__))
@@ -134,6 +161,27 @@ def read_sdnc_model_details(file):
         logger.error("No vsp file was found!")
         exit(1)
 
+""" Depracated hardcode 
+def set_properties_for_upgrade(service , xnf):
+    #sdnc_model_name, sdnc_model_version = read_sdnc_model_details(vsp_details["vsp_file"])
+    #if sdnc_model_name and sdnc_model_version:
+        #if service.status == const.DRAFT:
+            SDNC_TEMPLATE_NAME = "APACHE"
+            SDNC_TEMPLATE_VERSION = "1.0.0"
+            SDNC_ARTIFACT_NAME = "vnf"
+            logger.info("******** Set SDNC properties for VF ********")
+            component = service.get_component(xnf)
+            prop = component.get_property("sdnc_model_name")
+            prop.value = SDNC_TEMPLATE_NAME
+            prop = component.get_property("sdnc_model_version")
+            prop.value = SDNC_TEMPLATE_VERSION
+            prop = component.get_property("controller_actor")
+            prop.value = "CDS"
+            prop = component.get_property("sdnc_artifact_name")
+            prop.value = SDNC_ARTIFACT_NAME
+            prop = component.get_property("skip_post_instantiation_configuration")
+            prop.value = False
+"""
 
 def set_properties(service, xnf, vsp_details):
     sdnc_model_name, sdnc_model_version = read_sdnc_model_details(vsp_details["vsp_file"])
@@ -174,35 +222,66 @@ def check_distribution_status(service):
 
 def main():
     config = Config(env_dict=VariablesDict.env_variable)
-    retrieve_service(service_name=config.service_model["model_name"])
 
-    logger.info("******** SERVICE DESIGN *******")
-    service = create_service(service_name=config.service_model["model_name"],
-                             is_macro=config.service_model["macro_orchestration"])
-    vnfs = config.service_model.get("vnfs")
-    if vnfs:
-        for vnf in vnfs:
-            new_vnf = onboard_vnf(vnf_name=vnf["model_name"],
+    #sash
+    os.system('clear')
+    choice = int(input("Select your options for CNF Upgrade: \n\n 1 Service Onboard. \n 2 Service Upgrade. \n*************\n\n"))
+    if choice == 1:
+            logger.info("******** SERVICE DESIGN *******")
+            retrieve_service(choice,service_name=config.service_model["model_name"])
+            service = create_service(service_name=config.service_model["model_name"],is_macro=config.service_model["macro_orchestration"])
+            vnfs = config.service_model.get("vnfs")
+            if vnfs:
+                for vnf in vnfs:
+                    new_vnf = onboard_vnf(vnf_name=vnf["model_name"],
                                   vsp_name="VSP" + "_" + vnf["model_name"],
                                   vsp_file=vnf["vsp"]["vsp_file"],
                                   vendor_name=vnf["vsp"]["vendor"])
+                    service.add_resource(new_vnf)
+                    set_properties(service=service, xnf=new_vnf, vsp_details=vnf["vsp"])
+
+            pnfs = config.service_model.get("pnfs")
+            if pnfs:
+                for pnf in pnfs:
+                    new_pnf = onboard_pnf(pnf_name=pnf["model_name"],
+                              vsp_name="VSP" + "_" + pnf["model_name"],
+                              vsp_file=pnf["vsp"]["vsp_file"],
+                              vendor_name=pnf["vsp"]["vendor"])
+                    service.add_resource(new_pnf)
+                    set_properties(service=service, xnf=new_pnf, vsp_details=pnf["vsp"])
+
+            service.checkin()
+            service.onboard()
+            check_distribution_status(service)
+
+    elif choice == 2:
+            service_name=config.service_model["model_name"]
+            retrieve_service(choice,service_name)
+            vnfs = config.service_model.get("vnfs")
+            if vnfs:
+                for vnf in vnfs:
+                     new_vnf = upgrade_vsp_onboard_vnf(config, vnf_name=vnf["model_name"],
+                                  vsp_name="VSP" + "_" + vnf["model_name"],
+                                  vsp_file=vnf["vsp"]["vsp_file"],
+                                  vendor=vnf["vsp"]["vendor"])
+            logger.info( " VSP upgrade is Successful, VF is updated with new VSP Version. \nNext- Service distribution with new VSP")
+            logger.info("******** NOW ONBOARD Service with new VF*****************")
+            service = Service(service_name,
+                          instantiation_type=ServiceInstantiationType.MACRO)
+            logger.info("******** svc checkout *****************")
+            service.checkout()
+            logger.info("******** Add resource  with new VF to svc *****************")
             service.add_resource(new_vnf)
             set_properties(service=service, xnf=new_vnf, vsp_details=vnf["vsp"])
+            logger.info("******** Svc Checkin *****************")
+            service.checkin()
+            logger.info("******** Svc onboard *****************")
+            service.onboard()
+            logger.info("******** Checking Distribution Status *****************")
+            check_distribution_status(service)
 
-    pnfs = config.service_model.get("pnfs")
-    if pnfs:
-        for pnf in pnfs:
-            new_pnf = onboard_pnf(pnf_name=pnf["model_name"],
-                                  vsp_name="VSP" + "_" + pnf["model_name"],
-                                  vsp_file=pnf["vsp"]["vsp_file"],
-                                  vendor_name=pnf["vsp"]["vendor"])
-            service.add_resource(new_pnf)
-            set_properties(service=service, xnf=new_pnf, vsp_details=pnf["vsp"])
-
-    service.checkin()
-    service.onboard()
-    check_distribution_status(service)
-
+    else :
+          logger.info( "invalid option")
 
 if __name__ == "__main__":
     sh = logging.StreamHandler()
@@ -210,4 +289,4 @@ if __name__ == "__main__":
     sh.setFormatter(sh_formatter)
     logger.addHandler(sh)
 
-    main()
+    main(
