@@ -46,17 +46,17 @@ ip addr flush dev eth1
 ip addr flush dev eth2
 ifconfig eth1 up
 ifconfig eth2 up
-vppctl tap connect tap111 hwaddr $HWADDR1
-vppctl tap connect tap222 hwaddr $HWADDR2
-vppctl set int ip address tap-0 $IPADDR1"/"$IPADDR1_CIDR
-vppctl set int ip address tap-1 $IPADDR2"/"$IPADDR2_CIDR
-vppctl set int state tap-0 up
-vppctl set int state tap-1 up
+vppctl create tap hw-addr $HWADDR1
+vppctl create tap hw-addr $HWADDR2
+vppctl set int ip address tap0 $IPADDR1"/"$IPADDR1_CIDR
+vppctl set int ip address tap1 $IPADDR2"/"$IPADDR2_CIDR
+vppctl set int state tap0 up
+vppctl set int state tap1 up
 brctl addbr br0
-brctl addif br0 tap111
+brctl addif br0 tap0
 brctl addif br0 eth1
 brctl addbr br1
-brctl addif br1 tap222
+brctl addif br1 tap1
 brctl addif br1 eth2
 ifconfig br0 up
 ifconfig br1 up
@@ -67,7 +67,7 @@ VERSION=$(cat /opt/config/demo_artifacts_version.txt)
 mkdir -p /var/lib/honeycomb/persist/{config,context}/
 echo "" > /var/lib/honeycomb/persist/context/data.json
 echo "" > /var/lib/honeycomb/persist/config/data.json
-/opt/honeycomb/sample-distribution-$VERSION/honeycomb &>/dev/null &disown
+/opt/honeycomb/honeycomb &>/dev/null &disown
 sleep 1
 
 # Start VES client
