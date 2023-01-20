@@ -1,0 +1,446 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd1c6187_5f55bfb5",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "That method is the same as method above -- service_instance is not used at all",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d912b3d_36c50282",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "config, line_of_business_and platform arguments are not used at all -- please remove",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1be520c9_ba972dad",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "Do not hardcode an ONAP instance address. There is an onap_settings.py file where things like that can be stored. On ONAP SDK you can also overwrite SO_URL configuration value and it will be used on that script",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a603d0b_74f446bb",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "Same as above, there is a SO_AUTH config value on ONAP SDK you can overwrite",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b0e370e_61be9d36",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "that should be even a part of an ONAP SDK, could you add it there? We could release it with the next version and you will be able to use that here. That could be useful for the others",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d81c299_2ef08337",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "config argument not used at all",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "957ff902_7d7ef521",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "same comments as above -- please do not hardcode ONAP instance IPs",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e25ee92d_20c85418",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "as above:\n- unused arguments\n- hardcoded ONAP IP\n- method which could be a part of an ONAP SDK",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0786448c_e8f2812b",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "should that be done that way? I\u0027d prefer to use script arguments instead of choices. You could then automate that process easily, without any interaction with user. Check https://docs.python.org/3/library/argparse.html",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9167b88b_f7cdb822",
+        "filename": "tutorials/ApacheCNF/automation/instantiate.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 738,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "Please use enums for choices. Right now it\u0027s not clear on code what \u00272\u0027 means (I need to check what it on an input and for each time I find \u0027choice\u0027 variable I need to back to check what that particular value means)",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d306763_7d270aed",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "please use type annotations (was already used before)",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a6b22c8_03746d7c",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "Please use enum to store choice values. It\u0027s not clear what \u0027choice \u003d\u003d 1\u0027 means here",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3686397b_ab8a1308",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "use f\u0027string\u0027 formatting",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0b0b855_c3d68654",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "keep 4 spaces indents\n\nvsp_path file is opened here and not closed anywhere",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1002fdd5_eedac584",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "vsp_path file is opened and not closed anywhere",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdd28bf0_b2a1a837",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "add spaces around \u0027\u003d\u0027",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4750708e_8fa59e8b",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "do not use spaces around \u0027\u003d\u0027 for keyword arguments",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21575b84_8f0256a7",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "If \u0027vnfs\u0027 is False on line 105 \u0027vf\u0027 variable is not declared and an Unbound exception will be raised.",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6743fcf4_7658c5e5",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "It it won\u0027t be used please delete that code",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2c06742_421a6912",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "Is that some linter comment? It\u0027s not clear for me what that means",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d86df61e_a286f7bf",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "same as before -- that shouldn\u0027t be done with an \u0027input\u0027 in my opinion. You should use argparse or configure that somewhere. It\u0027s not possible to automate that because input is an interactive",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3f16b79_4452a3f2",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "Store choice values on an enum class",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cd2439e_95ae5fdf",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "use f\u0027string\u0027 formatting please",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a81196c8_da353961",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "same as above",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e7d3d8b_0c96c244",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "use f\u0027string\u0027 formatting",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63f119f6_435fcf54",
+        "filename": "tutorials/ApacheCNF/automation/onboard.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 6079
+      },
+      "writtenOn": "2023-01-20T07:35:34Z",
+      "side": 1,
+      "message": "missing close bracket",
+      "revId": "2a84e2b1c6358c73958251714cbe520b152c49e1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
